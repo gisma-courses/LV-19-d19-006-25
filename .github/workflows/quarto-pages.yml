@@ -42,7 +42,6 @@ jobs:
         with:
           use-public-rspm: true
 
-      # System-Dependencies für Geo/NetCDF/XML/Fonts/GUIs etc.
       - name: Install system libs for R packages
         run: |
           sudo apt-get update
@@ -55,7 +54,6 @@ jobs:
             libpng-dev \
             libx11-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev
 
-      # CRAN-Pakete (nur einmal installieren, falls nicht vorhanden)
       - name: Install CRAN packages
         run: |
           Rscript -e 'pkgs <- c(
@@ -64,7 +62,7 @@ jobs:
             "sf","terra","stars","lwgeom","exactextractr","units","s2",
             "raster","ncdf4","RNetCDF",
             "leaflet","leafem","leafsync","leafpop","mapview","maptiles","htmlwidgets","DT",
-            "classInt","lwgeom","e1071","caret","ClusterR","NbClust","clusternomics",
+            "classInt","e1071","caret","ClusterR","NbClust","clusternomics",
             "data.table","lubridate","broom",
             "xml2","XML","png",
             "here","devtools","remotes","renv",
@@ -75,7 +73,6 @@ jobs:
           ip <- rownames(installed.packages());
           install.packages(setdiff(unique(pkgs), ip))'
 
-      # GitHub-Pakete
       - name: Install GitHub packages
         run: |
           Rscript -e 'remotes::install_github(c(
@@ -84,6 +81,13 @@ jobs:
             "bluegreen-labs/microclimf",
             "bluegreen-labs/micropoint"
           ), upgrade = "never", dependencies = TRUE)'
+
+      # ---------- Quarto Extensions (Filter) ----------
+      - name: Install Quarto extensions (roughnotation, lightbox, tachyons)
+        run: |
+          quarto install extension quarto-ext/roughnotation || true
+          quarto install extension quarto-ext/lightbox || true
+          quarto install extension quarto-ext/tachyons || true
 
       - name: Show versions
         run: |
