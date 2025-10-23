@@ -47,7 +47,7 @@ tmap::tmap_arrange(m1,m2)
 
 The planes can be switched using the plane control. In true-color composites, the visible spectral channels Red (B04), Green (B03), and Blue (B02) are mapped to the corresponding red, green, and blue color channels, respectively, producing an image of the surface that closely resembles the natural "color" as it would be seen by a human sitting on the spacecraft. False color images are often created using the spectral channels for near-infrared, red, and green. They are particularly useful for assessing vegetation because plants reflect near-infrared and green light while absorbing red light (red-edge effect). Dense vegetation appears a darker red. Cities and open ground appear gray or light brown, water appears blue or black.
 
-```{R digitize, echo=TRUE}
+```{R digitize}
 #| echo: true
 #| eval: false
 ## ##
@@ -113,7 +113,7 @@ tDF = readRDS(paste0(envrmt$path_data,"tDF.rds"))
 
 The result is a table with training data for 2019 and 2020. The data set contains all raster information for all bands covered by the polygons for the classes "clearcut" and "other".
 
-```{R raw_train, echo=TRUE}
+```{R raw_train}
 #| echo: true
 #| eval: false
 ## ##

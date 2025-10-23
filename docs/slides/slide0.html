@@ -140,54 +140,49 @@
 </div>
 
 </section>
-<section id="scientific-process-overview" class="slide level2">
+<section id="scientific-process-overview" class="slide level2 tightgrid">
 <h2>Scientific Process – Overview</h2>
 <style>
-.flow { display: flex; flex-direction: column; gap: .6rem; }
-.box { padding: 1rem 1.25rem; border-radius: 14px; border: 2px solid #c7c7c7;
-       background: #f8f9fb; text-align: center; font-size: 1.1rem; }
-.box.primary {border-color:#6b7280;background:#f3f4f6;}
-.box.q       {border-color:#2563eb;background:#eff6ff;}
-.box.lit     {border-color:#7c3aed;background:#f5f3ff;}
-.box.methods {border-color:#059669;background:#ecfdf5;}
-.box.adv     {border-color:#0ea5e9;background:#f0f9ff;}
-.box.path    {border-color:#d97706;background:#fff7ed;}
-.box.results {border-color:#ea580c;background:#fff1eb;}
-.box.loop    {border-color:#dc2626;background:#fff1f2;}
-.small {font-size:.9rem;color:#374151;}
+.tightgrid .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem 1rem;
+                 max-width:1200px;margin:0 auto;}
+@media(max-width:1100px){.tightgrid .grid{grid-template-columns:1fr;}}
+.tightgrid .box{padding:.5rem .7rem;border-radius:10px;border:2px solid #c7c7c7;background:#f8f9fb;
+                text-align:center;font-size:.92rem;line-height:1.15;}
+.tightgrid .box strong{font-size:1.0rem;}
+/* colors */
+.primary{border-color:#6b7280;background:#f3f4f6;}
+.q{border-color:#2563eb;background:#eff6ff;}
+.lit{border-color:#7c3aed;background:#f5f3ff;}
+.methods{border-color:#059669;background:#ecfdf5;}
+.adv{border-color:#0ea5e9;background:#f0f9ff;}
+.path{border-color:#d97706;background:#fff7ed;}
+.results{border-color:#ea580c;background:#fff1eb;}
+.loop{border-color:#dc2626;background:#fff1f2;}
 </style>
-<div class="flow">
-<div class="box primary fragment" data-fragment-index="1">
-<pre><code>&lt;strong&gt;Foundations / Background&lt;/strong&gt;&lt;br&gt;
-&lt;span class="small"&gt;domain knowledge, theory, context&lt;/span&gt;</code></pre>
+<div class="grid">
+<div class="box primary fragment">
+<strong>Foundations / Background</strong>
 </div>
-<div class="box q fragment" data-fragment-index="2">
-<pre><code>&lt;strong&gt;Research Question&lt;/strong&gt;&lt;br&gt;
-&lt;span class="small"&gt;precise, testable, scoped&lt;/span&gt;</code></pre>
+<div class="box q fragment">
+<strong>Research Question</strong>
 </div>
-<div class="box lit fragment" data-fragment-index="3">
-<pre><code>&lt;strong&gt;State of the Art (Literature)&lt;/strong&gt;&lt;br&gt;
-&lt;span class="small"&gt;what is known, gaps, competing hypotheses&lt;/span&gt;</code></pre>
+<div class="box lit fragment">
+<strong>State of the Art (Literature)</strong>
 </div>
-<div class="box methods fragment" data-fragment-index="4">
-<pre><code>&lt;strong&gt;Necessary Methods &amp; Workflow&lt;/strong&gt;&lt;br&gt;
-&lt;span class="small"&gt;data, preprocessing, validation design, metrics&lt;/span&gt;</code></pre>
+<div class="box methods fragment">
+<strong>Necessary Methods &amp; Workflow</strong>
 </div>
-<div class="box adv fragment" data-fragment-index="5">
-<pre><code>&lt;strong&gt;Advanced Methods&lt;/strong&gt;&lt;br&gt;
-&lt;span class="small"&gt;models, algorithms, tuning, ablations&lt;/span&gt;</code></pre>
+<div class="box adv fragment">
+<strong>Advanced Methods</strong>
 </div>
-<div class="box path fragment" data-fragment-index="6">
-<pre><code>&lt;strong&gt;Applied Solution Path&lt;/strong&gt;&lt;br&gt;
-&lt;span class="small"&gt;implementation, assumptions, parameters&lt;/span&gt;</code></pre>
+<div class="box path fragment">
+<strong>Applied Solution Path</strong>
 </div>
-<div class="box results fragment" data-fragment-index="7">
-<pre><code>&lt;strong&gt;Results&lt;/strong&gt;&lt;br&gt;
-&lt;span class="small"&gt;findings, uncertainty, limitations&lt;/span&gt;</code></pre>
+<div class="box results fragment">
+<strong>Results</strong>
 </div>
-<div class="box loop fragment" data-fragment-index="8">
-<pre><code>&lt;strong&gt;Loopback → Evaluation &amp; Improvement&lt;/strong&gt;&lt;br&gt;
-&lt;span class="small"&gt;error analysis, robustness checks, next iterations&lt;/span&gt;</code></pre>
+<div class="box loop fragment">
+<strong>Loopback → Evaluation &amp; Improvement</strong>
 </div>
 </div>
 </section>

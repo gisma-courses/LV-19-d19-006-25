@@ -1716,7 +1716,7 @@
     "href": "slides/slide0.html#scientific-process-overview",
     "title": "From Foundations to Results: A Scientific Workflow",
     "section": "Scientific Process – Overview",
-    "text": "Scientific Process – Overview\n\n\n\n&lt;strong&gt;Foundations / Background&lt;/strong&gt;&lt;br&gt;\n&lt;span class=\"small\"&gt;domain knowledge, theory, context&lt;/span&gt;\n\n\n&lt;strong&gt;Research Question&lt;/strong&gt;&lt;br&gt;\n&lt;span class=\"small\"&gt;precise, testable, scoped&lt;/span&gt;\n\n\n&lt;strong&gt;State of the Art (Literature)&lt;/strong&gt;&lt;br&gt;\n&lt;span class=\"small\"&gt;what is known, gaps, competing hypotheses&lt;/span&gt;\n\n\n&lt;strong&gt;Necessary Methods & Workflow&lt;/strong&gt;&lt;br&gt;\n&lt;span class=\"small\"&gt;data, preprocessing, validation design, metrics&lt;/span&gt;\n\n\n&lt;strong&gt;Advanced Methods&lt;/strong&gt;&lt;br&gt;\n&lt;span class=\"small\"&gt;models, algorithms, tuning, ablations&lt;/span&gt;\n\n\n&lt;strong&gt;Applied Solution Path&lt;/strong&gt;&lt;br&gt;\n&lt;span class=\"small\"&gt;implementation, assumptions, parameters&lt;/span&gt;\n\n\n&lt;strong&gt;Results&lt;/strong&gt;&lt;br&gt;\n&lt;span class=\"small\"&gt;findings, uncertainty, limitations&lt;/span&gt;\n\n\n&lt;strong&gt;Loopback → Evaluation & Improvement&lt;/strong&gt;&lt;br&gt;\n&lt;span class=\"small\"&gt;error analysis, robustness checks, next iterations&lt;/span&gt;"
+    "text": "Scientific Process – Overview\n\n\n\nFoundations / Background\n\n\nResearch Question\n\n\nState of the Art (Literature)\n\n\nNecessary Methods & Workflow\n\n\nAdvanced Methods\n\n\nApplied Solution Path\n\n\nResults\n\n\nLoopback → Evaluation & Improvement"
   },
   {
     "objectID": "slides/slide0.html#process-as-diagram",
