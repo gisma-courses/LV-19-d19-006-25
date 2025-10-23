@@ -1,0 +1,7 @@
+---
+title: "Introduction to QGIS"
+
+title-block-banner: ../images/remsens_title.jpg
+title-block-banner-color: black
+
+---

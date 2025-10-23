@@ -1,0 +1,29 @@
+---
+title: "Worksheet 4: Pattern-based spatial analysis"
+
+title-block-banner: ../images/splash_L03.png
+title-block-banner-color: black
+
+---
+
+## Exercises WS 4
+
+1. Read the study area polygon from the `exdata/harz_borders.gpkg` file using the `read_sf()` function from the **sf** package.
+2. Read the land cover raster data for Europe from the file `exdata/lc_europe.tif` using the function `rast()` from the package **terra**. Visualise both datasets.
+2. Crop and mask the raster to the polygon boundaries. Visualise the results.
+2. Compute a spatial signature for the study area. Can you understand its meaning?
+2. Find out which areas of the Europe raster are most similar to the study area (this may take a minute or so). Try different window sizes (e.g. 200 or 500).
+
+
+### Addon
+::: {.callout-tip appearance="minimal"}
+
+
+- Download [Corine data from 2012 and 2018](https://land.copernicus.eu/en/map-viewer?product=130299ac96e54c30a12edd575eff80f7).
+- Define an appropriate scale for the assessment of forest structure changes at European level
+- Identify the areas with the smallest and largest changes
+- Provide a short interpretation 
+- How's the Harz ranked?
+
+
+:::

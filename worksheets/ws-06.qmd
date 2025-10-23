@@ -1,0 +1,31 @@
+---
+title: "Worksheet 5: Regionalisation"
+
+title-block-banner: ../images/splash_L03.png
+title-block-banner-color: black
+
+---
+
+## Exercises WS 5
+
+Regionalize Germany's climates. 
+
+- Use Worldclim versus CMIP data
+- Use the upper helper functions and code for Great Britain
+
+
+
+### Addon
+::: {.callout-tip appearance="minimal"}
+- Make sure you get an idea of a "scientific" [climate zoning concept](https://www.metoffice.gov.uk/weather/climate/climate-explained/climate-zones).
+
+- The following links provide an initial random selection of some thoughts on this concept. 
+  - [Climate Extremes are Becoming More Frequent, Co-occurring, and Persistent in Europe](https://link.springer.com/article/10.1007/s44177-022-00022-4?fromPaywallRec=false)
+  - [A systematic review of GIS-based local climate zone mapping studies](https://www.sciencedirect.com/science/article/pii/S0360132321001980?via%3Dihub)
+  - [European summer weather regimes 1990-2019: Automatic classification and representation in a small - global climate model ensemble](https://arxiv.org/abs/2409.16988)
+- What are the main aims of the following articles in relation to climate zones?
+- How do you assess the proposed solution using supercells etc. in comparison? 
+
+- Use the [LCZ-generator](https://lcz-generator.rub.de/) and compare it to your results. 
+
+:::

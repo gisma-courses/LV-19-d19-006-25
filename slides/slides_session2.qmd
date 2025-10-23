@@ -1,0 +1,172 @@
+---
+title: "Landscape Patterns"
+subtitle: "How to discover and to describe"
+author: "Chris Reudenbach"
+title-slide-attributes:
+  data-background-image: slide1/preview-image-mof.png
+  #data-background-size: contain
+  data-background-opacity: "0.5"
+format:
+  revealjs:
+    theme: [../_extensions/metropolis-theme/metropolis.scss]
+    toc: false
+    toc-depth: 2
+    chalkboard: true
+    slide-number: true
+    footer: <gisma 2023>
+    menu: true
+lightbox: true
+spotlight:
+      useAsPointer: true
+      size: 5
+---
+
+## Landscape Metrics
+
+- **Problem no. 1**: which of the hundreds of spatial metrics should we choose?
+- **Problem no. 2**: many landscape metrics are highly correlated…
+
+![](/assets/shdi_ai_map.png){width="40%"}
+---
+
+
+## Possible Approach - PCA of type samples of landscape metrics
+
+We performed a principal component analysis (PCA) using 17 landscape-level metrics:
+
+
+![](/assets/pca.png){width="80%"}
+
+---
+
+## PCA of landscape metrics
+
+:::: {.columns}
+
+::: {.column width="45%"}
+![PCA 1](/assets/PC1.png)
+:::
+
+::: {.column width="45%"}
+![PCA 2](/assets/PC2.png)
+:::
+
+::::
+
+* First two principal components explained ~71% of variability
+
+---
+
+## PCA of landscapes
+
+The result allows to distinguish between:
+
+* simple and complex rasters (left<->right)
+* agmented and consolidated rasters (bottom<->top)
+
+![PCA 2](/assets/PC1_PC2_map.png){width="40%"}
+
+However, there are still some problems here…
+
+---
+
+## PCA of landscapes
+
+
+* We performed a second PCA using data from the United Kingdom only
+* Next, we predicted the results on the data for the whole Europe
+
+
+:::: {.columns}
+
+::: {.column width="45%"}
+
+![PCA 1](/assets/PC1UK_map.png)
+:::
+
+::: {.column width="45%"}
+![PCA 2](/assets/PC2UK_map.png)
+:::
+
+
+::::
+
+---
+
+## PCA of landscapes
+
+![PCA 1 PCA 2 UK EU](/assets/PC1UK_PC2UK_map.png){width="25%"}
+
+Issues with the PCA approach:
+
+* Each new dataset requires recalculation of both, landscape metrics and principal components analysis (PCA)
+* Highly correlated landscape metrics are used
+* PCA results interpretation is not straightforward
+
+---
+
+## IT metrics
+
+* Five information theory metrics based on a co-occurrence matrix exist (Nowosad and Stepinski, 2019, https://doi.org/10.1007/s10980-019-00830-x)
+* **Marginal entropy [H(x)]** - diversity (composition) of spatial categories - from monothematic patterns to multithematic patterns
+* **Relative mutual information [U]** - clumpiness (configuration) of spatial categories from fragmented patterns to consolidated patterns)
+* **H(x) **and **U** are uncorrelated
+
+:::: {.columns}
+
+::: {.column width="45%"}
+![Entropy](/assets/ent_map.png)
+:::
+
+::: {.column width="45%"}
+![Relative mutual information](/assets/relmutinf_map.png)
+:::
+
+::::
+
+
+--- 
+
+## IT metrics
+
+**2D parametrization** of categorical rasters’ configurations based on two weakly correlated IT metrics **groups similar patterns into distinct** regions of the parameters space
+
+![](/assets/ent_relmutinf_map){width="45%"}
+
+---
+
+## IT metrics final results
+:::: {.columns}
+
+::: {.column width="45%"}
+![Land cover data](/assets/lc_map1.png)
+:::
+
+::: {.column width="45%"}
+![Parametrization of two IT metrics](/assets/2dmap_ent_relmutinf.png)
+:::
+
+::::
+
+
+
+--- 
+
+## Exercises
+
+1. The marginal entropy and relative mutual information can be calculated using the **landscapemetrics** package’s functions: `lsm_l_ent()` and `lsm_l_relmutinf()`. Calculate both of these metrics for the `exdata/lc_small.tif` raster.
+1. Read the `exdata/lc_europe.tif` raster using `rast() from the **terra** package and the `exdata/polygons.gpkg` vector data using the `read_sf()` function from the **sf** package. Calculate the marginal entropy and relative mutual information for each polygon using the `sample_lsm()` function.
+1. Join the calculated values with the polygons (see https://r-spatialecology.github.io/landscapemetrics/articles/irregular_areas.html for more details).
+1. Calculate SHDI and AI for the polygons. Compare the values of SHDI and AI with the marginal entropy and relative mutual information (e.g., using a scatterplot or by calculating the correlation coefficient). Are the results similar?
+1. (Extra) Create your own polygonal grid using `st_make_grid()` function from the **sf** package for the area from the `exdata/polygons.gpkg` file. Calculate the marginal entropy and relative mutual information for each square using the sample_lsm() function. Visualize the results.
+
+---
+
+## IT metrics
+
+These metrics still leave some questions open…
+
+* Relative mutual information is a result of dividing mutual information by entropy. What to do when the entropy is zero?
+* How to incorporate the meaning of categories into the analysis?
+
+![Parametrization of two IT metrics](/assets/2dmap_ent_relmutinf.png){width="45%"}

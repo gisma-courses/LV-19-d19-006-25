@@ -1,0 +1,123 @@
+---
+title: "Landscape Metrics Reloaded"
+subtitle: "Why and what to discover and to describe"
+author: "Chris Reudenbach"
+title-slide-attributes:
+  data-background-image: slide1/preview-image-mof.png
+  #data-background-size: contain
+  data-background-opacity: "0.5"
+format:
+  revealjs:
+    theme: [../_extensions/metropolis-theme/metropolis.scss]
+    toc: false
+    toc-depth: 2
+    chalkboard: true
+    slide-number: true
+    footer: <gisma 2024>
+    menu: true
+lightbox: true
+spotlight:
+      useAsPointer: true
+      size: 5
+---
+
+## What is the meaning?
+
+::: {.callout-tip appearance="minimal"}
+Spatial patterns can be quantified using landscape metrics [(O’Neill et al. 1988; Turner and Gardner 1991; Li and Reynolds 1993; He et al. 2000; Jaeger 2000; Kot i in. 2006; McGarigal 2014)]{.smallcaps}.
+:::
+
+And well, we can calculate technically very complex metrics and indices, but what is the meaning?
+
+![Parametrization of two IT metrics](/assets/2dmap_ent_relmutinf.png){width="35%"}
+
+-   **Marginal entropy** \[H(x)\] - diversity (composition) of spatial categories - from **monothematic patterns to multithematic patterns**
+-   **Relative mutual information** \[U\] - clumpiness (configuration) of spatial categories from **fragmented patterns to consolidated patterns**
+
+------------------------------------------------------------------------
+
+## Back to theory
+
+So let's go one step back:
+
+:::: fragment
+Read the following section of [Fragstats Manual](https://fragstats.org/index.php/background/landscape-metrics) and answer the following question:
+
+::: {.callout-tip appearance="minimal"}
+What are the basic concept an meaning meaning of landscape metrics?
+:::
+::::
+
+:::: fragment
+Form teams of two and please try to answer the following questions:
+
+::: {.callout-tip appearance="minimal"}
+-   What is now the specific purpose in scientific application?
+-   What can be expressed with them at all?
+:::
+::::
+
+------------------------------------------------------------------------
+
+## Now try to find an interpretation
+
+![Parametrization of two IT metrics](/assets/2dmap_ent_relmutinf.png){width="45%"}
+
+-   **Marginal entropy** \[H(x)\] - diversity (composition) of spatial categories - from **monothematic patterns to multithematic patterns**
+-   **Relative mutual information** \[U\] - clumpiness (configuration) of spatial categories from **fragmented patterns to consolidated patterns**
+
+------------------------------------------------------------------------
+
+### What are the fields of application?
+
+
+::: fragment
+Look at the first 30-50 hits on Google Scholar: [Google Scholar Landscape Metrics](https://scholar.google.de/scholar?as_ylo=2020&q=landscape+metrics&hl=de&as_sdt=0,5)
+
+Work through the following questions:
+
+::: {.callout-tip appearance="minimal"}
+-   Try to sort the articles into meaningful groups.
+-   What are the most important questions and applications?
+-   Choose an article that interests you and summarize it in a 3-minute presentation, focusing on the significance of the metrics.
+
+:::
+
+:::
+
+::: fragment
+With this knowledge check [Present and historical landscape structure shapes current species richness in Central European grasslands](https://link.springer.com/article/10.1007/s10980-021-01392-7).
+
+Try to find an answer:
+
+::: {.callout-tip appearance="minimal"}
+-   Why did they choose this specific indices?
+-   Can you identify the impact of specific metrics with respect to grassland?
+-   Discuss their Conlcusion with respect to landscape metrics
+:::
+:::
+
+## Ercercise
+
+
+Please navigate to the [landscapemetrics](https://r-spatialecology.github.io/landscapemetrics/index.html) package.
+
+Run the following tutorials with the example data of this course:
+
+::: {.callout-tip appearance="minimal"}
+-   [Sample lsm](https://r-spatialecology.github.io/landscapemetrics/articles/guide_sample_lsm.html)
+-   [Irregular Areas](https://r-spatialecology.github.io/landscapemetrics/articles/irregular_areas.html)
+-   [Utilities](https://r-spatialecology.github.io/landscapemetrics/articles/utility.html)
+:::
+
+For the irregular vector data download the OSM data [e.g. from Geofabrik](https://download.geofabrik.de/) and use the category landuse. Note you need to merge [Niedersachsen](https://download.geofabrik.de/europe/germany/niedersachsen.html) and [Sachsen-Anhalt](https://download.geofabrik.de/europe/germany/sachsen-anhalt.html)
+
+
+### Addon
+::: {.callout-tip appearance="minimal"}
+
+
+- Download the `FragStats` tutorial [Analyzing a single grid](https://www.fragstats.org/download/Tutorial_2.zip).
+- Run the tutorial once with `FragStats` and then use the data and indices for the same analysis with landscapemetrics instead.
+
+:::

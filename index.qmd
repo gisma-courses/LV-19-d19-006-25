@@ -1,20 +1,48 @@
 ---
-title: "Advanced GIS & RS"
+title: ""
+title-block-banner: images/hinterland-sp.jpg
+title-block-banner-color: black
+
+open-graph:
+  description: "Advanced Introduction TO GIS and Remote Sensing"
+  image: /images/park-4987155_1920.jpg
+twitter-card:
+  description: "Advanced Introduction TO GIS and Remote Sensing"
+  image: /images/park-4987155_1920.jpg
+comments: false
 ---
-<style>
-  body {
-  background-image: url("");
-  background-size: cover;
-  background-repeat: no-repeat;
-}
 
-</style>
+![](images/hinterland-sp.jpg)
+
+One could claim that the fact living on the surface of the earth and only get to know a small space through direct personal experience is the most important motivation for most of the geographic work. Compensation for this lack of direct experience has been and is being made, especially in scientific geography, with the help of efficient spatio-temporal techniques of abstraction.
+
+Knowledge of spatial and/or temporal aspects of our environment is increasingly in demand for action-relevant relationships. Whether we ask as tourists, consumers, producers or planners spatial information, or even knowledge.
+
+Geographic Information Science (GIS) is based on versatile and powerful software tools that are used in modeling, analysis, data mining merging and numerous other spatio-temporal applications. Nevertheless the most powerful tool is our mind developing the concepts and developing the necessary algorithms.
+
+# Intended learning outcomes
+
+At the end of this course you should be able
+
+- Understand, adapt and develop geoinformatics methods
+- Design workflows that are suitable for solving  spatio-temporal data-related regionalization issues
+- Critically evaluate their spatio-temporal analysis
+- Communicate their workflows and analysis results
+
+# Course features
+
+The course is intended as a blended learning module in our study program although the provided introductions, explanations and examples might be useful for self-study, too.
+
+# Deliverables
+
+The graded exam is based on a scientific presentation of 10 + 10 minutes (discussion) on a topic of your choice, applying the main techniques taught in the course. The topic should be motivated by personal interest and based on available data sets/your own classifications. Motivation, research questions and selected results as well as a critical discussion should be part of the presentation. The presentation as well as the scripts and sources used are to be published as a team portfolio (2 persons) on Github. One week before the presentation, an abstract of no more than one page is to be submitted.
+
+::: callout-note
+The presentation will take place in the last course session of the semester. 
+:::
 
 
-
-![](images/Adam-Savage-Quotes-3.jpg)
-
-Willkommen zur Kurs-Website **LV-19-d19-006-25** — gisma spatial science ressources.
+# Preparation and prerequisites
 
 
-
+The courses assumes basic knowledge and skills in remote sensing and GIS.

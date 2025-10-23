@@ -1,59 +1,15 @@
-# Course Website Template (Quarto)
 
-Ein Quarto-Gerüst für Kurs-Webseiten mit **Branding**, **Impressum** und **Auto-Deploy auf GitHub Pages**.
 
-Ein Blick auf die [Demo Seite](https://gisma-courses.github.io/web-template/) zeigt das Default-setup.
+![Course Header](https://gisma-courses.github.io/LV-19-d19-010-envi/images/remsens.png "Image source: C.Reudenbach")
 
-> Das Template kann grundsätzlich auch vollständig im Browser genutzt werden. Dann müssen jedoch alle Einträge, die `scripts/configure.py` nutzt, **online** in der `site-config.yaml` erfolgen . Das commiten löst dann die automatische Einrichtung der Seite aus
->
-> Empfehlenswert ist dennoch: Repo einmal lokal klonen, die `site-config.yaml` ausfüllen und anschließend `python3 scripts/configure.py` ausführen. Danach pushen – ab dann läuft der Build/Deploy automatisch und die Inhalte können bei Bedarf auch ausschließlich online weiterbearbeitet werden.
 
-------------------------------------------------------------------------
 
-## Quick Setup
+This course is part of [gisma spatial science ressources](https://gisma-courses.github.io/gc/) of the [Department of Geography](https://www.uni-marburg.de/fb19).
 
--   **Repo anlegen**
-    -   GitHub: *Use this template* → neues Repo
 
-    -   CLI (leerem Ordner):
+The course content is developed and hosted on Github. 
 
-        ``` bash
-        quarto use template ORG/REPO
-        # Trust? Y   •   Create subdirectory? n
-        ```
--   **Konfiguration**
-    -   **Online:** `site-config.yaml` im Webeditor ausfüllen → Push.\
-        *Der Workflow führt automatisch `python3 scripts/configure.py --noninteractive` aus.*
+The responsibility for the content rests with the instructors. Statements, opinions and/or conclusions are the ones from the instructors and do not necessarily reflect the opinion of the representatives of Marburg University.  
 
-    -   **Lokal (komfortabel):**
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
 
-        ``` bash
-        git clone https://github.com/<USER>/<REPO>.git
-        cd <REPO>
-        python3 scripts/configure.py --interactive   # fragt fehlende Felder
-        git commit -am "Apply site-config" && git push
-        ```
--   **Build & Deploy (automatisch)**
-    -   GitHub Actions rendert nach **`docs/`** und veröffentlicht via Pages.
--   **Einmalige GitHub-Einstellungen**
-    -   **Settings → Pages:** *Deploy from a branch* → **Branch:** `main` • **Folder:** `/docs`
-    -   **Settings → Actions → General:** *Workflow permissions* → **Read and write permissions**
--   **Tägliche Nutzung**
-    -   Inhalte ändern (`*.qmd`, Bilder) → `git push` → CI baut
-    -   Branding/Impressum ändern? → `site-config.yaml` anpassen\
-        (lokal `python3 scripts/configure.py` **oder** nur online; Workflow setzt’s automatisch)
--   **Hinweise / Stolpersteine**
-    -   Pflichtfelder in `site-config.yaml` nicht leer lassen (sonst Build-Fehler mit Hinweis)
-    -   Navbar-Rechts (`portal_text`, `portal_url`) wird nur dann gesetzt/überschrieben, wenn beide Werte vorhanden sind – also portal_text und portal_url!
-    -   404? Prüfe Pages-Einstellung (main/docs) & ob `docs/index.html` existiert
-    -   Alles in `./template/` gelandet? Beim `quarto use` **„Create subdirectory?“ → n**
-
-------------------------------------------------------------------------
-
-## Voraussetzungen
-
--   Quarto CLI (empfohlen ≥ 1.5): `quarto --version`
--   Python 3 zum Setup: `python3 --version`
--   GitHub-Repo mit Schreibrechten
-
-------------------------------------------------------------------------

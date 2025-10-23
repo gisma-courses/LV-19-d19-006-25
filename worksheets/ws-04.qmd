@@ -1,0 +1,32 @@
+---
+title: "Worksheet 3: Landscape metrics part 2"
+
+title-block-banner: ../images/splash_L03.png
+title-block-banner-color: black
+
+---
+
+## Exercises WS 3
+
+
+Please navigate to the [landscapemetrics](https://r-spatialecology.github.io/landscapemetrics/index.html) package.
+
+Run the following tutorials with the example data of this course:
+
+::: {.callout-tip appearance="minimal"}
+-   [Sample lsm](https://r-spatialecology.github.io/landscapemetrics/articles/guide_sample_lsm.html)
+-   [Irregular Areas](https://r-spatialecology.github.io/landscapemetrics/articles/irregular_areas.html)
+-   [Utilities](https://r-spatialecology.github.io/landscapemetrics/articles/utility.html)
+:::
+
+For the irregular vector data download the OSM data [e.g. from Geofabrik](https://download.geofabrik.de/) and use the category landuse. Note you need to merge [Niedersachsen](https://download.geofabrik.de/europe/germany/niedersachsen.html) and [Sachsen-Anhalt](https://download.geofabrik.de/europe/germany/sachsen-anhalt.html)
+
+
+### Addon
+::: {.callout-tip appearance="minimal"}
+
+
+- Download the fragstats tutorial [Analyzing a single grid](https://www.fragstats.org/download/Tutorial_2.zip).
+- Run the tutorial but use landscapemetrics instead
+
+:::

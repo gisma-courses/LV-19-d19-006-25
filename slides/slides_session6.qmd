@@ -1,0 +1,530 @@
+---
+title: "Change detection part 1"
+subtitle: "gdalcubes and STAC - new dimensions in time series and change detection analysis"
+author: "Chris Reudenbach"
+execute:
+  eval: false
+  echo: true
+title-slide-attributes:
+  data-background-image: slide1/preview-image-mof.png
+  #data-background-size: contain
+  data-background-opacity: "0.5"
+format:
+  revealjs:
+    theme: [../_extensions/metropolis-theme/metropolis.scss]
+    toc: false
+    toc-depth: 2
+    chalkboard: true
+    slide-number: true
+    footer: <gisma 2024>
+    menu: true
+lightbox: true
+spotlight:
+      useAsPointer: true
+      size: 5
+---
+
+## Retrieving Sentinel data 
+
+::: {.callout-important appearance="minimal"}
+
+:::
+
+# Introduction
+
+Sentinel-2 is currently the most important platform for Earth observation in all areas, but especially for climate change, land use and ecological issues at all levels, from the upper micro to the global scale.
+
+There are two operational Sentinel-2 satellites: Sentinel-2A and Sentinel-2B, both in sun-synchronous polar orbits and 180 degrees out of phase. This arrangement allows them to cover the mid-latitudes with an orbital period of about 5 days.
+
+The Sentinel-2 data are therefore predestined to record spatial and temporal changes on the Earth's surface (the forest was green in early summer, it has disappeared by late summer). They are ideal for timely studies before and after natural disasters, or for biomass balancing, etc.
+
+## Cloud-Optimised GeoTIFFs (COGs)
+
+Unfortunately, the official [Sentinel-2 archives](https://scihub.copernicus.eu/dhus/#/home) are anything but user-friendly. Even with very convenient tools such as [`sen2r`](https://sen2r.ranghetti.info/) it is sometimes tedious to process them.Technically, the processed product levels are available for download pre-processed as L1C and L2A products in JP2K format. The preferred file format is JP2K, which is storage efficient but has to be downloaded in its entirety locally by the user, resulting in high access costs and huge local storage requirements. The cloud-optimised GeoTIFFs (COGs) allow only the areas of interest to be downloaded and are also much faster to process. However, this requires optimised cloud services and a technically different access logic than in the processing chains used so far.
+
+## SpatioTemporal Asset Catalog (STAC)
+
+The [Spatial-Temporal Asset Catalogue] (https://stacspec.org/) (STAC) provides a common language for simplified indexing and discovery of geospatial data. A "Spatio-Temporal Asset" is a file that contains information in a specific space and time.
+
+This approach allows any provider of spatio-temporal data (imagery, SAR, point clouds, data cubes, full motion video, etc.) to provide Spatio-Temporal Asset Catalogues (STAC) for their data. STAC focuses on an easy-to-implement standard that organisations can use to make their data available in a durable and reliable way.
+
+[Element84](https://www.element84.com/) has provided a public API called Earth-search, a central search catalogue for all public AWS datasets using STAC (including the new Sentinel-2 COGs), which contains more than 11.4 million Sentinel-2 scenes worldwide as of 1 November 2017.
+
+# Goals
+
+This example shows how complex times series methods from external R packages can be applied in cloud computing environments using [`[rstac`](https://cran.r-project.org/package=rstac) [@rstac] and [`gdalcubes`](https://cran.r-project.org/package=gdalcubes) [@gdalcubes]. We will use the [`bfast` R package](https://cran.r-project.org/package=bfast) containing unsupervised change detection methods identifying structural breakpoints in vegetation index time series. Specifically, we will use the `bfastmonitor()` function to monitor changes on a dedicated timeperiod of a time series of Sentinel-2 imagery.
+
+Other packages used in this tutorial include [`stars`](https://cran.r-project.org/package=stars) [@stars], [`tmap`](https://cran.r-project.org/package=tmap) [@tmap] and [mapview](https://cran.r-project.org/package=tmap) [@mapview] for creating interactive maps, [`sf`](https://cran.r-project.org/package=sf) [@sf] for processing vector data, and [`colorspace`](https://cran.r-project.org/package=colorspace) [@colorspace] for visualizations with accessible colors.
+
+Various approaches to time series and difference analyses with different indices will be applied using the example of the MOF AOI for the time period 1997 - 2021.
+
+# Starting the Analysis
+
+## Setup the working environment
+
+```{r setup,comment = NA, echo=TRUE, message = FALSE, warnings = FALSE, results = FALSE }
+# adapt your directory this is following the concept of the envimaR structure
+tutorialDir = path.expand("data/")
+
+library(sf)
+library(raster)
+library(tidyverse)
+library(downloader)
+library(tmap)
+library(tmaptools)
+library(mapview)
+library(gdalcubes)
+library(OpenStreetMap)
+library(stars)
+library(colorspace)
+library(rstac)
+
+
+ndvi.col = function(n) {
+  rev(sequential_hcl(n, "Green-Yellow"))
+}
+
+ano.col = diverging_hcl(7, palette = "Red-Green",  register = "rg")
+
+
+```
+
+## Defining the Area of Interest
+
+One major challenge is the fact that most of the earth surface related remote sensing activities are heavily *"disturbed"* by the atmosphere, especially by clouds. So to find cloud free satellite imagery is a common and cumbersome task. This task is supported by the `rstac` package which provides a convenient tool to find and filter adequate Sentinel-2 images out of the COG data storage. However, to address the AOI we need to provide the extend via the `bbox` argument of the corresponding function `stac_search()`. So first we need to derive and transform the required bounding box to WGS84 geo-coordinates, easily done with the `sf` functions `st_bbox()` and `st_transform()`. In addition we adapt the projection of the referencing vector objects to all other later projection needs.
+
+::::: boxSuccess
+<br>
+
+<p class="textline">
+
+Please note to project to three different CRS is for this examples convenience and clarity and somewhat superfluous. Only the corner coordinates of the sections are required and not the complete geometries. However, it creates more clarity for the later process to already have the data needed in different projections.\
+
+</div>
+
+</p>
+
+```{r geometries}
+library(tmap)
+library(tmaptools)
+utils::download.file(url="https://github.com/gisma/gismaData/raw/master/MOF/MOF_CORE.gpkg",destfile="../data/MOF_CORE.gpkg")
+
+forest_mask = st_read("../data/MOF_CORE.gpkg")
+sf::st_crs(forest_mask) <- 4326
+fm=bb(forest_mask,projection=4326)
+forest_4326 =st_transform(forest_mask,crs = 4326)
+forest_3035 =st_transform(forest_mask,crs = 3035)
+forest_32632 =st_transform(forest_mask,crs = 32632)
+
+
+# call background map
+osm_forest <- tmaptools::read_osm(fm,type = "bing")
+
+# mapping the extents and boundaries of the choosen geometries
+tmap_mode("view")
+tmap_options(check.and.fix = TRUE) + 
+  tm_basemap(server = c("Esri.WorldGrayCanvas", "OpenStreetMap", "Esri.WorldTopoMap","Esri.WorldImagery")) +
+  tm_shape(forest_mask) +   
+  tm_polygons(alpha = 0.4, col="mainTreeSp")
+```
+
+Our study area is pretty small, covering roughly 2.5 by 2.5 km forest area northwest of Marburg. The core part of the AOI is the Marburg Open Forest (MOF) a field research facility of the Philipps University Marburg.
+
+### Querying images with `rstac`
+
+Using the `rstac` package, we first request all available images from 2017 to 2020 that intersect with our region of interest. Here, since the polygon has WGS84 as CRS, we do **not** need to transform the bounding box before using the `stac_search()` function.
+
+```{r stac2}
+# search the data stack for the given period and area
+library(rstac)
+
+s = stac("https://earth-search.aws.element84.com/v0")
+items <- s |>
+  stac_search(collections = "sentinel-s2-l2a-cogs",
+              bbox = c(st_bbox(forest_4326)["xmin"],
+                       st_bbox(forest_4326)["ymin"],
+                       st_bbox(forest_4326)["xmax"],
+                       st_bbox(forest_4326)["ymax"]), 
+              datetime = "2018-01-01/2022-12-31",
+              limit = 1000) |>
+  post_request() 
+items
+
+# print date and time of first and last images
+range(sapply(items$features, function(x) {x$properties$datetime}))
+```
+
+This gives us 315 matching images recorded between Januar 2019 and December 2023.
+
+### Creating a monthly Sentinel-2 data cube
+
+To obtain a Sentinel data cube, a gdalcube image collection must be created from the STAC query result. To do this, the asset names must be explicitly named in order to apply the SCL channel with the quality characteristics per pixel (classification as clouds, cloud shadows, etc.). In this query, a filter is set to cloud cover <= 50%.
+
+```{r add_cube_assets}
+library(gdalcubes)
+assets = c("B01","B02","B03","B04","B05","B06", "B07","B08","B8A","B09","B11","SCL")
+s2_collection = stac_image_collection(items$features, asset_names = assets, property_filter = function(x) {x[["eo:cloud_cover"]] < 50}) 
+s2_collection
+```
+
+The result is 107 images, i.e. approx. 1.8 images per month, from which we can now create a data cube. To do this, we use the UTM bounding box of our polygon as a spatial boundary, a spatial resolution of 10 metres, a bilinear spatial interpolation (useful for the spatially lower-resolution sentinel channels) and calculate monthly median values for all pixel values from the available images of a month. In addition, we add a buffer (b) on each side of the cube.
+
+
+:::: boxSuccess
+<br>
+
+<p class="textline">
+
+The *gdalcube image collection* can be considered as a proxy structure object which will be applied on the COGs.
+
+</div>
+
+</p>
+
+```{r create_cubeview, messages=FALSE, warnings=FALSE}
+b = 100
+v = cube_view(srs = "EPSG:32632", 
+              dx = 10, 
+              dy = 10, 
+              dt = "P1M",  
+              aggregation = "median", 
+              extent = list(t0 = "2018-01-01",
+                            t1 = "2022-12-31", 
+                            left = st_bbox(forest_32632)["xmin"] - b, 
+                            right = st_bbox(forest_32632)["xmax"] + b,
+                            bottom = st_bbox(forest_32632)["ymin"] - b, 
+                            top = st_bbox(forest_32632)["ymax"] + b),
+              resampling = "bilinear")
+v
+```
+
+Next we create a data cube, subset the red and near infrared bands and crop by our polygon, which simply sets pixel values outside the polygon to NA. We then save the data cube as a single netCDF file. Note that this is not necessary, but saving intermediate results sometimes makes debugging easier, especially if the methods applied afterwards are computationally intensive.
+
+::: boxSuccess
+<br>
+
+<p class="textline">
+
+Only calling a final *action* will start the processing on the COG-Server. In this case 'write_ncdf'.
+
+</div>
+
+</p>
+
+```{r get_data_write_ncdf}
+# we "download" the data and write it t a netcdf file
+  s2.mask = image_mask("SCL", values = c(3,8,9))
+  gdalcubes_options(parallel = 16, ncdf_compression_level = 5)
+  raster_cube(s2_collection, v, mask = s2.mask) |>
+    write_ncdf("../data/MOF_10_2.nc",overwrite=TRUE)
+```
+
+In the following examples we will show a simple plot in a generic pipe. However, a more common visualisation is quite simple. A typical pipe might be Save a resulting netCDF file `->` Convert it to a `stars` object `->` Visualise the results with `tmap`, `mapview`, `ggplot2` or whatever package you prefer to produce (interactive) map(s).
+
+## Reductions
+
+Possible *reducers* include `min"`, `mean"`, `median"`, `max"`, `count"` (count non-missing values), `sum"`, `var"` (variance), and `sd"` (standard deviation). Reducer expressions are always given as a string, starting with the reducer name, followed by the band name in parentheses. Note that it is possible to mix reducers and bands.
+
+### Counting
+
+To get an idea of the data, we can compute simple summary statistics using a 'reducer' function over dimensions. For example, using the `count` reducer, we can learn about the temporal coverage for each aggregated pixel, giving us an initial understanding of the temporal quality of the dataset.
+
+```{r count, messages=FALSE, warnings=FALSE}
+
+ncdf_cube("../data/MOF_10_2.nc") |>
+  reduce_time("count(B04)") |> 
+  plot(key.pos = 1,  col = viridis::viridis, nbreaks = 10)
+```
+
+We can see that most time series contain valid observations of around 60 months, which should be sufficient for our example. Similarly, it is also possible to reduce over space, leading to summary time series.
+
+Below you will find various examples dealing with the common NDVI and the [kNDVI](https://advances.sciencemag.org/content/7/9/eabc7447) Indices.
+
+### kNDVI
+
+Below, we derive mean monthly kNdvi values over all pixel time series.
+
+```{r forest_kndvi, messages=FALSE, warnings=FALSE}
+
+ncdf_cube("../data/MOF_10_2.nc") |>
+    apply_pixel("tanh(((B08-B04)/(B08+B04))^2)", "kNDVI") |>
+  reduce_time("mean(kNDVI)") |>
+  plot(key.pos = 1,  col = ndvi.col, nbreaks = 12)
+```
+
+## NDVI
+
+Below, we derive mean monthly Ndvi values over all pixel time series.
+
+```{r forest_ndvi, messages=FALSE, warnings=FALSE}
+ncdf_cube("../data/MOF_10_2.nc") |>
+  apply_pixel("(B08-B04)/(B08+B04)", "NDVI") |>
+  reduce_time("mean(NDVI)") |>
+  plot(key.pos = 1, zlim=c(-0.2,1), col = ndvi.col, nbreaks = 12)
+```
+
+### Zonal Statistics
+
+```{r zonal, messages=FALSE, warnings=FALSE}
+
+
+zstats = ncdf_cube("../data/MOF_10_2.nc") |>
+  apply_pixel("(B08-B04)/(B08+B04)", "NDVI") |>
+  extract_geom(forest_32632,FUN=median) 
+
+forest_32632$FID = rownames(forest_32632)
+x = merge(forest_32632, zstats, by = "FID")
+mapview(x[x$time == "2020-07", "NDVI"],col.regions = ndvi.col)
+```
+
+### Timeseries
+
+```{r timeseries_kndvi_forest2, messages=FALSE, warnings=FALSE}
+ncdf_cube("../data/MOF_10.nc") |>
+  apply_pixel("tanh(((B08-B04)/(B08+B04))^2)", "kNDVI") |>
+  reduce_space("min(kNDVI)", "max(kNDVI)", "mean(kNDVI)") |>
+  plot(join.timeseries = TRUE)
+
+```
+
+### Calculate the annual NDVI difference - using functions
+
+The following function will iterate through 3 years of NDVI data and calculating NDVI difference maps for each pair of years.
+
+```{r automatic, messages=FALSE, warnings=FALSE}
+
+gdalcubes_options(parallel =  12)
+
+# ndvi operand
+ndvi_type = "median(kNDVI)"
+
+# time slots as tibble
+ts = tibble(t0 = c("2018-04-01","2019-04-01","2020-04-01","2021-04-01"), 
+            t1= c("2018-09-01","2019-09-01","2020-09-01","2021-09-01"))
+
+# names of the time slots
+names_ndvi = paste(ts$t0,ts$t1,sep = " to ")
+
+basic_kndvi <- function(fncube=NULL, t0=NULL, t1=NULL) {
+  ncdf_cube(fncube) |> 
+    select_bands(c("B04", "B08")) |>
+    select_time(c(t0,t1)) |>
+  apply_pixel("tanh(((B08-B04)/(B08+B04))^2)", "kNDVI") |>
+    reduce_time(ndvi_type)
+}
+
+# (stac-search -> stac and cloud filter image collection -> create cube -> call user function)
+ndvi = list()
+for (i in 1:nrow(ts)){
+  # call user function
+  basic_kndvi(fncube = "../data/MOF_10.nc", t0 = ts$t0[i], t1 = ts$t1[i]) %>%
+    st_as_stars() -> ndvi[[i]]
+  
+}
+
+# now we may create a mask according to the NDVI extent and resolution
+stars::write_stars(ndvi[[1]] * 0, paste0(tutorialDir,"forest/only_forestmask.tif"))
+gi=link2GI::linkGDAL(searchLocation = "/usr/bin/")
+cmd=gi$bin[[1]]$gdal_bin[14]
+system(paste(cmd ,'-burn 1.0 -tr 10.0 10.0 -a_nodata 0.0 -te ', st_bbox(ndvi[[1]])$xmin,' ',st_bbox(ndvi[[1]])$ymin,' ',st_bbox(ndvi[[1]])$xmax,' ',st_bbox(ndvi[[1]])$ymax,' -ot Float32 -of GTiff', paste0(tutorialDir,"forest/MOF_mask_pr.shp "),paste0(tutorialDir,"forest/only_forestmask.tif")))
+mask <- raster(paste0(tutorialDir,"forest/only_forestmask.tif"))
+plot(mask)                                
+
+mask[mask == 0] = NA
+
+# mapping the results
+tmap_mode("plot")
+tm_ndvi = lapply(seq(2:length(names_ndvi) -1),function(i){
+  m = tm_shape(osm_forest) + tm_rgb() +
+    tm_shape((ndvi[[i]] - ndvi[[i+1]]) * st_as_stars(mask )) +
+    tm_raster(title = ndvi_type,pal =diverging_hcl(11, "rg")) +
+    tm_layout(panel.labels = paste("Difference ",names_ndvi[[i]],"/",names_ndvi[[i+1]]),
+              legend.show = TRUE,
+              panel.label.color = "darkblue",
+              panel.label.size =0.5,
+              panel.label.height=1.2,
+              legend.text.size = 0.3,
+              legend.outside = TRUE) +
+    tm_grid()
+})
+
+
+# tmap_arrange(tm_ndvi,nrow = 1,asp = NA,widths = c(0.33,0.33,0.33),outer.margins = 0.001)
+```
+
+#### Resulting maps
+
+```{r tm_ndvi, echo=FALSE, messages=FALSE, warnings=FALSE}
+
+tm_ndvi[[1]]
+tm_ndvi[[2]]
+tm_ndvi[[3]]
+
+```
+
+## Use case: Spatial identification of magnitudes and time periods of kNDVI changes
+
+To apply a more complex time series method such as `bfastmonitor()`, the data cube operations below allow to provide custom user-defined R functions instead of string expressions, which translate to built-in reducers. It is very important that these functions receive arrays as input and must return arrays as output, too. Depending on the operation, the dimensionality of the arrays is different:
+
+| Operator | Input | Output |
+|:-----------------------|:-----------------------|:-----------------------|
+| `apply_pixel` | Vector of band values for one pixel | Vector of band values of one pixel |
+| `reduce_time` | Multi-band time series as a matrix | Vector of band values |
+| `reduce_space` | Three-dimensional array with dimensions bands, x, and y | Vector of band values |
+| `apply_time` | Multi-band time series as a matrix | Multi-band time series as a matrix |
+
+There is almost no limit of what R function we use, but we must take care of a few things: 1. The reducer function is executed in a new R process without access to the current workspace. It is not possible to access variables defined outside of the function and packages must be loaded **within** the function. 2. The reducer function **must** always return a vector with the same length (for all time series). 3. It is a good idea to think about `NA` values, i.e. you should check whether the complete time series is `NA`, and that missing values do not produce errors.
+
+Another possibility to apply R functions to data cubes is of course to convert data cubes to `stars` objects and use the `stars` package for further analysis.
+
+### Applying `bfastmonitor` as a user-defined reducer function
+
+In our example, `bfastmonitor` returns change date and change magnitude values per time series so we can use `reduce_time()`. The script below (1) calculates the [kNDVI](https://advances.sciencemag.org/content/7/9/eabc7447), (2) applies `bfastmonitor()`, and properly handles errors e.g. due to missing data with `tryCatch()`, and (3) finally writes out the resulting change dates and magnitudes of change for all pixels of the time series as a netCDF file. The results shows the changes starting at 1/2019 until 12/2021 and identify pretty well the dynamical impacts of drought and bark beetle in the Marburg University Forest (MOF).
+
+```{r calc_bfast , messages=FALSE, warnings=FALSE}
+
+library(sf)
+library(tmap)
+library(tmaptools)
+library(gdalcubes)
+library(stars)
+library(colorspace)
+ndvi.col = function(n) {
+  rev(sequential_hcl(n, "Green-Yellow"))
+}
+tutorialDir = path.expand("~/edu/agis/doc/data/tutorial/")
+
+figtrim <- function(path) {
+  img <- magick::image_trim(magick::image_read(path))
+  magick::image_write(img, path)
+  path
+}
+gdalcubes_options(parallel = 12)
+## start analysis
+system.time(
+  ncdf_cube("../data/MOF_10.nc") |>
+    reduce_time(names = c("change_date", "change_magnitude","kndvi"), FUN = function(x) {
+      kndvi = tanh(((x['B08',]-x['B04',])/(x['B08',]+x['B04',]))^2)
+      if (all(is.na(kndvi))) {
+        return(c(NA,NA))
+      }
+      kndvi_ts = ts(kndvi, start = c(2017, 1), frequency = 12)
+      library(bfast)
+      tryCatch({
+        result = bfastmonitor(kndvi_ts, start = c(2020,1), 
+                              history = "all", level = 0.01)
+        return(c(result$breakpoint, result$magnitude))
+      }, error = function(x) {
+        return(c(NA,NA))
+      })
+    }) |>
+    write_ncdf(paste0(tutorialDir,"bf_results.nc"),overwrite = TRUE))
+```
+
+Now we can use the netCDF file and map the results with any preferred visualisation tool. In this case `tmap`.
+
+```{r plot_bfast, eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
+library(tmap)
+
+mask <- raster(paste0(tutorialDir,"forest/only_forestmask.tif"))
+# plotting it from the local ncdf  
+tmap_mode("view")
+gdalcubes::ncdf_cube(paste0(tutorialDir,"bf_results.nc")) |>
+  stars::st_as_stars() -> x
+tm_shape(osm_forest) + tm_rgb() +
+  tm_shape(x[1] * st_as_stars(mask )) + 
+  tm_raster(n = 6)  +
+  tm_layout(
+    legend.show = TRUE,
+    panel.label.height=0.6,
+    panel.label.size=0.6,
+    legend.text.size = 0.4,
+    legend.outside = TRUE) +
+  tm_grid()
+
+tm_shape(osm_forest) + tm_rgb() +
+  tm_shape(x[2]* st_as_stars(mask ))  + tm_raster() +
+  tm_layout(legend.title.size = 1,
+            panel.label.height=0.6,
+            panel.label.size=0.6,
+            legend.text.size = 0.4,
+            legend.outside = TRUE) +
+  tm_grid()
+
+```
+
+```{r plot_bfast_worker, echo=FALSE, message=FALSE, warning=FALSE}
+library(tmap)
+
+mask <- raster(paste0(tutorialDir,"forest/only_forestmask.tif"))
+# plotting it from the local ncdf  
+tmap_mode("view")
+gdalcubes::ncdf_cube(paste0(tutorialDir,"bf_results.nc")) |>
+  stars::st_as_stars() -> x
+tmap::tmap_save(tm_shape(osm_forest) + tm_rgb() +
+  tm_shape(x[1] * st_as_stars(mask )) + 
+  tm_raster(n = 6)  +
+  tm_layout(legend.title.size = 1,
+    legend.show = TRUE,
+    panel.label.height=0.6,
+    panel.label.size=0.6,
+    legend.text.size = 0.4,
+    legend.outside = TRUE) +
+  tm_grid(), file = "m1.html" ) 
+
+tmap::tmap_save(tm_shape(osm_forest) + tm_rgb() +
+  tm_shape(x[2]* st_as_stars(mask ))  + tm_raster() +
+  tm_layout(legend.title.size = 1,
+    legend.show = TRUE,
+    panel.label.height=0.6,
+    panel.label.size=0.6,
+    legend.text.size = 0.4,
+    legend.outside = TRUE) +
+  tm_grid(),file = "m2.html" ) 
+
+```
+
+<iframe valign="center" src="m2.html" width="1024" height="960" frameborder="0" allowfullscreen="allowfullscreen">
+
+</iframe>
+
+<figcaption>*Magnitude Change Map* </figcaption>
+
+<p>
+
+<iframe valign="center" src="m1.html" width="1024" height="960" frameborder="0" allowfullscreen="allowfullscreen">
+
+</iframe>
+
+<figcaption>*Period of Change Map* </figcaption>
+
+Running `bfastmonitor()` is computationally expensive. However, since in common (*not in our case*) the data should be located in the cloud, it would be obvious to launch one of the (payed) more powerful machine instance types with many processors. Parallelization within one instance can be controlled entirely by `gdalcubes` using `gdalcubes_options()` which is extremely simple.
+
+From a scientific point of view we need to tune some aspects. The kNDVI Index together with the `bfastmonitor` approach is somewhat sophisticated and need a validation strategy. Also the correlation to the different tree species could be promising. So there is certainly a need for more analysis to understand the processes and to identify false results.
+
+# Summary
+
+This examples have shown, how simple and more more complex methods can be applied on data cubes. Especially the chosen approach to just *"download"* the data from a COG server and perform the processing on the local machine is kind of promising due to the fact that the code can be run almost identically on a cloud instance. The use of more common or well known functionalities and packages helps a lot migrating to `gdalcubes` concept.
+
+It is even more powerful to use this workflow for extremely comfortable multisensor multiscale approaches.
+
+# References
+:::
+::::
+:::::
+
+
+
+------------------------------------------------------------------------
+
+## Minimum temperature (°C)
+
+::::: columns
+::: {.column width="45%"}
+![CMIP6 downscaled future climate projection for 2061-2080 \[model: CNRM-ESM2-1; ssp: “585”\]](../assets/cmip.png)
+:::
+
+::: {.column width="45%"}
+![WorldClim version 2.1 climate data for 1970-2000](../assets/wc.png)
+:::
+:::::

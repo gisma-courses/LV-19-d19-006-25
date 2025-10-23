@@ -1,0 +1,28 @@
+---
+title: "Prerequisies"
+comments: false
+title-block-banner: ../images/climatroof-sp.jpg
+title-block-banner-color: black
+
+---
+
+
+
+## Prerequisites
+
+Participants are expected to have a working recent version of R and RStudio installed, along with several R packages listed below.
+
+- R: <https://cloud.r-project.org/>
+- RStudio: <https://posit.co/download/rstudio-desktop/#download>
+
+```r
+install.packages("remotes")
+pkg_list = c("terra", "sf", "landscapemetrics", "motif", "tidyr", "dplyr")
+remotes::install_cran(pkg_list)
+```
+
+## Exercises
+
+The slides are accompanied by practical exercises.
+The best way to get them is to download the exercises repository as a ZIP file from <https://github.com/gisma-courses/LV-19-d19-006-24/blob/main/assets/exercises-session1.zip> and unpack it on your computer.
+Then, you can open the `.Rproj` file and start working on the exercises in RStudio.

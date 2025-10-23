@@ -1,0 +1,39 @@
+---
+title: "Worksheet 7: Reproducible Analysis Workflows"
+
+title-block-banner: ../images/splash_L03.png
+title-block-banner-color: black
+
+---
+
+
+
+Achieving reliable monitoring hinges on the reproducibility of both field data collection and subsequent analyses. In the context of spatial micro-scale analysis and modeling, the precise geo-object locations play a central role, presenting an additional challenge when considering the 3D structure. Incorporating the temporal aspect, such as accurately recording repeated flights, further elevates these demands. Whether utilizing low-cost or professional UAV systems, these factors must be acknowledged to enable meaningful analysis or modeling. While LiDAR systems are the preferred choice for acquiring forest structure, their high cost, both in acquisition and processing, poses challenges. A feasible alternative lies in off-the-shelf UAV systems with integrated image acquisition. These systems allow for the generation of not only orthorectified planar image data but also quasi-three-dimensional point clouds through photo reconstruction and image processing techniques, providing elevation information for each coordinate.
+
+## Aims and Goals
+
+Reproducibility in Data Acquisition and Analysis:
+
+Aims: Establish a framework for reproducible and automated data acquisition and analysis, crucial for robust monitoring.
+
+Goals: Ensure that the 3D parameters and forest ecological metrics are calculated in a fully reproducible manner, enabling accurate spatial micro-scale modeling.
+
+Integration of Temporal and Spatial Aspects:
+
+Aims: Address the challenges posed by the 3D structure and temporal aspects in UAV-based monitoring.
+Goals: Achieve meaningful analysis and modeling by acknowledging and incorporating precise geo-object locations and accurate recording of repeated flights.
+
+Cost-Effective Alternatives for Forest Structure Acquisition:
+
+Aims: Explore alternatives to expensive LiDAR systems for acquiring forest structure.
+Goals: Utilize off-the-shelf UAV systems with integrated image acquisition to generate quasi-three-dimensional point clouds, providing elevation information in a cost-effective manner.
+
+Automated and Reproducible Workflows:
+
+Aims: Develop automated workflows that streamline data processing and analysis.
+Goals: Enable a robust and efficient classification method using machine learning object-based image analysis (OBIA), ensuring complex classification goals can be achieved with minimal technical expertise.
+
+## Project Repository
+
+* [forenius-pp repository for additional functions](https://gitlab.uni-marburg.de/reudenba/forgenius-pp)
+

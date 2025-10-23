@@ -1,0 +1,315 @@
+---
+title: "Pattern-based spatial analysis"
+subtitle: "How to discover and to describe"
+author: "Chris Reudenbach"
+execute:
+  eval: false
+  echo: true
+title-slide-attributes:
+  data-background-image: slide1/preview-image-mof.png
+  #data-background-size: contain
+  data-background-opacity: "0.5"
+format:
+  revealjs:
+    theme: [../_extensions/metropolis-theme/metropolis.scss]
+    toc: false
+    toc-depth: 2
+    chalkboard: true
+    slide-number: true
+    footer: <gisma 2024>
+    menu: true
+lightbox: true
+spotlight:
+      useAsPointer: true
+      size: 5
+---
+
+## Spatial Patterns
+
+In recent years, the ideas of analyzing spatial patterns have been extended through an approach called **pattern-based spatial analysis** [(Long in in. 2010; Cardille in in. 2010; Cardille in in. 2012; Jasiewicz i in. 2013; Jasiewicz i in. 2015)]{.smallcaps}.
+
+The fundamental idea is to divide a big area into a large number of smaller areas which we may call local landscapes patches.
+
+::: {.callout-important appearance="minimal"}
+Note: The patch size is depending on spatial data resolution and scale of the landscape
+:::
+
+::::: columns
+::: {.column width="25%"}
+![](/assets/ng_grid.png)
+:::
+
+::: {.column width="45%"}
+The idea is to represent each of this arbitrary areas using a statistical description of the spatial pattern - a **spatial signature**.
+:::
+:::::
+
+This spatial signatures can be **compared** using a large number of existing **distance or dissimilarity measures** [(Lin 1991; Cha 2007)]{.smallcaps}, which enables spatial analyses such as searching, change detection, clustering, or segmentation.
+
+------------------------------------------------------------------------
+
+
+## Spatial Signatures
+
+
+Most landscape metrics are single numbers representing specific features of a local landscape.
+
+Spatial signatures, on the other hand, are multi-element representations of landscape composition and configuration.
+
+:::: [.columns]
+
+::: {.column width="45%"}
+![](/assets/index-29-bis-1.png)
+:::
+
+::: {.column width="45%"}
+The basic signature is the co-occurrence matrix:
+![](/assets/cooc.png)
+:::
+::::
+
+---
+
+## Spatial signatures dimension reduction & normalisation
+
+::::: columns
+
+::: {.column width="45%"}
+
+
+
+![](/assets/index-31-1.png)
+:::
+
+::: {.column width="45%"}
+
+::: fragment
+
+![**Reduced co-occurrence vector (cove)**](/assets/cove1.png)
+:::
+
+::: fragment
+
+![**Normalized co-occurrence vector(cove)**](/assets/cove3.png)
+:::
+::: fragment
+
+![**Co-occurrence vector (cove)**](/assets/cove3.png)
+:::
+
+:::
+:::::
+
+
+---
+
+## Dissimilarity measures Example 1
+
+Measuring the distance between two signatures in the form of normalised vectors allows the dissimilarity between spatial structures to be determined. The package [**motif**] (https://jakubnowosad.com/motif/) is designed to do this work.
+
+::::: columns
+
+::: {.column width="30%"}
+
+
+
+![](/assets/index-35-1.png)
+![](/assets/di1.png)
+:::
+
+::: {.column width="25%"}
+:::
+
+::: {.column width="30%"}
+
+
+
+![](/assets/index-37-1.png)
+![](/assets/di2.png)
+
+
+
+
+:::
+:::::
+
+::: fragment
+
+![Jensen-Shannon distance between the above rasters: **0.0684**](/assets/jsd1.png){width=35% fig-align="center"}
+
+
+:::
+
+---
+
+
+## Dissimilarity measures Example 2
+
+Measuring the distance between two signatures in the form of normalized vectors allows determining dissimilarity between spatial structures.
+
+::::: columns
+
+::: {.column width="30%"}
+
+
+
+![](/assets/index-40-1.png)
+![](/assets/di3.png)
+:::
+
+::: {.column width="25%"}
+:::
+
+::: {.column width="30%"}
+
+
+
+![](/assets/index-41-1.png)
+![](/assets/di4.png)
+
+
+
+
+:::
+:::::
+
+::: fragment
+
+![Jensen-Shannon distance between the above rasters: **0.444**](/assets/jsd2.png){width=35% fig-align="center"}
+:::
+
+---
+
+## Pattern-based spatial analysis
+
+The distance between spatial signatures provides a powerful possibility to identify (dis)similarities in several contexts.
+
+:::: {layout="[30,30,30]" layout-valign="bottom"}
+
+![finding similar spatial structures - **one to many** comparison](/assets/lsp_search4.png)
+
+![quantitative assessment of changes in spatial structures - **one to one** comparison](/assets/lsp_compare2.png)
+
+
+![clustering similar spatial structures - **many to many** comparison](/assets/lsp_cluster4.png)
+
+
+::::
+
+---
+
+## One to many
+
+Finding areas with similar topography to the Suwalski Landscape Park
+
+::::: {layout="[1,1]" layout-valign="bottom"}
+
+![Topography Indices](/assets/lsp_search2.png){width="85%"}
+
+![JSD Index](/assets/lsp_search4.png){width="85%"}
+:::::
+
+---
+
+## One to one
+
+
+The left maps are showing that many areas in the Amazon have undergone significant land cover changes between 1992 and 2018. The challenge now is to determine which areas have changed the most. The right map shows these areas identified by high JSD values. 
+
+::: {.callout-important appearance="minimal"}
+Note that changes in both **category and spatial configuration** are measured.
+:::
+
+::::: {layout="[0.75,0.35]" layout-valign="bottom"}
+
+![Landuse Types](/assets/lsp_compare1.png){width="85%"}
+
+![JSD Index](/assets/lsp_compare2.png){width="85%"}
+:::::
+
+---
+
+## Many to many
+
+Areas in Africa with similar spatial structures for two themes have been identified - land cover and landforms.
+
+![](/assets/lsp_cluster_map.png)
+
+---
+
+## Many to many
+
+![](/assets/lsp_cluster6.png){fig-align="center" width=75% }
+
+The quality of each cluster can be assessed using metrics:
+
+- **Intra-cluster heterogeneity**: determines distances between all landscapes within a group
+- **Inter-cluster isolation**: determines distances between a given group and all others
+
+---
+
+## Examples
+
+### coma
+
+```{r}
+library(terra)
+library(motif)
+r9 = rast("../exdata/r9.tif")
+r9_sign_coma = lsp_signature(r9, type = "coma")
+r9_sign_coma
+r9_sign_coma$signature
+```
+
+### cove
+
+```{r}
+r9_sign = lsp_signature(r9, type = "cove")
+r9_sign
+r9_sign$signature
+```
+
+### search
+
+```{r}
+
+library(sf)
+landcover = rast(system.file("raster/landcover2015s.tif", package = "motif"))
+ecoregions = read_sf(system.file("vector/ecoregionss.gpkg", package = "motif"))
+ecoregion1 = ecoregions[1, ]
+landcover1 = crop(landcover, ecoregion1, mask = TRUE)
+plot(landcover)
+plot(landcover1)
+
+search_result = lsp_search(landcover1, landcover, 
+                           type = "cove", dist_fun = "jensen-shannon", window = 25,
+                           output = "sf")
+plot(search_result["dist"])
+```
+
+### min/max
+
+```{r}
+search_result$id[which.min(search_result$dist)]
+search_results_75 = lsp_extract(landcover, window = 25, id = 75)
+plot(search_results_75)
+
+search_result$id[which.max(search_result$dist)]
+search_results_215 = lsp_extract(landcover, window = 25, id = 215)
+plot(search_results_215)
+
+```
+
+
+
+---
+
+## Exercises
+
+1. Read the study area polygon from the `exdata/harz_borders.gpkg` file using the `read_sf()` function from the **sf** package.
+2. Read the land cover raster data for Europe from the file `exdata/lc_europe.tif` using the function `rast()` from the package **terra**. Visualise both datasets.
+2. Crop and mask the raster to the polygon boundaries. Visualise the results.
+2. Compute a spatial signature for the study area. Can you understand its meaning?
+2. Find out which areas of the Europe raster are most similar to the study area (this may take a minute or so). Try different window sizes (e.g. 200 or 500).
+
+

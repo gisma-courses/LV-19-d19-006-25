@@ -1,0 +1,13 @@
+---
+title:  "Worksheets HowTo"
+
+title-block-banner: ../images/envi_met_title.png
+title-block-banner-color: black 
+---
+
+The Working Sheets will provide weekly assignments related to the general task of reaching out for the course goals.
+
+
+* Mandatory assignments (Studienleistung) will be marked as ![](../images/mandantory.png){width=10% height=9% fig-align="right"}
+* Graded examinations (Prüfungsleistung)  will be marked as ![](../images/graded.png){width=7% height=10% fig-align="right"}
+
