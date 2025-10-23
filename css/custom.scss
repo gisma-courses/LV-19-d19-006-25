@@ -23,6 +23,7 @@
 
 /*-- scss:defaults --*/
 /* Compile-time Fallbacks für Bootstrap/Bootswatch */
+@use "sass:color";
 $brand: #33A0D4;     // ← wird vom Template ersetzt
 $brand-font: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;
 
@@ -37,7 +38,7 @@ $link-color: $brand;
   --brand: #{$brand};
   --bs-primary: var(--brand);
   /* wichtig: RGB setzen, damit .bg-primary zuverlässig gefärbt wird */
-  --bs-primary-rgb: #{red($brand)}, #{green($brand)}, #{blue($brand)};
+  --bs-primary-rgb: #{color.red($brand)}, #{color.green($brand)}, #{color.blue($brand)};
   --bs-link-color: var(--brand);
   --bs-link-hover-color: color-mix(in srgb, var(--brand) 85%, black);
 }
@@ -47,7 +48,7 @@ $link-color: $brand;
 .quarto-dark {
   --brand: #{$brand};
   --bs-primary: var(--brand);
-  --bs-primary-rgb: #{red($brand)}, #{green($brand)}, #{blue($brand)};
+  --bs-primary-rgb: #{color.red($brand)}, #{color.green($brand)}, #{color.blue($brand)};
   --bs-link-color: var(--brand);
   --bs-link-hover-color: color-mix(in srgb, var(--brand) 85%, white);
 }
