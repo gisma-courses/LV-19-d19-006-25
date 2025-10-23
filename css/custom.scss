@@ -20,7 +20,7 @@
      - Wir setzen zusätzlich --bs-primary-rgb, sonst bleibt .bg-primary oft blau.
      - Wir beeinflussen nur HTML; PDF/DOCX sind unberührt.
    ========================================================================== */
-@use "sass:color";
+
 /*-- scss:defaults --*/
 /* Compile-time Fallbacks für Bootstrap/Bootswatch */
 
@@ -38,14 +38,15 @@ $link-color: $brand;
   --brand: #{$brand};
   --bs-primary: var(--brand);
   /* wichtig: RGB setzen, damit .bg-primary zuverlässig gefärbt wird */
-/* Light theme block */
---bs-primary-rgb: #{to-rgb($brand)};  // ← uses Bootstrap’s helper
-
-/* Dark theme block */
+/* Light */
 --bs-primary-rgb: #{to-rgb($brand)};
 
-/* Auto-contrast for navbar text */
-$nav-fg: color-contrast($brand);     
+/* Dark */
+--bs-primary-rgb: #{to-rgb($brand)};
+
+/* Auto-Kontrast in der Navbar */
+$nav-fg: color-contrast($brand);
+
   --bs-link-color: var(--brand);
   --bs-link-hover-color: color-mix(in srgb, var(--brand) 85%, black);
 }
@@ -55,15 +56,15 @@ $nav-fg: color-contrast($brand);
 .quarto-dark {
   --brand: #{$brand};
   --bs-primary: var(--brand);
-/* Light theme block */
---bs-primary-rgb: #{to-rgb($brand)};  // ← uses Bootstrap’s helper
-
-/* Dark theme block */
+ /* Light */
 --bs-primary-rgb: #{to-rgb($brand)};
 
-/* Auto-contrast for navbar text */
-$nav-fg: color-contrast($brand);     
-  --bs-link-color: var(--brand);
+/* Dark */
+--bs-primary-rgb: #{to-rgb($brand)};
+
+/* Auto-Kontrast in der Navbar */
+$nav-fg: color-contrast($brand);
+ --bs-link-color: var(--brand);
   --bs-link-hover-color: color-mix(in srgb, var(--brand) 85%, white);
 }
 
