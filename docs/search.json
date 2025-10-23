@@ -1714,9 +1714,9 @@
   {
     "objectID": "slides/slide0.html#scientific-process-overview",
     "href": "slides/slide0.html#scientific-process-overview",
-    "title": "From Foundations to Results: A Scientific Workflow",
+    "title": "A Scientific Workflow from the applied Point of View",
     "section": "Scientific Process – Overview",
-    "text": "Scientific Process – Overview\n\n\n\nFoundations / Background\n\n\nResearch Question\n\n\nState of the Art (Literature)\n\n\nNecessary Methods & Workflow\n\n\nAdvanced Methods\n\n\nApplied Solution Path\n\n\nResults\n\n\nLoopback → Evaluation & Improvement"
+    "text": "Scientific Process – Overview\n\n\n\nFoundations / Background\ntheory, domain context\n\n\nResearch Question\nprecise, testable, scoped\n\n\nState of the Art (Literature)\nknowns, gaps, hypotheses\n\n\nNecessary Methods & Workflow\ndata, preprocessing, validation, metrics\n\n\nAdvanced Methods\nmodels, tuning, ablations\n\n\nApplied Solution Path\nimplementation & assumptions\n\n\nResults\nfindings, uncertainty, limitations\n\n\nLoopback → Evaluation & Improvement\nerror analysis, robustness checks, iteration"
   },
   {
     "objectID": "slides/slide0.html#process-as-diagram",

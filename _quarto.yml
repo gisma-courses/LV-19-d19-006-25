@@ -88,7 +88,7 @@ website:
       - text: "---"
       - section: "Worksheets"
         contents:
-          - worksheets/comingsoon.qmd
+          - slides/slide0.qmd
           - worksheets/comingsoon.qmd
           - worksheets/comingsoon.qmd
           - worksheets/comingsoon.qmd

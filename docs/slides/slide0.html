@@ -9,7 +9,7 @@
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.7.32">
 
-  <title>Advanced GIS &amp; RS – From Foundations to Results: A Scientific Workflow</title>
+  <title>Advanced GIS &amp; RS – A Scientific Workflow from the applied Point of View</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -120,12 +120,9 @@
       margin-right: 0; 
     }
   </style>
-  <script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
-  <script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
-  <link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
   <script>mermaid.initialize({ startOnLoad: true });</script>
-<meta property="og:title" content="From Foundations to Results: A Scientific Workflow – Advanced GIS &amp; RS">
+<meta property="og:title" content="A Scientific Workflow from the applied Point of View – Advanced GIS &amp; RS">
 <meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/slides/images/banner.png">
 <meta property="og:site_name" content="Advanced GIS &amp; RS">
 </head>
@@ -134,7 +131,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">From Foundations to Results: A Scientific Workflow</h1>
+  <h1 class="title">A Scientific Workflow from the applied Point of View</h1>
 
 <div class="quarto-title-authors">
 </div>
@@ -143,75 +140,79 @@
 <section id="scientific-process-overview" class="slide level2 tightgrid">
 <h2>Scientific Process – Overview</h2>
 <style>
-.tightgrid .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem 1rem;
-                 max-width:1200px;margin:0 auto;}
-@media(max-width:1100px){.tightgrid .grid{grid-template-columns:1fr;}}
-.tightgrid .box{padding:.5rem .7rem;border-radius:10px;border:2px solid #c7c7c7;background:#f8f9fb;
-                text-align:center;font-size:.92rem;line-height:1.15;}
-.tightgrid .box strong{font-size:1.0rem;}
-/* colors */
-.primary{border-color:#6b7280;background:#f3f4f6;}
-.q{border-color:#2563eb;background:#eff6ff;}
-.lit{border-color:#7c3aed;background:#f5f3ff;}
-.methods{border-color:#059669;background:#ecfdf5;}
-.adv{border-color:#0ea5e9;background:#f0f9ff;}
-.path{border-color:#d97706;background:#fff7ed;}
-.results{border-color:#ea580c;background:#fff1eb;}
-.loop{border-color:#dc2626;background:#fff1f2;}
+:root{
+  --c-primary:#6b7280; --bg-primary:#f3f4f6;
+  --c-q:#2563eb;       --bg-q:#eff6ff;
+  --c-lit:#7c3aed;     --bg-lit:#f5f3ff;
+  --c-methods:#059669; --bg-methods:#ecfdf5;
+  --c-adv:#0ea5e9;     --bg-adv:#f0f9ff;
+  --c-path:#d97706;    --bg-path:#fff7ed;
+  --c-results:#ea580c; --bg-results:#fff1eb;
+  --c-loop:#dc2626;    --bg-loop:#fff1f2;
+}
+
+/* Layout: 2 Spalten, etwas größer */
+.tightgrid .grid{
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:.6rem 1.2rem; max-width:1200px; margin:0 auto;
+}
+@media (max-width:1100px){ .tightgrid .grid{ grid-template-columns:1fr; } }
+
+/* Box-Stil: größer + Farbe deutlich sichtbar */
+.tightgrid .box{
+  padding:.4rem 0.6rem; border-radius:14px; border-width:2px; border-style:solid;
+  text-align:center; font-size:1.05rem; line-height:1.2;
+  box-shadow:0 2px 6px rgba(0,0,0,.06);
+  font-weight:600;
+}
+
+/* Farben je Kategorie */
+.primary{ border-color:var(--c-primary); background:var(--bg-primary); }
+.q      { border-color:var(--c-q);       background:var(--bg-q); }
+.lit    { border-color:var(--c-lit);     background:var(--bg-lit); }
+.methods{ border-color:var(--c-methods); background:var(--bg-methods); }
+.adv    { border-color:var(--c-adv);     background:var(--bg-adv); }
+.path   { border-color:var(--c-path);    background:var(--bg-path); }
+.results{ border-color:var(--c-results); background:var(--bg-results); }
+.loop   { border-color:var(--c-loop);    background:var(--bg-loop); }
+
+/* Untertitel etwas größer/kontrast */
+.sub{ display:block; margin-top:.15rem; font-weight:500; font-size:.95rem; color:#374151; }
 </style>
 <div class="grid">
 <div class="box primary fragment">
-<strong>Foundations / Background</strong>
+<p>Foundations / Background<br>
+<span class="sub">theory, domain context</span></p>
 </div>
 <div class="box q fragment">
-<strong>Research Question</strong>
+<p>Research Question<br>
+<span class="sub">precise, testable, scoped</span></p>
 </div>
 <div class="box lit fragment">
-<strong>State of the Art (Literature)</strong>
+<p>State of the Art (Literature)<br>
+<span class="sub">knowns, gaps, hypotheses</span></p>
 </div>
 <div class="box methods fragment">
-<strong>Necessary Methods &amp; Workflow</strong>
+<p>Necessary Methods &amp; Workflow<br>
+<span class="sub">data, preprocessing, validation, metrics</span></p>
 </div>
 <div class="box adv fragment">
-<strong>Advanced Methods</strong>
+<p>Advanced Methods<br>
+<span class="sub">models, tuning, ablations</span></p>
 </div>
 <div class="box path fragment">
-<strong>Applied Solution Path</strong>
+<p>Applied Solution Path<br>
+<span class="sub">implementation &amp; assumptions</span></p>
 </div>
 <div class="box results fragment">
-<strong>Results</strong>
+<p>Results<br>
+<span class="sub">findings, uncertainty, limitations</span></p>
 </div>
 <div class="box loop fragment">
-<strong>Loopback → Evaluation &amp; Improvement</strong>
+<p>Loopback → Evaluation &amp; Improvement<br>
+<span class="sub">error analysis, robustness checks, iteration</span></p>
 </div>
 </div>
-</section>
-<section id="process-as-diagram" class="slide level2">
-<h2>Process as Diagram</h2>
-<div class="cell" data-reveal="true" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class=""><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-  A[Foundations / Background] --&gt; B[Research Question]
-  B --&gt; C[State of the Art (Literature)]
-  C --&gt; D[Necessary Methods &amp; Workflow]
-  D --&gt; E[Advanced Methods]
-  E --&gt; F[Applied Solution Path]
-  F --&gt; G[Results]
-  G -.-&gt;|Loopback: evaluation, error analysis, ablations| D
-  G -.-&gt;|Refine question| B
-
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</section>
-<section class="slide level2">
-
 
 
 </section>
