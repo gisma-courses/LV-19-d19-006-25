@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Change Detection - Sentinel – Advanced GIS &amp; RS</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reader/mc_2025_0.html" rel="next">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-2e6b1159dd83cca6b45a185263b00ab0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "Keine Treffer",
+    "search-matching-documents-text": "Treffer",
+    "search-copy-link-title": "Link in die Suche kopieren",
+    "search-hide-matches-text": "Zusätzliche Treffer verbergen",
+    "search-more-match-text": "weitere Treffer in diesem Dokument",
+    "search-more-matches-text": "weitere Treffer in diesem Dokument",
+    "search-clear-button-title": "Zurücksetzen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Abbrechen",
+    "search-submit-button-title": "Abschicken",
+    "search-label": "Suchen"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: green;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: green;
+background-image: url(images/hinterland-sp.jpg);
+background-size: cover;
+      }
+</style>
+
+
+<link rel="stylesheet" href="../css/styles.css">
+<meta property="og:title" content="Change Detection - Sentinel – Advanced GIS &amp; RS">
+<meta property="og:description" content="Clusteranalysis, Maximum-Likelihood and ML">
+<meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/reader/images/supervised_classification.jpg">
+<meta property="og:site_name" content="Advanced GIS &amp; RS">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Advanced GIS &amp; RS</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Suchen"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navigation umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../base/faq.html"> <i class="bi bi-question-square-fill" role="img">
+</i> 
+<span class="menu-text">FAQ</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://ilias.uni-marburg.de/ilias.php?baseClass=ilrepositorygui&amp;ref_id=4407827"> <i class="bi bi-chat-left-text-fill" role="img">
+</i> 
+<span class="menu-text">ILIAS</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title">Change Detection - Sentinel</h1>
+        </a>     
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title d-none d-lg-block">Change Detection - Sentinel</h1>
+            <p class="subtitle lead">Clusteranalysis, Maximum-Likelihood and ML</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">GIS Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://gisma--courses-github-io.translate.goog/geoinfo-basis-qgis//unit01/unit01-01_reader_geo_raum.html?_x_tr_sl=de&amp;_x_tr_tl=en&amp;_x_tr_hl=de&amp;_x_tr_pto=wapp" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Space needs a scope</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://gisma--courses-github-io.translate.goog/geoinfo-basis-qgis//unit02/unit02-01_reader_gi_raum.html?_x_tr_sl=de&amp;_x_tr_tl=en&amp;_x_tr_hl=de&amp;_x_tr_pto=wapp" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spatial Representation in GI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">R-Spatial Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://gisma-courses.github.io/LV-19-d19-006/morea/geocomputation-with-r/reading-screencast-spatial-r-gis-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Some Pros &amp; Cons for R-Spatial</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://thinking-spatial.org/courses/geoinformationen_kommunizieren/kurs1/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">First steps in geospatial R (German Ressource)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://r.geocompx.org/intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Geocomputation with R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Lectures</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reader/cd-1.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Spatial data classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reader/mc_2025_0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spatial Interpolation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reader/mc_2025_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PipeModel Idealized valley microclimate sandbox</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reader/mc_2025_microclimate_viewer_merged.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ecowitt Air Temperature — End-to-End applied Workflow</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reader/mc_2025_tec.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Microclimate Sensors &amp; Power-Supply Units</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reader/mc_2025_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Filling the Gaps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reader/cd2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data retrieval</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../slides/slides_session1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spatial Pattern Description</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../slides/slides_session2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Landscape Patterns</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../slides/slides_session3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Landscape Patterns Reloaded</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../slides/slides_session4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pattern-based spatial analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../slides/slides_session5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Continous data spatial analysis</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Worksheets</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../worksheets/comingsoon.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming&nbsp;Soon</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../worksheets/comingsoon.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming&nbsp;Soon</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../worksheets/comingsoon.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming&nbsp;Soon</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../worksheets/comingsoon.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming&nbsp;Soon</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../worksheets/comingsoon.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming&nbsp;Soon</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../worksheets/comingsoon.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming&nbsp;Soon</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Auf dieser Seite</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#goals" id="toc-goals" class="nav-link" data-scroll-target="#goals">Goals</a></li>
+  <li><a href="#information-from-satellite-imagery" id="toc-information-from-satellite-imagery" class="nav-link" data-scroll-target="#information-from-satellite-imagery">Information from satellite imagery</a></li>
+  <li><a href="#theoretical-principles" id="toc-theoretical-principles" class="nav-link" data-scroll-target="#theoretical-principles">Theoretical principles</a>
+  <ul class="collapse">
+  <li><a href="#unsupervised-classification---k-means-clustering" id="toc-unsupervised-classification---k-means-clustering" class="nav-link" data-scroll-target="#unsupervised-classification---k-means-clustering">Unsupervised Classification - k-means clustering</a></li>
+  <li><a href="#supervised-classification" id="toc-supervised-classification" class="nav-link" data-scroll-target="#supervised-classification">Supervised classification</a></li>
+  </ul></li>
+  <li><a href="#change-detection-case-study-harz-mountains" id="toc-change-detection-case-study-harz-mountains" class="nav-link" data-scroll-target="#change-detection-case-study-harz-mountains">Change detection case study: Harz Mountains</a>
+  <ul class="collapse">
+  <li><a href="#setting-up-the-work-environment" id="toc-setting-up-the-work-environment" class="nav-link" data-scroll-target="#setting-up-the-work-environment">Setting up the work environment</a></li>
+  <li><a href="#defining-the-area-of-interest" id="toc-defining-the-area-of-interest" class="nav-link" data-scroll-target="#defining-the-area-of-interest">Defining the Area of Interest</a></li>
+  </ul></li>
+  <li><a href="#step-1-retrieving-sentinel-data" id="toc-step-1-retrieving-sentinel-data" class="nav-link" data-scroll-target="#step-1-retrieving-sentinel-data">Step 1: Retrieving Sentinel data</a>
+  <ul class="collapse">
+  <li><a href="#alternative-1-using-gdalcubes-with-stac" id="toc-alternative-1-using-gdalcubes-with-stac" class="nav-link" data-scroll-target="#alternative-1-using-gdalcubes-with-stac">Alternative 1: Using <code>gdalcubes</code> with STAC</a></li>
+  <li><a href="#alternative-2-copernicus-data-space-ecosystem-cdse" id="toc-alternative-2-copernicus-data-space-ecosystem-cdse" class="nav-link" data-scroll-target="#alternative-2-copernicus-data-space-ecosystem-cdse">Alternative 2: Copernicus Data Space Ecosystem (CDSE)</a></li>
+  </ul></li>
+  <li><a href="#step2-overview-unsupervised-classification" id="toc-step2-overview-unsupervised-classification" class="nav-link" data-scroll-target="#step2-overview-unsupervised-classification">Step2: Overview – Unsupervised classification</a>
+  <ul class="collapse">
+  <li><a href="#k-means-clustering" id="toc-k-means-clustering" class="nav-link" data-scroll-target="#k-means-clustering">k-means clustering</a></li>
+  <li><a href="#bfast-spatial-identification-of-magnitudes-and-time-periods-of-kndvi-changes" id="toc-bfast-spatial-identification-of-magnitudes-and-time-periods-of-kndvi-changes" class="nav-link" data-scroll-target="#bfast-spatial-identification-of-magnitudes-and-time-periods-of-kndvi-changes">bfast: Spatial identification of magnitudes and time periods of kNDVI changes</a></li>
+  </ul></li>
+  <li><a href="#step-3---generating-training-data" id="toc-step-3---generating-training-data" class="nav-link" data-scroll-target="#step-3---generating-training-data">Step 3 - Generating training data</a></li>
+  <li><a href="#step-4---supervised-classification" id="toc-step-4---supervised-classification" class="nav-link" data-scroll-target="#step-4---supervised-classification">Step 4 - supervised classification</a>
+  <ul class="collapse">
+  <li><a href="#maximum-likelihood-classification-1" id="toc-maximum-likelihood-classification-1" class="nav-link" data-scroll-target="#maximum-likelihood-classification-1">Maximum Likelihood Classification</a></li>
+  <li><a href="#random-forest-1" id="toc-random-forest-1" class="nav-link" data-scroll-target="#random-forest-1">Random forest</a></li>
+  <li><a href="#prediction-on-the-original-data" id="toc-prediction-on-the-original-data" class="nav-link" data-scroll-target="#prediction-on-the-original-data">Prediction on the original data</a></li>
+  <li><a href="#step-5-estimation-model-quality" id="toc-step-5-estimation-model-quality" class="nav-link" data-scroll-target="#step-5-estimation-model-quality">Step 5: Estimation model quality</a></li>
+  </ul></li>
+  <li><a href="#final-remarks" id="toc-final-remarks" class="nav-link" data-scroll-target="#final-remarks">Final Remarks</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>In the geosciences, remote sensing is the only measurement technique that allows complete coverage of large spatial areas, up to the entire Earth’s surface. Its successful application requires both the use of existing methods and the adaptation and development of new ones.</p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In geospatial or environmental informatics, the detection of changes to the Earth’s surface using satellite, aircraft or drone images, known as change detection analysis, is an important application. These results are often linked to biophysical, geophysical or anthropogenic processes in order to gain both a deeper understanding and the possibility of developing predictive models. Methods of image analysis are of outstanding importance for generating spatial information from the underlying processes. Since both the quantity and quality of this “image data” are playing an increasingly important role in environmental monitoring and modeling, it is becoming more and more necessary to integrate “big data” concepts into the analyses. This means performing reproducible analyses with large amounts of data (&gt;&gt; 1 TB). This is essential for both scientific knowledge gain and future societal challenges.</p>
+<p>As already explained in the introduction, we start with a scalable change detection analysis of forest damage in low mountain ranges, which is a typical application-oriented task. Scalable means that we limit the analysis to a manageable area, the Nordwestharz, and to two time slices. However, the resulting algorithm can be applied to different or larger areas and to more time slices.</p>
+</section>
+<section id="goals" class="level2">
+<h2 class="anchored" data-anchor-id="goals">Goals</h2>
+<p>This example shows how change detection methods can be applied conventionally to individual satellite scenes and in a modern way in cloud computing environments using <a href="https://cran.r-project.org/package=rstac"><code>rstac</code></a> <span class="citation" data-cites="rstac">(<a href="#ref-rstac" role="doc-biblioref">Brazil Data Cube Team 2021</a>)</span> and <a href="https://cran.r-project.org/package=gdalcubes"><code>gdalcubes</code></a> <span class="citation" data-cites="gdalcubes">(<a href="#ref-gdalcubes" role="doc-biblioref">Appel und Pebesma 2019</a>)</span> or <a href="https://cran.r-project.org/package=openeo"><code>openeo</code></a> <span class="citation" data-cites="openeo">(<a href="#ref-openeo" role="doc-biblioref">Lahn 2024</a>)</span>. In addition to classical supervised classification methods such as Maximum Likelihood and Random Forest, the <a href="https://cran.r-project.org/package=bfast"><code>bfast</code></a> <span class="citation" data-cites="bfast">(<a href="#ref-bfast" role="doc-biblioref">Verbesselt, Zeileis, und Herold 2012</a>)</span> is used, which includes an unsupervised method for detecting structural breaks in vegetation index time series.</p>
+<p>Other packages used in this tutorial include <a href="https://cran.r-project.org/package=stars"><code>stars</code></a> <span class="citation" data-cites="stars">(<a href="#ref-stars" role="doc-biblioref">Pebesma 2019</a>)</span>, <a href="https://cran.r-project.org/package=tmap"><code>tmap</code></a> <span class="citation" data-cites="tmap">(<a href="#ref-tmap" role="doc-biblioref">Tennekes 2018</a>)</span> and <a href="https://cran.r-project.org/package=mapview"><code>mapview</code></a> <span class="citation" data-cites="mapview">(<a href="#ref-mapview" role="doc-biblioref">Appelhans u.&nbsp;a. 2019</a>)</span> for creating interactive maps, <a href="https://cran.r-project.org/package=sf"><code>sf</code></a> <span class="citation" data-cites="sf">(<a href="#ref-sf" role="doc-biblioref">Pebesma 2018</a>)</span> for processing vector data, and <a href="https://cran.r-project.org/package=colorspace"><code>colorspace</code></a> <span class="citation" data-cites="colorspace">(<a href="#ref-colorspace" role="doc-biblioref">Zeileis u.&nbsp;a. 2020</a>)</span> for visualizations with accessible colors.</p>
+<p>This study employs a variety of approaches to time series and difference analyses with different indices, using the Harz Mountains as a case study for the period between 2018 and 2023. The objective is to analyze or classify the data.</p>
+</section>
+<section id="information-from-satellite-imagery" class="level2">
+<h2 class="anchored" data-anchor-id="information-from-satellite-imagery">Information from satellite imagery</h2>
+<p>Unprocessed satellite images are not necessarily informative. While our eyes can interpret a true-color image relatively conclusively and intuitively, a reliable and reproducible, i.e.&nbsp;scientifically sound, interpretation requires other approaches. A major advantage of typical image analysis methods over visual interpretation is the derivation of additional, so-called <em>invisible</em> information.</p>
+<p>To obtain useful or meaningful information, e.g.&nbsp;about the land cover in an area, we have to analyze the data according to the question at hand. Probably the best known and most widely used approach is the supervised classification of image data into categories of interest.</p>
+<p>In this unit, you will learn about the classification of satellite image data. This includes both data acquisition on the Copernicus portal and the various steps from digitising the training data to evaluating the quality of the classifications.</p>
+<p>We will cover the following topics:</p>
+<ul>
+<li><p><a href="#theoretical-principles">Theoretical principles</a></p></li>
+<li><p><a href="#change-detection-case-study-harz-mountains">Case Study Harz Mountains</a></p>
+<ul>
+<li><a href="#setting-up-the-work-environment">Preparing the work environment</a></li>
+<li><a href="#step-1-retrieving-sentinel-data">Retrieving Sentinel and auxilliary data</a></li>
+<li><a href="#step2-overview--unsupervised-classification">Unsupervised classification</a> (k-means clustering)</li>
+<li><a href="#step-3---generating-training-data">Recording training areas</a></li>
+<li><a href="#step-4---supervised-classification">Supervised classification</a> (Random Forest, Maximum Likelihood)</li>
+<li><a href="#step-5-estimation-model-quality">Estimating model quality</a></li>
+</ul></li>
+</ul>
+</section>
+<section id="theoretical-principles" class="level2">
+<h2 class="anchored" data-anchor-id="theoretical-principles">Theoretical principles</h2>
+<p>Please note that all types of classification usually require extensive data pre-processing. The focus is then on model building and quality assessment, which can be seen as the technical basis for classification, in order to finally derive the interpretation of the results in terms of content in the data post-processing.</p>
+<p>We will go through this process step by step.</p>
+<section id="unsupervised-classification---k-means-clustering" class="level3">
+<h3 class="anchored" data-anchor-id="unsupervised-classification---k-means-clustering">Unsupervised Classification - k-means clustering</h3>
+<p>Probably the best-known unsupervised classification technique is K-means clustering, which is also referred to as the <em>“simplest machine learning algorithm”</em>.</p>
+<p>K-means clustering is a technique commonly used in satellite image classification to group pixels with similar spectral characteristics. Treating each pixel as an observation, the algorithm assigns pixels to clusters based on their spectral values, with each cluster having a mean (or centroid) that represents its central spectral signature. This results in the segmentation of the image into distinct regions (similar to Voronoi cells) corresponding to land cover types, such as water, vegetation or urban areas, facilitating further analysis. It is often used to obtain an initial overview of whether the raster data can be sufficiently separated in feature space.</p>
+<p><a title="Chire, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:K-means_convergence.gif"><img width="512" alt="K-means convergence" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/K-means_convergence.gif/512px-K-means_convergence.gif?20170530143526"></a></p>
+<p>Figure: Convergence of k-means clustering from an unfavorable starting position (two initial cluster centers are fairly close). <a href="https://commons.wikimedia.org/wiki/User:Chire">Chire</a> [CC BY-SA 4.0] via wikipedia.org</p>
+</section>
+<section id="supervised-classification" class="level3">
+<h3 class="anchored" data-anchor-id="supervised-classification">Supervised classification</h3>
+<p>In supervised land cover classification, a model is derived from a limited amount of training land cover data that predicts land cover for the entire data set. The land cover types are defined <em>a priori</em>, and the model attempts to predict these types based on the similarity between the characteristics of the training data and the rest of the data set.</p>
+<p><img src="images/supervised_classification.jpg" class="img-fluid"></p>
+<p>Classifiers (e.g.&nbsp;the maximum likelihood classifier) or machine learning algorithms (such as Random Forest) use the training data to determine descriptive models that represent statistical signatures, classification trees or other functions. Within the limits of the quality of the training data, such models are suitable and representative for making predictions for areas if the predictors from the model are available for the entire area.</p>
+<p>We now want to predict the spatial characteristics of clear-felling/no forest using a maximum likelihood classification and random forest, and apply standard methods of random validation and model quality assessment.</p>
+<p>The goal is to separate clearcuts from all other pixels and to quantify the differences between 2018 and 2022.</p>
+<section id="maximum-likelihood-classification" class="level4">
+<h4 class="anchored" data-anchor-id="maximum-likelihood-classification">Maximum Likelihood Classification</h4>
+<p>Maximum likelihood classification assumes that the distribution of data for each class and in each channel is normally distributed. Under this assumption, the probability that a particular pixel belongs to a particular class is calculated. Since the probabilities can also be specified as a threshold, without this restriction, <em>all</em> pixels are assigned regardless of how unlikely they are. Each pixel is assigned to the class that has the highest probability (i.e., the maximum probability).</p>
+<p><img src="images/max.png" class="img-fluid"></p>
+</section>
+<section id="random-forest" class="level4">
+<h4 class="anchored" data-anchor-id="random-forest">Random forest</h4>
+<p>Random forests can be used for both regression and classification tasks, with the latter being particularly relevant in environmental remote sensing. Like any machine learning method, the random forest model learns to recognize patterns and structures in the data itself. Since the random forest algorithm also requires training data, it is also a supervised learning method.</p>
+<p><img src="images/Random_forest_diagram_complete.png" class="img-fluid"></p>
+<p>Figure: Simplified illustration of data classification by random forest during training. Venkata Jagannath [CC BY-SA 4.0] via wikipedia.org</p>
+<p>From a pragmatic point of view, classification tasks generally require the following steps:</p>
+<ul>
+<li>Creation of a comprehensive input data set that contains one or more raster layers.</li>
+<li>Selection of training areas, i.e.&nbsp;subsets of the input data set for which the land cover type is known to the remote sensing expert. Knowledge of the land cover can be obtained, for example, from one’s own or third-party in situ observations, management information or other remote sensing products (e.g.&nbsp;high-resolution aerial photographs).</li>
+<li>Training a model using the training sites. For validation purposes, the training sites are often subdivided into one or more test and training sites to evaluate the performance of the model algorithm.</li>
+<li>Applying the trained model to the entire data set, i.e.&nbsp;predicting the land cover type based on the similarity of the data at each site to the class characteristics of the training data set.</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="change-detection-case-study-harz-mountains" class="level2">
+<h2 class="anchored" data-anchor-id="change-detection-case-study-harz-mountains">Change detection case study: Harz Mountains</h2>
+<p>Since 2018, there has been a notable increase in the incidence of extensive forest dieback in the Harz Mountains. During this period, the combination of repeated years of drought, extreme heat waves and the resulting weakening of the spruce trees led to an exponential increase in the population of bark beetles. The combined impact of these factors resulted in the extensive mortality of spruce stands across an area of approximately 30,000 hectares over a period of approximately five to six years. This equates to approximately 35% of the total forest area of the Harz.</p>
+<p>It is important to note that the prolonged drought in 2018, 2019 and 2020, which is considered one of the most severe in the region, has significantly exacerbated the damage in the Harz Mountains.</p>
+<p>In this context, a time series analysis or a change detection analysis is an essential technique for quantifying and localising the damage and characterising its dynamics.</p>
+<section id="setting-up-the-work-environment" class="level3">
+<h3 class="anchored" data-anchor-id="setting-up-the-work-environment">Setting up the work environment</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- 0 Project Setup ----</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Achtung: OpenStreetMap nicht laden (zieht rJava)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  mapview, mapedit, tmap, tmaptools,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  raster, terra, stars, gdalcubes, sf,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  webshot, dplyr, downloader, tidyverse,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  RStoolbox, rprojroot, exactextractr,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  randomForest, ranger, e1071, caret,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  link2GI, rstac, colorspace, ows4R, httr</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>root_folder <span class="ot">&lt;-</span> rprojroot<span class="sc">::</span><span class="fu">find_rstudio_root_file</span>()</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>ndvi.col <span class="ot">&lt;-</span> <span class="cf">function</span>(n) <span class="fu">rev</span>(colorspace<span class="sc">::</span><span class="fu">sequential_hcl</span>(n, <span class="st">"Green-Yellow"</span>))</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>ano.col  <span class="ot">&lt;-</span> colorspace<span class="sc">::</span><span class="fu">diverging_hcl</span>(<span class="dv">7</span>, <span class="at">palette =</span> <span class="st">"Red-Green"</span>,  <span class="at">register =</span> <span class="st">"rg"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Please add any missing or defective packages in the above setup script (if error messages occur). On the basis of the available Sentinel data, the first step should be to identify suitable data sets for a surface classification.</p>
+</section>
+<section id="defining-the-area-of-interest" class="level3">
+<h3 class="anchored" data-anchor-id="defining-the-area-of-interest">Defining the Area of Interest</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download training data (also used for extent)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>utils<span class="sc">::</span><span class="fu">download.file</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">url      =</span> <span class="st">"https://github.com/gisma/gismaData/raw/master/geoinfo/train_areas_2019_2020.gpkg"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">destfile =</span> <span class="fu">file.path</span>(root_folder, <span class="st">"data/train_areas_2019_2020.gpkg"</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode     =</span> <span class="st">"wb"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>train_areas_2019_2020 <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="fu">file.path</span>(root_folder, <span class="st">"data/train_areas_2019_2020.gpkg"</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>bbox <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(train_areas_2019_2020)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># CORINE forest mask (optional step, cached)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/corine_harz.tif"</span>))){</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  corine <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/U2018_CLC2018_V2020_20u1.tif"</span>))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  corine <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">project</span>(corine,<span class="st">"EPSG:4326"</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  corine_harz <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">crop</span>(corine, terra<span class="sc">::</span><span class="fu">vect</span>(train_areas_2019_2020))</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  terra<span class="sc">::</span><span class="fu">writeRaster</span>(corine_harz, <span class="fu">file.path</span>(root_folder,<span class="st">"data/corine_harz.tif"</span>), <span class="at">overwrite=</span><span class="cn">TRUE</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>corine_harz <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/corine_harz.tif"</span>))</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Forest mask codes: 22..25 -&gt; 1, else 0</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>rclmat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">100</span>,<span class="dv">22</span>,<span class="dv">0</span>, <span class="dv">22</span>,<span class="dv">26</span>,<span class="dv">1</span>, <span class="dv">26</span>,<span class="dv">500</span>,<span class="dv">0</span>), <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>harz_forest_mask <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">classify</span>(corine_harz, rclmat, <span class="at">include.lowest =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># quick view (optional)</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># mapview::mapview(corine_harz) + mapview::mapview(train_areas_2019_2020, zcol="class") + harz_forest_mask</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="step-1-retrieving-sentinel-data" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-retrieving-sentinel-data">Step 1: Retrieving Sentinel data</h2>
+<section id="alternative-1-using-gdalcubes-with-stac" class="level3">
+<h3 class="anchored" data-anchor-id="alternative-1-using-gdalcubes-with-stac">Alternative 1: Using <code>gdalcubes</code> with STAC</h3>
+<section id="stac-earth-search" class="level4">
+<h4 class="anchored" data-anchor-id="stac-earth-search">STAC &amp; earth-search</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># search the data stack for the given period and area</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> rstac<span class="sc">::</span><span class="fu">stac</span>(<span class="st">"https://earth-search.aws.element84.com/v0"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> s <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  rstac<span class="sc">::</span><span class="fu">stac_search</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">collections =</span> <span class="st">"sentinel-s2-l2a-cogs"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">bbox       =</span> <span class="fu">c</span>(bbox[<span class="st">"xmin"</span>], bbox[<span class="st">"ymin"</span>], bbox[<span class="st">"xmax"</span>], bbox[<span class="st">"ymax"</span>]),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">datetime   =</span> <span class="st">"2018-06-01/2022-09-01"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">limit      =</span> <span class="dv">600</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  rstac<span class="sc">::</span><span class="fu">post_request</span>()</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>items</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>###Items
+- matched feature(s): 627
+- features (600 item(s) / 27 not fetched):
+  - S2A_32UNC_20220901_0_L2A
+  - S2A_32UNC_20220829_0_L2A
+  - S2B_32UNC_20220827_0_L2A
+  - S2B_32UNC_20220824_0_L2A
+  - S2A_32UNC_20220822_0_L2A
+  - S2A_32UNC_20220819_1_L2A
+  - S2B_32UNC_20220817_0_L2A
+  - S2B_32UNC_20220814_0_L2A
+  - S2A_32UNC_20220812_0_L2A
+  - S2A_32UNC_20220809_0_L2A
+  - ... with 590 more feature(s).
+- assets: 
+AOT, B01, B02, B03, B04, B05, B06, B07, B08, B09, B11, B12, B8A, info, metadata, overview, SCL, thumbnail, visual, WVP
+- item's fields: 
+assets, bbox, collection, geometry, id, links, properties, properties.sentinel:boa_offset_applied, stac_extensions, stac_version, type</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>s2_collection <span class="ot">&lt;-</span> gdalcubes<span class="sc">::</span><span class="fu">stac_image_collection</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  items<span class="sc">$</span>features,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">asset_names =</span> <span class="fu">c</span>(<span class="st">"B01"</span>,<span class="st">"B02"</span>,<span class="st">"B03"</span>,<span class="st">"B04"</span>,<span class="st">"B05"</span>,<span class="st">"B06"</span>,<span class="st">"B07"</span>,<span class="st">"B08"</span>,<span class="st">"B8A"</span>,<span class="st">"B09"</span>,<span class="st">"B11"</span>,<span class="st">"SCL"</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">property_filter =</span> <span class="cf">function</span>(x) { x[[<span class="st">"eo:cloud_cover"</span>]] <span class="sc">&lt;</span> <span class="dv">5</span> }</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>s2_collection</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Image collection object, referencing 78 images with 12 bands
+Images:
+                      name     left      top   bottom    right
+1 S2B_32UNC_20220824_0_L2A 9.494450 52.34699 51.35264 10.61137
+2 S2A_32UNC_20220812_0_L2A 8.999721 52.35046 51.35264 10.61137
+3 S2A_32UNC_20220623_0_L2A 8.999721 52.35046 51.35264 10.61137
+4 S2B_32UNC_20220618_0_L2A 8.999721 52.35046 51.35264 10.61137
+5 S2B_32UNC_20220615_0_L2A 9.471038 52.34716 51.35264 10.61137
+6 S2B_32UNC_20220519_1_L2A 8.999721 52.35046 51.35264 10.61137
+             datetime        srs
+1 2022-08-24T10:26:32 EPSG:32632
+2 2022-08-12T10:36:42 EPSG:32632
+3 2022-06-23T10:36:42 EPSG:32632
+4 2022-06-18T10:36:34 EPSG:32632
+5 2022-06-15T10:26:36 EPSG:32632
+6 2022-05-19T10:36:29 EPSG:32632
+[ omitted 72 images ] 
+
+Bands:
+   name offset scale unit nodata image_count
+1   B01      0     1                      78
+2   B02      0     1                      78
+3   B03      0     1                      78
+4   B04      0     1                      78
+5   B05      0     1                      78
+6   B06      0     1                      78
+7   B07      0     1                      78
+8   B08      0     1                      78
+9   B09      0     1                      78
+10  B11      0     1                      78
+11  B8A      0     1                      78
+12  SCL      0     1                      78</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>bbox_utm <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_as_sfc</span>(bbox) <span class="sc">|&gt;</span> sf<span class="sc">::</span><span class="fu">st_transform</span>(<span class="st">"EPSG:32632"</span>) <span class="sc">|&gt;</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> gdalcubes<span class="sc">::</span><span class="fu">cube_view</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">srs =</span> <span class="st">"EPSG:32632"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">extent =</span> <span class="fu">list</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">t0 =</span> <span class="st">"2018-06"</span>, <span class="at">t1 =</span> <span class="st">"2022-09"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">left =</span> bbox_utm[<span class="st">"xmin"</span>] <span class="sc">-</span> <span class="dv">10</span>, <span class="at">right =</span> bbox_utm[<span class="st">"xmax"</span>] <span class="sc">+</span> <span class="dv">10</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">bottom =</span> bbox_utm[<span class="st">"ymin"</span>] <span class="sc">-</span> <span class="dv">10</span>, <span class="at">top  =</span> bbox_utm[<span class="st">"ymax"</span>] <span class="sc">+</span> <span class="dv">10</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">dx =</span> <span class="dv">10</span>, <span class="at">dy =</span> <span class="dv">10</span>, <span class="at">dt =</span> <span class="st">"P1M"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">aggregation =</span> <span class="st">"median"</span>, <span class="at">resampling =</span> <span class="st">"bilinear"</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>v</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A data cube view object
+
+Dimensions:
+               low             high count pixel_size
+t       2018-06-01       2022-09-30    52        P1M
+y  5744956.9172092  5755796.9172092  1084         10
+x 583230.473549458 596220.473549458  1299         10
+
+SRS: "EPSG:32632"
+Temporal aggregation method: "median"
+Spatial resampling method: "bilinear"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Only when you actually want to materialize the cube</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>s2_mask <span class="ot">&lt;-</span> gdalcubes<span class="sc">::</span><span class="fu">image_mask</span>(<span class="st">"SCL"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">8</span>,<span class="dv">9</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>gdalcubes<span class="sc">::</span><span class="fu">gdalcubes_options</span>(<span class="at">parallel =</span> <span class="dv">16</span>, <span class="at">ncdf_compression_level =</span> <span class="dv">5</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>gdalcubes<span class="sc">::</span><span class="fu">raster_cube</span>(s2_collection, v, <span class="at">mask =</span> s2_mask) <span class="sc">|&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  gdalcubes<span class="sc">::</span><span class="fu">write_ncdf</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/harz_2018_2022_all.nc"</span>), <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Requires the netCDF produced above</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>gdalcubes<span class="sc">::</span><span class="fu">ncdf_cube</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/harz_2018_2022_all.nc"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  gdalcubes<span class="sc">::</span><span class="fu">apply_pixel</span>(<span class="st">"tanh(((B08-B04)/(B08+B04))^2)"</span>, <span class="st">"kNDVI"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  gdalcubes<span class="sc">::</span><span class="fu">reduce_time</span>(<span class="st">"mean(kNDVI)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">key.pos =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="fu">ndvi.col</span>(<span class="dv">11</span>), <span class="at">nbreaks =</span> <span class="dv">12</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="alternative-2-copernicus-data-space-ecosystem-cdse" class="level3">
+<h3 class="anchored" data-anchor-id="alternative-2-copernicus-data-space-ecosystem-cdse">Alternative 2: Copernicus Data Space Ecosystem (CDSE)</h3>
+<blockquote class="blockquote">
+<p><strong>Hinweis:</strong> In CI werden diese Chunks ausgeschaltet (<code>eval=eval_cdse</code>), damit keine Secrets nötig sind.</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CDSE); <span class="fu">library</span>(purrr); <span class="fu">library</span>(tibble)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>safe_get <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>(CDSE<span class="sc">::</span><span class="fu">GetCollections</span>(<span class="at">as_data_frame =</span> <span class="cn">FALSE</span>), <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>collections_raw <span class="ot">&lt;-</span> <span class="fu">safe_get</span>()</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">is.null</span>(collections_raw)) {</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"CDSE GetCollections fehlgeschlagen – überspringe Anzeige."</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  keys <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"id"</span>,<span class="st">"title"</span>,<span class="st">"description"</span>,<span class="st">"license"</span>,<span class="st">"stac_version"</span>,<span class="st">"sci:doi"</span>,<span class="st">"keywords"</span>,<span class="st">"type"</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  collections <span class="ot">&lt;-</span> <span class="fu">map</span>(collections_raw, <span class="cf">function</span>(x) {</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    vals <span class="ot">&lt;-</span> <span class="fu">lapply</span>(keys, <span class="cf">function</span>(k) <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(x[[k]])) x[[k]] <span class="cf">else</span> <span class="cn">NA</span>)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">names</span>(vals) <span class="ot">&lt;-</span> keys</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>(vals)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">|&gt;</span> <span class="fu">list_rbind</span>()</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  collections</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 8
+  id             title description license stac_version `sci:doi` keywords type 
+  &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt;        &lt;lgl&gt;     &lt;lgl&gt;    &lt;chr&gt;
+1 sentinel-2-l1c Sent… Sentinel 2… propri… 1.0.0        NA        NA       Coll…
+2 sentinel-3-ol… Sent… Sentinel 3… propri… 1.0.0        NA        NA       Coll…
+3 sentinel-3-ol… Sent… Sentinel 3… propri… 1.0.0        NA        NA       Coll…
+4 sentinel-3-sl… Sent… Sentinel 3… propri… 1.0.0        NA        NA       Coll…
+5 sentinel-3-sy… Sent… Sentinel 3… propri… 1.0.0        NA        NA       Coll…
+6 sentinel-1-grd Sent… Sentinel 1… propri… 1.0.0        NA        NA       Coll…
+7 sentinel-2-l2a Sent… Sentinel 2… propri… 1.0.0        NA        NA       Coll…
+8 sentinel-5p-l2 Sent… Sentinel 5… propri… 1.0.0        NA        NA       Coll…</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>images <span class="ot">&lt;-</span> CDSE<span class="sc">::</span><span class="fu">SearchCatalog</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">bbox =</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(train_areas_2019_2020),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> <span class="st">"2018-05-01"</span>, <span class="at">to =</span> <span class="st">"2022-12-31"</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">collection =</span> <span class="st">"sentinel-2-l2a"</span>, <span class="at">with_geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">client =</span> OAuthClient</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>images</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 683 features and 11 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 8.999721 ymin: 51.35264 xmax: 10.61137 ymax: 52.35046
+Geodetic CRS:  WGS 84
+First 10 features:
+   acquisitionDate tileCloudCover areaCoverage   satellite
+1       2022-12-30         100.00          100 sentinel-2a
+2       2022-12-27          79.03          100 sentinel-2a
+3       2022-12-25          99.98          100 sentinel-2b
+4       2022-12-22          99.41          100 sentinel-2b
+5       2022-12-20          97.58          100 sentinel-2a
+6       2022-12-17          29.46          100 sentinel-2a
+7       2022-12-15           3.70          100 sentinel-2b
+8       2022-12-10          95.68          100 sentinel-2a
+9       2022-12-07          96.03          100 sentinel-2a
+10      2022-12-05          99.97          100 sentinel-2b
+   acquisitionTimestampUTC acquisitionTimestampLocal
+1      2022-12-30 10:36:29       2022-12-30 11:36:29
+2      2022-12-27 10:26:31       2022-12-27 11:26:31
+3      2022-12-25 10:36:29       2022-12-25 11:36:29
+4      2022-12-22 10:26:31       2022-12-22 11:26:31
+5      2022-12-20 10:36:28       2022-12-20 11:36:28
+6      2022-12-17 10:26:31       2022-12-17 11:26:31
+7      2022-12-15 10:36:28       2022-12-15 11:36:28
+8      2022-12-10 10:36:30       2022-12-10 11:36:30
+9      2022-12-07 10:26:33       2022-12-07 11:26:33
+10     2022-12-05 10:36:27       2022-12-05 11:36:27
+                                                            sourceId long.min
+1  S2A_MSIL2A_20221230T103431_N0510_R108_T32UNC_20240803T051250.SAFE 8.999721
+2  S2A_MSIL2A_20221227T102431_N0510_R065_T32UNC_20240805T222708.SAFE 9.476927
+3  S2B_MSIL2A_20221225T103349_N0510_R108_T32UNC_20240806T140039.SAFE 8.999721
+4  S2B_MSIL2A_20221222T102339_N0510_R065_T32UNC_20240804T111825.SAFE 9.485113
+5  S2A_MSIL2A_20221220T103441_N0510_R108_T32UNC_20240803T223745.SAFE 8.999721
+6  S2A_MSIL2A_20221217T102431_N0510_R065_T32UNC_20240805T123818.SAFE 9.478651
+7  S2B_MSIL2A_20221215T103339_N0510_R108_T32UNC_20240805T070920.SAFE 8.999721
+8  S2A_MSIL2A_20221210T103431_N0510_R108_T32UNC_20240803T150543.SAFE 8.999721
+9  S2A_MSIL2A_20221207T102411_N0510_R065_T32UNC_20240806T043548.SAFE 9.476926
+10 S2B_MSIL2A_20221205T103319_N0510_R108_T32UNC_20240802T232027.SAFE 8.999721
+    lat.min long.max  lat.max                       geometry
+1  51.35264 10.61137 52.35046 POLYGON ((8.999721 52.35046...
+2  51.35264 10.61137 52.34711 POLYGON ((9.889693 52.34711...
+3  51.35264 10.61137 52.35046 POLYGON ((8.999721 52.35046...
+4  51.35264 10.61137 52.34705 POLYGON ((9.898648 52.34705...
+5  51.35264 10.61137 52.35046 POLYGON ((8.999721 52.35046...
+6  51.35264 10.61137 52.34710 POLYGON ((9.891455 52.3471,...
+7  51.35264 10.61137 52.35046 POLYGON ((8.999721 52.35046...
+8  51.35264 10.61137 52.35046 POLYGON ((8.999721 52.35046...
+9  51.35264 10.61137 52.34711 POLYGON ((9.890282 52.34711...
+10 51.35264 10.61137 52.35046 POLYGON ((8.999721 52.35046...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(images<span class="sc">$</span>areaCoverage)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  15.48  100.00  100.00   99.83  100.00  100.00 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>day <span class="ot">&lt;-</span> images[<span class="fu">order</span>(images<span class="sc">$</span>tileCloudCover), ]<span class="sc">$</span>acquisitionDate[<span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>]</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>script_file_raw   <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"scripts"</span>, <span class="st">"RawBands.js"</span>, <span class="at">package =</span> <span class="st">"CDSE"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>script_file_kndvi <span class="ot">&lt;-</span> <span class="st">"kndvi.js"</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>script_file_savi  <span class="ot">&lt;-</span> <span class="st">"savi.js"</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>script_file_evi   <span class="ot">&lt;-</span> <span class="st">"evi.js"</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>raw_2018_07_01 <span class="ot">&lt;-</span> CDSE<span class="sc">::</span><span class="fu">GetImage</span>(</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">bbox =</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(train_areas_2019_2020), <span class="at">time_range =</span> day[<span class="dv">12</span>],</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">script =</span> script_file_raw, <span class="at">collection =</span> <span class="st">"sentinel-2-l2a"</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"image/tiff"</span>, <span class="at">mosaicking_order =</span> <span class="st">"leastCC"</span>,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">resolution =</span> <span class="dv">10</span>, <span class="at">mask =</span> <span class="cn">TRUE</span>, <span class="at">buffer =</span> <span class="fl">0.01</span>, <span class="at">client =</span> OAuthClient</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(raw_2018_07_01) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"B01"</span>,<span class="st">"B02"</span>,<span class="st">"B03"</span>,<span class="st">"B04"</span>,<span class="st">"B05"</span>,<span class="st">"B06"</span>,<span class="st">"B07"</span>,<span class="st">"B08"</span>,<span class="st">"B8A"</span>,<span class="st">"B09"</span>,<span class="st">"B11"</span>,<span class="st">"B12"</span>)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>kndvi_2018_07_01 <span class="ot">&lt;-</span> CDSE<span class="sc">::</span><span class="fu">GetImage</span>(</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">bbox =</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(train_areas_2019_2020), <span class="at">time_range =</span> day[<span class="dv">12</span>],</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">script =</span> script_file_kndvi, <span class="at">collection =</span> <span class="st">"sentinel-2-l2a"</span>,</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"image/tiff"</span>, <span class="at">mosaicking_order =</span> <span class="st">"leastCC"</span>,</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">resolution =</span> <span class="dv">10</span>, <span class="at">mask =</span> <span class="cn">TRUE</span>, <span class="at">buffer =</span> <span class="fl">0.01</span>, <span class="at">client =</span> OAuthClient</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(kndvi_2018_07_01)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"kNDVI"</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>savi_2018_07_01 <span class="ot">&lt;-</span> CDSE<span class="sc">::</span><span class="fu">GetImage</span>(</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">bbox =</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(train_areas_2019_2020), <span class="at">time_range =</span> day[<span class="dv">12</span>],</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">script =</span> script_file_savi, <span class="at">collection =</span> <span class="st">"sentinel-2-l2a"</span>,</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"image/tiff"</span>, <span class="at">mosaicking_order =</span> <span class="st">"leastCC"</span>,</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">resolution =</span> <span class="dv">10</span>, <span class="at">mask =</span> <span class="cn">TRUE</span>, <span class="at">buffer =</span> <span class="fl">0.01</span>, <span class="at">client =</span> OAuthClient</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(savi_2018_07_01)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"SAVI"</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>evi_2018_07_01 <span class="ot">&lt;-</span> CDSE<span class="sc">::</span><span class="fu">GetImage</span>(</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">bbox =</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(train_areas_2019_2020), <span class="at">time_range =</span> day[<span class="dv">12</span>],</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">script =</span> script_file_evi, <span class="at">collection =</span> <span class="st">"sentinel-2-l2a"</span>,</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"image/tiff"</span>, <span class="at">mosaicking_order =</span> <span class="st">"leastCC"</span>,</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">resolution =</span> <span class="dv">10</span>, <span class="at">mask =</span> <span class="cn">TRUE</span>, <span class="at">buffer =</span> <span class="fl">0.01</span>, <span class="at">client =</span> OAuthClient</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(evi_2018_07_01)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"EVI"</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>pred_stack_2018 <span class="ot">&lt;-</span> <span class="fu">c</span>(raw_2018_07_01, evi_2018_07_01[[<span class="dv">1</span>]], kndvi_2018_07_01[[<span class="dv">1</span>]], savi_2018_07_01[[<span class="dv">1</span>]])</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>raw_2022_06_23 <span class="ot">&lt;-</span> CDSE<span class="sc">::</span><span class="fu">GetImage</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">bbox =</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(train_areas_2019_2020), <span class="at">time_range =</span> day[<span class="dv">1</span>],</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">script =</span> script_file_raw, <span class="at">collection =</span> <span class="st">"sentinel-2-l2a"</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"image/tiff"</span>, <span class="at">mosaicking_order =</span> <span class="st">"leastCC"</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">resolution =</span> <span class="dv">10</span>, <span class="at">mask =</span> <span class="cn">TRUE</span>, <span class="at">buffer =</span> <span class="fl">0.01</span>, <span class="at">client =</span> OAuthClient</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(raw_2022_06_23) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"B01"</span>,<span class="st">"B02"</span>,<span class="st">"B03"</span>,<span class="st">"B04"</span>,<span class="st">"B05"</span>,<span class="st">"B06"</span>,<span class="st">"B07"</span>,<span class="st">"B08"</span>,<span class="st">"B8A"</span>,<span class="st">"B09"</span>,<span class="st">"B11"</span>,<span class="st">"B12"</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>kndvi_2022_06_23 <span class="ot">&lt;-</span> CDSE<span class="sc">::</span><span class="fu">GetImage</span>(</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">bbox =</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(train_areas_2019_2020), <span class="at">time_range =</span> day[<span class="dv">1</span>],</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">script =</span> script_file_kndvi, <span class="at">collection =</span> <span class="st">"sentinel-2-l2a"</span>,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"image/tiff"</span>, <span class="at">mosaicking_order =</span> <span class="st">"leastCC"</span>,</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">resolution =</span> <span class="dv">10</span>, <span class="at">mask =</span> <span class="cn">TRUE</span>, <span class="at">buffer =</span> <span class="fl">0.01</span>, <span class="at">client =</span> OAuthClient</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(kndvi_2022_06_23)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"kNDVI"</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>savi_2022_06_23 <span class="ot">&lt;-</span> CDSE<span class="sc">::</span><span class="fu">GetImage</span>(</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">bbox =</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(train_areas_2019_2020), <span class="at">time_range =</span> day[<span class="dv">1</span>],</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">script =</span> script_file_savi, <span class="at">collection =</span> <span class="st">"sentinel-2-l2a"</span>,</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"image/tiff"</span>, <span class="at">mosaicking_order =</span> <span class="st">"leastCC"</span>,</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">resolution =</span> <span class="dv">10</span>, <span class="at">mask =</span> <span class="cn">TRUE</span>, <span class="at">buffer =</span> <span class="fl">0.01</span>, <span class="at">client =</span> OAuthClient</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(savi_2022_06_23)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"SAVI"</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>evi_2022_06_23 <span class="ot">&lt;-</span> CDSE<span class="sc">::</span><span class="fu">GetImage</span>(</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">bbox =</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(train_areas_2019_2020), <span class="at">time_range =</span> day[<span class="dv">1</span>],</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">script =</span> script_file_evi, <span class="at">collection =</span> <span class="st">"sentinel-2-l2a"</span>,</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"image/tiff"</span>, <span class="at">mosaicking_order =</span> <span class="st">"leastCC"</span>,</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">resolution =</span> <span class="dv">10</span>, <span class="at">mask =</span> <span class="cn">TRUE</span>, <span class="at">buffer =</span> <span class="fl">0.01</span>, <span class="at">client =</span> OAuthClient</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(evi_2022_06_23)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"EVI"</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>pred_stack_2022 <span class="ot">&lt;-</span> <span class="fu">c</span>(raw_2022_06_23, evi_2022_06_23[[<span class="dv">1</span>]], kndvi_2022_06_23[[<span class="dv">1</span>]], savi_2022_06_23[[<span class="dv">1</span>]])</span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">writeRaster</span>(pred_stack_2018, <span class="fu">file.path</span>(root_folder,<span class="st">"data/pred_stack_2018.tif"</span>), <span class="at">overwrite=</span><span class="cn">TRUE</span>)</span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">writeRaster</span>(pred_stack_2022, <span class="fu">file.path</span>(root_folder,<span class="st">"data/pred_stack_2022.tif"</span>), <span class="at">overwrite=</span><span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="step2-overview-unsupervised-classification" class="level2">
+<h2 class="anchored" data-anchor-id="step2-overview-unsupervised-classification">Step2: Overview – Unsupervised classification</h2>
+<section id="k-means-clustering" class="level3">
+<h3 class="anchored" data-anchor-id="k-means-clustering">k-means clustering</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Requires pred_stack_2018/2022 (CDSE) or create equivalent stacks otherwise</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">exists</span>(<span class="st">"pred_stack_2018"</span>)) pred_stack_2018 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/pred_stack_2018.tif"</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">exists</span>(<span class="st">"pred_stack_2022"</span>)) pred_stack_2022 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/pred_stack_2022.tif"</span>))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>prediction_kmeans_2018 <span class="ot">&lt;-</span> RStoolbox<span class="sc">::</span><span class="fu">unsuperClass</span>(</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  pred_stack_2018, <span class="at">nClasses =</span> <span class="dv">5</span>, <span class="at">norm =</span> <span class="cn">TRUE</span>, <span class="at">algorithm =</span> <span class="st">"MacQueen"</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(prediction_kmeans_2018<span class="sc">$</span>map, <span class="at">main =</span> <span class="st">"k-means 2018"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cd-1_files/figure-html/kmeans-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>prediction_kmeans_2022 <span class="ot">&lt;-</span> RStoolbox<span class="sc">::</span><span class="fu">unsuperClass</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  pred_stack_2022, <span class="at">nClasses =</span> <span class="dv">5</span>, <span class="at">norm =</span> <span class="cn">TRUE</span>, <span class="at">algorithm =</span> <span class="st">"MacQueen"</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(prediction_kmeans_2022<span class="sc">$</span>map, <span class="at">main =</span> <span class="st">"k-means 2022"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cd-1_files/figure-html/kmeans-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="bfast-spatial-identification-of-magnitudes-and-time-periods-of-kndvi-changes" class="level3">
+<h3 class="anchored" data-anchor-id="bfast-spatial-identification-of-magnitudes-and-time-periods-of-kndvi-changes">bfast: Spatial identification of magnitudes and time periods of kNDVI changes</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>gdalcubes<span class="sc">::</span><span class="fu">gdalcubes_options</span>(<span class="at">parallel =</span> <span class="dv">16</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>gdalcubes<span class="sc">::</span><span class="fu">ncdf_cube</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/harz_2018_2022_all.nc"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  gdalcubes<span class="sc">::</span><span class="fu">reduce_time</span>(<span class="at">names =</span> <span class="fu">c</span>(<span class="st">"change_date"</span>,<span class="st">"change_magnitude"</span>), <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    knr   <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="sc">-</span>((x[<span class="st">"B08"</span>,]<span class="sc">/</span><span class="dv">10000</span>)<span class="sc">-</span>(x[<span class="st">"B04"</span>,]<span class="sc">/</span><span class="dv">10000</span>))<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(<span class="dv">2</span>))</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    kndvi <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> knr) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> knr)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">all</span>(<span class="fu">is.na</span>(kndvi))) <span class="fu">return</span>(<span class="fu">c</span>(<span class="cn">NA</span>,<span class="cn">NA</span>))</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    kndvi_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(kndvi, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2018</span>,<span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(bfast)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tryCatch</span>({</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>      res <span class="ot">&lt;-</span> bfast<span class="sc">::</span><span class="fu">bfastmonitor</span>(kndvi_ts, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2019</span>,<span class="dv">1</span>), <span class="at">level =</span> <span class="fl">0.01</span>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(res<span class="sc">$</span>breakpoint, res<span class="sc">$</span>magnitude)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">error =</span> <span class="cf">function</span>(e) <span class="fu">c</span>(<span class="cn">NA</span>,<span class="cn">NA</span>))</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">|&gt;</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  gdalcubes<span class="sc">::</span><span class="fu">write_ncdf</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/bfast_results.nc"</span>), <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>gdalcubes<span class="sc">::</span><span class="fu">ncdf_cube</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/bfast_results.nc"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">key.pos =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="fu">ndvi.col</span>(<span class="dv">11</span>), <span class="at">nbreaks =</span> <span class="dv">12</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="step-3---generating-training-data" class="level2">
+<h2 class="anchored" data-anchor-id="step-3---generating-training-data">Step 3 - Generating training data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>pred_stack_2018 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/pred_stack_2018.tif"</span>))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>pred_stack_2022 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/pred_stack_2022.tif"</span>))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>tDF_2019 <span class="ot">&lt;-</span> exactextractr<span class="sc">::</span><span class="fu">exact_extract</span>(</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  pred_stack_2018, dplyr<span class="sc">::</span><span class="fu">filter</span>(train_areas_2019_2020, year <span class="sc">==</span> <span class="dv">2019</span>),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">force_df =</span> <span class="cn">TRUE</span>, <span class="at">include_cell =</span> <span class="cn">TRUE</span>, <span class="at">include_xy =</span> <span class="cn">TRUE</span>, <span class="at">full_colnames =</span> <span class="cn">TRUE</span>, <span class="at">include_cols =</span> <span class="st">"class"</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |=                                                                     |   2%
+  |                                                                            
+  |===                                                                   |   4%
+  |                                                                            
+  |====                                                                  |   6%
+  |                                                                            
+  |======                                                                |   8%
+  |                                                                            
+  |=======                                                               |  10%
+  |                                                                            
+  |=========                                                             |  12%
+  |                                                                            
+  |==========                                                            |  15%
+  |                                                                            
+  |============                                                          |  17%
+  |                                                                            
+  |=============                                                         |  19%
+  |                                                                            
+  |===============                                                       |  21%
+  |                                                                            
+  |================                                                      |  23%
+  |                                                                            
+  |==================                                                    |  25%
+  |                                                                            
+  |===================                                                   |  27%
+  |                                                                            
+  |====================                                                  |  29%
+  |                                                                            
+  |======================                                                |  31%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |=========================                                             |  35%
+  |                                                                            
+  |==========================                                            |  38%
+  |                                                                            
+  |============================                                          |  40%
+  |                                                                            
+  |=============================                                         |  42%
+  |                                                                            
+  |===============================                                       |  44%
+  |                                                                            
+  |================================                                      |  46%
+  |                                                                            
+  |==================================                                    |  48%
+  |                                                                            
+  |===================================                                   |  50%
+  |                                                                            
+  |====================================                                  |  52%
+  |                                                                            
+  |======================================                                |  54%
+  |                                                                            
+  |=======================================                               |  56%
+  |                                                                            
+  |=========================================                             |  58%
+  |                                                                            
+  |==========================================                            |  60%
+  |                                                                            
+  |============================================                          |  62%
+  |                                                                            
+  |=============================================                         |  65%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |================================================                      |  69%
+  |                                                                            
+  |==================================================                    |  71%
+  |                                                                            
+  |===================================================                   |  73%
+  |                                                                            
+  |====================================================                  |  75%
+  |                                                                            
+  |======================================================                |  77%
+  |                                                                            
+  |=======================================================               |  79%
+  |                                                                            
+  |=========================================================             |  81%
+  |                                                                            
+  |==========================================================            |  83%
+  |                                                                            
+  |============================================================          |  85%
+  |                                                                            
+  |=============================================================         |  88%
+  |                                                                            
+  |===============================================================       |  90%
+  |                                                                            
+  |================================================================      |  92%
+  |                                                                            
+  |==================================================================    |  94%
+  |                                                                            
+  |===================================================================   |  96%
+  |                                                                            
+  |===================================================================== |  98%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>tDF_2020 <span class="ot">&lt;-</span> exactextractr<span class="sc">::</span><span class="fu">exact_extract</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  pred_stack_2022, dplyr<span class="sc">::</span><span class="fu">filter</span>(train_areas_2019_2020, year <span class="sc">==</span> <span class="dv">2020</span>),</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">force_df =</span> <span class="cn">TRUE</span>, <span class="at">include_cell =</span> <span class="cn">TRUE</span>, <span class="at">include_xy =</span> <span class="cn">TRUE</span>, <span class="at">full_colnames =</span> <span class="cn">TRUE</span>, <span class="at">include_cols =</span> <span class="st">"class"</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |==                                                                    |   3%
+  |                                                                            
+  |====                                                                  |   5%
+  |                                                                            
+  |=====                                                                 |   8%
+  |                                                                            
+  |=======                                                               |  10%
+  |                                                                            
+  |=========                                                             |  13%
+  |                                                                            
+  |===========                                                           |  15%
+  |                                                                            
+  |=============                                                         |  18%
+  |                                                                            
+  |==============                                                        |  21%
+  |                                                                            
+  |================                                                      |  23%
+  |                                                                            
+  |==================                                                    |  26%
+  |                                                                            
+  |====================                                                  |  28%
+  |                                                                            
+  |======================                                                |  31%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |=========================                                             |  36%
+  |                                                                            
+  |===========================                                           |  38%
+  |                                                                            
+  |=============================                                         |  41%
+  |                                                                            
+  |===============================                                       |  44%
+  |                                                                            
+  |================================                                      |  46%
+  |                                                                            
+  |==================================                                    |  49%
+  |                                                                            
+  |====================================                                  |  51%
+  |                                                                            
+  |======================================                                |  54%
+  |                                                                            
+  |=======================================                               |  56%
+  |                                                                            
+  |=========================================                             |  59%
+  |                                                                            
+  |===========================================                           |  62%
+  |                                                                            
+  |=============================================                         |  64%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |================================================                      |  69%
+  |                                                                            
+  |==================================================                    |  72%
+  |                                                                            
+  |====================================================                  |  74%
+  |                                                                            
+  |======================================================                |  77%
+  |                                                                            
+  |========================================================              |  79%
+  |                                                                            
+  |=========================================================             |  82%
+  |                                                                            
+  |===========================================================           |  85%
+  |                                                                            
+  |=============================================================         |  87%
+  |                                                                            
+  |===============================================================       |  90%
+  |                                                                            
+  |=================================================================     |  92%
+  |                                                                            
+  |==================================================================    |  95%
+  |                                                                            
+  |====================================================================  |  97%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>tDF_2019 <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(tDF_2019); tDF_2019<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="dv">2019</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>tDF_2020 <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(tDF_2020); tDF_2020<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="dv">2020</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>tDF_2019 <span class="ot">&lt;-</span> tDF_2019[<span class="fu">complete.cases</span>(tDF_2019), ]</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>tDF_2020 <span class="ot">&lt;-</span> tDF_2020[<span class="fu">complete.cases</span>(tDF_2020), ]</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>tDF <span class="ot">&lt;-</span> <span class="fu">rbind</span>(tDF_2019, tDF_2020)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(tDF, <span class="fu">file.path</span>(root_folder,<span class="st">"data/tDF_2018_2022.rds"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-4---supervised-classification" class="level2">
+<h2 class="anchored" data-anchor-id="step-4---supervised-classification">Step 4 - supervised classification</h2>
+<section id="maximum-likelihood-classification-1" class="level3">
+<h3 class="anchored" data-anchor-id="maximum-likelihood-classification-1">Maximum Likelihood Classification</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>tDF <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/tDF_2018_2022.rds"</span>))</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>idx      <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">createDataPartition</span>(tDF<span class="sc">$</span>class, <span class="at">list =</span> <span class="cn">FALSE</span>, <span class="at">p =</span> <span class="fl">0.05</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>trainDat <span class="ot">&lt;-</span> tDF[idx,]</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>testDat  <span class="ot">&lt;-</span> tDF[<span class="sc">-</span>idx,]</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>trainDat<span class="sc">$</span>class <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(trainDat<span class="sc">$</span>class)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>testDat<span class="sc">$</span>class  <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(testDat<span class="sc">$</span>class)</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>sp_trainDat <span class="ot">&lt;-</span> trainDat</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>sp_testDat  <span class="ot">&lt;-</span> testDat</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>sp<span class="sc">::</span><span class="fu">coordinates</span>(sp_trainDat) <span class="ot">&lt;-</span> <span class="er">~</span>x<span class="sc">+</span>y</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>sp<span class="sc">::</span><span class="fu">coordinates</span>(sp_testDat)  <span class="ot">&lt;-</span> <span class="er">~</span>x<span class="sc">+</span>y</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>sp<span class="sc">::</span><span class="fu">proj4string</span>(sp_trainDat) <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">crs</span>(pred_stack_2018)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>sp<span class="sc">::</span><span class="fu">proj4string</span>(sp_testDat)  <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">crs</span>(pred_stack_2018)</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>prediction_mlc_2018 <span class="ot">&lt;-</span> RStoolbox<span class="sc">::</span><span class="fu">superClass</span>(</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  pred_stack_2018, <span class="at">trainData =</span> sp_trainDat[,<span class="dv">1</span><span class="sc">:</span><span class="dv">16</span>], <span class="at">valData =</span> sp_testDat[,<span class="dv">1</span><span class="sc">:</span><span class="dv">16</span>],</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">responseCol =</span> <span class="st">"class"</span>, <span class="at">model =</span> <span class="st">"mlc"</span>, <span class="at">tuneLength =</span> <span class="dv">1</span>,</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">trainPartition =</span> <span class="fl">0.3</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="fu">file.path</span>(root_folder,<span class="st">"data/prediction_mlc_2018.tif"</span>)</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>prediction_mlc_2022 <span class="ot">&lt;-</span> RStoolbox<span class="sc">::</span><span class="fu">superClass</span>(</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>  pred_stack_2022, <span class="at">trainData =</span> sp_trainDat[,<span class="dv">1</span><span class="sc">:</span><span class="dv">16</span>], <span class="at">valData =</span> sp_testDat[,<span class="dv">1</span><span class="sc">:</span><span class="dv">16</span>],</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">responseCol =</span> <span class="st">"class"</span>, <span class="at">model =</span> <span class="st">"mlc"</span>, <span class="at">tuneLength =</span> <span class="dv">1</span>,</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">trainPartition =</span> <span class="fl">0.3</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="fu">file.path</span>(root_folder,<span class="st">"data/prediction_mlc_2022.tif"</span>)</span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(prediction_mlc_2018, <span class="fu">file.path</span>(root_folder,<span class="st">"data/prediction_mlc_2018.rds"</span>))</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(prediction_mlc_2022, <span class="fu">file.path</span>(root_folder,<span class="st">"data/prediction_mlc_2022.rds"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="random-forest-1" class="level3">
+<h3 class="anchored" data-anchor-id="random-forest-1">Random forest</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>ctrlh <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"cv"</span>, <span class="at">number =</span> <span class="dv">10</span>, <span class="at">savePredictions =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>rf_model <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> trainDat[,<span class="dv">2</span><span class="sc">:</span><span class="dv">16</span>], <span class="at">y =</span> trainDat[,<span class="dv">1</span>],</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"rf"</span>, <span class="at">metric =</span> <span class="st">"Kappa"</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> ctrlh, <span class="at">importance =</span> <span class="cn">TRUE</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>rf_model</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(rf_model, <span class="fu">file.path</span>(root_folder,<span class="st">"data/rf_model.rds"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="prediction-on-the-original-data" class="level3">
+<h3 class="anchored" data-anchor-id="prediction-on-the-original-data">Prediction on the original data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>rf_model <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/rf_model.rds"</span>))</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>prediction_rf_2018 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">predict</span>(pred_stack_2018, rf_model)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>prediction_rf_2022 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">predict</span>(pred_stack_2022, rf_model)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(prediction_rf_2018, <span class="fu">file.path</span>(root_folder,<span class="st">"data/prediction_rf_2018.rds"</span>))</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(prediction_rf_2022, <span class="fu">file.path</span>(root_folder,<span class="st">"data/prediction_rf_2022.rds"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>prediction_rf_2018  <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/prediction_rf_2018.rds"</span>))</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>prediction_rf_2022  <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/prediction_rf_2022.rds"</span>))</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>prediction_mlc_2018 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/prediction_mlc_2018.tif"</span>))</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>prediction_mlc_2022 <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="fu">file.path</span>(root_folder,<span class="st">"data/prediction_mlc_2022.tif"</span>))</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>mask <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">resample</span>(harz_forest_mask, pred_stack_2022)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mask<span class="sc">*</span>prediction_rf_2022 <span class="sc">-</span> mask<span class="sc">*</span>prediction_rf_2018, <span class="at">main=</span><span class="st">"RF Δ 2022–2018"</span>) </span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mask<span class="sc">*</span>prediction_mlc_2022 <span class="sc">-</span> mask<span class="sc">*</span>prediction_mlc_2018, <span class="at">main=</span><span class="st">"MLC Δ 2022–2018"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-5-estimation-model-quality" class="level3">
+<h3 class="anchored" data-anchor-id="step-5-estimation-model-quality">Step 5: Estimation model quality</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>cm_rf <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">predict</span>(rf_model, <span class="at">newdata =</span> testDat),</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reference =</span> testDat<span class="sc">$</span>class</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>cm_rf</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="final-remarks" class="level2">
+<h2 class="anchored" data-anchor-id="final-remarks">Final Remarks</h2>
+<p>You may have noticed that we have mixed two different approaches …</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Literatur</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-gdalcubes" class="csl-entry" role="listitem">
+Appel, Marius, und Edzer Pebesma. 2019. <span>„On-Demand Processing of Data Cubes from Satellite Image Collections with the gdalcubes Library“</span>. <em>Data</em> 4 (3). <a href="https://www.mdpi.com/2306-5729/4/3/92">https://www.mdpi.com/2306-5729/4/3/92</a>.
+</div>
+<div id="ref-mapview" class="csl-entry" role="listitem">
+Appelhans, Tim, Florian Detsch, Christoph Reudenbach, und Stefan Woellauer. 2019. <em>mapview: Interactive Viewing of Spatial Data in R</em>. <a href="https://CRAN.R-project.org/package=mapview">https://CRAN.R-project.org/package=mapview</a>.
+</div>
+<div id="ref-rstac" class="csl-entry" role="listitem">
+Brazil Data Cube Team. 2021. <em>rstac: Client Library for SpatioTemporal Asset Catalog</em>. <a href="https://github.com/brazil-data-cube/rstac">https://github.com/brazil-data-cube/rstac</a>.
+</div>
+<div id="ref-openeo" class="csl-entry" role="listitem">
+Lahn, Florian. 2024. <em>openeo: Client Interface for ’openEO’ Servers</em>. <a href="https://CRAN.R-project.org/package=openeo">https://CRAN.R-project.org/package=openeo</a>.
+</div>
+<div id="ref-sf" class="csl-entry" role="listitem">
+Pebesma, Edzer. 2018. <span>„<span>Simple Features for R: Standardized Support for Spatial Vector Data</span>“</span>. <em><span>The R Journal</span></em> 10 (1): 439–46. <a href="https://doi.org/10.32614/RJ-2018-009">https://doi.org/10.32614/RJ-2018-009</a>.
+</div>
+<div id="ref-stars" class="csl-entry" role="listitem">
+———. 2019. <em>stars: Spatiotemporal Arrays, Raster and Vector Data Cubes</em>. <a href="https://CRAN.R-project.org/package=stars">https://CRAN.R-project.org/package=stars</a>.
+</div>
+<div id="ref-tmap" class="csl-entry" role="listitem">
+Tennekes, Martijn. 2018. <span>„<span>tmap</span>: Thematic Maps in <span>R</span>“</span>. <em>Journal of Statistical Software</em> 84 (6): 1–39. <a href="https://doi.org/10.18637/jss.v084.i06">https://doi.org/10.18637/jss.v084.i06</a>.
+</div>
+<div id="ref-bfast" class="csl-entry" role="listitem">
+Verbesselt, Jan, Achim Zeileis, und Martin Herold. 2012. <span>„Near real-time disturbance detection using satellite image time series“</span>. <em>Remote Sensing of Environment</em> 123: 98–108. <a href="https://doi.org/10.1016/j.rse.2012.02.022">https://doi.org/10.1016/j.rse.2012.02.022</a>.
+</div>
+<div id="ref-colorspace" class="csl-entry" role="listitem">
+Zeileis, Achim, Jason C. Fisher, Kurt Hornik, Ross Ihaka, Claire D. McWhite, Paul Murrell, Reto Stauffer, und Claus O. Wilke. 2020. <span>„<span>colorspace</span>: A Toolbox for Manipulating and Assessing Colors and Palettes“</span>. <em>Journal of Statistical Software</em> 96 (1): 1–49. <a href="https://doi.org/10.18637/jss.v096.i01">https://doi.org/10.18637/jss.v096.i01</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Jahr einsetzen
+  document.querySelectorAll('.year').forEach(function (el) {
+    el.textContent = new Date().getFullYear();
+  });
+
+  // Impressum-Link relativ zum Projekt-Root setzen
+  const offset = document.querySelector('meta[name="quarto:offset"]')?.getAttribute('content') || '';
+  document.querySelectorAll('a.impressum-link').forEach(function (a) {
+    a.setAttribute('href', offset + 'base/impressum.html');
+  });
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Kopiert");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Kopiert");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("^(?:http:|https:)//(gisma\-courses\.github\.io/LV\-19\-d19\-006\-25|www\.quarto\.org/custom)");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            // default icon
+            link.classList.add("external");
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reader/mc_2025_0.html" class="pagination-link" aria-label="Spatial Interpolation">
+        <span class="nav-page-text">Spatial Interpolation</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>gisma spatial science ressources (<span class="year"></span>) — <a class="impressum-link" href="base/impressum.html">Impressum</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

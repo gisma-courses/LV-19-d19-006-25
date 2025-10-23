@@ -4,14 +4,30 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+    inputs:
+      publish_local:
+        description: "Skip rendering and publish repo's docs/ as-is"
+        required: true
+        default: "false"
+        type: choice
+        options: ["false","true"]
 
 jobs:
-  build:
+  # =========================================================
+  # A) VOLLER RENDER/COMPUTE AUF GITHUB
+  #    - läuft auf push (normal)
+  #    - läuft auf workflow_dispatch, wenn publish_local == false
+  #    - wird übersprungen, wenn Commit-Message [local-docs] enthält
+  # =========================================================
+  render_and_publish:
+    if: >
+      (github.event_name == 'push' && !contains(github.event.head_commit.message, '[local-docs]'))
+      || (github.event_name == 'workflow_dispatch' && inputs.publish_local == 'false')
     runs-on: ubuntu-latest
     permissions:
       contents: write
     env:
-      # Token für remotes::install_github (vermeidet 401/Rate-Limits)
+      # PAT für remotes::install_github (Rate-Limits vermeiden)
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
@@ -100,10 +116,12 @@ jobs:
           pandoc --version | head -n 2
           tlmgr --version || true
 
-      # ---------- Render ----------
+      # ---------- Render (inkl. CDSE Secrets falls gesetzt) ----------
       - name: Render site (HTML + alt formats via format-links)
         env:
           QUARTO_PROFILE: ci
+          CDSE_CLIENT_ID: ${{ secrets.CDSE_CLIENT_ID }}
+          CDSE_CLIENT_SECRET: ${{ secrets.CDSE_CLIENT_SECRET }}
         run: |
           quarto render . --log-level=INFO
 
@@ -130,4 +148,39 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f docs
           git commit -m "CI: render site (HTML+PDF+DOCX) [skip ci]" || echo "Nothing to commit"
+          git push
+
+  # =========================================================
+  # B) PUBLISH LOCAL (KEIN RENDER/COMPUTE)
+  #    - läuft auf workflow_dispatch, wenn publish_local == true
+  #    - oder wenn Commit-Message [local-docs] enthält
+  #    - prüft nur, ob docs/ da ist, pusht es (falls nötig)
+  # =========================================================
+  publish_local:
+    if: >
+      (github.event_name == 'workflow_dispatch' && inputs.publish_local == 'true')
+      || (github.event_name == 'push' && contains(github.event.head_commit.message, '[local-docs]'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sanity check for local docs
+        run: |
+          if [ ! -f "docs/index.html" ]; then
+            echo "docs/index.html missing. Please build locally first (quarto render) and commit docs/."
+            exit 1
+          fi
+          # optional: sicherstellen, dass Pages keine Jekyll-Pipeline erzwingt
+          touch docs/.nojekyll
+
+      - name: Commit & push docs (no render)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f docs/.nojekyll || true
+          git commit -m "CI: publish local docs only [skip ci]" || echo "Nothing to commit"
           git push

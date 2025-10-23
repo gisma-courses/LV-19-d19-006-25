@@ -1,6 +1,6 @@
 project:
   type: website
-  output-dir: _site
+  output-dir: docs/
   resources:
     - images/**
 resource-path:
@@ -65,8 +65,13 @@ website:
         contents:
           - href: reader/cd-1.qmd
             text: Spatial data classification
-          - href: reader/mc3.qmd
-            text: Filling Gaps
+          - href: reader/mc_2025_0.qmd
+          # - reader/swiss_models_one_legend_bluewhite.html 
+          - href:  reader/mc_2025_1.qmd
+          - href:  reader/mc_2025_microclimate_viewer_merged.qmd
+          - href:  reader/mc_2025_tec.qmd
+          - href:  reader/mc_2025_data.qmd
+            text: Filling the Gaps
           - href: reader/cd2.qmd
             text: Data retrieval
           - href: slides/slides_session1.qmd

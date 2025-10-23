@@ -1,0 +1,3056 @@
+---
+title: "PipeModel Idealized valley microclimate sandbox "
+subtitle: "EON Summer School 2025"
+author: Chris Reudenbach, Philipps University Marburg (PUM)
+date: "2025-08-30"
+title-block-banner: ../images/tube-hp.png
+title-block-banner-color: black 
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    code-fold: true
+    number-sections: false
+    embed-resources: true
+execute:
+  echo: true
+  warning: false
+  message: false
+  results: hide
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+The **PipeModel** is a deliberately idealized yet physically plausible
+valley scenario. It distills terrain to the essentials (parabolic
+cross-valley profile) and optional features (left-side hill, right-side
+pond or hollow), so that dominant **microclimate drivers** become
+visible and testable:
+
+-   **Radiation** via terrain exposure `cos(i)` from slope & aspect
+-   **Elevation**: daytime negative lapse; pre-dawn weak inversion
+-   **Cold-air pooling** along the valley axis (Gaussian trough)
+-   **Surface type / land-cover** (grass / forest / water / bare soil /
+    maize) alters heating, shading, roughness and nocturnal behaviour
+
+You can sample synthetic stations, train interpolators (IDW, Kriging
+variants, RF, GAM), and assess them with **spatial LBO-CV**.
+
+![](pipe.png)
+
+## What the `pipemodel` is
+
+A didactic, reproducible pipeline for micro-scale spatial prediction
+with **process-aware features** and **scale tuning**. It simulates or
+ingests a domain (“scenario”), learns from station points, validates
+with **leave-block-out CV**, infers a characteristic **scale (R\*)**
+from data, re-trains at that scale, and produces tuned maps,
+diagnostics, and optional exports.
+
+## Architecture
+
+1.  **Main (orchestrator):** `main_ultra.R` is intentionally *thin*: it
+    wires pieces together, runs the stages in order, shows live
+    previews, and—optionally—saves outputs at the end. No heavy lifting.
+    
+```{r}
+#| eval: false
+#| echo: fenced
+
+  # =====================================================================
+  # main_ultra.R — minimal: run + (optional) save-at-end
+  #
+  # Purpose:
+  #   1) Source packages + your function library + scenario registry
+  #   2) Build scenario + station sets from a chosen scenario "make()" factory
+  #   3) Live preview: domain/land-cover/terrain + 2x2 overview + scenario preview
+  #   4) Baseline: leave-block-out CV (LBO-CV) and prediction maps (T14, T05)
+  #   5) Scale inference: empirical variogram -> (L50,L95) -> U-curve -> R*
+  #   6) Tuned CV & maps at R*
+  #   7) OPTIONAL: save all plots/tables/rasters at the end
+  #
+  # Design notes:
+  #   - This script stays "thin": all heavy lifting lives in fun_pipemodel.R
+  #     and the scenario files. This keeps the main pipe reproducible and
+  #     testable.
+  #   - Keep side effects (saving files) to the very end; set `export <- FALSE`
+  #     if you just want to run and eyeball plots interactively.
+  # =====================================================================
+  
+  message("=== pipe main (ultra) ===")
+  
+  # Toggle: set to FALSE to only run/plot without saving anything
+  export <- TRUE
+  
+  # ---------------------------------------------------------------------
+  # 0) Setup & packages (centralized in your packages.R)
+  #    - Loads CRAN pkgs (terra, sf, ggplot2, mgcv, gstat, suncalc, ...)
+  #    - Sets knitr options (if used in a notebook context)
+  #    - We also disable spherical geometry in sf to keep planar ops robust
+  #      for projected domains (UTM in our scenarios).
+  # ---------------------------------------------------------------------
+  source(here::here("block4_5/src/packages.R"))
+  sf::sf_use_s2(FALSE)
+  set.seed(42)  # one seed here (scenarios may set more where needed)
+  
+  # ---------------------------------------------------------------------
+  # 1) Functions + Scenario registry
+  #    - fun_pipemodel.R: your full function library (NO side effects)
+  #    - registry.R: maps scenario names to files; exposes source_scenario()
+  #      which returns a `make()` function to build the object.
+  # ---------------------------------------------------------------------
+  source(here::here("block4_5/src/fun_pipemodel.R"))
+  source(here::here("block4_5/src/fun_learn_predict_core.R"))
+  source(here::here("block4_5/scenarios/registry.R"))
+  
+  # ---------------------------------------------------------------------
+  # 2) Pick a scenario
+  #    - Choose via env var SCEN (e.g., export SCEN=scen_scaled_demo)
+  #    - Defaults to "lake_bump_dense" which is a realistic didactic scene
+  #      (valley, lake, bump hill, dense micro-relief, LC = forest/water/bare/baseline meadow).
+  # ---------------------------------------------------------------------
+  #scen_name <- Sys.getenv("SCEN", "lake_bump_dense")
+  scen_name <- Sys.getenv("SCEN", "scen_scaled_demo")
+  make_fun  <- source_scenario(scen_name)  # returns a function make(overrides=list(), do_cv=FALSE)
+  
+  # ---------------------------------------------------------------------
+  # 3) Build the object (domain + scenario + stations + params)
+  #    - `obj` is a list with a stable contract used downstream:
+  #        scen: list of rasters (E, R14, R05, I14, I05, lc, sun, ...)
+  #        stn_sf_14 / stn_sf_05: station sf at 14/05 UTC (features + temp)
+  #        block_size: integer (meters) used by LBO-CV
+  #        params$models: character vector of model names to run
+  # ---------------------------------------------------------------------
+  obj  <- make_fun()
+  scen <- obj$scen
+  st14 <- obj$stn_sf_14
+  st05 <- obj$stn_sf_05
+  bs   <- obj$block_size
+  mods <- obj$params$models
+  
+  # --- Safety checks that catch common wiring issues early ----------------------
+  stopifnot(inherits(st14, "sf"), inherits(st05, "sf"))
+  stopifnot(all(c("E","R14","R05") %in% names(scen)))
+  
+  # Sun geometry must be present for the R*-tuning (cosine-of-incidence features)
+  if (is.null(scen$sun) || is.null(scen$sun$T14) || is.null(scen$sun$T05)) {
+    stop("Scenario did not populate scen$sun$T14 / scen$sun$T05 (alt/az). ",
+         "Fix in the scenario builder (build_scenario) before tuning.")
+  }
+  if (any(is.null(c(scen$sun$T14$alt, scen$sun$T14$az,
+                    scen$sun$T05$alt, scen$sun$T05$az)))) {
+    stop("Sun angles (alt/az) are NULL. Scenario must supply numeric alt/az for T14/T05.")
+  }
+  
+  # ---------------------------------------------------------------------
+  # 4) Live preview: plots during the run (no side effects)
+  #    Why plot first?
+  #      - Instant sanity checks: station placement, LC, illumination maps
+  #      - Early visual cues if something is off (e.g., CRS mismatch)
+  # ---------------------------------------------------------------------
+  print(plot_landcover_terrain(scen, stations = st14, layout = "vertical"))
+  print(plot_block_overview_2x2_en(scen, pts_sf = st14))
+  # preview_scenario() may show truth fields, histograms, thumbnails, etc.
+  print(preview_scenario(obj))  # accepts obj or obj$scen in the robust version
+  
+    # ---------------------------------------------------------------------
+  # 5) Baseline LBO-CV & prediction maps
+  #    - For each time slice (T14 day / T05 pre-dawn):
+  #      1) Run leave-block-out CV on station data
+  #      2) Produce truth vs predicted raster maps (model ensemble)
+  #    - Diagnostics printed/printed:
+  #      * Metrics table (RMSE/MAE/R2 per model)
+  #      * Blocks plot (spatial CV blocks)
+  #      * Pred-vs-obs scatter plot
+  #      * Truth and prediction maps
+  # ---------------------------------------------------------------------
+  run14 <- run_for_time(st14, scen$R14, "T14", scen_local = scen, block_m = bs, models = mods)
+  run05 <- run_for_time(st05, scen$R05, "T05", scen_local = scen, block_m = bs, models = mods)
+  
+  cat("\n== Metrics T14 ==\n"); print(run14$res$metrics)
+  cat("\n== Metrics T05 ==\n"); print(run05$res$metrics)
+  
+  print(run14$res$blocks_plot); print(run14$res$diag_plot)
+  print(run05$res$blocks_plot); print(run05$res$diag_plot)
+  print(run14$maps$p_truth);    print(run14$maps$p_pred)
+  print(run05$maps$p_truth);    print(run05$maps$p_pred)
+  
+  # =====================================================================
+  # 6) SCALE → R* tuning → tuned CV + maps
+  #
+  # Pipeline rationale:
+  #   (a) Variogram reveals correlation ranges in the point field.
+  #   (b) U-curve scans DEM-smoothing radii ~ [L50, L95] to find data-driven R*.
+  #       Each radius implies a different "macro-signal" (E*, slope*, cosi*).
+  #       We refit CV at each R and pick the RMSE-minimizer (R*).
+  #   (c) With R* in hand, we derive feature rasters at that scale: E*, slp*, cosi*.
+  #   (d) Re-extract station features at R* to ensure training/prediction consistency.
+  #   (e) Run LBO-CV again (tuned) using E* as the reference raster for blocks/domain.
+  #   (f) Predict tuned maps by injecting the feature rasters.
+  #   (g) Build compact multi-model panels with residual diagnostics.
+  #
+  # Performance tips if tuning feels slow:
+  #   - Reduce n_grid in the U-curve (e.g., 5 instead of 9).
+  #     n_grid sets how many candidate smoothing radii are tested in the U-curve search for R*
+  #   - Trim `mods` to a smaller set while teaching the concept.
+  #   - Increase block size slightly (fewer blocks → fewer CV folds).
+  # =====================================================================
+  
+  # --- (a) Variogram → L50/L95 -------------------------------------------------
+  Ls14 <- compute_Ls_from_points(st14, value_col = "temp")
+  Ls05 <- compute_Ls_from_points(st05, value_col = "temp")
+  
+  p_vg14 <- plot_variogram_with_scales(Ls14$vg, Ls14$L50, Ls14$L95, Ls14$sill,
+                                       "T14 — empirical variogram")
+  p_vg05 <- plot_variogram_with_scales(Ls05$vg, Ls05$L50, Ls05$L95, Ls05$sill,
+                                       "T05 — empirical variogram")
+  print(p_vg14); print(p_vg05)
+  
+  # --- (b) U-curve → R* --------------------------------------------------------
+  # We pass *explicit* sun angles so tune_Rstar_ucurve() can build cosi@R
+  # consistently with the scenario's solar geometry.
+  tune14 <- tune_Rstar_ucurve(
+    stn_sf = st14,
+    E      = scen$E,
+    alt    = scen$sun$T14$alt,
+    az     = scen$sun$T14$az,
+    L50    = Ls14$L50,
+    L95    = Ls14$L95,
+    block_fallback = bs,
+    n_grid = 6
+  )
+  
+  tune05 <- tune_Rstar_ucurve(
+    stn_sf = st05,
+    E      = scen$E,
+    alt    = scen$sun$T05$alt,
+    az     = scen$sun$T05$az,
+    L50    = Ls05$L50,
+    L95    = Ls05$L95,
+    block_fallback = bs,
+    n_grid = 6
+  )
+  
+  # Plot the U-curves and report chosen R* (rounded for readability).
+  p_uc14 <- plot_ucurve(tune14$grid, tune14$R_star, "T14 — U-curve")
+  p_uc05 <- plot_ucurve(tune05$grid, tune05$R_star, "T05 — U-curve")
+  print(p_uc14); print(p_uc05)
+  
+  # IMPORTANT: use %.0f (not %d) because R* is numeric (may be non-integer).
+  message(sprintf("Chosen R* — T14: %.0f m | blocks ≈ %d m", tune14$R_star, tune14$block_m))
+  message(sprintf("Chosen R* — T05: %.0f m | blocks ≈ %d m", tune05$R_star, tune05$block_m))
+  
+  # --- (c) Feature rasters @R* -------------------------------------------------
+  # Smooth DEM at R* and derive slope/incident-cosine given the scenario sun angles.
+  fr14 <- smooth_dem_and_derive(
+    scen$E, scen$sun$T14$alt, scen$sun$T14$az, radius_m = tune14$R_star
+  )
+  fr05 <- smooth_dem_and_derive(
+    scen$E, scen$sun$T05$alt, scen$sun$T05$az, radius_m = tune05$R_star
+  )
+  
+  # --- (d) Station features @R* ------------------------------------------------
+  # Re-extract E*, slope*, cosi* (plus consistent LC factors) at station points.
+  # This keeps training features aligned with the tuned raster features.
+  st14_R <- add_drifts_at_R(
+    st14, scen$E, scen$sun$T14$alt, scen$sun$T14$az, tune14$R_star,
+    lc = scen$lc, lc_levels = scen$lc_levels,
+    na_action = "fill"   # or "drop" if you prefer to omit affected stations
+  )
+  st05_R <- add_drifts_at_R(
+    st05, scen$E, scen$sun$T05$alt, scen$sun$T05$az, tune05$R_star,
+    lc = scen$lc, lc_levels = scen$lc_levels,
+    na_action = "fill"   # or "drop" if you prefer to omit affected stations
+  )
+  
+  # --- (e) LBO-CV @R* ----------------------------------------------------------
+  # Use the tuned smoothed DEM (E*) as the reference for CV blocks and domain
+  # geometry so the CV respects the working resolution/scale of the model.
+  bench14 <- run_lbo_cv(st14_R, E = scen$E, block_size = bs, models = mods)
+  bench05 <- run_lbo_cv(st05_R, E = scen$E, block_size = bs, models = mods)
+  print(bench14$metrics); print(bench05$metrics)
+  
+  # --- (f) Tuned maps ----------------------------------------------------------
+  # Inject the tuned feature rasters so model predictions operate at R* scale.
+  maps14_tuned <- predict_maps(
+    stn_sf = st14_R, truth_raster = scen$R14, which_time = "T14",
+    scen = scen, models = mods, lc_levels = scen$lc_levels,
+    feature_rasters = list(E = fr14$Es, slp = fr14$slp, cosi = fr14$cosi)
+  )
+  maps05_tuned <- predict_maps(
+    stn_sf = st05_R, truth_raster = scen$R05, which_time = "T05",
+    scen = scen, models = mods, lc_levels = scen$lc_levels,
+    feature_rasters = list(E = fr05$Es, slp = fr05$slp, cosi = fr05$cosi)
+  )
+  
+  # --- (g) Panels: truth | predictions | residual diagnostics ------------------
+  panel_T14 <- build_panels_truth_preds_errors_paged(
+    maps = maps14_tuned, truth_raster = scen$R14, cv_tbl = bench14$cv,
+    which_time = "T14", models_per_page = 7, scatter_next_to_truth = TRUE
+  )
+  panel_T05 <- build_panels_truth_preds_errors_paged(
+    maps = maps05_tuned, truth_raster = scen$R05, cv_tbl = bench05$cv,
+    which_time = "T05", models_per_page = 7, scatter_next_to_truth = TRUE
+  )
+  print(panel_T14[[1]]); print(panel_T05[[1]])
+  
+  
+  # Sensor noise (°C) – from specs or co-location
+  sigma_inst <- 0.5
+  
+  # α from residual variogram (microscale share) – T14 and T05
+  alpha14 <- nugget_fraction_from_cv(bench14$cv, model = "RF", crs_ref = st14)
+  alpha05 <- nugget_fraction_from_cv(bench05$cv, model = "RF", crs_ref = st05)
+  
+  # Fallbacks if the fit fails
+  if (!is.finite(alpha14)) alpha14 <- 0.6
+  if (!is.finite(alpha05)) alpha05 <- 0.6
+  
+  # Fehlerbudgets berechnen (Base = runXX$res, Tuned = benchXX)
+  eb14_base  <- simple_error_budget(run14$res, sigma_inst, alpha14) |>
+    dplyr::mutate(Time = "T14", Mode = "Base")
+  eb05_base  <- simple_error_budget(run05$res, sigma_inst, alpha05) |>
+    dplyr::mutate(Time = "T05", Mode = "Base")
+  eb14_tuned <- simple_error_budget(bench14,   sigma_inst, alpha14) |>
+    dplyr::mutate(Time = "T14", Mode = "Tuned")
+  eb05_tuned <- simple_error_budget(bench05,   sigma_inst, alpha05) |>
+    dplyr::mutate(Time = "T05", Mode = "Tuned")
+  
+  eb_all <- dplyr::bind_rows(eb14_base, eb05_base, eb14_tuned, eb05_tuned) |>
+    dplyr::relocate(Time, Mode)
+  
+  print(eb_all)
+  
+  # einfache Stacked-Bar-Plot-Funktion
+  plot_error_budget <- function(df) {
+    d <- df |>
+      dplyr::filter(Component %in% c("Instrument var","Microscale var","Mesoscale var"))
+    ggplot2::ggplot(d,
+                    ggplot2::aes(x = interaction(Time, Mode, sep = " "), y = Value, fill = Component)
+    ) +
+      ggplot2::geom_col(position = "stack") +
+      ggplot2::theme_minimal() +
+      ggplot2::labs(x = NULL, y = "Variance (°C²)", title = "Error budget by time & mode")
+  }
+  p_eb <- plot_error_budget(eb_all)
+  print(p_eb)
+  # =====================================================================
+  # 7) Optional: save everything at the end (plots + tables + rasters)
+  #    - Change `export <- FALSE` at the top to only run/plot interactively
+  #    - We wrap saves in try() so a single failed save does not abort the run.
+  # =====================================================================
+  if (export) {
+    # ---------- Ausgabe-Verzeichnis: results_<scen-name> ----------
+    out_root <- here::here("block4_5")
+    out_dir  <- file.path(out_root, sprintf("results_%s", scen_name))
+    fig_dir  <- file.path(out_dir, "fig")
+    tab_dir  <- file.path(out_dir, "tab")
+    ras_dir  <- file.path(out_dir, "ras")
+    # ohne Rückfrage, rekursiv, ohne Warnungen
+    dir.create(fig_dir, recursive = TRUE, showWarnings = FALSE)
+    dir.create(tab_dir, recursive = TRUE, showWarnings = FALSE)
+    dir.create(ras_dir, recursive = TRUE, showWarnings = FALSE)
+    
+  
+    
+    # ---------- Baseline: Previews & CV-Plots ----------------------
+    save_plot_min(plot_landcover_terrain(scen, stations = st14, layout = "vertical"),
+                  fn_fig("landcover_terrain"))
+    save_plot_min(plot_block_overview_2x2_en(scen, pts_sf = st14), fn_fig("overview_2x2"))
+    save_plot_min(run14$res$blocks_plot, fn_fig("T14_blocks"))
+    save_plot_min(run14$res$diag_plot,   fn_fig("T14_diag"))
+    save_plot_min(run05$res$blocks_plot, fn_fig("T05_blocks"))
+    save_plot_min(run05$res$diag_plot,   fn_fig("T05_diag"))
+    save_plot_min(run14$maps$p_truth,    fn_fig("T14_truth"))
+    save_plot_min(run14$maps$p_pred,     fn_fig("T14_pred"))
+    save_plot_min(run05$maps$p_truth,    fn_fig("T05_truth"))
+    save_plot_min(run05$maps$p_pred,     fn_fig("T05_pred"))
+    
+    # --- Tuned Panels ---
+    save_plot_min(panel_T14[[1]], fn_fig("T14_panel_tuned"))
+    save_plot_min(panel_T05[[1]], fn_fig("T05_panel_tuned"))
+    
+    # --- Raster ---
+    save_raster_min(scen$E,   fn_ras("E_dem"))
+    save_raster_min(scen$R14, fn_ras("R14_truth"))
+    save_raster_min(scen$R05, fn_ras("R05_truth"))
+    if ("lc" %in% names(scen)) save_raster_min(scen$lc, fn_ras("landcover"))
+    # ---------- Scale inference + tuned panels ----------------------
+    safe_save_plot(p_vg14, fn_fig("T14_variogram"))
+    safe_save_plot(p_vg05, fn_fig("T05_variogram"))
+    safe_save_plot(p_uc14, fn_fig("T14_ucurve"))
+    safe_save_plot(p_uc05, fn_fig("T05_ucurve"))
+    safe_save_plot(panel_T14[[1]], fn_fig("T14_panel_tuned"))
+    safe_save_plot(panel_T05[[1]], fn_fig("T05_panel_tuned"))
+    
+    save_table_readable(bench14$metrics, "metrics_T14_tuned", "Tuned metrics — T14")
+    save_table_readable(bench05$metrics, "metrics_T05_tuned", "Tuned metrics — T05")
+    save_table_readable(tune14$grid,     "Ucurve_T14",       "U-curve grid — T14")
+    save_table_readable(tune05$grid,     "Ucurve_T05",       "U-curve grid — T05")
+    save_table_readable(data.frame(L50 = Ls14$L50, L95 = Ls14$L95, R_star = tune14$R_star),
+                        "scales_T14", "Scales — T14 (L50/L95/R*)")
+    save_table_readable(data.frame(L50 = Ls05$L50, L95 = Ls05$L95, R_star = tune05$R_star),
+                        "scales_T05", "Scales — T05 (L50/L95/R*)")
+    save_table_readable(run14$res$metrics, file.path(tab_dir, sprintf("metrics_T14_%s", scen_name)))
+    save_table_readable(run05$res$metrics, file.path(tab_dir, sprintf("metrics_T05_%s", scen_name)))
+    save_table_readable(bench14$metrics,   file.path(tab_dir, sprintf("metrics_T14_tuned_%s", scen_name)))
+    save_table_readable(bench05$metrics,   file.path(tab_dir, sprintf("metrics_T05_tuned_%s", scen_name)))
+    save_table_readable(eb_all,            file.path(tab_dir, sprintf("error_budget_%s", scen_name)))
+    #
+    # ---------- Raster mit Szenario-Präfix --------------------------
+    try(terra::writeRaster(scen$E,   fn_ras("E_dem")),     silent = TRUE)
+    try(terra::writeRaster(scen$R14, fn_ras("R14_truth")), silent = TRUE)
+    try(terra::writeRaster(scen$R05, fn_ras("R05_truth")), silent = TRUE)
+    if ("lc" %in% names(scen))
+      try(terra::writeRaster(scen$lc, fn_ras("landcover")), silent = TRUE)
+    
+    # ---------- Sessioninfo -----------------------------------------
+    try(saveRDS(sessionInfo(), file.path(out_dir, sprintf("%s_sessionInfo.rds", scen_name))),
+        silent = TRUE)
+    
+    message("✔ Exports written to: ", normalizePath(out_dir, winslash = "/"))
+  }
+  
+
+
+
+```
+
+2.  **Helpers / Core library:**
+
+    -   `packages.R`: centralized package loading and global run options
+        (e.g., `sf_use_s2(FALSE)`, seeds).
+```{r}
+#| eval: false
+#| echo: fenced
+# --- Paketliste an EINER Stelle pflegen ---------------------------------
+.req_pkgs <- list(
+  core      = c("terra","sf","suncalc","gstat"),
+  modeling  = c("randomForest","mgcv"),
+  wrangling = c("dplyr","tibble","tidyr"),
+  viz       = c("ggplot2","scales","patchwork","RColorBrewer"),
+  report    = c("knitr","kableExtra","here","zoo", "gt", "openxlsx", "writexl")
+
+)
+
+ensure_packages <- function(pkgs = unlist(.req_pkgs)) {
+  inst <- rownames(installed.packages())
+  missing <- setdiff(pkgs, inst)
+  if (length(missing)) install.packages(missing, dependencies = TRUE)
+  invisible(lapply(pkgs, require, character.only = TRUE))
+}
+
+after_load <- function() {
+  if (requireNamespace("sf", quietly = TRUE)) sf::sf_use_s2(FALSE)  # wie bisher
+}
+
+# Aufruf:
+ensure_packages()
+after_load()
+
+# ---- Pfade ------------------------------------------------------------
+base_dir <- tryCatch(here::here(), error = function(e) getwd())
+src_dir  <- file.path(base_dir, "block4_5", "src")
+out_dir  <- file.path(base_dir, "block4_5", "exports")
+fig_dir  <- file.path(out_dir, "figs")
+tab_dir  <- file.path(out_dir, "tables")
+ras_dir  <- file.path(out_dir, "rasters")
+dat_dir  <- file.path(out_dir, "data")
+
+dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
+for (d in c(fig_dir, tab_dir, ras_dir, dat_dir)) dir.create(d, showWarnings = FALSE, recursive = TRUE)
+
+
+```
+    -   `fun_pipemodel.R`: domain modeling utilities (plots, feature
+        derivation, variogram utilities, U-curve tuning, panels, saving
+        helpers).
+```{r}
+#| eval: false
+#| echo: fenced
+
+## ======================================================================
+## pipemodel_functions.R  —  nur Funktionen, keine Seiteneffekte
+## ======================================================================
+# ========================= I/O helpers (tables & plots) ======================
+
+
+# ---- Export-Helper (einfügen NACH out_dir/fig_dir/tab_dir/ras_dir) ----
+fn_fig <- function(stem, ext = "png") file.path(fig_dir, sprintf("%s.%s", stem, ext))
+fn_ras <- function(stem, ext = "tif") file.path(ras_dir, sprintf("%s.%s", stem, ext))
+
+save_plot_min <- function(p, file, width = 9, height = 6, dpi = 150, bg = "white") {
+  # Speichert ggplot ODER "druckbare" Plot-Objekte
+  dir.create(dirname(file), recursive = TRUE, showWarnings = FALSE)
+  if (inherits(p, "ggplot")) {
+    ggplot2::ggsave(filename = file, plot = p, width = width, height = height, dpi = dpi, bg = bg)
+  } else {
+    grDevices::png(filename = file, width = width, height = height, units = "in", res = dpi, bg = bg)
+    print(p)
+    grDevices::dev.off()
+  }
+  invisible(normalizePath(file, winslash = "/"))
+}
+
+safe_save_plot <- function(p, file, width = 9, height = 6, dpi = 150, bg = "white") {
+  try(save_plot_min(p, file, width, height, dpi, bg), silent = TRUE)
+}
+
+save_raster_min <- function(r, file, overwrite = TRUE) {
+  dir.create(dirname(file), recursive = TRUE, showWarnings = FALSE)
+  terra::writeRaster(r, file, overwrite = overwrite)
+  invisible(normalizePath(file, winslash = "/"))
+}
+
+
+# Save a table in CSV (+ optional HTML via gt, XLSX via openxlsx/writexl)
+# Robust to tibbles, list cols (ignored), and mistaken positional args.
+# Save a table as CSV (always), HTML (if gt is installed), and XLSX
+# file_stem: full path without extension, e.g. fn_tab("metrics_T14_base")
+save_table_readable <- function(df, file_stem,
+                                title = NULL,
+                                digits = 3,
+                                make_dirs = TRUE,
+                                verbose = FALSE) {
+  if (!inherits(df, "data.frame")) df <- as.data.frame(df)
+  
+  # Drop list-cols so write.csv/openxlsx don't choke
+  is_listcol <- vapply(df, is.list, logical(1))
+  if (any(is_listcol)) df <- df[ , !is_listcol, drop = FALSE]
+  
+  if (isTRUE(make_dirs)) dir.create(dirname(file_stem), showWarnings = FALSE, recursive = TRUE)
+  
+  # Round numeric columns safely
+  numcols <- vapply(df, is.numeric, TRUE)
+  if (any(numcols)) {
+    for (nm in names(df)[numcols]) df[[nm]] <- round(df[[nm]], digits)
+  }
+  
+  paths <- list()
+  
+  ## CSV
+  csv_path <- paste0(file_stem, ".csv")
+  utils::write.csv(df, csv_path, row.names = FALSE)
+  paths$csv <- csv_path
+  
+  ## HTML via gt (optional)
+  if (requireNamespace("gt", quietly = TRUE)) {
+    gt_tbl <- gt::gt(df)
+    if (!is.null(title)) gt_tbl <- gt::tab_header(gt_tbl, title = title)
+    gt::gtsave(gt_tbl, paste0(file_stem, ".html"))
+    paths$html <- paste0(file_stem, ".html")
+  } else if (verbose) {
+    message("[save_table_readable] Package 'gt' not installed → skipping HTML.")
+  }
+  
+  ## XLSX via openxlsx (preferred) or writexl (fallback)
+  xlsx_path <- paste0(file_stem, ".xlsx")
+  if (requireNamespace("openxlsx", quietly = TRUE)) {
+    wb <- openxlsx::createWorkbook()
+    openxlsx::addWorksheet(wb, "table")
+    
+    # Optional title in A1, style it a bit
+    start_row <- 1L
+    if (!is.null(title)) {
+      openxlsx::writeData(wb, "table", title, startRow = start_row, startCol = 1)
+      # bold, bigger font for title
+      st <- openxlsx::createStyle(textDecoration = "bold", fontSize = 14)
+      openxlsx::addStyle(wb, "table", st, rows = start_row, cols = 1, gridExpand = TRUE, stack = TRUE)
+      start_row <- start_row + 2L  # blank row after title
+    }
+    
+    openxlsx::writeData(wb, "table", df, startRow = start_row, startCol = 1)
+    openxlsx::saveWorkbook(wb, xlsx_path, overwrite = TRUE)
+    paths$xlsx <- xlsx_path
+  } else if (requireNamespace("writexl", quietly = TRUE)) {
+    writexl::write_xlsx(df, xlsx_path)
+    paths$xlsx <- xlsx_path
+  } else if (verbose) {
+    message("[save_table_readable] Neither 'openxlsx' nor 'writexl' installed → skipping XLSX.")
+  }
+  
+  invisible(paths)
+}
+
+
+
+#' Save a ggplot/patchwork safely (no-op if not a plot)
+#'
+#' @param p A ggplot/patchwork object.
+#' @param file Output path (with extension, e.g. \code{.png}).
+#' @param width,height Figure size in inches.
+#' @param dpi Resolution in dots per inch.
+#' @param bg Background color (default \code{"white"}).
+#' @keywords io export plot
+save_plot_safe <- function(p, file, width = 9, height = 6, dpi = 300, bg = "white") {
+  if (inherits(p, c("gg", "ggplot", "patchwork"))) {
+    dir.create(dirname(file), showWarnings = FALSE, recursive = TRUE)
+    try(ggplot2::ggsave(file, p, width = width, height = height, dpi = dpi, bg = bg),
+        silent = TRUE)
+  }
+}
+# =============================================================================
+
+order_models_by_median_rmse <- function(cv_tbl) {
+  bm <- block_metrics_long(cv_tbl)
+  bm |>
+    dplyr::filter(Metric == "RMSE") |>
+    dplyr::group_by(model) |>
+    dplyr::summarise(med = stats::median(Value, na.rm = TRUE), .groups = "drop") |>
+    dplyr::arrange(med) |>
+    dplyr::pull(model)
+}
+
+# Block-wise metrics (RMSE, MAE)
+block_metrics_long <- function(cv_tbl) {
+  stopifnot(all(c("model","block_id","obs","pred") %in% names(cv_tbl)))
+  cv_tbl |>
+    dplyr::group_by(model, block_id) |>
+    dplyr::summarise(
+      RMSE = sqrt(mean((obs - pred)^2, na.rm = TRUE)),
+      MAE  = mean(abs(obs - pred), na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    tidyr::pivot_longer(c(RMSE, MAE), names_to = "Metric", values_to = "Value")
+}
+make_block_metric_box <- function(cv_tbl, which_time = "T14", tail_cap = 0.995) {
+  bm <- block_metrics_long(cv_tbl) |>
+    dplyr::filter(is.finite(Value))
+  if (!is.null(tail_cap)) {
+    ymax <- stats::quantile(bm$Value, tail_cap, na.rm = TRUE)
+  }
+  lev <- order_models_by_median_rmse(cv_tbl)
+  bm$model <- factor(bm$model, levels = lev)
+  
+  ggplot2::ggplot(bm, ggplot2::aes(model, Value)) +
+    ggplot2::geom_boxplot(outlier.alpha = 0.35, width = 0.7) +
+    ggplot2::stat_summary(fun = mean, geom = "point", shape = 23, size = 3,
+                          fill = "white", colour = "black", stroke = 0.5) +
+    ggplot2::coord_cartesian(ylim = c(0, ymax)) +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(title = sprintf("%s — Block-wise errors (LBO-CV)", which_time),
+                  subtitle = "Box = IQR · line = median · ◆ = mean",
+                  x = "Model", y = "Error") +
+    ggplot2::facet_wrap(~ Metric, scales = "free_y")
+}
+
+make_abs_error_box <- function(cv_tbl, which_time = "T14", tail_cap = 0.995) {
+  df <- cv_tbl |>
+    dplyr::mutate(abs_err = abs(pred - obs)) |>
+    dplyr::filter(is.finite(abs_err))
+  ymax <- if (!is.null(tail_cap)) stats::quantile(df$abs_err, tail_cap, na.rm = TRUE) else max(df$abs_err, na.rm = TRUE)
+  lev <- df |>
+    dplyr::group_by(model) |>
+    dplyr::summarise(med = stats::median(abs_err, na.rm = TRUE), .groups = "drop") |>
+    dplyr::arrange(med) |>
+    dplyr::pull(model)
+  df$model <- factor(df$model, levels = lev)
+  
+  ggplot2::ggplot(df, ggplot2::aes(model, abs_err)) +
+    ggplot2::geom_boxplot(outlier.alpha = 0.3, width = 0.7) +
+    ggplot2::stat_summary(fun = mean, geom = "point", shape = 23, size = 3,
+                          fill = "white", colour = "black", stroke = 0.5) +
+    ggplot2::coord_cartesian(ylim = c(0, ymax)) +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(title = sprintf("%s — Absolute errors per station (LBO-CV)", which_time),
+                  subtitle = "Box = IQR · line = median · ◆ = mean",
+                  x = "Model", y = "|pred − obs|")
+}
+
+
+make_obs_pred_scatter <- function(cv_tbl, which_time = "T14") {
+  lab <- .make_labeller(cv_tbl)
+  ggplot(cv_tbl, aes(obs, pred)) +
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+    geom_point(alpha = 0.7, shape = 16) +
+    coord_equal() + theme_minimal() +
+    labs(title = sprintf("%s — Observed vs Predicted (LBO-CV)", which_time), x = "Observed", y = "Predicted") +
+    facet_wrap(~ model, ncol = 3, labeller = ggplot2::as_labeller(lab))
+}
+
+make_residual_density <- function(cv_tbl, which_time = "T14") {
+  cv_tbl |> dplyr::mutate(resid = pred - obs) |> ggplot2::ggplot(ggplot2::aes(resid, fill = model)) +
+    ggplot2::geom_density(alpha = 0.4) + ggplot2::theme_minimal() +
+    ggplot2::labs(title = sprintf("%s — Residual density", which_time), x = "Residual (°C)", y = "Density")
+}
+
+# Prediction maps & error panels ---------------------------------------
+.make_labeller <- function(cv_tbl) {
+  m <- cv_tbl |>
+    dplyr::group_by(model) |>
+    dplyr::summarise(RMSE = sqrt(mean((obs - pred)^2, na.rm = TRUE)), MAE  = mean(abs(obs - pred), na.rm = TRUE), .groups = "drop")
+  setNames(sprintf("%s  (RMSE=%.2f · MAE=%.2f)", m$model, m$RMSE, m$MAE), m$model)
+}
+.plot_raster_gg <- function(r, title = "", palette = temp_palette, q = c(0.02,0.98), lims = NULL) {
+  stopifnot(terra::nlyr(r) == 1)
+  df <- as.data.frame(r, xy = TRUE, na.rm = FALSE)
+  nm <- names(df)[3]
+  if (is.null(lims)) {
+    vv <- terra::values(r, na.rm = TRUE)
+    lims <- stats::quantile(vv, probs = q, na.rm = TRUE, names = FALSE)
+  }
+  ggplot2::ggplot(df, ggplot2::aes(.data$x, .data$y, fill = .data[[nm]])) +
+    ggplot2::geom_raster() +
+    ggplot2::coord_equal() +
+    ggplot2::scale_fill_gradientn(colours = palette, limits = lims, oob = scales::squish) +
+    ggplot2::labs(title = title, x = NULL, y = NULL, fill = "°C") +
+    ggplot2::theme_minimal(base_size = 11) +
+    ggplot2::theme(legend.position = "right",
+                   plot.title = ggplot2::element_text(face = "bold"))
+}
+
+.get_preds_from_maps <- function(maps) {
+  # 1) SpatRaster direkt
+  if (inherits(maps, "SpatRaster")) {
+    ul <- terra::unstack(maps)
+    names(ul) <- names(maps)
+    return(ul)
+  }
+  # 2) Liste mit typischen Feldern
+  if (is.list(maps)) {
+    if (!is.null(maps$preds))          return(maps$preds)
+    if (!is.null(maps$pred_rasters))   return(maps$pred_rasters)
+    if (!is.null(maps$pred_stack) && inherits(maps$pred_stack, "SpatRaster")) {
+      ul <- terra::unstack(maps$pred_stack); names(ul) <- names(maps$pred_stack); return(ul)
+    }
+    if (!is.null(maps$stack) && inherits(maps$stack, "SpatRaster")) {
+      ul <- terra::unstack(maps$stack); names(ul) <- names(maps$stack); return(ul)
+    }
+    if (!is.null(maps$maps) && inherits(maps$maps, "SpatRaster")) {
+      ul <- terra::unstack(maps$maps); names(ul) <- names(maps$maps); return(ul)
+    }
+    # 3) Liste, die bereits einzelne SpatRaster oder ggplots enthält
+    cand <- maps[ vapply(maps, function(x) inherits(x, "SpatRaster") || inherits(x, "ggplot"), logical(1)) ]
+    if (length(cand) > 0) return(cand)
+  }
+  stop("build_panels_with_errors(): In 'maps' keine Vorhersagen gefunden.")
+}
+# --- Kartenplot mit optionalen Achsenticks/labels ----------------------
+.plot_map_axes <- function(r, title, cols, lims, q = c(0.02,0.98),
+                           base_size = 14, tick_n = 5,
+                           show_axis_labels = FALSE, show_axis_ticks = TRUE) {
+  stopifnot(terra::nlyr(r) == 1)
+  df <- as.data.frame(r, xy = TRUE, na.rm = FALSE)
+  nm <- names(df)[3]
+  
+  if (is.null(lims) || !all(is.finite(lims)) || lims[1] >= lims[2]) {
+    vv <- terra::values(r, na.rm = TRUE)
+    lims <- stats::quantile(vv, probs = q, na.rm = TRUE, names = FALSE)
+    if (!all(is.finite(lims)) || lims[1] == lims[2]) lims <- range(vv, na.rm = TRUE) + c(-1e-6, 1e-6)
+  }
+  if (is.function(cols)) cols <- cols(256)
+  if (!is.atomic(cols) || length(cols) < 2) cols <- grDevices::hcl.colors(256, "YlOrRd")
+  
+  ggplot2::ggplot(df, ggplot2::aes(x, y, fill = .data[[nm]])) +
+    ggplot2::geom_raster() +
+    ggplot2::coord_equal(expand = FALSE) +
+    ggplot2::scale_x_continuous(expand = c(0,0), breaks = scales::breaks_pretty(n = tick_n)) +
+    ggplot2::scale_y_continuous(expand = c(0,0), breaks = scales::breaks_pretty(n = tick_n)) +
+    ggplot2::scale_fill_gradientn(colours = cols, limits = lims, oob = scales::squish) +
+    ggplot2::labs(title = title, x = NULL, y = NULL, fill = "°C") +
+    ggplot2::theme_minimal(base_size = base_size) +
+    ggplot2::theme(
+      legend.position = "right",
+      plot.title = ggplot2::element_text(face = "bold"),
+      axis.title   = ggplot2::element_blank(),
+      axis.text    = if (show_axis_labels) ggplot2::element_text(size = base_size - 3) else ggplot2::element_blank(),
+      axis.ticks   = if (show_axis_ticks)  ggplot2::element_line(linewidth = 0.25) else ggplot2::element_blank(),
+      panel.border = ggplot2::element_rect(fill = NA, colour = "grey40", linewidth = .4)
+    )
+}
+build_panels_truth_preds_errors_paged <- function(
+    maps, truth_raster, cv_tbl, which_time,
+    models_per_page = 4,
+    model_order      = NULL,
+    temp_pal         = temp_palette,     # Vektor ODER Funktion -> wird zu Vektor
+    stretch_q        = c(0.02, 0.98),
+    errors_height    = 1.2,
+    scatter_next_to_truth = TRUE,        # Scatter rechts von Truth?
+    top_widths       = c(1.1, 0.9),      # Breitenverhältnis Truth | Scatter
+    show_second_legend = FALSE           # zweite °C-Legende bei den Preds unterdrücken
+) {
+  stopifnot(length(stretch_q) == 2)
+  if (is.function(temp_pal)) temp_pal <- temp_pal(256)
+  stopifnot(is.atomic(temp_pal), length(temp_pal) >= 2)
+  
+  # Vorhersagen einsammeln / Reihenfolge
+  preds_raw  <- .get_preds_from_maps(maps)
+  pred_names <- names(preds_raw) %||% paste0("model_", seq_along(preds_raw))
+  if (!is.null(model_order)) {
+    keep <- intersect(model_order, pred_names)
+    if (!length(keep)) stop("model_order enthält keine gültigen Modellnamen.")
+    preds_raw  <- preds_raw[keep]
+    pred_names <- keep
+  }
+  
+  # Gemeinsame Farbskala
+  all_vals <- c(terra::values(truth_raster, na.rm = TRUE))
+  for (p in preds_raw) if (inherits(p, "SpatRaster")) all_vals <- c(all_vals, terra::values(p, na.rm = TRUE))
+  lims <- stats::quantile(all_vals, probs = stretch_q, na.rm = TRUE, names = FALSE)
+  if (all(is.finite(lims)) && lims[1] == lims[2]) {
+    eps <- .Machine$double.eps * max(1, abs(lims[1])); lims <- lims + c(-eps, eps)
+  }
+  
+  # Helfer: Raster -> ggplot
+  make_tile <- function(obj, title_txt, show_legend = TRUE) {
+    if (inherits(obj, "SpatRaster")) {
+      g <- .plot_raster_gg(obj, title = title_txt, palette = temp_pal, q = stretch_q, lims = lims)
+      if (!show_legend) g <- g + ggplot2::theme(legend.position = "none")
+      g
+    } else if (inherits(obj, "ggplot")) {
+      obj + ggplot2::labs(title = title_txt)
+    } else stop("Nicht unterstützter Prediction-Typ: ", class(obj)[1])
+  }
+  
+  # Truth (+ optional Scatter daneben)
+  p_truth   <- .plot_raster_gg(truth_raster, title = paste0(which_time, " — truth"),
+                               palette = temp_pal, q = stretch_q, lims = lims)
+  p_scatter <- make_obs_pred_scatter(cv_tbl, which_time = which_time)
+  
+  # Prediction-Kacheln bauen (nur erste mit °C-Legende falls gewünscht)
+  pred_tiles <- lapply(seq_along(preds_raw), function(i) {
+    show_leg <- if (isTRUE(show_second_legend)) TRUE else (i == 1L)
+    make_tile(preds_raw[[i]], pred_names[i], show_legend = show_leg)
+  })
+  
+  # Paginierung
+  n <- length(pred_tiles)
+  idx_split <- split(seq_len(n), ceiling(seq_len(n) / models_per_page))
+  
+  pages <- lapply(idx_split, function(idx) {
+    preds_row <- patchwork::wrap_plots(pred_tiles[idx], nrow = 1, ncol = length(idx))
+    
+    top_row <- if (isTRUE(scatter_next_to_truth)) {
+      (p_truth | (p_scatter + ggplot2::theme(legend.position = "none"))) +
+        patchwork::plot_layout(widths = top_widths)
+    } else {
+      p_truth
+    }
+    
+    # Errors unten: wenn Scatter schon oben, unten nur Dichte
+    p_box_rmse <- make_block_metric_box(cv_tbl, which_time = which_time, tail_cap = 0.995)
+    p_box_ae   <- make_abs_error_box  (cv_tbl, which_time = which_time, tail_cap = 0.995)
+    p_dens     <- make_residual_density(cv_tbl, which_time = which_time)
+    p_errors   <- (p_box_rmse | p_box_ae) / p_dens
+    
+    (top_row / preds_row / p_errors) +
+      patchwork::plot_layout(heights = c(1, 1, errors_height), guides = "collect") &
+      ggplot2::theme(legend.position = "right")
+  })
+  
+  pages
+}
+.pm_verbose <- function(v = NULL) {
+  if (!is.null(v)) return(isTRUE(v))
+  isTRUE(getOption("pipemodel.verbose", FALSE))
+}
+pm_say <- function(fmt, ..., v = NULL) {
+  if (.pm_verbose(v)) message(sprintf(fmt, ...))
+}
+.k_for_xy <- function(n, n_xy) max(3, min(60, n_xy - 1L, floor(n * 0.8)))
+.kcap_unique <- function(x, kmax) {
+  ux <- unique(x[is.finite(x)])
+  nu <- length(ux)
+  if (nu <= 3) return(0L)                # treat as constant/near-constant
+  max(4L, min(kmax, nu - 1L))
+}
+
+`%||%` <- function(a, b) if (!is.null(a)) a else b
+# --- Sun helper (self-contained in the lib) --------------------------
+sun_pos_utc <- function(y, m, d, h, lat, lon) {
+  t  <- as.POSIXct(sprintf("%04d-%02d-%02d %02d:00:00", y, m, d, h), tz = "UTC")
+  sp <- suncalc::getSunlightPosition(date = t, lat = lat, lon = lon)
+  list(
+    alt = sp$altitude,
+    az  = (sp$azimuth + pi) %% (2*pi)  # convert to [0, 2π) from north
+  )
+}
+
+# Sun helper: pull sun14/sun05 from scen; else compute; else fallback
+.get_sun <- function(scen, which = c("T14","T05")) {
+  which <- match.arg(which)
+  key   <- if (which == "T14") "sun14" else "sun05"
+  
+  # 1) stored in scen?
+  s <- scen[[key]]
+  if (is.list(s) && is.finite(s$alt) && is.finite(s$az)) return(s)
+  
+  # 2) compute from lat/lon/sun_date if available
+  if (all(c("lat","lon","sun_date") %in% names(scen))) {
+    hour <- if (which == "T14") 14L else 5L
+    return(sun_pos_utc(scen$sun_date, hour, scen$lat, scen$lon))
+  }
+  
+  # 3) hard fallback
+  list(alt = if (which == "T14") 0.75 else 0.10, az = 0.0)
+}
+
+# -------------------------- Defaults -----------------------------------
+lc_levels_default <- c("forest","water","bare soil","meadows")
+lc_levels <- getOption("pipemodel.lc_levels", lc_levels_default)
+
+lc_colors_default <- c(
+  "forest"   = "#2E8B57",
+  "water"    = "#5DADE2",
+  "bare soil"= "#C49A6C",
+  "meadows"  = "#7FBF7B"
+)
+temp_palette <- grDevices::colorRampPalette(c("#0000FF","#FF0000"))
+stretch_q    <- c(0.02, 0.98)
+# Normalize any CRS input to a non-empty character string
+norm_crs <- function(crs, fallback = "EPSG:32632") {
+  # allow sf::crs, numeric EPSG, character EPSG/WKT
+  if (inherits(crs, "crs")) {
+    out <- sf::st_crs(crs)$wkt
+  } else if (is.numeric(crs) && length(crs) == 1 && is.finite(crs)) {
+    out <- sprintf("EPSG:%d", as.integer(crs))
+  } else if (is.character(crs) && length(crs) >= 1) {
+    out <- crs[1]
+  } else {
+    out <- NA_character_
+  }
+  if (!length(out) || is.na(out) || identical(out, "")) out <- fallback
+  out
+}
+
+# -------------------------- Domain/Template -----------------------------
+make_domain <- function(center_E, center_N, len_x, len_y, res, crs = "EPSG:32632") {
+  crs <- norm_crs(crs)
+  ext <- terra::ext(center_E - len_x/2, center_E + len_x/2,
+                    center_N - len_y/2, center_N + len_y/2)
+  Rtemplate <- terra::rast(ext, resolution = res, crs = crs)
+  list(
+    xmin = terra::xmin(ext), xmax = terra::xmax(ext),
+    ymin = terra::ymin(ext), ymax = terra::ymax(ext),
+    x0 = center_E, y0 = center_N,
+    res = as.numeric(res), crs = crs,
+    Rtemplate = Rtemplate
+  )
+}
+
+
+compute_block_size <- function(len_x, len_y, n_st,
+                               target_st_per_block = 3,
+                               min_blocks_axis = 3,
+                               round_to = 50) {
+  area <- len_x * len_y
+  B_target <- max(min_blocks_axis^2, round(n_st / target_st_per_block))
+  bs <- sqrt(area / B_target)
+  bs <- min(bs, len_x / min_blocks_axis, len_y / min_blocks_axis)
+  bs <- max(round_to, round(bs / round_to) * round_to)
+  as.integer(bs)
+}
+
+# -------------------------- Sonne/Geometrie -----------------------------
+
+# Cosine of incidence on a slope/aspect for a given sun (radians)
+cosi_fun <- function(alt, az, slp_r, asp_r) {
+  zen <- (pi/2 - alt)
+  ci  <- cos(slp_r)*cos(zen) + sin(slp_r)*sin(zen)*cos(az - asp_r)
+  terra::ifel(ci < 0, 0, ci)
+}
+
+# Sun position at a given UTC date + hour (numeric hour), return radians
+sun_pos_utc <- function(sun_date, hour_utc, lat, lon) {
+  stopifnot(inherits(sun_date, "Date"), length(hour_utc) == 1)
+  t  <- as.POSIXct(sprintf("%s %02d:00:00", format(sun_date, "%Y-%m-%d"), as.integer(hour_utc)), tz = "UTC")
+  sp <- suncalc::getSunlightPosition(date = t, lat = lat, lon = lon)
+  list(
+    alt = as.numeric(sp$altitude),                   # radians
+    az  = as.numeric((sp$azimuth + pi) %% (2*pi))    # convert to [0..2π) from north
+  )
+}
+
+
+# -------------------------- Rauschen ------------------------------------
+make_noise_pair <- function(template, sd14 = 0.3, sd05 = 0.3,
+                            seed14 = 1001, seed05 = 1002) {
+  set.seed(seed14)
+  n14 <- terra::setValues(terra::rast(template), rnorm(terra::ncell(template), 0, sd14))
+  set.seed(seed05)
+  n05 <- terra::setValues(terra::rast(template), rnorm(terra::ncell(template), 0, sd05))
+  list(noise14 = n14, noise05 = n05)
+}
+
+# -------------------------- Topographie ---------------------------------
+build_topography <- function(domain,
+                             lake_mode = c("none","water","hollow"),
+                             hill_mode = c("none","bump"),
+                             lake_diam_m  = 50,  lake_depth_m = 10, smooth_edges = FALSE,
+                             hill_diam_m  = 80,  hill_height_m = 50, hill_smooth  = FALSE) {
+  lake_mode <- match.arg(lake_mode); hill_mode <- match.arg(hill_mode)
+  Rtemplate <- domain$Rtemplate
+  x0 <- domain$x0; y0 <- domain$y0
+  xmin <- domain$xmin; xmax <- domain$xmax
+  len_x <- xmax - xmin; y_hc <- y0
+  x_hc <- xmin + len_x/3; x_lc <- xmin + 2*len_x/3; y_lc <- y0
+  
+  XY <- as.data.frame(terra::xyFromCell(Rtemplate, 1:terra::ncell(Rtemplate)))
+  names(XY) <- c("x","y")
+  dy <- XY$y - y0
+  a  <- 100 / (( (domain$ymax - domain$ymin)/2 )^2)
+  elev <- 500 + a * dy^2
+  
+  # See/Grube
+  rl <- sqrt((XY$x - x_lc)^2 + (XY$y - y_lc)^2); lr <- lake_diam_m/2
+  if (lake_mode %in% c("water","hollow")) {
+    w_l <- if (smooth_edges) pmax(0, 1 - (rl/lr)^2) else as.numeric(rl <= lr)
+    elev <- elev - lake_depth_m * w_l
+  } else w_l <- 0
+  
+  # Haupt-Hügel
+  if (hill_mode == "bump") {
+    rh <- sqrt((XY$x - x_hc)^2 + (XY$y - y_hc)^2); hr <- max(1e-6, hill_diam_m/2)
+    w_h <- if (hill_smooth) exp(-(rh/hr)^2) else as.numeric(rh <= hr)
+    elev <- elev + hill_height_m * w_h
+  } else w_h <- 0
+  
+  E <- Rtemplate; terra::values(E) <- elev; names(E) <- "elev"
+  lakeR <- Rtemplate; terra::values(lakeR) <- if (lake_mode=="water") as.numeric(w_l>0) else 0; names(lakeR) <- "lake"
+  hillW <- Rtemplate; terra::values(hillW) <- w_h; names(hillW) <- "hillW"
+  
+  slp  <- terra::terrain(E, v="slope",  unit="radians")
+  asp  <- terra::terrain(E, v="aspect", unit="radians")
+  
+  list(E = E, lake = lakeR, hillW = hillW,
+       slp = terra::ifel(is.na(slp), 0, slp),
+       asp = terra::ifel(is.na(asp), 0, asp))
+}
+# --- Sun helpers (UTC) -------------------------------------------------
+sun_pos_utc <- function(date, hour, lat, lon) {
+  t  <- as.POSIXct(sprintf("%s %02d:00:00", as.Date(date), hour), tz = "UTC")
+  sp <- suncalc::getSunlightPosition(date = t, lat = lat, lon = lon)
+  # Azimut: 0 = Nord, positiv im Uhrzeigersinn
+  list(alt = sp$altitude, az = (sp$azimuth + pi) %% (2*pi))
+}
+
+# -------------------------- Physikfelder --------------------------------
+build_physics_fields <- function(topography, landcover,
+                                 noise14, noise05,
+                                 alpha_I_by_lc = c("forest" = 3.5, "water" = 1.5, "bare soil" = 6.0, "meadows" = 4.0),
+                                 shade_fac_by_lc = c("forest" = 0.60, "water" = 1.00, "bare soil" = 1.00, "meadows" = 0.95),
+                                 dawn_bias_by_lc = c("forest" = 0.30, "water" = 1.20, "bare soil" = -0.50, "meadows" = 0.05),
+                                 pool_fac_by_lc  = c("forest" = 0.70, "water" = 0.80, "bare soil" = 1.10, "meadows" = 1.05),
+                                 pool_block_gain = 0.4,
+                                 sun14 = list(alt = 0.75, az = 0.0),
+                                 sun05 = list(alt = 0.10, az = 0.0))
+                                 {
+  E    <- topography$E
+  slp0 <- topography$slp
+  asp0 <- topography$asp
+  hillW<- topography$hillW
+  
+  # Sonnen-Inzidenz
+  I14 <- cosi_fun(sun14$alt, sun14$az, slp0, asp0)
+  I05 <- cosi_fun(sun05$alt, sun05$az, slp0, asp0)
+  
+  lc <- if (inherits(landcover, "SpatRaster")) landcover else landcover$lc
+  stopifnot(inherits(lc, "SpatRaster"))
+  
+  v <- as.integer(terra::values(lc))
+  v[!is.finite(v)] <- 1L
+  v <- pmax(1L, pmin(v, length(lc_levels_default)))
+  lc_char <- factor(lc_levels_default[v], levels = lc_levels_default)
+  
+  to_r <- function(x) terra::setValues(terra::rast(E), x)
+  alpha_I <- to_r(as.numeric(alpha_I_by_lc[lc_char]))
+  shade_f <- to_r(as.numeric(shade_fac_by_lc[lc_char]))
+  dawn_b  <- to_r(as.numeric(dawn_bias_by_lc[lc_char]))
+  pool_f  <- to_r(as.numeric(pool_fac_by_lc[lc_char]))
+  
+  I14_eff <- I14 * shade_f
+  
+  E_mean <- terra::global(E, "mean", na.rm = TRUE)[1,1]
+  Y <- terra::init(E, "y")
+  dist2ax <- abs(Y - (terra::ymax(E)+terra::ymin(E))/2)
+  w_pool <- 70
+  pool_base <- 4.0 * exp(- (dist2ax / w_pool)^2)
+  pool_mod  <- pool_base * (1 - pool_block_gain * hillW) * pool_f
+  
+  T0_14 <- 26.0; lapse_14 <- -0.0065
+  R14 <- T0_14 + lapse_14 * (E - E_mean) + alpha_I * I14_eff + noise14; names(R14) <- "T14"
+  
+  T0_05 <- 8.5; inv_05 <- 0.003; eta_slope <- 0.6
+  R05 <- T0_05 + inv_05 * (E - E_mean) + eta_slope * slp0 - pool_mod + dawn_b + noise05; names(R05) <- "T05"
+  
+  list(R14 = R14, R05 = R05, I14 = I14, I05 = I05)
+}
+
+# --- Sun + cos(i) helpers (safe to keep once in your lib) --------------------
+cosi_fun <- function(alt, az, slp_r, asp_r) {
+  zen <- (pi/2 - alt)
+  ci  <- cos(slp_r)*cos(zen) + sin(slp_r)*sin(zen)*cos(az - asp_r)
+  terra::ifel(ci < 0, 0, ci)
+}
+
+sun_pos_utc <- function(sun_date, hour_utc, lat, lon) {
+  stopifnot(inherits(sun_date, "Date"))
+  t  <- as.POSIXct(sprintf("%s %02d:00:00",
+                           format(sun_date, "%Y-%m-%d"),
+                           as.integer(hour_utc)), tz = "UTC")
+  sp <- suncalc::getSunlightPosition(date = t, lat = lat, lon = lon)
+  list(
+    alt = as.numeric(sp$altitude),                  # radians
+    az  = as.numeric((sp$azimuth + pi) %% (2*pi))   # [0..2π) from north
+  )
+}
+
+build_scenario <- function(
+    domain,
+    lake_mode = c("none","water","hollow"),
+    hill_mode = c("none","bump"),
+    # main hill / lake geometry (meters)
+    lake_diam_m  = 50,  lake_depth_m = 10, smooth_edges = FALSE,
+    hill_diam_m  = 80,  hill_height_m = 50, hill_smooth  = FALSE,
+    # micro-relief (meters)
+    random_hills        = 0,
+    micro_hill_diam_m   = 30,
+    micro_hill_height_m = 50,
+    micro_hill_smooth   = TRUE,
+    micro_seed          = NULL,
+    # sun / geo
+    lat = 51.8, lon = 10.6, sun_date = as.Date("2024-06-21"),
+    # optional noise
+    noise14 = NULL, noise05 = NULL
+) {
+  lake_mode <- match.arg(lake_mode)
+  hill_mode <- match.arg(hill_mode)
+  
+  # --- 0) Template & CRS guard (must be meters) -----------------------
+  ext <- terra::ext(domain$xmin, domain$xmax, domain$ymin, domain$ymax)
+  Rtemplate <- terra::rast(ext, resolution = domain$res, crs = domain$crs)
+  
+  crs_sf <- sf::st_crs(terra::crs(Rtemplate, proj=TRUE))
+  if (isTRUE(sf::st_is_longlat(crs_sf))) {
+    stop(
+      "build_scenario(): Domain CRS is geographic (degrees). ",
+      "All geometry is in meters. Use a projected CRS (e.g. UTM / EPSG:32632)."
+    )
+  }
+  
+  xmin <- terra::xmin(ext); xmax <- terra::xmax(ext)
+  ymin <- terra::ymin(ext); ymax <- terra::ymax(ext)
+  len_x <- xmax - xmin;     len_y <- ymax - ymin
+  x0 <- (xmin + xmax)/2;    y0 <- (ymin + ymax)/2
+  
+  # coordinate rasters
+  X <- terra::init(Rtemplate, "x")
+  Y <- terra::init(Rtemplate, "y")
+  
+  # quick sanity for scale
+  px <- mean(terra::res(Rtemplate))
+  lr_px <- (lake_diam_m/2) / px
+  hr_px <- (hill_diam_m/2) / px
+  message(sprintf("[build_scenario] pixel=%.2f m; lake r=%.1f px; hill r=%.1f px", px, lr_px, hr_px))
+  
+  # --- 1) Base valley --------------------------------------------------
+  a  <- 100 / ((len_y/2)^2)
+  E  <- 500 + a * (Y - y0)^2
+  names(E) <- "elev"
+  
+  # --- 2) Lake (mirror of hill, negative) ------------------------------
+  x_lc <- xmin + 2*len_x/3;  y_lc <- y0
+  lr   <- max(1e-6, lake_diam_m/2)
+  rl   <- sqrt((X - x_lc)^2 + (Y - y_lc)^2)
+  
+  w_l <- if (isTRUE(smooth_edges)) {
+    exp(-(rl/lr)^2)            # Gaussian "bump"
+  } else {
+    terra::ifel(rl <= lr, 1, 0) # hard disc
+  }
+  
+  if (lake_mode %in% c("water","hollow")) {
+    E <- E - as.numeric(lake_depth_m) * w_l
+  }
+  lakeR <- if (identical(lake_mode, "water")) terra::ifel(w_l > 1e-6, 1L, 0L)
+  else terra::setValues(terra::rast(Rtemplate), 0L)
+  names(lakeR) <- "lake"
+  
+  # --- 3) Main hill ----------------------------------------------------
+  x_hc <- xmin + len_x/3;  y_hc <- y0
+  hr   <- max(1e-6, hill_diam_m/2)
+  rh   <- sqrt((X - x_hc)^2 + (Y - y_hc)^2)
+  
+  w_h_main <- if (hill_mode == "bump") {
+    if (isTRUE(hill_smooth)) exp(-(rh/hr)^2) else terra::ifel(rh <= hr, 1, 0)
+  } else {
+    0 * X
+  }
+  E <- E + as.numeric(hill_height_m) * w_h_main
+  
+  # --- 4) Micro hills (additive, clamped to 1) ------------------------
+  w_h_micro <- 0 * X
+  if (random_hills > 0) {
+    if (!is.null(micro_seed)) set.seed(micro_seed)
+    margin <- micro_hill_diam_m/2 + 5
+    hrm <- max(1e-6, micro_hill_diam_m/2)
+    for (i in seq_len(random_hills)) {
+      cx <- runif(1, xmin + margin, xmax - margin)
+      cy <- runif(1, ymin + margin, ymax - margin)
+      r  <- sqrt((X - cx)^2 + (Y - cy)^2)
+      wi <- if (isTRUE(micro_hill_smooth)) exp(-(r/hrm)^2) else terra::ifel(r <= hrm, 1, 0)
+      sum_i <- w_h_micro + wi
+      w_h_micro <- terra::ifel(sum_i > 1, 1, sum_i)  # clamp without pmin()
+    }
+    E <- E + as.numeric(micro_hill_height_m) * w_h_micro
+  }
+  
+  hillW <- w_h_main + w_h_micro
+  hillW <- terra::ifel(hillW > 1, 1, hillW); names(hillW) <- "hillW"
+  
+  # --- 5) Derivatives --------------------------------------------------
+  slp <- terra::terrain(E, v = "slope",  unit = "radians")
+  asp <- terra::terrain(E, v = "aspect", unit = "radians")
+  
+  # --- 6) Sun & cos(i) -------------------------------------------------
+  sun14 <- sun_pos_utc(sun_date, 14L, lat, lon)
+  sun05 <- sun_pos_utc(sun_date,  5L, lat, lon)
+  I14   <- cosi_fun(sun14$alt, sun14$az, slp, asp); names(I14) <- "I14"
+  I05   <- cosi_fun(sun05$alt, sun05$az, slp, asp); names(I05) <- "I05"
+  
+  # --- 7) Land cover (1 forest, 2 water, 3 bare, 4 meadows) -----------
+  lc <- terra::setValues(terra::rast(Rtemplate), 4L)  # meadows
+  lc <- terra::ifel(lakeR > 0, 2L, lc)                # water overrides
+  forest_mask <- terra::ifel((hillW > 0.2) | ((slp > 0.15) & (Y > y0)), 1, 0)
+  lc <- terra::ifel((forest_mask == 1) & (lakeR <= 0), 1L, lc)
+  v_slp   <- terra::values(slp)
+  thr_slp <- stats::quantile(v_slp[is.finite(v_slp)], 0.90, na.rm = TRUE)
+  bare_mask <- terra::ifel((slp >= thr_slp) & (lakeR <= 0) & (forest_mask == 0), 1, 0)
+  lc <- terra::ifel(bare_mask == 1, 3L, lc)
+  lc <- terra::clamp(lc, 1L, 4L); names(lc) <- "lc"
+  
+  lc_levels <- c("forest","water","bare soil","meadows")
+  lc_colors <- c("forest"="#2E8B57","water"="#5DADE2","bare soil"="#C49A6C","meadows"="#7FBF7B")
+  
+  # --- 8) Noise --------------------------------------------------------
+  if (is.null(noise14)) {
+    set.seed(1001)
+    noise14 <- terra::setValues(terra::rast(E), rnorm(terra::ncell(E), 0, 0.3))
+  }
+  if (is.null(noise05)) {
+    set.seed(1002)
+    noise05 <- terra::setValues(terra::rast(E), rnorm(terra::ncell(E), 0, 0.3))
+  }
+  
+  # --- 9) Physics fields ----------------------------------------------
+  topo <- list(E = E, slp = slp, asp = asp, hillW = hillW)
+  phys <- build_physics_fields(
+    topography = topo, landcover = lc,
+    noise14 = noise14, noise05 = noise05,
+    sun14 = sun14, sun05 = sun05
+  )
+  R14 <- phys$R14; R05 <- phys$R05
+  
+  # --- 10) Return ------------------------------------------------------
+  list(
+    E = E, slp = slp, asp = asp,
+    I14 = I14, I05 = I05,
+    R14 = R14, R05 = R05,
+    lake = lakeR, hillW = hillW,
+    lc = lc, lc_levels = lc_levels, lc_colors = lc_colors,
+    sun = list(T14 = sun14, T05 = sun05)
+  )
+}
+
+
+
+
+# -------------------------- Stationen/Features -------------------------
+make_stations <- function(domain, n_st = 60,
+                          station_mode = c("random","ns_transect","ew_transect"),
+                          transect_margin_m = 10, ns_offset_m = 0, ew_offset_m = 0,
+                          crs = sf::st_crs(domain$Rtemplate)) {
+  station_mode <- match.arg(station_mode)
+  with(domain, {
+    if (station_mode == "random") {
+      pts <- tibble::tibble(
+        id = 1:n_st,
+        x  = runif(n_st, xmin + transect_margin_m, xmax - transect_margin_m),
+        y  = runif(n_st, ymin + transect_margin_m, ymax - transect_margin_m)
+      )
+    } else if (station_mode == "ns_transect") {
+      x_const <- min(max(x0 + ns_offset_m, xmin + transect_margin_m), xmax - transect_margin_m)
+      y_seq   <- seq(ymin + transect_margin_m, ymax - transect_margin_m, length.out = n_st)
+      pts <- tibble::tibble(id = 1:n_st, x = x_const, y = y_seq)
+    } else {
+      y_const <- min(max(y0 + ew_offset_m, ymin + transect_margin_m), ymax - transect_margin_m)
+      x_seq   <- seq(xmin + transect_margin_m, xmax - transect_margin_m, length.out = n_st)
+      pts <- tibble::tibble(id = 1:n_st, x = x_seq, y = y_const)
+    }
+    sf::st_as_sf(pts, coords = c("x","y"), crs = crs, remove = FALSE)
+  })
+}
+
+stations_from_scenario <- function(scen, pts_sf) {
+  vpts <- terra::vect(pts_sf)
+  df <- tibble::as_tibble(pts_sf) %>%
+    dplyr::mutate(
+      z_surf = as.numeric(terra::extract(scen$E,   vpts, ID = FALSE)[,1]),
+      slp    = as.numeric(terra::extract(scen$slp, vpts, ID = FALSE)[,1]),
+      I14    = as.numeric(terra::extract(scen$I14, vpts, ID = FALSE)[,1]),
+      I05    = as.numeric(terra::extract(scen$I05, vpts, ID = FALSE)[,1]),
+      lc     = as.integer(terra::extract(scen$lc,  vpts, ID = FALSE)[,1]),
+      T14    = as.numeric(terra::extract(scen$R14, vpts, ID = FALSE)[,1]),
+      T05    = as.numeric(terra::extract(scen$R05, vpts, ID = FALSE)[,1])
+    )
+  lc_levels <- scen$lc_levels
+  pts14 <- df[stats::complete.cases(df[, c("x","y","z_surf","slp","I14","lc","T14")]), ]
+  pts05 <- df[stats::complete.cases(df[, c("x","y","z_surf","slp","I05","lc","T05")]), ]
+  stn_sf_14 <- pts14 %>%
+    dplyr::transmute(id, x, y,
+                     z_surf = as.numeric(z_surf), slp = as.numeric(slp), cosi = as.numeric(I14),
+                     lc = factor(lc_levels[pmax(1, pmin(lc, length(lc_levels)))], levels = lc_levels),
+                     temp = as.numeric(T14)) %>%
+    sf::st_as_sf(coords = c("x","y"), crs = sf::st_crs(pts_sf), remove = FALSE)
+  stn_sf_05 <- pts05 %>%
+    dplyr::transmute(id, x, y,
+                     z_surf = as.numeric(z_surf), slp = as.numeric(slp), cosi = as.numeric(I05),
+                     lc = factor(lc_levels[pmax(1, pmin(lc, length(lc_levels)))], levels = lc_levels),
+                     temp = as.numeric(T05)) %>%
+    sf::st_as_sf(coords = c("x","y"), crs = sf::st_crs(pts_sf), remove = FALSE)
+  list(T14 = stn_sf_14, T05 = stn_sf_05)
+}
+
+# -------------------------- Plots: Übersicht ---------------------------
+
+# -------------------------- Preview: Domain ----------------------------
+# Zeigt Extent, optional ein Grid, und annotiert Kern-Parameter.
+preview_domain <- function(domain, grid = TRUE, grid_step = NULL, annotate = TRUE) {
+  stopifnot(is.list(domain), !is.null(domain$Rtemplate))
+  crs <- sf::st_crs(domain$Rtemplate)
+  bb  <- sf::st_as_sfc(sf::st_bbox(c(
+    xmin = domain$xmin, ymin = domain$ymin,
+    xmax = domain$xmax, ymax = domain$ymax
+  ), crs = crs))
+
+  p <- ggplot2::ggplot() +
+    ggplot2::geom_sf(data = bb, fill = NA, color = "black", linewidth = 0.7) +
+    ggplot2::coord_sf(crs = crs, datum = NA, expand = FALSE) +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(title = "Domain preview", x = "Easting (m)", y = "Northing (m)")
+
+  if (isTRUE(grid)) {
+    len_x <- domain$xmax - domain$xmin
+    len_y <- domain$ymax - domain$ymin
+    step  <- if (is.null(grid_step)) max(100, round(min(len_x, len_y)/6, -2)) else grid_step
+    gr    <- sf::st_make_grid(bb, cellsize = c(step, step), what = "polygons")
+    gr_ln <- sf::st_as_sf(sf::st_boundary(gr))
+    p <- p + ggplot2::geom_sf(data = gr_ln, color = "grey70", linewidth = 0.2)
+  }
+
+  if (isTRUE(annotate)) {
+    r   <- terra::res(domain$Rtemplate)
+    txt <- sprintf(
+      "Center: (%.0f, %.0f)\nSize: %.0f × %.0f m\nRes: %.0f × %.0f m\nCRS: %s",
+      domain$x0, domain$y0,
+      domain$xmax - domain$xmin, domain$ymax - domain$ymin,
+      r[1], r[2], as.character(terra::crs(domain$Rtemplate))
+    )
+    p <- p + ggplot2::annotate(
+      "label",
+      x = domain$xmin + 0.02 * (domain$xmax - domain$xmin),
+      y = domain$ymin + 0.06 * (domain$ymax - domain$ymin),
+      label = txt, hjust = 0, vjust = 0, size = 3
+    )
+  }
+
+  print(p)
+  invisible(p)
+}
+
+# -------------------------- Preview: Szenario-Raster -------------------
+# Visualisiert die vorhandenen Raster im Szenario (ohne Modelle/CV).
+preview_scenario <- function(x,
+                             which = c("lc","E","slp","R14","R05"),
+                             stations = NULL,
+                             show_contours = TRUE,
+                             layout = c("grid","vertical")) {
+  layout <- match.arg(layout)
+  
+  # ---- Szenario + Stationen erkennen ---------------------------------
+  scen <- if (is.list(x) && !is.null(x$scen)) x$scen else x
+  if (is.null(stations) && is.list(x)) {
+    stations <- x$pts_sf %||% x$stn_sf_14 %||% x$stn_sf_05
+  }
+  
+  # ---- Verfügbare Ebenen sammeln -------------------------------------
+  layers <- list(
+    lc  = scen$lc,
+    E   = scen$E,
+    slp = scen$slp,
+    R14 = scen$R14,
+    R05 = scen$R05
+  )
+  keep <- names(layers) %in% which & vapply(layers, function(r) inherits(r,"SpatRaster"), TRUE)
+  layers <- layers[keep]
+  if (!length(layers)) stop("preview_scenario(): Keine der angefragten Ebenen im Szenario vorhanden.")
+  
+  # ---- optionale Konturen vorbereiten --------------------------------
+  add_contours <- function(p) p
+  if (isTRUE(show_contours)) {
+    adders <- list()
+    
+    has_lake <- !is.null(scen$lake) && inherits(scen$lake, "SpatRaster")
+    if (has_lake) {
+      lake_df <- as.data.frame(scen$lake, xy = TRUE); names(lake_df) <- c("x","y","lake")
+      adders[[length(adders)+1]] <- ggplot2::geom_contour(
+        data = lake_df,
+        mapping = ggplot2::aes(x = x, y = y, z = lake),
+        breaks = 0.5, colour = "black", linewidth = 0.35,
+        inherit.aes = FALSE
+      )
+    }
+    
+    has_hill <- !is.null(scen$hillW) && inherits(scen$hillW, "SpatRaster")
+    if (has_hill) {
+      hill_df <- as.data.frame(scen$hillW, xy = TRUE); names(hill_df) <- c("x","y","hillW")
+      adders[[length(adders)+1]] <- ggplot2::geom_contour(
+        data = hill_df,
+        mapping = ggplot2::aes(x = x, y = y, z = hillW),
+        breaks = 0.5, colour = "black", linetype = "22", linewidth = 0.3,
+        inherit.aes = FALSE
+      )
+    }
+    
+    add_contours <- function(p) {
+      if (length(adders)) for (a in adders) p <- p + a
+      p
+    }
+  }
+  
+  # ---- Einzelplots bauen ----------------------------------------------
+  make_plot <- function(name, r) {
+    df <- as.data.frame(r, xy = TRUE); names(df) <- c("x","y","val")
+    
+    if (name == "lc") {
+      levs <- scen$lc_levels %||% c("1","2","3","4")
+      pal  <- scen$lc_colors %||% setNames(scales::hue_pal()(length(levs)), levs)
+      df$val <- factor(df$val, levels = seq_along(levs), labels = levs)
+      p <- ggplot2::ggplot(df, ggplot2::aes(x, y, fill = val)) +
+        ggplot2::geom_raster() +
+        ggplot2::scale_fill_manual(
+          values = pal[levels(df$val)],  # <-- sicher auf Levels abbilden
+          na.value = "grey90", name = "Landuse"
+        ) +
+        ggplot2::coord_equal() + ggplot2::theme_minimal() +
+        ggplot2::labs(title = "Landuse", x = "Easting", y = "Northing")
+    } else {
+      p <- ggplot2::ggplot(df, ggplot2::aes(x, y, fill = val)) +
+        ggplot2::geom_raster() +
+        ggplot2::coord_equal() + ggplot2::theme_minimal() +
+        ggplot2::labs(
+          title = switch(name,
+                         E   = "Elevation (m)",
+                         slp = "Slope (rad)",
+                         R14 = "T 14 UTC",
+                         R05 = "T 05 UTC",
+                         name),
+          x = "Easting", y = "Northing"
+        )
+      if (name %in% c("E","slp")) {
+        p <- p + ggplot2::scale_fill_viridis_c()
+      } else {
+        p <- p + ggplot2::scale_fill_gradientn(colors = temp_palette(256), name = "Temp")
+      }
+    }
+    
+    # Konturen (nur falls vorhanden)
+    p <- add_contours(p)
+    
+    # Stationen optional
+    if (!is.null(stations) && inherits(stations, "sf")) {
+      # stilles CRS-Align (Fehlermeldungen unterdrücken)
+      suppressWarnings({
+        stations_plot <- try(sf::st_transform(stations, sf::st_crs(scen$lc %||% scen$E)), silent = TRUE)
+        if (inherits(stations_plot, "try-error")) stations_plot <- stations
+        p <- p + ggplot2::geom_sf(
+          data = stations_plot, colour = "black", fill = "white",
+          shape = 21, size = 1.6, stroke = 0.25, inherit.aes = FALSE
+        )
+      })
+    }
+    p
+  }
+  
+  plots <- Map(make_plot, names(layers), layers)
+  
+  # ---- kombinieren ----------------------------------------------------
+  if (length(plots) == 1) {
+    p_out <- plots[[1]]
+  } else if (layout == "vertical") {
+    p_out <- patchwork::wrap_plots(plots, ncol = 1)
+  } else {
+    p_out <- patchwork::wrap_plots(plots, ncol = min(3, length(plots)))
+  }
+  
+  print(p_out)
+  invisible(p_out)
+}
+
+
+
+
+plot_landcover_terrain <- function(scen, stations = NULL, show_contours = TRUE,
+                                   layout = c("grid","vertical")) {
+  layout <- match.arg(layout)
+  lc_df  <- as.data.frame(scen$lc,  xy = TRUE); names(lc_df)  <- c("x","y","lc")
+  E_df   <- as.data.frame(scen$E,   xy = TRUE); names(E_df)   <- c("x","y","elev")
+  slp_df <- as.data.frame(scen$slp, xy = TRUE); names(slp_df) <- c("x","y","slp")
+  lc_df$lc <- factor(lc_df$lc, levels = seq_along(scen$lc_levels), labels = scen$lc_levels)
+  
+  p_lc <- ggplot2::ggplot() +
+    ggplot2::geom_raster(data = lc_df, ggplot2::aes(x, y, fill = lc)) +
+    ggplot2::scale_fill_manual(values = scen$lc_colors, na.value = "grey90", name = "Landuse") +
+    ggplot2::coord_equal() + ggplot2::theme_minimal() +
+    ggplot2::labs(title = "Landuse", x = "Easting", y = "Northing")
+  
+  p_elev <- ggplot2::ggplot() +
+    ggplot2::geom_raster(data = E_df, ggplot2::aes(x, y, fill = elev)) +
+    ggplot2::scale_fill_viridis_c(name = "Altitude [m]") +
+    ggplot2::coord_equal() + ggplot2::theme_minimal() +
+    ggplot2::labs(title = "Altitude", x = "Easting", y = "Northing")
+  
+  p_slp <- ggplot2::ggplot() +
+    ggplot2::geom_raster(data = slp_df, ggplot2::aes(x, y, fill = slp)) +
+    ggplot2::scale_fill_viridis_c(name = "Slope [rad]") +
+    ggplot2::coord_equal() + ggplot2::theme_minimal() +
+    ggplot2::labs(title = "Slope", x = "Easting", y = "Northing")
+  
+  if (isTRUE(show_contours)) {
+    lake_df <- as.data.frame(scen$lake, xy = TRUE); names(lake_df) <- c("x","y","lake")
+    hill_df <- as.data.frame(scen$hillW, xy = TRUE); names(hill_df) <- c("x","y","hillW")
+    p_lc  <- p_lc  +
+      ggplot2::geom_contour(data = lake_df, ggplot2::aes(x, y, z = lake),
+                            breaks = 0.5, colour = "black", linewidth = 0.35) +
+      ggplot2::geom_contour(data = hill_df, ggplot2::aes(x, y, z = hillW),
+                            breaks = 0.5, colour = "black", linetype = "22", linewidth = 0.3)
+    p_slp <- p_slp +
+      ggplot2::geom_contour(data = lake_df, ggplot2::aes(x, y, z = lake),
+                            breaks = 0.5, colour = "black", linewidth = 0.35) +
+      ggplot2::geom_contour(data = hill_df, ggplot2::aes(x, y, z = hillW),
+                            breaks = 0.5, colour = "black", linetype = "22", linewidth = 0.3)
+  }
+  if (!is.null(stations)) {
+    add_st <- list(ggplot2::geom_sf(data = stations, colour = "black", fill = "white",
+                                    shape = 21, size = 1.6, stroke = 0.25, inherit.aes = FALSE))
+    p_lc   <- p_lc   + add_st
+    p_elev <- p_elev + add_st
+    p_slp  <- p_slp  + add_st
+  }
+  if (layout == "vertical") {
+    (p_lc / p_elev / p_slp) + patchwork::plot_layout(guides = "keep")
+  } else {
+    (p_lc | (p_elev | p_slp)) + patchwork::plot_layout(guides = "keep")
+  }
+}
+
+plot_block_overview_2x2_en <- function(scen, pts_sf = NULL) {
+  Rstack <- c(scen$E, scen$slp, scen$I14, scen$I05)
+  df <- terra::as.data.frame(Rstack, xy = TRUE, na.rm = FALSE)
+  names(df) <- c("x","y","elev","slope","I14","I05")
+  theme_base <- ggplot2::theme_minimal(base_size = 11)
+  pal_terrain <- grDevices::hcl.colors(256, "Terrain")
+  pal_slope   <- grDevices::hcl.colors(256, "Viridis")
+  pal_hot     <- grDevices::hcl.colors(256, "YlOrRd")
+  pal_cool    <- grDevices::hcl.colors(256, "PuBuGn")
+  p_elev <- ggplot2::ggplot(df, ggplot2::aes(x, y, fill = elev)) +
+    ggplot2::geom_raster() + ggplot2::coord_equal() +
+    ggplot2::scale_fill_gradientn(colours = pal_terrain, name = "m") +
+    ggplot2::labs(title = "Terrain (Elevation)") + theme_base
+  p_slope <- ggplot2::ggplot(df, ggplot2::aes(x, y, fill = slope)) +
+    ggplot2::geom_raster() + ggplot2::coord_equal() +
+    ggplot2::scale_fill_gradientn(colours = pal_slope, name = "rad") +
+    ggplot2::labs(title = "Slope (radians)") + theme_base
+  p_I14 <- ggplot2::ggplot(df, ggplot2::aes(x, y, fill = I14)) +
+    ggplot2::geom_raster() + ggplot2::coord_equal() +
+    ggplot2::scale_fill_gradientn(colours = pal_hot, name = "") +
+    ggplot2::labs(title = "Insolation 14 UTC (cos i)") + theme_base
+  p_I05 <- ggplot2::ggplot(df, ggplot2::aes(x, y, fill = I05)) +
+    ggplot2::geom_raster() + ggplot2::coord_equal() +
+    ggplot2::scale_fill_gradientn(colours = pal_cool, name = "") +
+    ggplot2::labs(title = "Insolation 05 UTC (cos i)") + theme_base
+  if (!is.null(pts_sf)) {
+    pts_df <- sf::st_drop_geometry(pts_sf)
+    add_pts <- function(p)
+      p + ggplot2::geom_point(data = pts_df, ggplot2::aes(x = x, y = y),
+                              inherit.aes = FALSE, size = 0.7, alpha = 0.7,
+                              colour = "black")
+    p_elev  <- add_pts(p_elev); p_slope <- add_pts(p_slope)
+    p_I14   <- add_pts(p_I14);  p_I05   <- add_pts(p_I05)
+  }
+  (p_elev | (p_slope)) / (p_I14 | p_I05) + patchwork::plot_layout(guides = "collect")
+}
+
+# -------------------------- Geostat/Models -----------------------------
+# helpers
+.align_factor_to_model <- function(x, lev_model) {
+  xs <- as.character(x)
+  if (!length(lev_model)) return(factor(rep(NA_character_, length(xs))))
+  y <- factor(xs, levels = lev_model)
+  if (anyNA(y)) { xs[is.na(y)] <- lev_model[1]; y <- factor(xs, levels = lev_model) }
+  y
+}
+.default_vgm <- function(values, model = "Exp", range = 100) {
+  psill <- stats::var(values, na.rm = TRUE); nug <- 0.1 * psill
+  gstat::vgm(psill = psill, model = model, range = range, nugget = nug)
+}
+safe_r2 <- function(obs, pred) {
+  idx <- is.finite(obs) & is.finite(pred)
+  if (sum(idx) < 2) return(NA_real_)
+  x <- obs[idx]; y <- pred[idx]
+  sx <- stats::sd(x); sy <- stats::sd(y)
+  if (!is.finite(sx) || !is.finite(sy) || sx == 0 || sy == 0) return(NA_real_)
+  stats::cor(x, y)^2
+}
+safe_gam_formula <- function(d, include_lc = FALSE) {
+  stopifnot(all(c("temp","x","y") %in% names(d)))
+  d <- d[stats::complete.cases(d[, c("temp","x","y")]), , drop = FALSE]
+  n    <- nrow(d)
+  n_xy <- dplyr::n_distinct(paste0(round(d$x,3), "_", round(d$y,3)))
+  k_xy <- max(3, min(60, n_xy - 1L, floor(n * 0.8)))
+  base <- if (n_xy >= 4) sprintf("temp ~ s(x,y,bs='tp',k=%d)", k_xy) else "temp ~ x + y"
+  add <- character(0)
+  kcap <- function(x, kmax) {
+    ux <- unique(x[is.finite(x)]); nu <- length(ux)
+    if (nu <= 3) return(0L); max(4L, min(kmax, nu - 1L))
+  }
+  if ("z_surf" %in% names(d) && dplyr::n_distinct(d$z_surf) > 3) add <- c(add, sprintf("s(z_surf,bs='tp',k=%d)", kcap(d$z_surf, 20)))
+  if ("slp"    %in% names(d) && dplyr::n_distinct(d$slp)    > 3) add <- c(add, sprintf("s(slp,bs='tp',k=%d)",    kcap(d$slp, 12)))
+  if ("cosi"   %in% names(d) && dplyr::n_distinct(d$cosi)   > 3) add <- c(add, sprintf("s(cosi,bs='tp',k=%d)",   kcap(d$cosi, 12)))
+  if (include_lc && "lc" %in% names(d)) { d$lc <- droplevels(factor(d$lc)); if (nlevels(d$lc) >= 2) add <- c(add, "lc") }
+  stats::as.formula(paste(base, paste(add, collapse = " + "), sep = if (length(add)) " + " else ""))
+}
+# learners
+# NOTE:
+# The following learner functions have been moved to a dedicated file
+# (e.g., learners_geostat_core.R):
+#   - pred_Voronoi
+#   - pred_IDW
+#   - pred_OK
+#   - pred_KED
+#   - pred_RF
+#   - pred_GAM
+#
+# Source that file alongside your helpers BEFORE any code that calls them.
+# -------------------------- Block-CV -----------------------------------
+make_blocks_and_assign <- function(pts_sf, E, block_size = 100) {
+  bb <- sf::st_as_sfc(sf::st_bbox(c(xmin = terra::xmin(E), ymin = terra::ymin(E),
+                                    xmax = terra::xmax(E), ymax = terra::ymax(E)),
+                                  crs = sf::st_crs(pts_sf)))
+  gr <- sf::st_make_grid(bb, cellsize = c(block_size, block_size), what = "polygons")
+  blocks <- sf::st_sf(block_id = seq_along(gr), geometry = gr)
+  pts_blk <- sf::st_join(pts_sf, blocks, join = sf::st_intersects, left = TRUE)
+  if (any(is.na(pts_blk$block_id))) {
+    nearest <- sf::st_nearest_feature(pts_blk[is.na(pts_blk$block_id), ], blocks)
+    pts_blk$block_id[is.na(pts_blk$block_id)] <- blocks$block_id[nearest]
+  }
+  list(blocks = blocks, pts = pts_blk)
+}
+plot_blocks_grid <- function(blocks, pts_blk, title = "Blocks & stations") {
+  crs_plot <- sf::st_crs(pts_blk)
+  bb       <- sf::st_bbox(blocks)
+  n_blocks <- dplyr::n_distinct(pts_blk$block_id)
+  cols     <- scales::hue_pal()(max(1, n_blocks))
+  ggplot2::ggplot() +
+    ggplot2::geom_sf(data = blocks, fill = NA, color = "grey50", linewidth = 0.25) +
+    ggplot2::geom_sf(data = pts_blk, ggplot2::aes(color = factor(block_id)), size = 2, alpha = 0.95) +
+    ggplot2::scale_color_manual(values = cols, name = "Block") +
+    ggplot2::coord_sf(crs  = crs_plot, datum = NA,
+                      xlim = c(bb["xmin"], bb["xmax"]),
+                      ylim = c(bb["ymin"], bb["ymax"]), expand = FALSE) +
+    ggplot2::theme_minimal() + ggplot2::labs(title = title, x = "Easting (m)", y = "Northing (m)")
+}
+run_lbo_cv <- function(stn_sf, E, block_size = 100, models = c("Voronoi","IDW","OK","KED","RF","GAM")) {
+  if (!all(c("x","y") %in% names(stn_sf))) { xy <- sf::st_coordinates(stn_sf); stn_sf$x <- xy[,1]; stn_sf$y <- xy[,2] }
+  blk <- make_blocks_and_assign(stn_sf, E, block_size = block_size)
+  blocks_sf <- blk$blocks; stn_blk <- blk$pts
+  for (nm in c("temp","z_surf","slp","cosi","lc","x","y")) if (!(nm %in% names(stn_blk))) stn_blk[[nm]] <- stn_sf[[nm]][match(stn_blk$id, stn_sf$id)]
+  
+  block_ids <- sort(unique(stn_blk$block_id))
+  out_list <- vector("list", length(block_ids))
+  for (k in seq_along(block_ids)) {
+    b <- block_ids[k]
+    test_idx  <- which(stn_blk$block_id == b)
+    train_idx <- which(stn_blk$block_id != b)
+    train_sf <- stn_blk[train_idx, ]; test_sf <- stn_blk[test_idx, ]
+    pred_tbl <- lapply(models, function(m) {
+      p <- switch(m,
+                  "Voronoi" = pred_Voronoi(train_sf, test_sf),
+                  "IDW"     = pred_IDW    (train_sf, test_sf),
+                  "OK"      = pred_OK     (train_sf, test_sf),
+                  "KED"     = pred_KED    (train_sf, test_sf, E = E),
+                  "RF"      = pred_RF     (train_sf, test_sf),
+                  "GAM"     = pred_GAM    (train_sf, test_sf),
+                  stop("Unknown model: ", m)
+      )
+      tibble::tibble(model = m, id = test_sf$id, obs = test_sf$temp, pred = p, block_id = b)
+    })
+    out_list[[k]] <- dplyr::bind_rows(pred_tbl)
+  }
+  
+  cv_tbl <- dplyr::bind_rows(out_list)
+  metrics <- cv_tbl %>%
+    dplyr::group_by(model) %>%
+    dplyr::summarise(
+      n    = dplyr::n(),
+      n_ok = sum(is.finite(obs) & is.finite(pred)),
+      MAE  = {i <- is.finite(obs) & is.finite(pred); if (any(i)) mean(abs(pred[i]-obs[i])) else NA_real_},
+      RMSE = {i <- is.finite(obs) & is.finite(pred); if (any(i)) sqrt(mean((pred[i]-obs[i])^2)) else NA_real_},
+      Bias = {i <- is.finite(obs) & is.finite(pred); if (any(i)) mean(pred[i]-obs[i]) else NA_real_},
+      R2   = safe_r2(obs, pred),
+      .groups = "drop"
+    ) |>
+    dplyr::arrange(RMSE)
+  
+  diag_plot <- ggplot2::ggplot(cv_tbl, ggplot2::aes(obs, pred)) +
+    ggplot2::geom_abline(slope=1, intercept=0, linetype="dashed") +
+    ggplot2::geom_point(alpha=0.7) +
+    ggplot2::coord_equal() + ggplot2::theme_minimal() +
+    ggplot2::labs(title = sprintf("LBO-CV (block = %dm) — Observed vs Predicted", block_size), x = "Observed", y = "Predicted") +
+    ggplot2::facet_wrap(~ model)
+  
+  blocks_plot <- plot_blocks_grid(blocks_sf, stn_blk, title = sprintf("Blocks (%.0f m) & stations", block_size))
+  list(cv = cv_tbl, metrics = metrics, diag_plot = diag_plot, blocks_plot = blocks_plot)
+}
+
+# -------------------------- „run_for_time“ Wrapper ---------------------
+run_for_time <- function(stn_sf, truth_r, label,
+                         scen_local,
+                         block_m,
+                         models = c("Voronoi","IDW","OK","KED","RF","GAM"),
+                         layout = c("horizontal","vertical")) {
+  layout <- match.arg(layout)
+  res   <- run_lbo_cv(stn_sf, scen_local$E, block_size = block_m, models = models)
+  maps  <- predict_maps(stn_sf, truth_r, which_time = label,
+                        scen = scen_local, models = models,
+                        lc_levels = scen_local$lc_levels)
+  list(res = res, maps = maps)
+}
+
+# -------------------------- Skalen & Tuning ----------------------------
+plot_variogram_with_scales <- function(vg, L50, L95, sill, title = "Empirical variogram") {
+  df <- as.data.frame(vg)
+  ggplot2::ggplot(df, ggplot2::aes(dist, gamma)) +
+    ggplot2::geom_point(size = 1.4) +
+    ggplot2::geom_line(alpha = 0.5) +
+    ggplot2::geom_hline(yintercept = sill, linetype = "dotted", linewidth = 0.4) +
+    ggplot2::geom_vline(xintercept = L50, colour = "#2b8cbe", linetype = "dashed") +
+    ggplot2::geom_vline(xintercept = L95, colour = "#de2d26", linetype = "dashed") +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(title = title, x = "Distance (m)", y = "Semivariance")
+}
+.mean_kernel_for_R <- function(r, R_m) {
+  px <- mean(terra::res(r))
+  half <- max(1L, ceiling(R_m / px))
+  k <- 2L * half + 1L
+  W <- matrix(1, nrow = k, ncol = k)
+  W / sum(W)
+}
+smooth_mean_R <- function(r, R_m) {
+  W <- .mean_kernel_for_R(r, R_m)
+  terra::focal(r, w = W, fun = "mean", na.policy = "omit", pad = TRUE, normalize = FALSE)
+}
+gaussian_focal <- function(r, radius_m, sigma_m = NULL) {
+  resx <- terra::res(r)[1]
+  if (is.null(sigma_m)) sigma_m <- radius_m / 2
+  rad_px   <- max(1L, round(radius_m / resx))
+  sigma_px <- max(0.5, sigma_m / resx)
+  xs <- -rad_px:rad_px
+  k1 <- exp(-0.5 * (xs / sigma_px)^2); k1 <- k1 / sum(k1)
+  K  <- outer(k1, k1); K / sum(K)
+}
+smooth_dem_and_derive <- function(E, alt, az, radius_m) {
+  resx <- terra::res(E)[1]
+  pad_cells <- ceiling(radius_m / resx) + 2L
+  
+  E_pad <- terra::extend(E, pad_cells)
+  
+  K <- gaussian_focal(E_pad, radius_m)
+  Es_pad  <- terra::focal(E_pad, w = K, fun = mean, na.policy = "omit", pad = TRUE)
+  
+  slp_pad <- terra::terrain(Es_pad, v = "slope",  unit = "radians")
+  asp_pad <- terra::terrain(Es_pad, v = "aspect", unit = "radians")
+  
+  ci_pad  <- cosi_fun(alt, az, slp_pad, asp_pad)
+  
+  list(
+    Es   = terra::crop(Es_pad,  E),
+    slp  = terra::crop(slp_pad, E),
+    cosi = terra::crop(ci_pad,  E)
+  )
+}
+
+ .extract_to_pts <- function(r, pts_sf) {
+  out <- try(terra::extract(r, terra::vect(pts_sf), ID = FALSE)[,1], silent = TRUE)
+  if (inherits(out, "try-error") || length(out) == 0L) rep(NA_real_, nrow(pts_sf)) else out
+}
+ cv_gam_with_R <- function(stn_sf, E, alt = NULL, az = NULL, R, block_size_m = NULL, verbose = TRUE,...) 
+   {
+   t0 <- proc.time()
+   # robust check whether to compute cos(i)
+   use_cosi <- isTRUE(!is.null(alt) && !is.null(az) &&
+                        is.finite(alt) && is.finite(az)) 
+   
+   # --- 0) Block size guard
+   bs <- suppressWarnings(as.numeric(block_size_m)[1])
+   if (!is.finite(bs) || bs <= 0) {
+     bs <- suppressWarnings(as.numeric(get0("block_size", ifnotfound = NA_real_)))
+   }
+   if (!is.finite(bs) || bs <= 0)
+     stop("cv_gam_with_R(): no valid block size (block_size_m or global block_size).")
+   
+   # --- 1) DEM smoothing + derived fields
+   zR   <- smooth_mean_R(E, R)
+   slpR <- terra::terrain(zR, v = "slope",  unit = "radians")
+   aspR <- terra::terrain(zR, v = "aspect", unit = "radians")
+   
+   # Only compute cos(i) if BOTH angles are clean, finite scalars
+   use_cosi <- isTRUE(is.numeric(alt) && is.numeric(az) &&
+                        length(alt) == 1L && length(az) == 1L &&
+                        is.finite(alt) && is.finite(az))
+   if (use_cosi) {
+     zen  <- (pi/2 - alt)
+     ci   <- cos(slpR)*cos(zen) + sin(slpR)*sin(zen)*cos(az - aspR)
+     cosiR <- terra::ifel(ci < 0, 0, ci)
+   } else {
+     cosiR <- NULL
+   }
+   
+   # --- 2) Extract to stations (fill missing with medians)
+   if (!all(c("x","y") %in% names(stn_sf))) {
+     xy <- sf::st_coordinates(stn_sf); stn_sf$x <- xy[,1]; stn_sf$y <- xy[,2]
+   }
+   fill_med <- function(v) {
+     m <- stats::median(v[is.finite(v)], na.rm = TRUE)
+     v[!is.finite(v)] <- m
+     v
+   }
+   stn_sf$z_surf_R <- fill_med(.extract_to_pts(zR,   stn_sf))
+   stn_sf$slp_R    <- fill_med(.extract_to_pts(slpR, stn_sf))
+   if (use_cosi) {
+     stn_sf$cosi_R <- fill_med(.extract_to_pts(cosiR, stn_sf))
+   } else {
+     stn_sf$cosi_R <- NA_real_
+   }
+   
+   # --- 3) Build blocks
+   bb_poly <- sf::st_as_sfc(sf::st_bbox(stn_sf), crs = sf::st_crs(stn_sf))
+   blocks  <- sf::st_make_grid(bb_poly, cellsize = c(bs, bs), what = "polygons")
+   blocks  <- sf::st_sf(block_id = seq_along(blocks), geometry = blocks)
+   
+   stn_blk <- sf::st_join(stn_sf, blocks, join = sf::st_intersects, left = TRUE)
+   if (anyNA(stn_blk$block_id)) {
+     i <- is.na(stn_blk$block_id)
+     stn_blk$block_id[i] <- blocks$block_id[sf::st_nearest_feature(stn_blk[i,], blocks)]
+   }
+   if (!all(c("x","y") %in% names(stn_blk))) {
+     xy <- sf::st_coordinates(stn_blk); stn_blk$x <- xy[,1]; stn_blk$y <- xy[,2]
+   }
+   
+   # --- 4) LBO-CV
+   bids  <- sort(unique(stn_blk$block_id))
+   pm_say("[cv_gam_with_R] R=%.0f m | block=%.0f m | stations=%d | blocks=%d | cos(i)=%s",
+          R, block_size_m, nrow(stn_sf), length(bids),
+          if (use_cosi) "yes" else "no", v = verbose)
+   preds <- vector("list", length(bids)); j <- 0L
+   
+   for (b in bids) {
+     te <- stn_blk[stn_blk$block_id == b, ]
+     tr <- stn_blk[stn_blk$block_id != b, ]
+     pm_say("  - block %d: train=%d, test=%d", b, nrow(tr), nrow(te), v = verbose)
+     
+     
+     dtr  <- sf::st_drop_geometry(tr)
+     # include cosi_R only if it’s present with finite values
+     need <- c("temp","x","y","z_surf_R","slp_R")
+     inc_cosi <- ("cosi_R" %in% names(dtr)) && any(is.finite(dtr$cosi_R))
+     if (inc_cosi) need <- c(need, "cosi_R")
+     
+     dtr  <- dtr[stats::complete.cases(dtr[, need, drop = FALSE]), need, drop = FALSE]
+     if (nrow(dtr) < 10) next
+     
+     # dynamic k guards
+     n_xy <- dplyr::n_distinct(paste0(round(dtr$x,3), "_", round(dtr$y,3)))
+     k_xy <- .k_for_xy(nrow(dtr), n_xy)
+     k_z  <- .kcap_unique(dtr$z_surf_R, 20)
+     k_sl <- .kcap_unique(dtr$slp_R,    12)
+     if (inc_cosi) k_ci <- .kcap_unique(dtr$cosi_R, 12)
+     
+     # assemble formula with only informative terms
+     terms <- c()
+     terms <- c(terms, if (n_xy >= 4) sprintf("s(x,y,bs='tp',k=%d)", k_xy) else "x + y")
+     terms <- c(terms, if (k_z  >= 4) sprintf("s(z_surf_R,bs='tp',k=%d)", k_z)  else "z_surf_R")
+     if (length(unique(dtr$slp_R[is.finite(dtr$slp_R)])) > 1)
+       terms <- c(terms, if (k_sl >= 4) sprintf("s(slp_R,bs='tp',k=%d)", k_sl) else "slp_R")
+     if (inc_cosi && any(is.finite(dtr$cosi_R)) &&
+         length(unique(dtr$cosi_R[is.finite(dtr$cosi_R)])) > 1)
+       terms <- c(terms, if (k_ci >= 4) sprintf("s(cosi_R,bs='tp',k=%d)", k_ci) else "cosi_R")
+     
+     form <- stats::as.formula(paste("temp ~", paste(terms, collapse = " + ")))
+     gm <- mgcv::gam(form, data = dtr, method = "REML", select = TRUE)
+     
+     dte <- sf::st_drop_geometry(te)
+     # restrict to variables actually in the model
+     vars_needed <- setdiff(all.vars(form), "temp")
+     dte <- dte[, vars_needed, drop = FALSE]
+     ph  <- try(stats::predict(gm, newdata = dte, type = "response"), silent = TRUE)
+     if (inherits(ph, "try-error")) ph <- rep(NA_real_, nrow(dte))
+     
+     j <- j + 1L
+     preds[[j]] <- tibble::tibble(id = te$id, obs = te$temp, pred = as.numeric(ph), block_id = b)
+   }
+   
+   preds <- preds[seq_len(j)]
+   if (!length(preds)) {
+     return(list(cv = tibble::tibble(id = integer(), obs = numeric(), pred = numeric(), block_id = integer()),
+                 RMSE = NA_real_))
+   }
+   out  <- dplyr::bind_rows(preds)
+   rmse <- sqrt(mean((out$pred - out$obs)^2, na.rm = TRUE))
+   list(cv = out, RMSE = rmse)
+ }
+ 
+ 
+ 
+
+ tune_Rstar_ucurve <- function(stn_sf, E, alt = NULL, az = NULL,
+                               L50, L95, block_fallback = 120,
+                               n_grid = 6, extra = c(0.8, 1.2),
+                               scen = NULL, which_time = c("T14","T05")) {
+   
+   which_time <- match.arg(which_time)
+   
+   # fallback L50/L95 if broken
+   e <- terra::ext(E)
+   dom_diag <- sqrt((terra::xmax(e)-terra::xmin(e))^2 + (terra::ymax(e)-terra::ymin(e))^2)
+   if (!is.finite(L50) || !is.finite(L95) || L95 <= L50) {
+     L50 <- dom_diag/10; L95 <- dom_diag/4
+   }
+   block_m <- max(block_fallback, round(L50))
+   
+   # sun from scen if not given
+   if ((is.null(alt) || is.null(az)) && !is.null(scen)) {
+     s <- .get_sun(scen, which_time)
+     alt <- s$alt; az <- s$az
+   }
+   
+   R_min <- max(10, round(L50*extra[1])); R_max <- round(L95*extra[2])
+   R_grid <- unique(round(seq(R_min, R_max, length.out = n_grid)))
+   
+   rows <- lapply(R_grid, function(R) {
+     z <- cv_gam_with_R(stn_sf, E, alt = alt, az = az, R = R,
+                        block_size_m = block_m, scen = NULL, which_time = which_time)
+     data.frame(R = R, RMSE = z$RMSE)
+   })
+   df <- do.call(rbind, rows)
+   R_star <- df$R[which.min(df$RMSE)]
+   list(grid = df, R_star = as.numeric(R_star), block_m = block_m)
+ }
+ 
+ 
+
+plot_ucurve <- function(df, R_star, title = "U-curve: tune R") {
+  ggplot2::ggplot(df, ggplot2::aes(R, RMSE)) +
+    ggplot2::geom_line() + ggplot2::geom_point() +
+    ggplot2::geom_vline(xintercept = R_star, linetype = "dashed", colour = "#de2d26") +
+    ggplot2::theme_minimal() + ggplot2::labs(title = title, x = "Drift radius R (m)", y = "RMSE (block-CV)")
+}
+
+# Drop-in replacement
+add_drifts_at_R <- function(stn_sf, E, alt, az, R,
+                            lc = NULL, lc_levels = NULL,
+                            na_action = c("error","fill","drop")) {
+  na_action <- match.arg(na_action)
+  
+  # 0) Align CRS (key cause of NA extractions)
+  crs_r <- sf::st_crs(E)
+  if (!isTRUE(sf::st_crs(stn_sf) == crs_r)) {
+    stn_sf <- sf::st_transform(stn_sf, crs_r)
+  }
+  
+  # 1) Build @R* features (Es, slope, cosi) — your existing function
+  fr <- smooth_dem_and_derive(E, alt, az, radius_m = R)
+  
+  # 2) Extract to points
+  v <- terra::vect(stn_sf)
+  stn_sf$E_R    <- as.numeric(terra::extract(fr$Es,   v, ID = FALSE)[, 1])
+  stn_sf$slp_R  <- as.numeric(terra::extract(fr$slp,  v, ID = FALSE)[, 1])
+  stn_sf$cosi_R <- as.numeric(terra::extract(fr$cosi, v, ID = FALSE)[, 1])
+  
+  # Optional LC (factor) — unchanged logic
+  if (!is.null(lc)) {
+    if (is.null(lc_levels)) lc_levels <- lc_levels_default
+    lc_idx <- as.integer(terra::extract(lc, v, ID = FALSE)[, 1])
+    lc_idx[!is.finite(lc_idx)] <- 1L
+    lc_idx <- pmax(1L, pmin(lc_idx, length(lc_levels)))
+    stn_sf$lc <- factor(lc_levels[lc_idx], levels = lc_levels)
+  }
+  
+  # 3) Handle NA per policy
+  d <- sf::st_drop_geometry(stn_sf)
+  miss <- !stats::complete.cases(d[, c("E_R","slp_R","cosi_R"), drop = FALSE])
+  
+  if (any(miss)) {
+    if (na_action == "error") {
+      stop("Station features at R* contain NA. Increase padding in smooth_dem_and_derive(), ",
+           "reduce R*, or call add_drifts_at_R(..., na_action='fill'/'drop').")
+    }
+    if (na_action == "fill") {
+      fill_med <- function(x) { m <- stats::median(x[is.finite(x)], na.rm = TRUE); x[!is.finite(x)] <- m; x }
+      stn_sf$E_R    <- fill_med(stn_sf$E_R)
+      stn_sf$slp_R  <- fill_med(stn_sf$slp_R)
+      stn_sf$cosi_R <- fill_med(stn_sf$cosi_R)
+    }
+    if (na_action == "drop") {
+      stn_sf <- stn_sf[!miss, ]
+    }
+  }
+  
+  stn_sf
+}
+
+compute_Ls_from_points <- function(stn_sf, value_col = "temp",
+                                   maxdist = NULL, nlag = 18, smooth_k = 3) {
+  stopifnot(inherits(stn_sf, "sf"), value_col %in% names(stn_sf))
+  pts <- stn_sf[is.finite(stn_sf[[value_col]]), ]
+  if (is.null(maxdist)) {
+    bb <- sf::st_bbox(pts)
+    dom_diag <- sqrt((bb["xmax"]-bb["xmin"])^2 + (bb["ymax"]-bb["ymin"])^2)
+    maxdist <- dom_diag / 2
+  }
+  form <- stats::as.formula(sprintf("%s ~ 1", value_col))
+  vg  <- gstat::variogram(form, data = pts, cutoff = maxdist, width = maxdist/nlag)
+  if (nrow(vg) >= smooth_k) {
+    vg$gamma <- stats::filter(vg$gamma, rep(1/smooth_k, smooth_k), sides = 2)
+    vg$gamma[!is.finite(vg$gamma)] <- zoo::na.approx(vg$gamma, na.rm = FALSE)
+    vg$gamma <- zoo::na.locf(zoo::na.locf(vg$gamma, fromLast = TRUE))
+  }
+  sill <- max(vg$gamma, na.rm = TRUE)
+  if (!is.finite(sill) || sill <= 0) sill <- stats::median(vg$gamma, na.rm = TRUE)
+  L_at_q <- function(q) {
+    thr <- q * sill
+    i   <- which(vg$gamma >= thr)[1]
+    if (is.na(i)) return(NA_real_)
+    if (i == 1) return(vg$dist[1])
+    d0 <- vg$dist[i-1]; d1 <- vg$dist[i]
+    g0 <- vg$gamma[i-1]; g1 <- vg$gamma[i]
+    if (!is.finite(d0) || !is.finite(d1) || g1 == g0) return(d1)
+    d0 + (thr - g0) * (d1 - d0) / (g1 - g0)
+  }
+  list(vg = vg, sill = sill, L50 = L_at_q(0.5), L95 = L_at_q(0.95), cutoff = maxdist)
+}
+
+# -------------------------- Error-Budget --------------------------------
+
+# -------------------------- Error-Budget --------------------------------
+nugget_fraction_from_cv <- function(cv_sf_or_df, model, crs_ref, x_col="x", y_col="y",
+                                    cutoff = NULL, width = NULL) {
+  stopifnot(!missing(model))
+  df <- dplyr::filter(cv_sf_or_df, .data$model == !!model)
+  
+  # Ensure sf
+  sf <- if (inherits(df, "sf")) df else sf::st_as_sf(df, coords = c(x_col, y_col), crs = sf::st_crs(crs_ref))
+  sf <- sf::st_transform(sf, sf::st_crs(crs_ref))
+  sf$resid <- sf$obs - sf$pred
+  
+  xy  <- sf::st_coordinates(sf) %>% as.data.frame()
+  dat <- dplyr::bind_cols(sf::st_drop_geometry(sf), xy)
+  
+  if (is.null(cutoff)) cutoff <- max(dist(xy)) * 0.5
+  if (is.null(width))  width  <- cutoff / 12
+  
+  vg  <- gstat::variogram(resid ~ 1, data = dat, locations = ~ X + Y,
+                          cutoff = cutoff, width = width)
+  fit <- gstat::fit.variogram(vg, gstat::vgm("Mat"))
+  nug <- fit$psill[fit$model == "Nug"]; sill <- sum(fit$psill)
+  if (length(nug) && is.finite(sill) && sill > 0) nug / sill else NA_real_
+}
+
+simple_error_budget <- function(res_cv, sigma_inst = 0.5, alpha = 0.6) {
+  res <- res_cv$cv
+  res <- res[is.finite(res$obs) & is.finite(res$pred), , drop = FALSE]
+  RMSE <- sqrt(mean((res$pred - res$obs)^2))
+  Bias <- mean(res$pred - res$obs)
+  VarE <- stats::var(res$pred - res$obs, na.rm = TRUE)
+  meas <- sigma_inst^2
+  proc <- max(0, VarE - meas)
+  micro <- alpha * proc
+  meso  <- (1 - alpha) * proc
+  tibble::tibble(Component = c("RMSE","Bias","Total var","Instrument var","Microscale var","Mesoscale var"),
+                 Value     = c(RMSE, Bias, VarE, meas, micro, meso))
+}
+## ======================================================================
+## Ende der Bibliothek
+## ======================================================================
+
+## ---------- Mini-Beispiel (nicht Teil der Bibliothek) -----------------
+## domain  <- make_domain()
+## scen    <- build_scenario(domain, lake_mode="water", hill_mode="bump",
+##                           random_hills = 100, micro_seed = 1)
+## pts_sf  <- make_stations(domain, n_st = 60, station_mode = "random")
+## stns    <- stations_from_scenario(scen, pts_sf)
+## bs      <- compute_block_size(len_x = domain$xmax-domain$xmin,
+##                               len_y = domain$ymax-domain$ymin, n_st = nrow(pts_sf))
+## out14   <- run_for_time(stns$T14, scen$R14, "T14", scen, bs)
+## out05   <- run_for_time(stns$T05, scen$R05, "T05", scen, bs)
+## # Plot-Beispiele:
+## # print(plot_landcover_terrain(scen, stations = stns$T14))
+## # print(out14$res$blocks_plot); print(out14$res$diag_plot)
+
+```
+
+    -   `fun_learn_predict_core.R`: learning/validation/prediction
+        routines (block CV, learners, map prediction, residual
+        diagnostics).
+```{r}
+#| eval: false
+#| echo: fenced
+#' Geostatistical Learners & Map Predictor (Core Only)
+#'
+#' @title Learners and Raster Predictor (no helpers inside)
+#' @description
+#' A compact set of **model-specific predictors** used in your teaching/
+#' pipeline code, plus a high-level `predict_maps()` convenience that
+#' evaluates multiple learners on a full grid.  
+#'
+#' This file intentionally contains **no helpers**. It assumes that common
+#' utilities and constants are sourced from your *helpers* module, including:
+#' - `%||%` — null-coalescing helper
+#' - `.default_vgm()` — conservative variogram fallback
+#' - `.align_factor_to_model()` — align factor levels at predict time
+#' - `safe_gam_formula()` — guarded GAM formula constructor
+#' - `lc_levels_default` — global land-cover levels
+#' - `temp_palette`, `stretch_q` — visualization defaults
+#'
+#' @details
+#' **Contract expected by all learners**:
+#' - `train_sf`, `test_sf` are `sf` objects with at least:
+#'   - `temp` (numeric): the response variable to be learned
+#'   - `x`, `y` (numeric): planar coordinates (will be derived from geometry
+#'     if absent)
+#'   - Drift/covariate columns depending on the learner (see each function)
+#' - Each learner returns a numeric vector of predictions aligned with
+#'   `nrow(test_sf)`.
+#'
+#' **Coordinate Reference System**: all learners assume that `x` and `y`
+#' are in a **projected CRS** with meter-like units (e.g., UTM).
+#'
+#' **Error handling**:
+#' - Learners are defensive; if inputs are insufficient (e.g., too few rows,
+#'   missing drift columns), they return `NA_real_` predictions of the correct
+#'   length instead of failing hard (except where a *hard requirement* is unmet
+#'   such as missing KED drifts in training).
+#'
+#' @section Dependencies:
+#' - **Packages**: `sf`, `gstat`, `mgcv`, `randomForest`, `terra`, `ggplot2`,
+#'   `tibble`, `dplyr`, `stats`, `scales`
+#' - **Helpers (sourced elsewhere)**: `%||%`, `.default_vgm`, `.align_factor_to_model`,
+#'   `safe_gam_formula`, `lc_levels_default`, `temp_palette`, `stretch_q`
+#'
+#' @seealso
+#' - Your helpers/utilities module for the functions noted above.
+#' - `gstat::krige`, `gstat::idw`, `gstat::variogram`, `gstat::fit.variogram`
+#' - `mgcv::gam`, `randomForest::randomForest`
+#'
+#' @keywords geostatistics interpolation kriging regression GAM randomForest
+#' @family learners
+
+
+#' Voronoi / Nearest-Station Predictor
+#'
+#' @description
+#' Assigns each prediction point the observed value from the **nearest**
+#' training station (a fast proxy for Voronoi interpolation).
+#'
+#' @param train_sf `sf` with at least `temp` and geometry.
+#' @param test_sf  `sf` with geometry to predict for.
+#'
+#' @return Numeric vector `length(nrow(test_sf))` with nearest-neighbor temps.
+#' @examples
+#' # y_hat <- pred_Voronoi(train_sf, grid_sf)
+pred_Voronoi <- function(train_sf, test_sf) {
+  idx <- sf::st_nearest_feature(test_sf, train_sf)
+  as.numeric(train_sf$temp)[idx]
+}
+
+
+#' Inverse Distance Weighting (IDW)
+#'
+#' @description
+#' Classic **IDW** using `gstat::idw`, predicting from training points to
+#' the test geometry.
+#'
+#' @param train_sf `sf` with `temp` and geometry.
+#' @param test_sf  `sf` with geometry.
+#' @param idp      Inverse distance power (default `2`).
+#'
+#' @return Numeric vector of predictions for `test_sf`.
+#' @examples
+#' # y_hat <- pred_IDW(train_sf, grid_sf, idp = 2)
+pred_IDW <- function(train_sf, test_sf, idp = 2) {
+  pr <- suppressWarnings(gstat::idw(temp ~ 1, locations = train_sf, newdata = test_sf, idp = idp))
+  as.numeric(pr$var1.pred)
+}
+
+
+#' Ordinary Kriging (OK)
+#'
+#' @description
+#' Univariate **OK** with an automatically fitted **exponential** variogram.
+#' Falls back to `.default_vgm()` if fitting fails (e.g., too few points).
+#'
+#' @param train_sf `sf` with `temp` and geometry.
+#' @param test_sf  `sf` with geometry.
+#'
+#' @return Numeric vector of kriged predictions.
+#' @examples
+#' # y_hat <- pred_OK(train_sf, grid_sf)
+pred_OK <- function(train_sf, test_sf) {
+  vg      <- suppressWarnings(gstat::variogram(temp ~ 1, data = train_sf))
+  vgm_fit <- try(suppressWarnings(gstat::fit.variogram(vg, gstat::vgm("Exp"))), silent = TRUE)
+  if (inherits(vgm_fit, "try-error")) vgm_fit <- .default_vgm(train_sf$temp)
+  pr <- suppressWarnings(gstat::krige(temp ~ 1, locations = train_sf, newdata = test_sf, model = vgm_fit))
+  as.numeric(pr$var1.pred)
+}
+
+
+#' Kriging with External Drift (KED)
+#'
+#' @description
+#' **KED** with additive drift terms. Requires drifts in *training*, fills
+#' non-finite values in *test* by median of training. If `lc` is present in
+#' both sets, it is included as a categorical drift with aligned levels.
+#'
+#' @details
+#' **Required drift columns** in `train_sf`: `z_surf`, `slp`, `cosi`.  
+#' If any are missing in training, this function errors (by design).
+#'
+#' @param train_sf `sf`; must contain `temp`, `z_surf`, `slp`, `cosi`, geometry,
+#'   and optionally `lc`.
+#' @param test_sf  `sf` with geometry and preferably the same drift columns
+#'   (non-finite values are median-filled).
+#' @param ...      Unused (placeholder for compatibility).
+#'
+#' @return Numeric vector of KED predictions, `length(nrow(test_sf))`.
+#' @examples
+#' # y_hat <- pred_KED(train_sf, grid_sf)
+pred_KED <- function(train_sf, test_sf, ...) {
+  need <- c("z_surf","slp","cosi")
+  miss <- setdiff(need, names(train_sf))
+  if (length(miss)) stop("pred_KED(): missing drifts in training: ", paste(miss, collapse = ", "))
+  use_lc <- "lc" %in% names(train_sf) && "lc" %in% names(test_sf)
+  tr <- train_sf; te <- test_sf
+  if (use_lc) {
+    tr$lc <- droplevels(factor(tr$lc))
+    te$lc <- factor(as.character(te$lc), levels = levels(tr$lc))
+    te$lc[is.na(te$lc)] <- levels(tr$lc)[1]
+  }
+  for (nm in need) {
+    m <- stats::median(tr[[nm]][is.finite(tr[[nm]])], na.rm = TRUE)
+    te[[nm]][!is.finite(te[[nm]])] <- m
+  }
+  keep_tr <- c("temp", need, if (use_lc) "lc")
+  dtr <- sf::st_drop_geometry(tr)[, keep_tr, drop = FALSE]
+  ok  <- stats::complete.cases(dtr); tr <- tr[ok, ]
+  if (nrow(tr) < 5) return(rep(NA_real_, nrow(te)))
+  form <- stats::as.formula(paste("temp ~", paste(c(need, if (use_lc) "lc"), collapse = " + ")))
+  vg      <- suppressWarnings(gstat::variogram(form, data = tr))
+  vgm_fit <- try(suppressWarnings(gstat::fit.variogram(vg, gstat::vgm("Exp"))), silent = TRUE)
+  if (inherits(vgm_fit, "try-error")) {
+    ps <- stats::var(sf::st_drop_geometry(tr)$temp, na.rm = TRUE)
+    vgm_fit <- gstat::vgm(psill = ps, model = "Exp", range = max(vg$dist, na.rm = TRUE)/3, nugget = 0.1*ps)
+  }
+  pr <- suppressWarnings(gstat::krige(form, locations = tr, newdata = te, model = vgm_fit))
+  as.numeric(pr$var1.pred)
+}
+
+
+#' Random Forest Regressor (RF)
+#'
+#' @description
+#' A **RandomForest** on spatial and drift features. If `lc` is absent, a
+#' harmless single-level factor is injected (levels provided by
+#' `lc_levels_default`). At prediction, factor levels are aligned using
+#' `.align_factor_to_model()`.
+#'
+#' @param train_sf `sf` with `temp`, `x`, `y`, `z_surf`, `slp`, `cosi`,
+#'   optionally `lc` (factor), and geometry.
+#' @param test_sf  `sf` with the same predictors (geometry required).
+#'
+#' @return Numeric vector of RF predictions.
+#' @examples
+#' # y_hat <- pred_RF(train_sf, grid_sf)
+pred_RF <- function(train_sf, test_sf) {
+  dtr <- sf::st_drop_geometry(train_sf)
+  if (!("lc" %in% names(dtr))) dtr$lc <- factor(lc_levels_default[1], levels = lc_levels_default)
+  dtr$lc <- droplevels(factor(as.character(dtr$lc), levels = lc_levels_default))
+  dtr <- stats::na.omit(dtr)
+  if (nrow(dtr) < 5) return(rep(NA_real_, nrow(test_sf)))
+  rf  <- randomForest::randomForest(temp ~ x + y + z_surf + slp + cosi + lc, data = dtr, na.action = na.omit)
+  dte <- sf::st_drop_geometry(test_sf)
+  if (!("lc" %in% names(dte))) dte$lc <- factor(lc_levels_default[1], levels = lc_levels_default)
+  lev <- levels(dtr$lc)
+  dte$lc <- .align_factor_to_model(dte$lc, lev)
+  good <- stats::complete.cases(dte[, c("x","y","z_surf","slp","cosi","lc")])
+  out  <- rep(NA_real_, nrow(dte)); if (any(good)) out[good] <- stats::predict(rf, dte[good, ])
+  out
+}
+
+
+#' Generalized Additive Model (GAM)
+#'
+#' @description
+#' A **GAM** (thin-plate splines) built with a protective formula from
+#' `safe_gam_formula()` that caps basis sizes and includes `lc` only if
+#' useful. Requires a minimal number of complete rows.
+#'
+#' @param train_sf `sf` with `temp`, `x`, `y`, `z_surf`, `slp`, `cosi`,
+#'   optionally `lc` (factor).
+#' @param test_sf  `sf` with matching predictors.
+#'
+#' @return Numeric vector of GAM predictions; `NA_real_` if the model could
+#'   not be trained.
+#' @examples
+#' # y_hat <- pred_GAM(train_sf, grid_sf)
+pred_GAM <- function(train_sf, test_sf) {
+  dtr  <- sf::st_drop_geometry(train_sf)
+  keep <- intersect(c("temp","x","y","z_surf","slp","cosi","lc"), names(dtr))
+  dtr  <- dtr[stats::complete.cases(dtr[, keep, drop = FALSE]), keep, drop = FALSE]
+  if (!nrow(dtr)) return(rep(NA_real_, nrow(test_sf)))
+  if ("lc" %in% names(dtr)) dtr$lc <- droplevels(factor(dtr$lc))
+  inc_lc <- "lc" %in% names(dtr) && nlevels(dtr$lc) >= 2
+  if (nrow(dtr) < 10) return(rep(NA_real_, nrow(test_sf)))
+  gm <- mgcv::gam(formula = safe_gam_formula(dtr, include_lc = inc_lc), data = dtr, method = "REML", select = TRUE)
+  dte <- sf::st_drop_geometry(test_sf)
+  vars <- c("x","y","z_surf","slp","cosi", if (inc_lc) "lc"); vars <- intersect(vars, names(dte))
+  if (inc_lc) {
+    lev <- levels(model.frame(gm)$lc)
+    if (!("lc" %in% names(dte))) dte$lc <- lev[1]
+    dte$lc <- .align_factor_to_model(dte$lc, lev)
+  }
+  good <- stats::complete.cases(dte[, vars, drop = FALSE])
+  out  <- rep(NA_real_, nrow(dte)); if (any(good)) out[good] <- stats::predict(gm, dte[good, vars, drop = FALSE], type = "response")
+  out
+}
+
+
+#' Predict on a Raster Grid with Multiple Learners + Pretty Plots
+#'
+#' @description
+#' High-level utility that:
+#' 1. Ensures station covariates exist (E, slope, cos(i), optional LC).
+#' 2. Builds a **full-grid** data frame of covariates from rasters.
+#' 3. Runs selected learners (`Voronoi`, `IDW`, `OK`, `KED`, `RF`, `GAM`).
+#' 4. Returns both **prediction rasters** and **ggplot** panels.
+#'
+#' @param stn_sf `sf` training stations; must have `temp` and (if missing)
+#'   this function will derive `x`, `y` and extract missing covariates from
+#'   rasters.
+#' @param truth_raster `SpatRaster` (single-layer) used only for common
+#'   color scaling in plots (and optional “truth” visualization).
+#' @param which_time Character; `"T14"` or `"T05"` (plot titles only).
+#' @param scen A scenario list containing at least: `E`, `slp`, and either
+#'   `I14` or `I05` (for cos(i)) and optionally `lc` + `lc_levels`.
+#' @param models Character vector of learners to run.
+#' @param lc_levels Optional character vector of LC levels (defaults to
+#'   `scen$lc_levels`).
+#' @param feature_rasters Optional list with named rasters `E`, `slp`, `cosi`
+#'   to **override** the scenario’s baseline (e.g., when using tuned R*).
+#'
+#' @return A list with:
+#' \describe{
+#'   \item{pred_df}{Tidy `tibble` of predictions for all models & grid cells}
+#'   \item{pred_rasters}{`list` of `SpatRaster` predictions, one per model}
+#'   \item{p_pred}{`ggplot` facet showing all model maps}
+#'   \item{p_truth}{`ggplot` of the truth raster (for reference)}
+#' }
+#'
+#' @note
+#' Requires helpers/constants: `%||%`, `temp_palette`, `stretch_q`, plus
+#' land-cover level alignment utilities.
+#'
+#' @examples
+#' # out <- predict_maps(stn_sf, scen$R14, which_time = "T14", scen = scen)
+#' # print(out$p_truth); print(out$p_pred)
+predict_maps <- function(stn_sf, truth_raster,
+                         which_time = c("T14","T05"),
+                         scen, models = c("Voronoi","IDW","OK","KED","RF","GAM"),
+                         lc_levels = NULL,
+                         feature_rasters = NULL) {
+  which_time <- match.arg(which_time)
+  lc_levels  <- lc_levels %||% scen$lc_levels
+  E      <- feature_rasters$E   %||% scen$E
+  slp_r  <- feature_rasters$slp %||% scen$slp
+  cosi_r <- feature_rasters$cosi %||% if (which_time == "T14") scen$I14 else scen$I05
+  has_lc <- ("lc" %in% names(scen)) && !is.null(scen$lc)
+  lc_r   <- if (has_lc) scen$lc else NULL
+  
+  train_sf <- stn_sf
+  if (!all(c("x","y") %in% names(train_sf))) {
+    xy <- sf::st_coordinates(train_sf); train_sf$x <- xy[,1]; train_sf$y <- xy[,2]
+  }
+  if (!("z_surf" %in% names(train_sf)))
+    train_sf$z_surf <- as.numeric(terra::extract(E,      sf::st_coordinates(train_sf))[,1])
+  if (!("slp" %in% names(train_sf)))
+    train_sf$slp    <- as.numeric(terra::extract(slp_r,  sf::st_coordinates(train_sf))[,1])
+  if (!("cosi" %in% names(train_sf)))
+    train_sf$cosi   <- as.numeric(terra::extract(cosi_r, sf::st_coordinates(train_sf))[,1])
+  if (has_lc && !("lc" %in% names(train_sf))) {
+    lc_codes <- as.integer(terra::extract(lc_r, sf::st_coordinates(train_sf))[,1])
+    lc_codes[is.na(lc_codes)] <- 1L
+    lc_codes <- pmax(1L, pmin(lc_codes, length(lc_levels)))
+    train_sf$lc <- factor(lc_levels[lc_codes], levels = lc_levels)
+  }
+  
+  xy <- as.data.frame(terra::xyFromCell(E, 1:terra::ncell(E))); names(xy) <- c("x","y")
+  grid_df <- xy
+  grid_df$z_surf <- as.numeric(terra::values(E))
+  grid_df$slp    <- as.numeric(terra::values(slp_r))
+  grid_df$cosi   <- as.numeric(terra::values(cosi_r))
+  if (has_lc) {
+    lc_codes <- as.integer(terra::values(lc_r))
+    lc_codes[!is.finite(lc_codes)] <- 1L
+    lc_codes <- pmax(1L, pmin(lc_codes, length(lc_levels)))
+    grid_df$lc <- factor(lc_levels[lc_codes], levels = lc_levels)
+  }
+  grid_sf <- sf::st_as_sf(grid_df, coords = c("x","y"),
+                          crs = sf::st_crs(train_sf), remove = FALSE)
+  
+  use_lc <- has_lc && ("lc" %in% names(train_sf)) && ("lc" %in% names(grid_sf))
+  if (use_lc) {
+    lev <- levels(droplevels(factor(train_sf$lc)))
+    train_sf$lc <- factor(as.character(train_sf$lc), levels = lev)
+    grid_sf$lc  <- factor(as.character(grid_sf$lc),  levels = lev)
+    if (anyNA(train_sf$lc) || anyNA(grid_sf$lc)) {
+      use_lc <- FALSE; train_sf$lc <- NULL; grid_sf$lc <- NULL
+    }
+  }
+  
+  pred_list <- list()
+  if ("Voronoi" %in% models) pred_list$Voronoi <- pred_Voronoi(train_sf, grid_sf)
+  if ("IDW"     %in% models) pred_list$IDW     <- pred_IDW    (train_sf, grid_sf, idp = 2)
+  if ("OK"      %in% models) pred_list$OK      <- pred_OK     (train_sf, grid_sf)
+  if ("KED"     %in% models) pred_list$KED     <- pred_KED    (train_sf, grid_sf)
+  if ("RF"      %in% models) {
+    dtr <- sf::st_drop_geometry(train_sf)
+    rf_vars <- c("x","y","z_surf","slp","cosi", if (use_lc) "lc")
+    dtr <- stats::na.omit(dtr[, c("temp", rf_vars), drop = FALSE])
+    pred_list$RF <- if (nrow(dtr) >= 5) {
+      rf <- randomForest::randomForest(stats::as.formula(paste("temp ~", paste(rf_vars, collapse = " + "))),
+                                       data = dtr, na.action = na.omit)
+      as.numeric(stats::predict(rf, sf::st_drop_geometry(grid_sf)[, rf_vars, drop = FALSE]))
+    } else rep(NA_real_, nrow(grid_sf))
+  }
+  if ("GAM"     %in% models) pred_list$GAM     <- pred_GAM    (train_sf, grid_sf)
+  
+  pred_df <- dplyr::bind_rows(lapply(names(pred_list), function(nm) {
+    tibble::tibble(model = nm, x = grid_df$x, y = grid_df$y, pred = pred_list[[nm]])
+  }))
+  
+  make_r <- function(vals, template = E) { r <- terra::rast(template); terra::values(r) <- as.numeric(vals); r }
+  pred_rasters <- lapply(pred_list, make_r)
+  
+  truth_df <- as.data.frame(truth_raster, xy = TRUE, na.rm = FALSE)
+  names(truth_df) <- c("x","y","truth")
+  lims <- stats::quantile(truth_df$truth, probs = stretch_q, na.rm = TRUE)
+  
+  p_pred <- ggplot2::ggplot(pred_df, ggplot2::aes(x, y, fill = pred)) +
+    ggplot2::geom_raster() +
+    ggplot2::scale_fill_gradientn(colors = temp_palette(256), limits = lims,
+                                  oob = scales::squish, name = "Temp") +
+    ggplot2::coord_equal() + ggplot2::theme_minimal() +
+    ggplot2::labs(title = sprintf("%s — Predictions by model", which_time),
+                  x = "Easting", y = "Northing") +
+    ggplot2::facet_wrap(~ model, ncol = 3)
+  
+  p_truth <- ggplot2::ggplot(truth_df, ggplot2::aes(x, y, fill = truth)) +
+    ggplot2::geom_raster() +
+    ggplot2::scale_fill_gradientn(colors = temp_palette(256), limits = lims,
+                                  oob = scales::squish, name = "Temp") +
+    ggplot2::coord_equal() + ggplot2::theme_minimal() +
+    ggplot2::labs(title = sprintf("%s — Truth raster", which_time),
+                  x = "Easting", y = "Northing")
+  
+  list(pred_df = pred_df, pred_rasters = pred_rasters, p_pred = p_pred, p_truth = p_truth)
+}
+
+```       
+
+3.  **Scenarios (data & geometry):** `scenarios/` + `registry.R`. Each
+    scenario provides a `make()` factory returning a standard **object
+    contract** (see below). `registry.R` maps a name to its builder;
+    `source_scenario(name)` returns the `make()` function. Scenarios
+    control domain rasters, station sets, and recommended block size.
+    
+    
+```{r}
+#| eval: false
+#| echo: fenced
+# =====================================================================
+# block4_5/scenarios/lake_bump_dense.R
+# Benötigt: source("block4_5/src/pipemodel_functions.R") davor
+# Definiert: SCEN_NAME, SCEN_DESC, make(...)
+# =====================================================================
+
+SCEN_NAME <- "lake_bump_dense"
+SCEN_DESC <- "Valley with lake (right), bump hill (left) + dense micro-hills; random stations."
+
+# Defaults so wie bisher genutzt (nur Settings/Parameter)
+.defaults <- list(
+  # Domain
+  center_E = 600000, center_N = 5725000,
+  len_x = 600, len_y = 400, res = 10, crs = "EPSG:32632",
+  
+  # Topographie-Features
+  lake_mode = "water",   # "none" | "water" | "hollow"
+  hill_mode = "bump",    # "none" | "bump"
+  lake_diam_m  = 100, lake_depth_m = 500, smooth_edges = FALSE,
+  hill_diam_m  = 100, hill_height_m = 500, hill_smooth  = FALSE,
+  
+  # micro-relief
+  random_hills        = 50,
+  micro_hill_diam_m   = 30,
+  micro_hill_height_m = 50,
+  micro_hill_smooth   = FALSE,
+  micro_seed          = NULL,
+  
+
+  # Sonne/Geo
+  lat = 51.8, lon = 10.6, sun_date = as.Date("2024-06-21"),
+  
+  # Stationen
+  station_mode = "random",  # "random" | "ns_transect" | "ew_transect"
+  n_st = 60,
+  transect_margin_m = 10,
+  ns_offset_m = 0,
+  ew_offset_m = 0,
+  
+  # Modelle + Block-CV
+  models = c("Voronoi","IDW","OK","KED","RF","GAM"),
+  block_size = NA_real_    # wenn NA -> automatisch berechnet
+)
+
+# einfaches Mergen (ohne Seiteneffekte)
+.merge <- function(a, b) { a[names(b)] <- b; a }
+
+# ---------------------------------------------------------------------
+# make(overrides = list(), do_cv = FALSE)
+# baut Domain -> Szenario -> Stationen -> (optional) CV
+# nutzt ausschließlich Funktionen aus pipemodel_functions.R
+# ---------------------------------------------------------------------
+make <- function(overrides = list(), do_cv = FALSE) {
+  p <- .merge(.defaults, overrides)
+  
+  # 1) Domain
+  domain <- make_domain(
+    center_E = p$center_E, center_N = p$center_N,
+    len_x = p$len_x, len_y = p$len_y, res = p$res, crs = p$crs
+  )
+  
+  # 2) Szenario (Topographie/Physikfelder)
+  scen <- build_scenario(
+    domain       = domain,
+    lake_mode    = p$lake_mode,
+    hill_mode    = p$hill_mode,
+    
+    # <<< diese Zeilen fehlten bisher
+    lake_diam_m  = p$lake_diam_m,
+    lake_depth_m = p$lake_depth_m,
+    smooth_edges = p$smooth_edges,
+    hill_diam_m  = p$hill_diam_m,
+    hill_height_m= p$hill_height_m,
+    hill_smooth  = p$hill_smooth,
+    # >>>
+    
+    # micro-relief
+    random_hills        = p$random_hills,
+    micro_hill_diam_m   = p$micro_hill_diam_m,
+    micro_hill_height_m = p$micro_hill_height_m,
+    micro_hill_smooth   = p$micro_hill_smooth,
+    micro_seed          = p$micro_seed,
+    
+    # Sonne/Geo
+    lat = p$lat, lon = p$lon, sun_date = p$sun_date
+  )
+  
+  # 3) Stationen
+  pts_sf <- make_stations(
+    domain,
+    n_st = p$n_st,
+    station_mode = p$station_mode,
+    transect_margin_m = p$transect_margin_m,
+    ns_offset_m = p$ns_offset_m,
+    ew_offset_m = p$ew_offset_m
+  )
+  
+  # 4) Station-Features/Targets extrahieren
+  stns <- stations_from_scenario(scen, pts_sf)
+  stn_sf_14 <- stns$T14
+  stn_sf_05 <- stns$T05
+  
+  # 5) Blockgröße
+  block_size <- if (is.finite(p$block_size)) {
+    as.numeric(p$block_size)
+  } else {
+    compute_block_size(
+      len_x = domain$xmax - domain$xmin,
+      len_y = domain$ymax - domain$ymin,
+      n_st  = p$n_st
+    )
+  }
+  
+  out <- list(
+    name       = SCEN_NAME,
+    desc       = SCEN_DESC,
+    params     = p,
+    domain     = domain,
+    scen       = scen,
+    pts_sf     = pts_sf,
+    stn_sf_14  = stn_sf_14,
+    stn_sf_05  = stn_sf_05,
+    block_size = block_size
+  )
+  
+  # 6) Optional: Block-CV (nur wenn gewünscht)
+  if (isTRUE(do_cv)) {
+    out$cv <- list(
+      T14 = run_for_time(stn_sf_14, scen$R14, "T14",
+                         scen_local = scen, block_m = block_size, models = p$models),
+      T05 = run_for_time(stn_sf_05, scen$R05, "T05",
+                         scen_local = scen, block_m = block_size, models = p$models)
+    )
+  }
+  
+  out
+}
+# =====================================================================
+
+```
+
+## Pipeline stages 
+
+### Setup model
+
+1.  **Setup** Source `packages.R`; disable `s2` for robust planar ops in
+    projected UTM domains; set seeds. Source core helpers and the
+    scenario registry.
+
+2.  **Scenario selection & build** Select `scen_name` via
+    `Sys.getenv("SCEN", "<default>")`.
+    `make_fun <- source_scenario(scen_name)` → `obj <- make_fun()`.
+
+3.  **Sanity checks** Assert `E`, `R14`, `R05` exist;
+    `sun$T14`/`sun$T05` include numeric `alt`,`az`.
+
+4.  **Live preview (no side effects)** Quick plots to catch wiring/CRS
+    issues early: land-cover + terrain overview, 2×2 domain panel, a
+    scenario preview.
+    
+![](results_lake_bump_dense/fig/landcover_terrain.png)
+
+![](results_lake_bump_dense/fig/overview_2x2.png)
+
+![](results_lake_bump_dense/fig/T14_truth.png)
+ 
+ 
+ ![](results_lake_bump_dense/fig/T05_truth.png)
+
+::: {.callout-note title="Overview Setup" icon="false" collapse="true"}
+
+| Step | Function/Call                                                 | Purpose                        | Key args (examples)         | Output                                                   |
+| ---- | ------------------------------------------------------------- | ------------------------------ | --------------------------- | -------------------------------------------------------- |
+| S1   | `source(here::here("block4_5/src/packages.R"))`               | Load packages & global options | –                           | Packages loaded                                          |
+| S2   | `sf::sf_use_s2(FALSE)`                                        | Robust planar ops in UTM       | –                           | s2 disabled                                              |
+| S3   | `source(here::here("block4_5/src/fun_pipemodel.R"))`          | Plot/feature/scale utilities   | –                           | Helper funcs                                             |
+| S4   | `source(here::here("block4_5/src/fun_learn_predict_core.R"))` | Learn/validate/predict core    | –                           | Core funcs                                               |
+| S5   | `source(here::here("block4_5/scenarios/registry.R"))`         | Scenario registry              | –                           | `source_scenario()`                                      |
+| S6   | `make_fun <- source_scenario(scen_name)`                      | Select scenario                | `scen_name`                 | `make()` factory                                         |
+| S7   | `obj <- make_fun()`                                           | Build scenario object          | `overrides`, `do_cv` (opt.) | `scen`, `stn_sf_14`, `stn_sf_05`, `block_size`, `params` |
+
+**Scenario object** `obj` (returned by `make()`):
+
+-   `scen`: named list of rasters and metadata
+
+    -   `E`: DEM (reference geometry)
+    -   `R14`, `R05`: truth rasters for \~14 UTC and \~05 UTC
+    -   `lc`: land-cover raster (optional; with `scen$lc_levels`)
+    -   `sun`: list with `T14` and `T05`, each having numeric `alt` and
+        `az` (mandatory for R\* tuning)
+    -   optional helpers (illumination, indices) as needed by
+        features/plots
+
+-   `stn_sf_14`, `stn_sf_05`: `sf` point layers with at least `temp` and
+    covariate fields
+
+-   `block_size`: integer (meters) used for leave-block-out CV
+
+-   `params$models`: character vector of learner names to run
+
+**Tuned feature rasters \@ R\*** (produced later):
+
+-   `Es` (smoothed DEM), `slp` (slope from Es), `cosi` (cosine of
+    incidence given sun `alt`,`az`)
+
+
+ 
+ 
+ 
+:::
+
+### Learning and Predicting
+
+1.  **Baseline learning & maps** For each time slice (`T14`, `T05`):
+
+    -   `run_for_time(st, R, "Txx", scen_local=scen, block_m=block_size, models=mods)`
+    -   Produces: CV **metrics** (MAE/RMSE/R²), **blocks plot** (spatial
+        CV folds), **diag plot** (pred vs obs), **truth & prediction**
+        maps.
+        
+        
+      
+![](results_lake_bump_dense/fig/T14_pred.png)
+         
+
+
+
+
+::: {.columns}
+::: {.column width="50%"}
+
+![](results_lake_bump_dense/fig/T14_variogram.png)
+
+:::
+
+::: {.column width="50%"}
+
+![](results_lake_bump_dense/fig/T14_diag.png)
+
+:::
+:::
+  
+
+::: {.columns}
+::: {.column width="50%"}
+
+![](results_lake_bump_dense/fig/T14_block_box.png)
+
+:::
+:::
+
+
+::: {.columns}
+::: {.column width="50%"}
+
+![](results_lake_bump_dense/fig/T14_abs_error_box.png)
+
+:::
+
+::: {.column width="50%"}
+
+![](results_lake_bump_dense/fig/T14_residual_density.png)
+
+:::
+:::    
+
+---
+
+![](results_lake_bump_dense/fig/T05_pred.png)
+         
+
+
+
+
+
+::: {.columns}
+::: {.column width="50%"}
+
+![](results_lake_bump_dense/fig/T05_variogram.png)
+
+:::
+
+::: {.column width="50%"}
+
+![](results_lake_bump_dense/fig/T05_diag.png)
+
+:::
+:::
+  
+
+::: {.columns}
+::: {.column width="50%"}
+
+![](results_lake_bump_dense/fig/T05_block_box.png)
+
+:::
+:::
+
+
+::: {.columns}
+::: {.column width="50%"}
+
+![](results_lake_bump_dense/fig/T05_abs_error_box.png)
+
+:::
+
+::: {.column width="50%"}
+
+![](results_lake_bump_dense/fig/T05_residual_density.png)
+
+:::
+:::    
+
+
+### What do we see?
+
+The pipeline is behaving sensibly: block CV exposes how much of the error comes from sensors versus spatial structure. At **daytime (T14)**, most error is already “accounted for” by instrumentation; what remains splits between fine-scale heterogeneity and broader structure. At **pre-dawn (T05)**, fields are smoother at the choosen station spacing: after peeling off instrument noise, almost all leftover error is **mesoscale**—i.e., large-scale processes your mean/residual model doesn’t yet capture.
+
+### Daytime (T14)
+
+* **What the errors mean:** Sensors do a lot of the damage; once you discount that, the remainder is **balanced**: some is truly **microscale** (representativeness—canopy edges, roughness, small topographic breaks), and some is **mesoscale** (gentle gradients / structure not fully in the drift).
+* **What you likely see on maps:** Predictions look coherent, but local pockets near environmental transitions (edge effects, slope/aspect shifts) show residual texture. Scatter plots are tight with mild spread; block-wise boxplots show similar medians across your better models.
+* **Model behavior:** Simple geometric baselines (Voronoi/IDW) are adequate as references but can over- or under-smooth. KED/GAM/RF generally capture the daytime drift better; their residuals still show a **bit** of spatial correlation, which is consistent with the micro+meso split.
+
+**Implication:** Improvements now come from **targeted features** (multi-scale terrain/roughness/canopy, radiation states) and, if residuals are directional, **anisotropic/cost-aware** residual modeling. More raw smoothing won’t help much.
+
+### Pre-dawn (T05)
+
+* **What the errors mean:** After instrument noise, the leftover error is **overwhelmingly mesoscale**. That points to **organised nocturnal processes**—cold-air drainage, pooling, gentle advection—operating at scales larger than your microstructure and not fully encoded by the current drift.
+* **What you likely see on maps:** Smooth, broad residual swaths aligned with terrain and flow paths rather than speckled local noise. Scatter remains fair, but block-wise errors can vary between blocks that sit on/away from drainage lines.
+* **Model behavior:** Purely geometric methods under-represent the organised night-time structure; RF/GAM help if fed flow-aware features, but without those drivers their residuals still carry structure. Kriging alone won’t fix it unless the **metric** (anisotropy, barriers, cost distance) matches the physics.
+
+**Implication:** Focus on **process-scale** cues: flow-aligned neighborhoods, barriers across ridgelines, cost/geodesic distances that penalise uphill motion, and drift terms that proxy stratification (e.g., cold-air pathways, sky-view, topographic indices at appropriate scales). If residual correlation persists after that, add **residual kriging** with an **anisotropic/cost** metric.
+
+### Practical takeaways
+
+* You’re **not bottlenecked by algorithm choice**; you’re bottlenecked by **process representation**:
+
+  * **T14:** refine **multi-scale features** (terrain filters, canopy/roughness, radiation states) and allow **directional** residuals where wind/valley orientation matters.
+  * **T05:** elevate **flow physics** in the mean and residual metric; think **valley graphs**, **cost distance**, **barriers**.
+* **Sampling/design:** If T14 micro noise bothers you, micro-targeted placements (edges, small basins) or denser spacing help. For T05 meso, ensure transects across **valley axes** and **basin outlets** so the model “sees” the gradients it must learn.
+* **QC nudge:** If any model shows physically implausible tails (e.g., extreme GAM values at night), tighten smoothness or clip to plausible ranges and revisit feature scaling.
+
+Bottom line: baseline runs already tell a coherent story—**daytime** limits are **representativeness + mild missing drift**; **night-time** limits are **larger-scale drainage/advection**. Aim your next changes at **process-aware features** and **matching the residual metric to the physics** rather than chasing extra smoothing.
+
+
+2.  **Scale inference & tuning**
+
+    -   **Variogram → L50/L95:**
+        `compute_Ls_from_points(st, value_col="temp")` returns empirical
+        variogram and correlation scales; plotting highlights L50/L95.
+    -   **U-curve → R\*:**
+        `tune_Rstar_ucurve(st, E, alt, az, L50, L95, block_fallback, n_grid)`
+        scans smoothing radii around \[L50, L95\] to find the
+        RMSE-minimizer **R\*** via spatial CV.
+    -   **Features \@ R\*:**
+        `smooth_dem_and_derive(E, alt, az, radius_m=R*)` → `Es`, `slp`,
+        `cosi`.
+    -   **Re-extract station features \@ R\*:**
+        `add_drifts_at_R(st, E, alt, az, R*, lc=..., lc_levels=...)`
+        aligns training features with tuned rasters.
+    -   **Tuned CV:**
+        `run_lbo_cv(st_R, E=scen$E, block_size=block_size, models=mods)`
+        → updated metrics and CV table.
+    -   **Tuned maps:**
+        `predict_maps(st_R, truth_raster=Rxx, which_time="Txx", scen, models, lc_levels, feature_rasters=list(E=Es, slp=slp, cosi=cosi))`.
+    -   **Panels & diagnostics:**
+        `build_panels_truth_preds_errors_paged(...)` shows truth \|
+        predictions \| residual diagnostics.
+    -   **Error budgets (optional):** `simple_error_budget(...)`
+        aggregates instrument/micro/meso components;
+        `plot_error_budget()` stacks them for base vs tuned.
+        
+
+ 
+![](results_lake_bump_dense/fig/T14_ucurve.png)       
+  ![](results_lake_bump_dense/fig/T05_ucurve.png)  
+ ```{=html}
+<iframe width="780" height="500" src="results_lake_bump_dense/tab/metrics_T14_tuned_lake_bump_dense.html" title="Voronoi"></iframe>
+``` 
+ ```{=html}
+<iframe width="780" height="500" src="results_lake_bump_dense/tab/metrics_T05_tuned_lake_bump_dense.html" title="Voronoi"></iframe>
+``` 
+::: {.callout-note title="Modeling, Prediction & Tuning" bucon="false" collapse="true"}
+
+
+| Step | Function/Call                                                                                                                                                                                    | Purpose                          | Key args (examples)                    | Output                                                            |                 |                  |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------- | -------------------------------------- | ----------------------------------------------------------------- | --------------- | ---------------- |
+| P1   | `plot_landcover_terrain(scen, stations = st14, layout="vertical")`                                                                                                                               | Quick domain sanity check        | `scen`, `stations`                     | `ggplot`                                                          |                 |                  |
+| P2   | `plot_block_overview_2x2_en(scen, pts_sf = st14)`                                                                                                                                                | 2×2 overview                     | `scen`, `pts_sf`                       | `ggplot`                                                          |                 |                  |
+| P3   | `preview_scenario(obj)`                                                                                                                                                                          | Scenario preview                 | `obj`                                  | Panels/plots                                                      |                 |                  |
+| P4   | `run_for_time(st14, scen$R14, "T14", scen_local = scen, block_m = bs, models = mods)`                                                                                                            | **Baseline** LBO-CV + maps (T14) | stations, truth raster, blocks, models | `res={metrics, blocks_plot, diag_plot}`, `maps={p_truth, p_pred}` |                 |                  |
+| P5   | `run_for_time(st05, scen$R05, "T05", …)`                                                                                                                                                         | **Baseline** (T05)               | as above                               | as above                                                          |                 |                  |
+| P6   | `Ls14 <- compute_Ls_from_points(st14, value_col="temp")`                                                                                                                                         | Variogram & scales (T14)         | stations, value col                    | `{vg, L50, L95, sill}`                                            |                 |                  |
+| P7   | `plot_variogram_with_scales(Ls14$vg, Ls14$L50, Ls14$L95, Ls14$sill, "…")`                                                                                                                        | Variogram plot                   | variogram + scales                     | `ggplot`                                                          |                 |                  |
+| P8   | `tune_Rstar_ucurve(st14, scen$E, alt=scen$sun$T14$alt, az=scen$sun$T14$az, L50=Ls14$L50, L95=Ls14$L95, block_fallback=bs, n_grid=6)`                                                             | U-curve → **R\*** (T14)          | stations, DEM, sun, L50/L95            | `{grid, R_star, block_m}`                                         |                 |                  |
+| P9   | `fr14 <- smooth_dem_and_derive(scen$E, scen$sun$T14$alt, scen$sun$T14$az, radius_m=tune14$R_star)`                                                                                               | Features @ **R\***               | DEM, sun, R\*                          | `{Es, slp, cosi}`                                                 |                 |                  |
+| P10  | `st14_R <- add_drifts_at_R(st14, scen$E, scen$sun$T14$alt, scen$sun$T14$az, tune14$R_star, lc=scen$lc, lc_levels=scen$lc_levels)`                                                                | Station features @ **R\***       | stations, DEM, sun, R\*, LC            | `sf` with drifts                                                  |                 |                  |
+| P11  | `bench14 <- run_lbo_cv(st14_R, E=scen$E, block_size=bs, models=mods)`                                                                                                                            | **Tuned** LBO-CV (T14)           | tuned stations, DEM, blocks, models    | `{metrics, cv, …}`                                                |                 |                  |
+| P12  | `maps14_tuned <- predict_maps(st14_R, truth_raster=scen$R14, which_time="T14", scen=scen, models=mods, lc_levels=scen$lc_levels, feature_rasters=list(E=fr14$Es, slp=fr14$slp, cosi=fr14$cosi))` | Maps @ **R\*** (T14)             | tuned stations + features              | Pred rasters/plots                                                |                 |                  |
+| P13  | `panel_T14 <- build_panels_truth_preds_errors_paged(maps14_tuned, scen$R14, bench14$cv, "T14", models_per_page=7, scatter_next_to_truth=TRUE)`                                                   | Truth                            | preds                                  | residuals panel                                                   | maps, truth, CV | list of `ggplot` |
+| P14  | `simple_error_budget(run14$res, sigma_inst=0.5, alpha=0.6)`                                                                                                                                      | Error budget (baseline/tuned)    | CV results, params                     | tidy table                                                        |                 |                  |
+
+> Mirror P6–P14 for **T05** with `st05`, `R05`, `sun$T05`.        
+
+:::
+
+
+### Saving  Results
+
+3.  **Exports (optional, end-only side effects)** Controlled by
+    `export <- TRUE/FALSE`. When `TRUE`:
+
+    -   Create `results_<scen-name>/{fig,tab,ras}`.
+    -   Save baseline and tuned plots (previews, CV blocks/diag,
+        truth/pred, variograms, U-curves, panels).
+    -   Save tables (metrics, U-curve grid, scales L50/L95/R\*, error
+        budgets).
+    -   Save rasters (`E`, `R14`, `R05`, `lc` if present).
+    -   Write `sessionInfo()`.
+    
+::: {.callout-note title="Documentation & Export" icon="false" collapse="true"}
+
+| Step | Function/Call                                                                          | Purpose                   | Key args (examples) | Output            |
+| ---- | -------------------------------------------------------------------------------------- | ------------------------- | ------------------- | ----------------- |
+| D1   | `fn_fig("name")`, `fn_ras("name")`                                                     | Build output paths        | stems, ext          | file paths        |
+| D2   | `save_plot_min(p, fn_fig("plot_name"))`                                                | Save plot safely          | `ggplot`, size, dpi | PNG               |
+| D3   | `safe_save_plot(p, fn_fig("plot_name"))`                                               | Try-save without aborting | plot, path          | PNG (best-effort) |
+| D4   | `save_table_readable(df, file_stem, title=..., digits=3)`                              | Save tables               | data.frame, stem    | CSV/HTML/XLSX     |
+| D5   | `save_raster_min(r, fn_ras("raster_name"))`                                            | Save raster (GeoTIFF)     | SpatRaster, path    | TIF               |
+| D6   | `terra::writeRaster(r, fn_ras("name"), overwrite=TRUE)`                                | Low-level raster write    | raster, path        | TIF               |
+| D7   | `saveRDS(sessionInfo(), file.path(out_dir, sprintf("%s_sessionInfo.rds", scen_name)))` | Session record            | scen name           | RDS               |
+
+
+:::
+
+
+# Baseline vs Tuned — one-page summary
+
+## Headline
+
+* **Accuracy:** Day (T14) \~**0.45 °C RMSE**, Pre-dawn (T05) \~**0.60 °C RMSE** — similar before/after tuning.
+* **Error structure:**
+
+  * **T14:** sensors dominate; leftover split between **micro** and **meso**.
+  * **T05:** sensors \~half; **remainder is mostly mesoscale** (smooth nocturnal structure).
+
+## Daytime (T14)
+
+**Baseline (LBO-CV)**
+
+* **RMSE:** **0.452 °C** (Total var **0.206 °C²**)
+* **Instrument:** **0.116 °C²** (**\~56%**)
+* **Microscale:** **0.0496 °C²** (**\~24%**)
+* **Mesoscale:** **0.0401 °C²** (**\~20%**)
+  **Reading:** After removing sensor noise, remaining error is fairly balanced between **sub-grid heterogeneity** (representativeness) and **broader, unmodelled structure**.
+
+**Tuned (R\* features)**
+
+* **RMSE:** essentially unchanged (≈ **0.45 °C**).
+* **Budget:** slices stay close to baseline (minor shifts only).
+  **Reading:** Tuning mainly harmonizes **feature scale (R\*)** and improves **map coherence**; it doesn’t move headline error much.
+
+## Pre-dawn (T05)
+
+**Baseline (LBO-CV)**
+
+* **RMSE:** **0.600 °C** (Total var **0.362 °C²**)
+* **Instrument:** **0.185 °C²** (**\~51%**)
+* **Microscale:** **≈ 0 °C²** (**\~0%**)
+* **Mesoscale:** **0.177 °C²** (**\~49%**)
+  **Reading:** Nearly all non-instrument error is **mesoscale** — consistent with **smooth nocturnal fields** (drainage/advection, stratification) at your station spacing.
+
+**Tuned (R\* features)**
+
+* **RMSE:** essentially unchanged (≈ **0.60 °C**).
+* **Budget:** instrument remains \~**51%**; remainder still **meso-heavy**.
+  **Reading:** Tuning doesn’t change the picture: add **process-scale** structure rather than more smoothing.
+
+## What to do next (precise & minimal)
+
+* **Sensors (both times):** sanity-check **σ\_inst** using co-location/specs; improve shielding/siting if instrument slice looks high.
+* **T14 (micro + meso):**
+
+  * **Micro:** enrich **multi-scale terrain/roughness/canopy** features; consider slightly **smaller R\*** or multi-radius features.
+  * **Meso:** add/strengthen **process covariates** (radiation states, exposure), and allow **anisotropy/cost** in residuals where flow/wind channel influence.
+* **T05 (meso-dominated):** favor **flow-aligned neighborhoods**, **barriers across ridgelines**, and **advection/drainage proxies**; if RF/GAM residuals remain correlated, add **residual kriging** (possibly anisotropic/cost-based).
+
+## How to present (clear story)
+
+* Per time slice: **metrics table → obs-pred scatter → block-wise error boxplots → truth vs prediction maps → stacked error-budget bars** (Instrument / Micro / Meso).
+* Then show the **same row for tuned** to highlight that **scale harmonization** improved map consistency while **headline RMSE** stayed stable.
+
+**Bottom line:** Your models are already accurate at T14 and reasonable at T05. The **limiting factor** during the day is **representativeness + mild missing structure**; at night it’s **large-scale process** not yet in the mean/residual model. Focus on **process-aware features and anisotropic/cost residuals**, not more smoothing.
+
+
+
+
+### Error budget — idea, concept, and purpose
+
+**Idea.**
+Turn the overall CV error ($\sigma_{\text{cv}}^2 \approx \text{RMSE}^2$) into a *story* of where it comes from:
+
+1. **Instrument** (sensor noise you assume),
+2. **Microscale** (sub-grid, representativeness),
+3. **Mesoscale** (larger-scale, unmodelled structure).
+
+**Concept.**
+
+* First peel off a **fixed** instrument part using your sensor SD (`sigma_inst`).
+* Split the **leftover** between **micro** and **meso** with **α**.
+
+  * Prefer **α from the residual variogram’s nugget fraction** (on **CV residuals**): nugget ≈ micro.
+  * Otherwise use a **site heuristic** (open 0.2–0.4; mixed 0.4–0.6; complex 0.6–0.8).
+
+**What for.**
+
+* **Diagnose limits:** Is error dominated by **instrument**, **micro** (representativeness), or **meso** (missing process/scale)?
+* **Guide action:**
+
+  * Big **instrument** → sensor QA, shielding, calibration.
+  * Big **micro** → finer scale (**R\***), denser stations, better canopy/roughness features.
+  * Big **meso** → add process covariates (drift), anisotropy/cost metrics, rethink neighborhood/blocks.
+* **Compare models/scenarios:** Same RMSE can hide very different error structures.
+* **Communicate uncertainty:** Bars in **°C²** (optionally show SD by √).
+
+**Why `σ_inst` and α.**
+
+* `σ_inst` externalizes **known** noise (you choose it from specs/co-location).
+* **α** makes the remaining variance **interpretable** by scale: micro (< \~R\*/2) vs meso (≳ \~R\*).
+
+**Practical workflow.**
+
+1. Compute CV errors → overall variance.
+2. Set `σ_inst`.
+3. Get **α** from **residual variogram nugget fraction** (per time/model), fallback to heuristic.
+4. Report **instrument / micro / meso** components; act on the largest slice.
+
+
+Here’s the plain-English read of your results.
+
+### T14 (daytime)
+
+* **Total variance:** 0.206 °C² (RMSE ≈ 0.452 °C).
+* **Instrument:** 0.116 °C² → **\~56%** of total (SD ≈ 0.34 °C).
+* **Microscale:** 0.0496 °C² → **\~24%** (SD ≈ 0.22 °C).
+* **Mesoscale:** 0.0401 °C² → **\~20%** (SD ≈ 0.20 °C).
+
+**Interpretation:** Most error is explained by sensor noise. The remaining \~44% splits fairly evenly between **sub-grid/representativeness** (micro) and **larger-scale unmodeled structure** (meso). Both small-scale heterogeneity and some broader process signal are still in play.
+
+### T05 (pre-dawn)
+
+* **Total variance:** 0.362 °C² (RMSE ≈ 0.600 °C).
+* **Instrument:** 0.185 °C² → **\~51%** of total (SD ≈ 0.43 °C).
+* **Microscale:** **≈ 0**.
+* **Mesoscale:** 0.177 °C² → **\~49%** (SD ≈ 0.42 °C).
+
+**Interpretation:** About half the error is sensor noise. **Nearly all** of the leftover is **mesoscale**, i.e., smoother, broader structure that the mean/residual model hasn’t captured (e.g., nocturnal drainage patterns, advection, or missing covariates). A near-zero micro slice is plausible at night when fields are smoother at the station spacing.
+
+### Net takeaway
+
+* **T14:** Sensor noise dominates; the rest is a balanced mix of micro and meso → both better micro-scale features (or finer R\*) and some added process covariates could help.
+* **T05:** Sensor \~half; remainder is **meso-dominated** → focus on **process/scale** (e.g., flow-aligned/anisotropic metrics, cost distance, additional nocturnal drivers).
+
+
+
+

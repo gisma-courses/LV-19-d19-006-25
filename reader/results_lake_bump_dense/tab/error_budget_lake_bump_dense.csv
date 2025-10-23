@@ -1,0 +1,25 @@
+"Time","Mode","Component","Value"
+"T05","Base","RMSE",1.162
+"T05","Base","Bias",0.039
+"T05","Base","Total var",1.353
+"T05","Base","Instrument var",0.185
+"T05","Base","Microscale var",0
+"T05","Base","Mesoscale var",1.168
+"T05","Tuned","RMSE",1.163
+"T05","Tuned","Bias",0.039
+"T05","Tuned","Total var",1.354
+"T05","Tuned","Instrument var",0.185
+"T05","Tuned","Microscale var",0
+"T05","Tuned","Mesoscale var",1.169
+"T14","Base","RMSE",1.151
+"T14","Base","Bias",-0.032
+"T14","Base","Total var",1.328
+"T14","Base","Instrument var",0.185
+"T14","Base","Microscale var",0.332
+"T14","Base","Mesoscale var",0.811
+"T14","Tuned","RMSE",1.152
+"T14","Tuned","Bias",-0.033
+"T14","Tuned","Total var",1.329
+"T14","Tuned","Instrument var",0.185
+"T14","Tuned","Microscale var",0.332
+"T14","Tuned","Mesoscale var",0.812

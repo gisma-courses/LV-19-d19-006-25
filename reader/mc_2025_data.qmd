@@ -1,0 +1,44 @@
+---
+title: "Data Sources"
+subtitle: "Tutorial: EON Summer School 2025"
+author: Chris Reudenbach, Philipps University Marburg (PUM)
+date: "2025-08-30"
+image: ../images/mc4.png
+about:
+  id: image-heading
+  template: solana
+  image-shape: rounded
+  image-width: 25em
+  links:
+    - icon: shop-window
+      text: 2023 Station — Dead Fir plot (Ecowitt dashboard; login required)
+      href: https://www.ecowitt.net/home/index?id=149300
+    - icon: shop-window
+      text: 2023 Station — Clear-cut site (Ecowitt dashboard; login required)
+      href: https://www.ecowitt.net/home/index?id=20166
+    - icon: shop-window
+      text: 2023 Position data (climate stations)
+      href: https://github.com/HannaMeyer/EON2023/blob/main/mc_session/data/stations_prelim.zip
+    - icon: shop-window
+      text: 2024 Position data (climate stations)
+      href: https://github.com/earth-observation-network/EON2024/blob/main/mc_session/data/raw_positions_2024.csv
+    - icon: shop-window
+      text: 2024 Station data (Ecowitt share link)
+      href: https://www.ecowitt.net/home/share?authorize=6KX30B
+    - icon: shop-window
+      text: 2025 Station data — Douglas Fir (site 20166; Ecowitt)
+      href: https://www.ecowitt.net/home/index?id=20166
+    - icon: shop-window
+      text: 2025 Station data — Douglas Fir (site 20163; Ecowitt)
+      href: https://www.ecowitt.net/home/index?id=20163
+    - icon: shop-window
+      text: 2025 Position data (climate stations)
+      href: https://github.com/earth-observation-network/EON2025/blob/main/block4_5/data/Mikroklima_Stationen_EON25.gpkg
+---
+
+## Tutorial Data
+
+Download the
+[exercises repository](https://next.hessenbox.de/index.php/s/c749MW3esYBqgTQ)
+(as a ZIP), then unpack it locally. Open the `.Rproj` in **RStudio** and start
+with the provided exercises.

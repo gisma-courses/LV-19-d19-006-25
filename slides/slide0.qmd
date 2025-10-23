@@ -1,0 +1,91 @@
+---
+title: "From Foundations to Results: A Scientific Workflow"
+format:
+  revealjs:
+    theme: simple
+    transition: fade
+include-in-header:
+  text: |
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true });</script>      
+---
+
+## Scientific Process – Overview
+
+<style>
+.flow { display: flex; flex-direction: column; gap: .6rem; }
+.box { padding: 1rem 1.25rem; border-radius: 14px; border: 2px solid #c7c7c7;
+       background: #f8f9fb; text-align: center; font-size: 1.1rem; }
+.box.primary {border-color:#6b7280;background:#f3f4f6;}
+.box.q       {border-color:#2563eb;background:#eff6ff;}
+.box.lit     {border-color:#7c3aed;background:#f5f3ff;}
+.box.methods {border-color:#059669;background:#ecfdf5;}
+.box.adv     {border-color:#0ea5e9;background:#f0f9ff;}
+.box.path    {border-color:#d97706;background:#fff7ed;}
+.box.results {border-color:#ea580c;background:#fff1eb;}
+.box.loop    {border-color:#dc2626;background:#fff1f2;}
+.small {font-size:.9rem;color:#374151;}
+</style>
+
+<div class="flow">
+  <div class="box primary fragment" data-fragment-index="1">
+    <strong>Foundations / Background</strong><br>
+    <span class="small">domain knowledge, theory, context</span>
+  </div>
+
+  <div class="box q fragment" data-fragment-index="2">
+    <strong>Research Question</strong><br>
+    <span class="small">precise, testable, scoped</span>
+  </div>
+
+  <div class="box lit fragment" data-fragment-index="3">
+    <strong>State of the Art (Literature)</strong><br>
+    <span class="small">what is known, gaps, competing hypotheses</span>
+  </div>
+
+  <div class="box methods fragment" data-fragment-index="4">
+    <strong>Necessary Methods & Workflow</strong><br>
+    <span class="small">data, preprocessing, validation design, metrics</span>
+  </div>
+
+  <div class="box adv fragment" data-fragment-index="5">
+    <strong>Advanced Methods</strong><br>
+    <span class="small">models, algorithms, tuning, ablations</span>
+  </div>
+
+  <div class="box path fragment" data-fragment-index="6">
+    <strong>Applied Solution Path</strong><br>
+    <span class="small">implementation, assumptions, parameters</span>
+  </div>
+
+  <div class="box results fragment" data-fragment-index="7">
+    <strong>Results</strong><br>
+    <span class="small">findings, uncertainty, limitations</span>
+  </div>
+
+  <div class="box loop fragment" data-fragment-index="8">
+    <strong>Loopback → Evaluation & Improvement</strong><br>
+    <span class="small">error analysis, robustness checks, next iterations</span>
+  </div>
+</div>
+
+---
+
+## Process as Diagram
+
+```{mermaid}
+flowchart LR
+  A[Foundations / Background] --> B[Research Question]
+  B --> C[State of the Art (Literature)]
+  C --> D[Necessary Methods & Workflow]
+  D --> E[Advanced Methods]
+  E --> F[Applied Solution Path]
+  F --> G[Results]
+  G -.->|Loopback: evaluation, error analysis, ablations| D
+  G -.->|Refine question| B
+
+```
+
+---
+
+

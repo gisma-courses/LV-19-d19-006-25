@@ -1,0 +1,575 @@
+---
+title: "Ecowitt Air Temperature — End-to-End applied Workflow"
+subtitle: "EON Summer School 2025"
+author: Chris Reudenbach, Philipps University Marburg (PUM)
+date: "2025-08-30"
+#title-block-banner: ../images/mc4.png
+#title-block-banner-color: black
+image: ../images/mc4.png
+about:
+  id: image-heading
+  template: marquee
+  image-width: 50em
+
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    number-sections: false
+    code-fold: true
+    code-tools: true
+execute:
+  warning: true
+  message: true
+  echo: true
+  cache: false
+
+---
+
+# Overview
+
+This document demonstrates and explains a six-stage spatial pipeline for Ecowitt temperature data:
+
+-   Ingest & clean: load two loggers, harmonize names, and aggregate to 3-hourly.
+-   Interpolation preview: per-timestep KED (universal kriging) and a multi-panel plot.
+-   Scale inference (L): fit a global variogram to get L50 / L95 (spatial correlation ranges).
+-   Scale-matched predictors: build DEM-derived rasters (optionally slope/aspect/TRI) at the right scale.
+-   Tune $R^*$: select an optimal drift radius $R$ with block-CV (U-curve), then benchmark methods.
+-   Diagnostics: export products, report scales, and compute an optional error budget.
+
+**Key concept:** We use two DEMs on purpose — `DEM_scale` at native/coarser resolution drives scales, tuning, folds, CV, and error budget. `DEM_render` is an upsampled/aggregated DEM for pretty maps and interpolation output. This separation prevents the tuner from collapsing to 10 m just because pixels are tiny.
+
+## 0) Requirements & Helpers
+
+```{r}
+#| label: setup
+# Global setup + packages
+set.seed(42)
+options(width = 100)
+
+pkgs <- c(
+  "sf","terra","raster","dplyr","automap","gstat","mapview","stars",
+  "readxl","stringr","tidyr","purrr","lubridate","rprojroot",
+  "exactextractr","zoo","ggplot2","viridis","mgcv","randomForest","fields","sp","deldir",
+  "leaflet","DT","htmltools","jsonlite","shiny" # viewer deps
+)
+need <- setdiff(pkgs, rownames(installed.packages()))
+if (length(need)) install.packages(need, dependencies = TRUE)
+invisible(lapply(pkgs, function(p) suppressPackageStartupMessages(library(p, character.only = TRUE))))
+```
+
+```{r}
+#| label: helpers
+# Small utilities (kept identical to your working script where applicable)
+# SpatRaster sicher "pinnen" (Datei-basiert) und als gültiges Objekt zurückgeben
+.pin_rast <- function(r, crs = NULL, dir = NULL, name = "pinned") {
+  stopifnot(inherits(r, "SpatRaster"))
+  if (is.null(dir)) dir <- file.path(getwd(), "run_cache")
+  if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
+  f <- file.path(dir, paste0(name, ".tif"))
+  # immer schreiben → garantiert datei-gestützt und voll materialisiert
+  terra::writeRaster(r, f, overwrite = TRUE)
+  rp <- terra::rast(f)
+  if (!is.null(crs)) {
+    # nur projezieren, wenn noch nicht identisch
+    same <- try(terra::crs(rp, proj=TRUE) == as.character(crs), silent = TRUE)
+    if (!isTRUE(same)) rp <- terra::project(rp, as.character(crs), method = "near")
+  }
+  # Sanity check
+  invisible(terra::nlyr(rp))
+  rp
+}
+
+# Prüfer: „lebt“ der Pointer?
+.is_alive_spatr <- function(r) {
+  inherits(r, "SpatRaster") && !inherits(try(terra::nlyr(r), silent = TRUE), "try-error")
+}
+
+# Safe, URL-friendly file slug
+slug <- function(x) { 
+  x <- gsub("[^0-9A-Za-z_-]+","-", x)
+  x <- gsub("-+","-", x)
+  gsub("(^-|-$)","", x)
+}
+
+# Human-readable time labels from AYYYY... keys
+pretty_time <- function(x) {
+  vapply(x, function(s) {
+    if (grepl("^A\\d{14}$", s)) {
+      ts <- as.POSIXct(substr(s, 2, 15), format = "%Y%m%d%H%M%S", tz = "UTC")
+      format(ts, "%Y-%m-%d %H:%M")
+    } else if (grepl("^A\\d{8}(_D)?$", s)) {
+      ts <- as.Date(substr(s, 2, 9), format = "%Y%m%d")
+      format(ts, "%Y-%m-%d")
+    } else s
+  }, character(1))
+}
+
+# Pick the most data-dense time-slice (max number of finite observations)
+pick_densest_index <- function(sf_wide, var_names) {
+  nn <- sapply(var_names, function(v) sum(is.finite(sf_wide[[v]])))
+  which.max(nn)
+}
+
+# Build figure descriptions (viewer)
+build_explanations <- function(fig_dir, pick_ts) {
+  ts_label <- slug(pretty_time(pick_ts))
+  files <- c(
+    "timeseries_panel_grid.png",
+    "timeseries_panel_grid.pdf",
+    sprintf("u_curve_%s.png", ts_label),
+    sprintf("u_curve_extras_%s.png", ts_label),
+    sprintf("benchmark_%s.png", ts_label),
+    sprintf("benchmark_extras_%s.png", ts_label)
+  )
+  paths <- file.path(fig_dir, files)
+  desc  <- c(
+    "Per-timestep KED previews; dots=stations; red=plot boundary.",
+    "Same as PNG, vector PDF.",
+    "U-curve for tuning R via block-CV (drift-only).",
+    "U-curve with extra predictors.",
+    "Method comparison at R* (lower RMSE is better).",
+    "Benchmark with extras at R*."
+  )
+  keep <- file.exists(paths)
+  out <- as.list(desc[keep]); names(out) <- basename(paths[keep])
+  out
+}
+```
+
+```{r}
+#| label: reporting-helpers
+#| echo: false
+#| warning: false
+#| message: false
+
+.is_html <- function() knitr::is_html_output()
+
+.show_table <- function(df, caption = "") {
+  if (isTRUE(.is_html())) {
+    DT::datatable(
+      df, rownames = FALSE,
+      caption = htmltools::tags$caption(
+        style='caption-side: top; text-align: left;', caption
+      ),
+      options = list(pageLength = 10, dom = "tip")
+    )
+  } else {
+    knitr::kable(df, caption = caption)
+  }
+}
+
+.kv_tbl <- function(...) {
+  li <- list(...)
+  data.frame(
+    Key   = names(li),
+    Value = vapply(li, function(x) paste(capture.output(print(x)), collapse = " "), character(1)),
+    check.names = FALSE
+  )
+}
+```
+
+> **Why this matters:** using fine pixels for scale estimation will cap $R$ at a few pixels, resulting in the “10 m fallback”. Keep `DEM_scale` at a realistic native/coarser resolution for L/R.
+
+## 1) Project & Paths
+
+```{r}
+#| label: paths
+# Robust project root finder and paths
+wd <- rprojroot::find_rstudio_root_file()
+
+source(file.path(wd, "reader/all_functions_1.R"))   # consolidated toolkit
+
+#fn_DTM        <- file.path(wd, "reader/data_2024/copernicus_DEM.tif")
+fn_DTM        <- file.path(wd, "reader/data_2024/DEM.tif")
+fn_stations   <- file.path(wd, "reader/data_2024/stations_prelim_modifiziert.gpkg")
+fn_area       <- file.path(wd, "reader/data_2024/plot.shp")
+fn_temp_FC29  <- file.path(wd, "reader/data_2024/all_GW1000A-WIFIFC29.xlsx")
+fn_temp_DB2F  <- file.path(wd, "reader/data_2024/all_GW1000A-WIFIDB2F.xlsx")
+cleandata_rds <- file.path(wd, "reader/data_2024/climdata.RDS")
+
+out_dir    <- file.path(wd, "reader/interpolated")
+fig_dir    <- file.path(out_dir, "fig")
+method_dir <- file.path(out_dir, "methods_compare")
+report_dir <- file.path(out_dir, "report")
+for (d in c(out_dir, fig_dir, method_dir, report_dir)) if (!dir.exists(d)) dir.create(d, recursive = TRUE)
+
+# CRS
+epsg <- "EPSG:32633"  # UTM zone 33N
+sf_crs_utm33 <- sf::st_crs(epsg)
+```
+
+## 2) Base Data & DEM Strategy
+
+```{r}
+#| label: dem-and-areas
+# DEMs
+DEM_scale  <- terra::rast(fn_DTM) |> terra::project(epsg)
+DEM_scale  <- terra::aggregate(DEM_scale, c(20, 20))  # coarsen ~20–25 m (as in your working code)
+names(DEM_scale) <- "altitude"
+DEM_render <- DEM_scale |> terra::aggregate(fact = c(10, 10))  # for rendering products
+
+cat("DEM_scale res (m): ", paste(terra::res(DEM_scale),  collapse=" x "), "\n")
+cat("DEM_render res (m):", paste(terra::res(DEM_render), collapse=" x "), "\n")
+
+# Stations and plot boundary → same CRS
+stations_pos <- sf::st_read(fn_stations, quiet = TRUE) |> sf::st_transform(sf_crs_utm33)
+plot_area    <- sf::st_read(fn_area, quiet = TRUE)     |> sf::st_transform(sf_crs_utm33) |> sf::st_make_valid()
+
+# Altitude from DEM_scale (not the upsampled one)
+stations_pos <- stations_pos %>%
+  dplyr::mutate(altitude = exactextractr::exact_extract(DEM_scale, sf::st_buffer(stations_pos, 1), "mean"))
+```
+
+```{r}
+#| label: dem-summary
+#| echo: false
+#| message: false
+#| warning: false
+
+if (exists("DEM_scale") && exists("DEM_render")) {
+  dem_info <- data.frame(
+    DEM    = c("DEM_scale","DEM_render"),
+    res_x  = c(terra::res(DEM_scale)[1], terra::res(DEM_render)[1]),
+    res_y  = c(terra::res(DEM_scale)[2], terra::res(DEM_render)[2]),
+    ncol   = c(ncol(DEM_scale), ncol(DEM_render)),
+    nrow   = c(nrow(DEM_scale), nrow(DEM_render)),
+    crs    = c(terra::crs(DEM_scale), terra::crs(DEM_render)),
+    stringsAsFactors = FALSE
+  )
+  .show_table(dem_info, "DEM summary (resolution, dimensions, CRS)")
+} else {
+  cat("DEM objects not found.\n")
+}
+```
+
+## 3) Ecowitt Ingestion, Cleaning, Aggregation
+
+```{r}
+#| label: ingest-and-clean
+temp_FC29 <- extract_ecowitt_core_vars(fn_temp_FC29)
+temp_DB2F <- extract_ecowitt_core_vars(fn_temp_DB2F)
+t_rh_all  <- merge_ecowitt_logger_vars(temp_FC29, temp_DB2F)
+
+# Clean display names and map to verbose station names
+for (meas in c("temperature","humidity")) {
+  t_rh_all[[meas]] <- t_rh_all[[meas]] %>%
+    dplyr::rename_with(~ to_verbose(.x, ifelse(meas=="temperature","Temperature","Humidity")), -Time) %>%
+    clean_names()
+}
+
+# Aggregate to 3-hour steps
+temp_agg <- t_rh_all$temperature %>%
+  dplyr::mutate(time = lubridate::floor_date(Time, "3 hours")) %>%
+  dplyr::group_by(time) %>%
+  dplyr::summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)), .groups = "drop")
+names(temp_agg) <- clean_ids(names(temp_agg))
+
+# long → wide matrix: station rows, time columns
+temp_matrix <- temp_agg %>%
+  tidyr::pivot_longer(cols = -time, names_to = "stationid", values_to = "value") %>%
+  tidyr::pivot_wider(names_from = time, values_from = value)
+
+# Join to station geometry and altitude
+stations_pos <- stations_pos %>% dplyr::mutate(stationid = to_verbose(stationid))
+m <- dplyr::left_join(stations_pos, temp_matrix, by = "stationid")
+
+# Hygiene
+stations_pos$stationid <- gsub("\\(℃\\)|\\(％\\)|\\(\\%\\)", "", stations_pos$stationid)
+m$stationid            <- gsub("\\(℃\\)|\\(％\\)|\\(\\%\\)", "", m$stationid)
+names(m)               <- fix_names(names(m))
+saveRDS(m, cleandata_rds)
+```
+
+```{r}
+#| label: stations-area-summary
+#| echo: false
+#| message: false
+
+if (exists("stations_pos") && exists("plot_area")) {
+  s_info <- .kv_tbl(
+    n_stations = nrow(stations_pos),
+    crs        = as.character(sf::st_crs(stations_pos)$input),
+    sample_ids = paste(utils::head(stations_pos$stationid %||% stations_pos$StationID, 8), collapse = ", ")
+  )
+  .show_table(s_info, "Stations summary")
+
+  a_info <- .kv_tbl(
+    area_crs = as.character(sf::st_crs(plot_area)$input),
+    area_bbox= paste(signif(as.numeric(sf::st_bbox(plot_area)), 4), collapse = " / ")
+  )
+  .show_table(a_info, "Plot boundary summary")
+} else {
+  cat("stations_pos / plot_area not available.\n")
+}
+```
+
+## 4) Interpolation Preview (Per-Timestep KED)
+
+```{r}
+#| label: ked-preview
+min_pts <- 5
+vars <- as.list(grep("^A\\d{8,14}", names(m), value = TRUE))
+
+kriged_list <- lapply(vars, function(v) {
+  interpolate_kriging(v, m, DEM_render, output_dir = out_dir, label = "pretty")
+})
+names(kriged_list) <- vars
+```
+
+```{r}
+#| label: panel
+# Shared color scale across all timestamps
+panel <- timeseries_panel(
+  kriged_list        = kriged_list,
+  plot_area          = plot_area,
+  stations_pos       = stations_pos,
+  cells_target       = 150000,
+  max_cols           = 4,
+  label_pretty_time  = TRUE,
+  out_png            = file.path(fig_dir, "timeseries_panel_grid.png"),
+  out_pdf            = file.path(fig_dir, "timeseries_panel_grid.pdf"),
+  fill_label         = "Temperature"
+)
+panel$plot
+```
+
+## 5) Method Comparison for Densest Timestamp (Working Code)
+
+```{r}
+#| label: run-one
+# Densest timestamp
+pick_idx <- pick_densest_index(m, vars)
+pick_ts  <- names(m)[pick_idx]
+
+# Extra predictors (kept as in your working code)
+extra_list <- list(
+  slope  = terra::terrain(DEM_scale, v = "slope",  unit = "degrees"),
+  aspect = terra::terrain(DEM_scale, v = "aspect"),
+  tri    = terra::terrain(DEM_scale, v = "TRI")
+)
+
+# One timestamp (densest), with extras
+res_one <- run_one(
+  v           = vars[[pick_idx]],
+  m           = m,
+  DEM_render  = DEM_render,
+  DEM_scale   = DEM_scale,
+  method_dir  = method_dir,
+  fig_dir     = fig_dir,
+  report_dir  = report_dir,
+  extra_preds = extra_list,
+  save_figs   = TRUE
+)
+```
+
+## 6) (Optional) Compute All Time Steps
+
+```{r}
+#| label: compute-all
+compute_all <- FALSE
+
+if (isTRUE(compute_all)) {
+  req <- c("m","DEM_render","DEM_scale","method_dir","fig_dir","report_dir")
+  miss <- req[!vapply(req, exists, logical(1), inherits = TRUE)]
+  if (length(miss)) stop("Fehlende Objekte im Environment: ", paste(miss, collapse = ", "))
+
+  .best_from_bench <- function(bench_obj) {
+    if (is.null(bench_obj) || !is.data.frame(bench_obj$table) || nrow(bench_obj$table) < 1)
+      return(NULL)
+    b <- bench_obj$table
+    b <- b[is.finite(b$RMSE), , drop = FALSE]
+    if (!nrow(b)) return(NULL)
+    b <- b[order(b$RMSE), , drop = FALSE]
+    b[1, c("method","RMSE"), drop = FALSE]
+  }
+
+  message(sprintf("Starte compute_all für %d Zeitschritte …", length(vars)))
+
+  res_all <- setNames(lapply(vars, function(vv) {
+    message("→ run_one: ", pretty_time(vv))
+    tryCatch(
+      run_one(
+        v           = vv,
+        m           = m,
+        DEM_render  = DEM_render,
+        DEM_scale   = DEM_scale,
+        method_dir  = method_dir,
+        fig_dir     = fig_dir,
+        report_dir  = report_dir,
+        extra_preds = extra_list,
+        save_figs   = TRUE,
+        save_tables = TRUE
+      ),
+      error = function(e) {
+        warning("run_one fehlgeschlagen für ", vv, ": ", conditionMessage(e))
+        NULL
+      }
+    )
+  }), vars)
+
+  saveRDS(res_all, file.path(report_dir, "all_results.RDS"))
+
+  summ <- do.call(rbind, lapply(names(res_all), function(k) {
+    r <- res_all[[k]]
+    if (is.null(r)) {
+      return(data.frame(
+        ts_key      = k, 
+        stamp       = pretty_time(k),
+        R_star      = NA_real_,
+        best_source = NA_character_,  # "no_extras"/"with_extras"
+        best_method = NA_character_,
+        best_RMSE   = NA_real_
+      ))
+    }
+    rstar <- suppressWarnings(as.numeric(r$tune$R_star))
+    if (!is.finite(rstar)) rstar <- NA_real_
+
+    b0 <- .best_from_bench(r$bench)
+    bE <- .best_from_bench(r$bench_ex)
+
+    score0 <- if (!is.null(b0) && isTRUE(is.finite(b0$RMSE))) b0$RMSE else Inf
+    scoreE <- if (!is.null(bE) && isTRUE(is.finite(bE$RMSE))) bE$RMSE else Inf
+
+    if (is.infinite(score0) && is.infinite(scoreE)) {
+      src <- NA_character_; bm <- NA_character_; br <- NA_real_
+    } else if (score0 <= scoreE) {
+      src <- "no_extras"; bm <- b0$method; br <- score0
+    } else {
+      src <- "with_extras"; bm <- bE$method; br <- scoreE
+    }
+
+    data.frame(
+      ts_key      = k,
+      stamp       = pretty_time(k),
+      R_star      = rstar,
+      best_source = src,
+      best_method = bm,
+      best_RMSE   = br
+    )
+  }))
+
+  utils::write.csv(summ, file.path(report_dir, "summary_Rstar_bestmethod.csv"), row.names = FALSE)
+  message("✔ Fertig: summary_Rstar_bestmethod.csv geschrieben.")
+}
+```
+
+## 7) Save CSVs for the One Timestamp
+
+```{r}
+#| label: save-csvs
+ts_label <- pretty_time(pick_ts)
+bench_base_csv <- file.path(report_dir, sprintf("benchmark_%s.csv",        slug(ts_label)))
+bench_ex_csv   <- file.path(report_dir, sprintf("benchmark_extras_%s.csv", slug(ts_label)))
+eb_base_csv    <- file.path(report_dir, sprintf("error_budget_%s.csv",     slug(ts_label)))
+eb_ex_csv      <- file.path(report_dir, sprintf("error_budget_extras_%s.csv", slug(ts_label)))
+
+if (is.list(res_one$bench)    && is.data.frame(res_one$bench$table))    write.csv(res_one$bench$table,    bench_base_csv, row.names = FALSE)
+if (is.list(res_one$bench_ex) && is.data.frame(res_one$bench_ex$table)) write.csv(res_one$bench_ex$table, bench_ex_csv,   row.names = FALSE)
+if (is.data.frame(res_one$errtab))    write.csv(res_one$errtab,    eb_base_csv, row.names = FALSE)
+if (is.data.frame(res_one$errtab_ex)) write.csv(res_one$errtab_ex, eb_ex_csv,   row.names = FALSE)
+```
+
+## 8) Console Summary
+
+```{r}
+#| label: console-summary
+n_stations <- nrow(stations_pos)
+n_pts_ts   <- sum(is.finite(m[[pick_ts]]))
+Ls         <- get_Ls(res_one$wf$L)
+Ls_e       <- if (!is.null(res_one$wf_ex)) get_Ls(res_one$wf_ex$L) else NULL
+Rstar_base <- suppressWarnings(as.numeric(res_one$tune$R_star))
+Rstar_ex   <- suppressWarnings(as.numeric(res_one$tune_ex$R_star))
+
+cat(sprintf("Chosen R (micro/local): %s / %s m\n",
+            ifelse(is.finite(res_one$wf$R['micro']), round(res_one$wf$R['micro']), "NA"),
+            ifelse(is.finite(res_one$wf$R['local']), round(res_one$wf$R['local']), "NA")
+))
+```
+
+## 9) Shiny Viewer (Optional, uses existing files)
+
+> The viewer launches a Shiny app; to not block Quarto rendering, the launch is wrapped in `if (interactive())`.
+
+```{r}
+#| label: viewer-funcs
+# Minimal viewer injection: use your working run_mc_viewer() with robust file matching
+raster_path <- function(method, ts) {
+  stopifnot(length(method) == 1, length(ts) == 1)
+  m <- tolower(method)
+  .ts_tokens <- function(ts_key) {
+    raw <- tolower(as.character(ts_key))
+    pty <- tolower(pretty_time(ts_key))
+    slug_pt <- gsub("[^0-9A-Za-z_-]+","-", pty)
+    d14 <- sub("^a", "", raw)
+    ymd  <- if (nchar(d14) >= 8) substr(d14,1,8) else NA_character_
+    hhmm <- if (nchar(d14) >= 12) substr(d14,9,12) else NA_character_
+    comp1 <- if (!is.na(ymd) && !is.na(hhmm))
+      paste0(substr(ymd,1,4),"-",substr(ymd,5,6),"-",substr(ymd,7,8),"-",
+             substr(hhmm,1,2),"-",substr(hhmm,3,4)) else NA_character_
+    comp2 <- gsub("-", "", comp1)
+    ymd_dash <- if (!is.na(ymd)) paste0(substr(ymd,1,4),"-",substr(ymd,5,6),"-",substr(ymd,7,8)) else NA_character_
+    unique(na.omit(c(raw, slug_pt, comp1, comp2, ymd_dash, ymd)))
+  }
+  toks <- .ts_tokens(ts)
+  tok_rx <- gsub("[-_]", "[-_]", toks)
+
+  all_files <- list.files(method_dir, pattern = "\\.tif$", full.names = TRUE, ignore.case = TRUE)
+  if (!length(all_files)) return(NA_character_)
+  b <- tolower(basename(all_files))
+
+  keep_pref <- grepl(paste0("^", m, "_"), b)
+  files_m <- all_files[keep_pref]; b_m <- b[keep_pref]
+  if (length(files_m)) {
+    score <- vapply(seq_along(b_m), function(i) {
+      max(c(0, vapply(tok_rx, function(rx) if (grepl(rx, b_m[i], perl = TRUE)) nchar(rx) else 0L, integer(1))))
+    }, numeric(1))
+
+    if (any(score > 0)) {
+      best <- files_m[score == max(score)]
+      bbest <- tolower(basename(best))
+      idxR <- grep("_rstar\\.tif$", bbest)
+      if (length(idxR)) return(best[idxR[1]])
+      idxL <- grep("_l95\\.tif$", bbest)
+      if (length(idxL)) return(best[idxL[1]])
+      return(best[1])
+    }
+  }
+
+  if (toupper(method) %in% c("KED","PREVIEW")) {
+    out_dir_local <- dirname(method_dir)
+    prev <- list.files(out_dir_local, pattern = "\\.tif$", full.names = TRUE, ignore.case = TRUE)
+    if (length(prev)) {
+      bp <- tolower(basename(prev))
+      rx_prev <- paste0("^(", paste0(tok_rx, collapse = "|"), ")_interpolated(_wgs84)?\\.tif$")
+      hit <- grepl(rx_prev, bp, perl = TRUE)
+      if (any(hit)) return(prev[which(hit)[1]])
+    }
+  }
+  NA_character_
+}
+```
+
+```{r}
+#| label: viewer-launch
+# Only launch interactively
+if (interactive()) {
+  explanations <- build_explanations(fig_dir = fig_dir, pick_ts = vars[[pick_idx]])
+  run_mc_viewer(
+    vars         = vars,
+    method_dir   = method_dir,
+    fig_dir      = fig_dir,
+    stations_pos = stations_pos,
+    plot_area    = plot_area,
+    wf           = res_one$wf,
+    wf_ex        = res_one$wf_ex,
+    tune         = res_one$tune,
+    tune_ex      = res_one$tune_ex,
+    bench        = res_one$bench,
+    bench_ex     = res_one$bench_ex,
+    tab_err      = res_one$errtab,
+    tab_err_ex   = res_one$errtab_ex,
+    explanations = explanations
+  )
+}
+```
