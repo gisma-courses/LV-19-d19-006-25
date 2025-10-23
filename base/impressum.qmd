@@ -7,21 +7,21 @@ title: "Impressum"
 # Impressum
 
 This website is part of the reproducible research framework of the
-[{{uni_name}}]({{uni_url}}).
-It is developed at the [{{institute_name}}]({{institute_url}}) under responsibility of the [{{chair_name}}]({{chair_url}}).
+[Philipps Universy Marburg](https://www.uni-marburg.de/en).
+It is developed at the [Department of Geography](https://www.uni-marburg.de/en/fb19) under responsibility of the [gisma](https://gisma-courses.github.io/gc/01_course_landing.html).
 
-<p>{{responsible_name}}<br />{{responsible_address}}</p>
-<p>Email: <a href="mailto:{{responsible_email}}">{{responsible_email}}</a></p>
-<p>Imprint: <a href="{{imprint_url}}" target="_blank">{{imprint_url}}</a>.</p>
+<p>Dr. Christoph Reudenbach<br /> Deutschhaustr. 10 <br/> 35047 Marburg</p>
+<p>Email: <a href="mailto:reudenbach@uni-marburg.de">reudenbach@uni-marburg.de</a></p>
+<p>Imprint: <a href="https://www.uni-marburg.de/en/legal" target="_blank">https://www.uni-marburg.de/en/legal</a>.</p>
 
 This website is brought with the background of
 [Open Educational Resources](https://open-educational-resources.de/)
 initiative coordinated by the
 [Leibniz-Institut für Bildungsforschung und Bildungsinformation](https://www.dipf.de/de)
 and integrated in the official teaching and reproducible research framework of the
-[{{uni_name}}]({{uni_url}}). It is developed at the
-[{{institute_name}}]({{institute_url}}) under responsibility of the
-[{{chair_name}}]({{chair_url}}).
+[Philipps Universy Marburg](https://www.uni-marburg.de/en). It is developed at the
+[Department of Geography](https://www.uni-marburg.de/en/fb19) under responsibility of the
+[gisma](https://gisma-courses.github.io/gc/01_course_landing.html).
 
 ## Content Responsibility
 
@@ -43,9 +43,9 @@ This work is licensed under a
 <p>The terms used are not gender-specific.</p>
 
 <h2 id="m3">Responsible</h2>
-<p>{{responsible_name}}<br />{{responsible_address}}</p>
-<p>Email address: <a href="mailto:{{responsible_email}}">{{responsible_email}}</a>.</p>
-<p>Imprint: <a href="{{imprint_url}}" target="_blank">{{imprint_url}}</a>.</p>
+<p>Dr. Christoph Reudenbach<br /> Deutschhaustr. 10 <br/> 35047 Marburg</p>
+<p>Email address: <a href="mailto:reudenbach@uni-marburg.de">reudenbach@uni-marburg.de</a>.</p>
+<p>Imprint: <a href="https://www.uni-marburg.de/en/legal" target="_blank">https://www.uni-marburg.de/en/legal</a>.</p>
 
 <h2 id="mOverview">Overview of Processing</h2>
 <p>The following overview summarizes the types of data processed and the purposes of their processing, and refers to the data subjects.</p>

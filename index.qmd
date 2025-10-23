@@ -1,5 +1,5 @@
 ---
-title: "{{site_title}}"
+title: "Advanced GIS & RS"
 ---
 <style>
   body {
@@ -14,7 +14,7 @@ title: "{{site_title}}"
 
 ![](images/Adam-Savage-Quotes-3.jpg)
 
-Willkommen zur Kurs-Website **{{course_code}}** — {{org_name}}.
+Willkommen zur Kurs-Website **LV-19-d19-006-25** — gisma spatial science ressources.
 
 
 

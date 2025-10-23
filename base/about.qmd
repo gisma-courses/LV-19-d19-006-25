@@ -8,6 +8,6 @@ format:
 ---
 
 
-Organisation: **{{org_name}}**
-Kurs: **{{course_code}}**
-Kontakt: <{{contact_email}}>
+Organisation: **gisma spatial science ressources**
+Kurs: **LV-19-d19-006-25**
+Kontakt: <reudenbach@uni-marburg.de>

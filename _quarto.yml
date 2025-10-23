@@ -8,9 +8,9 @@ resource-path:
   - .
 
 website:
-  title: "your title"
-  site-url: https://your-github-name.github.io/your-repo
-  repo-url: https://github.com/your-github-name/your-repo
+  title: "Advanced GIS & RS"
+  site-url: https://gisma-courses.github.io/LV-19-d19-006-25
+  repo-url: https://github.com/gisam-courses/LV-19-d19-006-25
   repo-actions: []   # [source, issue, edit] bei Bedarf manuell setzen
   page-navigation: true
   bread-crumbs: false
@@ -18,8 +18,8 @@ website:
   image: images/banner.png
   page-footer:
     center: |
-      your organisation (<span class="year"></span>) —
-      <a class="impressum-link" href="#">Impressum</a>
+      gisma spatial science ressources (<span class="year"></span>) —
+      <a class="impressum-link" href="base/impressum.html">Impressum</a>
 
   search:
     location: navbar
@@ -28,15 +28,15 @@ website:
   navbar:
     background: primary
     foreground: light
-    logo: images/logooil.jpg
+    logo: images/logo.png
     left:
       - icon: question-square-fill
         text: FAQ
         href: base/faq.qmd
     right:
       - icon: chat-left-text-fill
-        text: Interne Lernplattform
-        href: https://ilias.uni-marburg.de/ilias.php?baseClass=ilrepositorygui&reloadpublic=1&cmd=&ref_id=1
+        text: "ILIAS"
+        href: "https://ilias.uni-marburg.de/ilias.php?baseClass=ilrepositorygui&ref_id=4407827"
 
   sidebar:
     pinned: true
@@ -63,15 +63,15 @@ website:
 format:
   html:
     theme:
-      light: [lumen]
-      # __DARK_THEME_LINE__   # ← wird vom configure-Script ersetzt
+      light: [lumen, css/custom.scss]
+
     css: css/styles.css
     toc: true
     code-copy: true
     code-background: true
     link-external-icon: true
     link-external-newwindow: true
-    link-external-filter: '^(?:http:|https:)\/\/www\.quarto\.org\/custom'
+    link-external-filter: '^(?:http:|https:)//(gisma\-courses\.github\.io/LV\-19\-d19\-006\-25|www\.quarto\.org/custom)'
     md-extensions: +fenced_divs+bracketed_spans+link_attributes
     include-after-body:
       - "includes/_footer-year.html"

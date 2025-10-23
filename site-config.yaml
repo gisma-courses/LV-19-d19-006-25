@@ -2,29 +2,29 @@
 # Fülle in Ruhe aus
 
 # --- Kurs Infos
-course_code: "LV-123"                                      # Potentieller Code LV-yyyy-yyy wird nur auf der Index Seite eingetragen
+course_code: "LV-19-d19-006-25"                                      # Potentieller Code LV-yyyy-yyy wird nur auf der Index Seite eingetragen
 contact_email: "reudenbach@uni-marburg.de"                                 # kann abweichend oder gleich zu Impressum sein in der Regel Dozen*in wird nur auf der Index Seite eingetragen    
-site_title: "your title"                                     # Name der Seite in der Titelleiste
+site_title: "Advanced GIS & RS"                                     # Name der Seite in der Titelleiste
 org_name: "gisma spatial science ressources"                                # erscheint im Gegensatz zu chair_name etc im Footer  Header usw            
-site_url: "https://gisma-courses.github.io/your-repo"
-repo_url: "https://github.com/gisam-courses/your-repo"    
-logo_path: "images/your-logo.png"                            # Logo obere Ecke Navbar
+site_url: "https://gisma-courses.github.io/LV-19-d19-006-25"
+repo_url: "https://github.com/gisam-courses/LV-19-d19-006-25"    
+logo_path: "images/logo.png"                            # Logo obere Ecke Navbar
 
 # Navbar rechts
 portal_text: "ILIAS"                     # z.B. Interne Lernplattform
-portal_url: "https://ilias.uni-marburg.de/ilias.php?baseClass=ilrepositorygui&reloadpublic=1&cmd=&ref_id=1"                      # 
+portal_url: "https://ilias.uni-marburg.de/ilias.php?baseClass=ilrepositorygui&ref_id=4407827"                      # 
 
 # Footer / Impressum-Link im Footer
 impressum_href: "base/impressum.qmd"   # Script macht automatisch .html daraus
 
 # --- Branding ---
 # --- Vanilla = original theme ---
-brand_hex: ""          # leer lassen
-brand_hex_dark: ""     # leer lassen
+#brand_hex: ""          # leer lassen
+#brand_hex_dark: ""     # leer lassen
 
 # --- Auskommentieren um Branding Color zu aktivieren 
-#brand_hex: "#008BFF"             # Light
-#brand_hex_dark: "yes"            # optional (leer = wie Light)
+brand_hex: "#008BFF"             # Light
+brand_hex_dark: "yes"            # optional (leer = wie Light)
 
 
 brand_font: "system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif"
