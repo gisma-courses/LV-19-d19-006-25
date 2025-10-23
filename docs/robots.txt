@@ -1,1 +1,0 @@
-Sitemap: https://gisma-courses.github.io/your-repo/sitemap.xml
