@@ -1,0 +1,11 @@
+---
+title: "Coming&nbsp;Soon"
+page-layout: full
+format:
+  html:
+    toc: false
+    smooth-scroll: true
+    # falls du ein Theme nutzt, bleibt das wirksam (z. B. lumen + custom.scss)
+---
+    
+    

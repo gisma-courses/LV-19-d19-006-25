@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      # Token für remotes::install_github (vermeidet 401/Rate-Limits)
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout
@@ -75,6 +78,7 @@ jobs:
 
       - name: Install GitHub packages
         run: |
+          Rscript -e 'print(paste("Has PAT:", nzchar(Sys.getenv("GITHUB_PAT"))))'
           Rscript -e 'remotes::install_github(c(
             "mrke/NicheMapR",
             "bluegreen-labs/fieldClim",
@@ -82,7 +86,7 @@ jobs:
             "bluegreen-labs/micropoint"
           ), upgrade = "never", dependencies = TRUE)'
 
-      # ---------- Quarto Extensions (Filter) ----------
+      # ---------- Quarto Extensions ----------
       - name: Install Quarto extensions (roughnotation, lightbox, tachyons)
         run: |
           quarto install extension quarto-ext/roughnotation || true
@@ -103,6 +107,7 @@ jobs:
         run: |
           quarto render . --log-level=INFO
 
+      # Fallback: falls in _site/ gerendert wurde
       - name: Fallback _site -> docs
         run: |
           if [ -d "_site" ] && [ ! -f "docs/index.html" ]; then

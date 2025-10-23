@@ -44,21 +44,52 @@ website:
     style: docked
     contents: auto
     # collapse-level: 1
-    # contents:
-    #   - section: "Willkommen"
-    #     contents:
-    #       - index.qmd
-    #       - base/about.qmd
-    #   - text: "---"
-    #   - section: "Kurs-Sitzungen"
-    #     contents:
-    #       - section: "Sitzung 1"
-    #         contents:
-    #           - session-1/sitzung-1-01.qmd
-    #       - section: "Sitzung 2"
-    #         contents:
-    #           - session-2/sitzung-2-01.qmd
-    #           - session-2/sitzung-2-02.qmd
+   contents:
+      - section: "GIS Basics"
+        contents:
+          - href: https://gisma--courses-github-io.translate.goog/geoinfo-basis-qgis//unit01/unit01-01_reader_geo_raum.html?_x_tr_sl=de&_x_tr_tl=en&_x_tr_hl=de&_x_tr_pto=wapp 
+            text: Space needs a scope
+          - href: https://gisma--courses-github-io.translate.goog/geoinfo-basis-qgis//unit02/unit02-01_reader_gi_raum.html?_x_tr_sl=de&_x_tr_tl=en&_x_tr_hl=de&_x_tr_pto=wapp
+            text: Spatial Representation in GI
+
+      - text: "---"         
+      - section: "R-Spatial Basics"
+        contents:
+          - href: https://gisma-courses.github.io/LV-19-d19-006/morea/geocomputation-with-r/reading-screencast-spatial-r-gis-2.html
+            text: Some Pros & Cons for R-Spatial
+          - href: https://thinking-spatial.org/courses/geoinformationen_kommunizieren/kurs1/
+            text:  First steps in geospatial R (German Ressource)
+          - href: https://r.geocompx.org/intro.html
+            text: Geocomputation with R
+      - text: "---"  
+      - section: "Lectures"
+        contents:
+         - href:  reader/cd-1.qmd          
+            text: Spatial data classification
+          - href:  reader/mc3.qmd          
+            text: Filling Gaps     
+          - href:  reader/cd2.qmd          
+            text:  Data retrieval                 
+          - href:  slides/slides_session1.qmd          
+            text: Spatial Pattern Description 
+          - href:  slides/slides_session2.qmd          
+            text: Landscape Patterns
+          - href:  slides/slides_session3.qmd          
+            text: Landscape Patterns Reloaded
+          - href:  slides/slides_session4.qmd          
+            text: Pattern-based spatial analysis            
+          - href:  slides/slides_session5.qmd          
+            text: Continous data spatial analysis                 
+      - text: "---"
+      - section: "Worksheets"
+        contents:
+          - worksheets/comingsoon.qmd
+          - worksheets/comingsoon.qmd
+          - worksheets/comingsoon.qmd
+          - worksheets/comingsoon.qmd
+          - worksheets/comingsoon.qmd
+          - worksheets/comingsoon.qmd          
+
 
 format:
   html:
