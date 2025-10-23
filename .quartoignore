@@ -1,0 +1,6 @@
+# Konfig & Skripte sollen NICHT in die veröffentlichte Site
+site-config.yaml
+scripts/
+README.md          # wenn du es nicht als Seite ausliefern willst
+LICENSE
+configure.log

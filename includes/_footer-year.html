@@ -1,0 +1,14 @@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Jahr einsetzen
+  document.querySelectorAll('.year').forEach(function (el) {
+    el.textContent = new Date().getFullYear();
+  });
+
+  // Impressum-Link relativ zum Projekt-Root setzen
+  const offset = document.querySelector('meta[name="quarto:offset"]')?.getAttribute('content') || '';
+  document.querySelectorAll('a.impressum-link').forEach(function (a) {
+    a.setAttribute('href', offset + 'base/impressum.html');
+  });
+});
+</script>

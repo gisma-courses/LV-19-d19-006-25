@@ -1,0 +1,20 @@
+---
+title: "{{site_title}}"
+---
+<style>
+  body {
+  background-image: url("");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+</style>
+
+
+
+![](images/Adam-Savage-Quotes-3.jpg)
+
+Willkommen zur Kurs-Website **{{course_code}}** — {{org_name}}.
+
+
+

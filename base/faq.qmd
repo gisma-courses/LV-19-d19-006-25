@@ -1,0 +1,21 @@
+---
+title: "FAQ"
+---
+
+
+
+
+::: {.callout-warning title="Wo ändere ich Branding?" appearance="minimal"}
+css/custom.scss` (Light) und optional `css/theme-dark.scss` (Dark).
+:::
+
+::: {.callout-tip title="Wie bearbeite ich Inhalte?" appearance="simple"}
+Seiten sind `.qmd`-Dateien. Änderungen committen und pushen; GitHub Actions baut die Site.
+
+:::
+
+::: {.callout-warning title="Learn More..." collapse="true"}
+
+
+Diese Seite nutzt Quarto. Änderbare Farben/Branding liegen in `css/custom.scss`. Alles weitere auf der [Quarto Seite](https://quarto.org/docs/websites/)
+:::

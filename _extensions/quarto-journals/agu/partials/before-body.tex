@@ -1,0 +1,27 @@
+$if(title)$
+\title{$title$}
+$endif$
+
+\authors{${ by-author:_authors.tex()[, ] }}
+$by-affiliation:_affiliations.tex()$
+$by-author:_corresponding-author.tex()$
+
+$if(key-points)$
+\begin{keypoints}
+$for(key-points)$\item $key-points$ $endfor$
+\end{keypoints}
+$endif$
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+
+$if(plain-language-summary)$
+\section*{Plain Language Summary}
+$plain-language-summary$
+$endif$
+
+
+

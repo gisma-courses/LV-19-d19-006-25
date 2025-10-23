@@ -1,0 +1,10 @@
+# Dinge, die im Zielrepo nicht gebraucht werden
+_site/
+docs/
+.quarto/
+outputs/
+cache/
+tmp/
+.DS_Store
+Thumbs.db
+# WICHTIG: NICHT .github/ ignorieren – dein Workflow soll mitkopiert werden

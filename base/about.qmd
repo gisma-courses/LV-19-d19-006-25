@@ -1,0 +1,13 @@
+---
+title: "About"
+title-block-banner: ../images/diffusion-sp.jpg # keine pngs
+title-block-banner-color: black 
+format-links: [html]   # Link-Namen müssen den Formatkeys entsprechen
+format:
+  html: { toc: true, toc-depth: 2, code-fold: true, number-sections: false }
+---
+
+
+Organisation: **{{org_name}}**
+Kurs: **{{course_code}}**
+Kontakt: <{{contact_email}}>

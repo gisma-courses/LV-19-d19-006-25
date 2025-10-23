@@ -1,0 +1,12 @@
+# _quarto-ci.yml  (liegt im Repo-Root)
+project:
+  output-dir: docs
+  render: ["."]
+resources:
+  - images/**
+resource-path:
+  - .
+  - ..
+  - images
+execute:
+  freeze: false

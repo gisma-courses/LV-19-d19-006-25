@@ -1,0 +1,93 @@
+name: Quarto Build (HTML + DOCX + PDF)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # nötig für das Pushen von docs/
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Optional: Python-Version ausgeben (Python ist auf ubuntu-latest vorinstalliert)
+      - name: Show Python
+        run: python3 --version
+
+      # Anwenden der Konfiguration (liest site-config.yaml, schreibt _quarto.yml, SCSS, QMDs)
+      # Läuft idempotent – sicher bei jedem Run.
+      - name: Apply site configuration (from site-config.yaml)
+        if: hashFiles('scripts/configure.py') != ''
+        run: python3 scripts/configure.py --noninteractive
+
+      # CI-Profil erzwingt output-dir=docs
+      - name: Create CI profile (output=docs)
+        run: |
+          cat > _quarto-profile-ci.yml <<'YML'
+          project:
+            output-dir: docs
+          execute:
+            freeze: false
+          YML
+
+      - name: Set up Quarto + TinyTeX
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true
+
+      - name: Show versions
+        run: |
+          quarto --version
+          pandoc --version | head -n 2
+          tlmgr --version || true
+
+      # WICHTIG: kein --to! So erzeugt Quarto HTML + alle format-links (PDF/DOCX)
+      - name: Render site (HTML + alt formats via format-links)
+        env:
+          QUARTO_PROFILE: ci
+        run: |
+          quarto render . --log-level=INFO
+
+      # Fallback: falls Profil ignoriert wurde und nach _site/ gebaut wurde
+      - name: Fallback _site -> docs
+        run: |
+          if [ -d "_site" ] && [ ! -f "docs/index.html" ]; then
+            echo "Profile ignored; copying _site/ to docs/"
+            rm -rf docs
+            mkdir -p docs
+            cp -a _site/. docs/
+          fi
+
+      - name: Sanity check
+        run: |
+          test -f docs/index.html || (echo "docs/index.html missing" && exit 1)
+          echo "Listing alt formats found under docs/:"
+          find docs -type f \( -name '*.pdf' -o -name '*.docx' \) -printf '%P\n' || true
+
+      - name: Commit & push docs
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f docs
+          git commit -m "CI: render site with alt formats (HTML+PDF+DOCX) [skip ci]" || echo "Nothing to commit"
+          git push
+
+      # OPTIONAL: Source-Änderungen (durch configure.py) zurück ins Repo committen
+      # -> Nur aktivieren, wenn du möchtest, dass die ersetzten Werte dauerhaft in den Quellen landen.
+      # - name: Persist source changes (optional)
+      #   if: github.ref == 'refs/heads/main'
+      #   run: |
+      #     if ! git diff --quiet; then
+      #       git config user.name  "github-actions[bot]"
+      #       git config user.email "github-actions[bot]@users.noreply.github.com"
+      #       git add -A
+      #       git commit -m "CI: apply site-config via configure.py [skip ci]"
+      #       git push
+      #     else
+      #       echo "No source changes to commit."

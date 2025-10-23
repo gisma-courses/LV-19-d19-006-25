@@ -1,0 +1,44 @@
+# site-config.yaml — Projektkonfiguration für Quarto-Kurswebsite
+# Fülle in Ruhe aus
+
+# --- Kurs Infos
+course_code: "LV-123"                                      # Potentieller Code LV-yyyy-yyy wird nur auf der Index Seite eingetragen
+contact_email: "reudenbach@uni-marburg.de"                                 # kann abweichend oder gleich zu Impressum sein in der Regel Dozen*in wird nur auf der Index Seite eingetragen    
+site_title: "your title"                                     # Name der Seite in der Titelleiste
+org_name: "gisma spatial science ressources"                                # erscheint im Gegensatz zu chair_name etc im Footer  Header usw            
+site_url: "https://gisma-courses.github.io/your-repo"
+repo_url: "https://github.com/gisam-courses/your-repo"    
+logo_path: "images/your-logo.png"                            # Logo obere Ecke Navbar
+
+# Navbar rechts
+portal_text: "ILIAS"                     # z.B. Interne Lernplattform
+portal_url: "https://ilias.uni-marburg.de/ilias.php?baseClass=ilrepositorygui&reloadpublic=1&cmd=&ref_id=1"                      # 
+
+# Footer / Impressum-Link im Footer
+impressum_href: "base/impressum.qmd"   # Script macht automatisch .html daraus
+
+# --- Branding ---
+# --- Vanilla = original theme ---
+brand_hex: ""          # leer lassen
+brand_hex_dark: ""     # leer lassen
+
+# --- Auskommentieren um Branding Color zu aktivieren 
+#brand_hex: "#008BFF"             # Light
+#brand_hex_dark: "yes"            # optional (leer = wie Light)
+
+
+brand_font: "system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif"
+dark_theme: "yes"             # "yes" oder "no"
+
+# --- Impressum / Datenschutz ---
+responsible_name: "Dr. Christoph Reudenbach"                                        # z. B. "Prof. Dr. …"
+responsible_address: " Deutschhaustr. 10 <br/> 35047 Marburg"  # HTML-Zeilenumbruch mit <br />
+responsible_email: "reudenbach@uni-marburg.de"                     # email der Impressum verantworlichen Person
+uni_name: "Philipps Universy Marburg"                                                # Name der Uni/Institution               
+uni_url: "https://www.uni-marburg.de/en"                                                 # Hompage der Uni/Institution
+institute_name: "Department of Geography"                                          # Name der Abteilung/Institut/Unterorganisation
+institute_url: "https://www.uni-marburg.de/en/fb19"                                           # Hompage der Abteilung/Institut/Unterorganisation
+chair_name: "gisma"                                              # Name der AG
+chair_url: "https://gisma-courses.github.io/gc/01_course_landing.html"                                               # Hompage der AG
+imprint_url: "https://www.uni-marburg.de/en/legal"                                             # offizielles Impressum der Organisation
+

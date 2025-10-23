@@ -1,0 +1,21 @@
+/* =============================================================================
+   theme-dark.scss – Dark-Brand-Overrides
+   - Wird im Theme-Stack vor custom.scss geladen.
+   - Enthält optional eigene Markenfarbe für Dark.
+   - Alle Variablennamen spiegeln custom.scss, damit template.yml ersetzen kann.
+   ========================================================================== */
+
+$brand: #FB7171;  // ← kann via Template als brand_hex_dark ersetzt werden (leer => wie Light)
+$brand-font: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;
+
+/* Keine weiteren Regeln nötig: custom.scss liest $brand/$brand-font und
+   setzt die entsprechenden CSS-Variablen auch für Dark neu. */
+/*-- scss:defaults --*/
+$body-bg: #181818;
+$body-color: white;
+$link-color: #75AADB;
+$sidebar-bg: #303030;
+$code-background-alpha: -.8;
+$popover-bg: #242424;
+$input-bg: #242424;
+

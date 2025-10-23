@@ -1,0 +1,113 @@
+/* =============================================================================
+   custom.scss – Projekt-Branding für HTML-Output
+   -----------------------------------------------------------------------------
+   Zweck:
+     - Setzt die Markenfarbe (Primär- & Linkfarben) und färbt die Navbar
+       für das Bootswatch-Theme „lumen“ – sowohl Light als auch Dark.
+
+   Aktivierung (in _quarto.yml):
+     format:
+       html:
+         theme:
+           light: [lumen, css/custom.scss]
+           dark:  [lumen, css/theme-dark.scss, css/custom.scss]
+         css: css/styles.css
+
+   Nutzung:
+     - Markenfarbe einfach hier im $brand ändern (oder via Template-Prompt).
+
+   Hinweise:
+     - Wir setzen zusätzlich --bs-primary-rgb, sonst bleibt .bg-primary oft blau.
+     - Wir beeinflussen nur HTML; PDF/DOCX sind unberührt.
+   ========================================================================== */
+
+/*-- scss:defaults --*/
+/* Compile-time Fallbacks für Bootstrap/Bootswatch */
+$brand: #33A0D4;     // ← wird vom Template ersetzt
+$brand-font: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;
+
+$primary: $brand;
+$link-color: $brand;
+
+/*-- scss:rules --*/
+/* Light-Theme Variablen */
+:root,
+:root[data-bs-theme="light"],
+.quarto-light {
+  --brand: #{$brand};
+  --bs-primary: var(--brand);
+  /* wichtig: RGB setzen, damit .bg-primary zuverlässig gefärbt wird */
+  --bs-primary-rgb: #{red($brand)}, #{green($brand)}, #{blue($brand)};
+  --bs-link-color: var(--brand);
+  --bs-link-hover-color: color-mix(in srgb, var(--brand) 85%, black);
+}
+
+/* Dark-Theme Variablen (Dark nutzt ggf. eigenes $brand in theme-dark.scss) */
+:root[data-bs-theme="dark"],
+.quarto-dark {
+  --brand: #{$brand};
+  --bs-primary: var(--brand);
+  --bs-primary-rgb: #{red($brand)}, #{green($brand)}, #{blue($brand)};
+  --bs-link-color: var(--brand);
+  --bs-link-hover-color: color-mix(in srgb, var(--brand) 85%, white);
+}
+
+/* Navbar sicher einfärben + gute Lesbarkeit erzwingen */
+.navbar.bg-primary,
+.navbar.navbar-dark.bg-primary,
+.navbar.navbar-light.bg-primary {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+
+  /* Lesefarben über Navbar-Variablen */
+  --bs-navbar-color: #fff;
+  --bs-navbar-hover-color: rgba(255,255,255,.85);
+  --bs-navbar-brand-color: #fff;
+  --bs-navbar-brand-hover-color: rgba(255,255,255,.85);
+}
+
+/* Grundschrift (Brand-Font) */
+body { font-family: $brand-font; }
+
+/* Feinschliff (optional, Accessibility & UX) */
+a { text-decoration-thickness: .08em; }
+a:hover { text-decoration-thickness: .12em; }
+a:visited { color: color-mix(in srgb, var(--brand) 90%, black); }
+a:focus-visible, .btn:focus-visible {
+  outline: .18rem solid color-mix(in srgb, var(--brand) 60%, black);
+  outline-offset: .15rem;
+}
+
+.btn-primary { border-color: var(--bs-primary); }
+.btn-primary:hover {
+  background-color: color-mix(in srgb, var(--brand) 85%, black);
+  border-color: currentColor;
+}
+
+/* ==== Navbar: Auto-Kontrast je nach $brand ==== */
+$nav-fg: if(lightness($brand) > 60%, #111111, #ffffff);
+
+.navbar.bg-primary,
+.navbar.navbar-dark.bg-primary,
+.navbar.navbar-light.bg-primary {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+
+  /* Bootstrap Navbar-Variablen hart setzen */
+  --bs-navbar-color: #{$nav-fg};
+  --bs-navbar-hover-color: rgba($nav-fg, .85);
+  --bs-navbar-brand-color: #{$nav-fg};
+  --bs-navbar-brand-hover-color: rgba($nav-fg, .85);
+
+  /* Fallbacks gegen Theme-Overrides */
+  color: var(--bs-navbar-color) !important;
+}
+
+.navbar.bg-primary .navbar-brand,
+.navbar.bg-primary .nav-link {
+  color: var(--bs-navbar-color) !important;
+}
+.navbar.bg-primary .nav-link:hover,
+.navbar.bg-primary .navbar-brand:hover {
+  color: var(--bs-navbar-hover-color) !important;
+}

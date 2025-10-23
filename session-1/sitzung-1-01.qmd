@@ -1,0 +1,105 @@
+---
+title: "Übung 1-1"
+subtitle: "über das unbestimmte"
+author: Autor
+date: "2025-08-30"
+title-block-banner: ../images/freiraeume-sp.jpg
+title-block-banner-color: black 
+#resource-path: ["..", "images", "."]  # darf im übergeordneten Ordner suchen
+
+format-links: [html, pdf, docx]   # Link-Namen müssen den Formatkeys entsprechen
+format:
+  html: { toc: true, toc-depth: 2, code-fold: true, number-sections: false }
+  pdf:
+    pdf-engine: lualatex            # Standard-PDF (ohne Extras)
+  docx: default                  # Standard-DOCX (ohne Extras)
+---
+
+## Was wir lernen
+
+Diese Sitzung führt mit kurzen, dichten Beispielen in *unscharfe Problemstellungen* ein.
+Ziel ist ein pragmatischer Werkzeugkasten: **klare Begriffe**, **lesbare Visualisierungen** und **nachvollziehbare Tabellen**.
+
+### Lernziele
+- Zwischen **Beobachtung**, **Messung** und **Modell** unterscheiden  
+- Ambiguität benennen, kommunizieren, dokumentieren  
+- Ergebnisse so darstellen, dass **Annahmen** sichtbar bleiben
+
+## Kurztext (Lorem Ipsum)
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin in sapien at nisl lacinia porta. Integer pulvinar nibh sed dui hendrerit, vitae dapibus nibh aliquet. Suspendisse potenti. Sed dictum, arcu sed scelerisque congue, arcu ex lacinia augue, ac eleifend neque velit et nibh. Curabitur at leo mi. Nulla facilisi. Mauris ac nisl id diam placerat venenatis. In vitae semper ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.
+
+> **Merke:** Unbestimmtheit ist häufig **Information**, kein Defekt.
+
+## Bilder in Spalten
+
+Die beiden Beispielabbildungen stehen nebeneinander; in Texten kann darauf mit @fig-a bzw. @fig-b verwiesen werden.
+
+
+
+
+::: {#fig-cols layout-ncol=2}
+
+![Sternsinger: Kinder in der Einübung aktiver Inklusion](../images/bayern-religion-sp.jpg){#fig-a}
+
+![Das Weihnachtsbier: Kinder in der Einübung zentraler Kulturtechniken](../images/bayern-religion2-sp.jpg){#fig-b}
+
+
+:::
+
+Textbezug: Die Gottesfürchtigkeit in @fig-a geht Hand in Hand mit tiefreligiösen Wahrnehmung des Weihnachtsfestes in @fig-b. Kinder sind hierbei eine tragende Säule.
+
+## Text + Bild in Spalten
+
+::: {.grid}
+::: {.g-col-7}
+### Befund
+Phasellus sit amet nunc at turpis luctus posuere. Donec ullamcorper, purus nec vulputate dictum, metus ex venenatis justo, at sagittis sem arcu non mi.  
+**Argumentationslinie:**
+1. Datenlage knapp → Unsicherheit angeben  
+2. Vergleichende Visualisierung  
+3. Klarer, knapper Text
+
+**Mini-Checkliste:**
+- Annahmen genannt?
+- Skalen beschrieben?
+- Grenzen benannt?
+:::
+::: {.g-col-5}
+![](../images/whereto.png){#fig-skizze}
+:::
+:::
+
+
+## Callouts (Hinweise)
+
+::: {.callout-note appearance="minimal"}
+**Note:** Notation, Einheiten und Skalen **immer** explizit nennen.
+:::
+
+::: {.callout-warning}
+**Achtung:** Ausreißer erst **prüfen**, dann ggf. begründen und behandeln.
+:::
+
+
+
+
+
+## Weiteres Lorem
+
+::: {.columns .clean-columns}
+::: {.column width="33%"}
+#### Mini-Kasten A
+Kurzer Text.  
+- Punkt 1  
+- Punkt 2
+:::
+::: {.column width="33%"}
+#### Mini-Kasten B
+![Bayrischer Umweltschutz](../images/bayern-umweltschutz-sp.jpg)
+:::
+::: {.column width="33%"}
+#### Mini-Kasten C
+**Hinweis:** Spalten können Text, Bilder, Tabellen enthalten.
+:::
+:::

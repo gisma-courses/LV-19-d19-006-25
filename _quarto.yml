@@ -1,0 +1,80 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - images/**
+resource-path:
+  - images
+  - .
+
+website:
+  title: "your title"
+  site-url: https://your-github-name.github.io/your-repo
+  repo-url: https://github.com/your-github-name/your-repo
+  repo-actions: []   # [source, issue, edit] bei Bedarf manuell setzen
+  page-navigation: true
+  bread-crumbs: false
+  open-graph: true
+  image: images/banner.png
+  page-footer:
+    center: |
+      your organisation (<span class="year"></span>) —
+      <a class="impressum-link" href="#">Impressum</a>
+
+  search:
+    location: navbar
+    type: textbox
+
+  navbar:
+    background: primary
+    foreground: light
+    logo: images/logooil.jpg
+    left:
+      - icon: question-square-fill
+        text: FAQ
+        href: base/faq.qmd
+    right:
+      - icon: chat-left-text-fill
+        text: Interne Lernplattform
+        href: https://ilias.uni-marburg.de/ilias.php?baseClass=ilrepositorygui&reloadpublic=1&cmd=&ref_id=1
+
+  sidebar:
+    pinned: true
+    align: center
+    style: docked
+    contents: auto
+    # collapse-level: 1
+    # contents:
+    #   - section: "Willkommen"
+    #     contents:
+    #       - index.qmd
+    #       - base/about.qmd
+    #   - text: "---"
+    #   - section: "Kurs-Sitzungen"
+    #     contents:
+    #       - section: "Sitzung 1"
+    #         contents:
+    #           - session-1/sitzung-1-01.qmd
+    #       - section: "Sitzung 2"
+    #         contents:
+    #           - session-2/sitzung-2-01.qmd
+    #           - session-2/sitzung-2-02.qmd
+
+format:
+  html:
+    theme:
+      light: [lumen]
+      # __DARK_THEME_LINE__   # ← wird vom configure-Script ersetzt
+    css: css/styles.css
+    toc: true
+    code-copy: true
+    code-background: true
+    link-external-icon: true
+    link-external-newwindow: true
+    link-external-filter: '^(?:http:|https:)\/\/www\.quarto\.org\/custom'
+    md-extensions: +fenced_divs+bracketed_spans+link_attributes
+    include-after-body:
+      - "includes/_footer-year.html"
+
+
+lang: de
