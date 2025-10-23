@@ -1,0 +1,61 @@
+---
+title: aGIS-RS Ressources 
+subtitle: 'Supplemental Ressources for advanced GIS/RS'
+title-block-banner: ../images/sard-sp.png
+title-block-banner-color: black
+---
+
+## Data, Readings and more
+
+### Forest related ressources
+ * del Río, M., Pretzsch, H., Alberdi, I. et al. Characterization of the structure, dynamics, and productivity of mixed-species stands: review and perspectives. Eur J Forest Res 135, 23–49 (2016). [https://doi.org/10.1007/s10342-015-0927-6](https://doi.org/10.1007/s10342-015-0927-6). (VPN necessary)
+ * Estimating Forest Structure Indices for Evalution of Forest Bird Habitats by an Airborne Laser-Scanner
+H. Hashimoto, J. Imanishi, A. Hagiwara, Y. Morimoto, K. Kitada [Conference Paper](https://www.isprs.org/proceedings/xxxvi/8-w2/HASHIMOTO.pdf)
+ * Barnes, C.; Balzter, H.; Barrett, K.; Eddy, J.; Milner, S.; Suárez, J.C. Individual Tree Crown Delineation from Airborne Laser Scanning for Diseased Larch Forest Stands. Remote Sens. 2017, 9, 231. [https://doi.org/10.3390/rs9030231](https://doi.org/10.3390/rs9030231)
+ * Jakubowski, M.K.; Li, W.; Guo, Q.; Kelly, M. Delineating Individual Trees from Lidar Data: A Comparison of Vector- and Raster-based Segmentation Approaches. Remote Sens. 2013, 5, 4163-4186. [https://doi.org/10.3390/rs5094163](https://doi.org/10.3390/rs5094163)
+ * Special Issue  [Lidar Remote Sensing of Forest Structure, Biomass and Dynamics](https://www.mdpi.com/si/26165)
+ 
+ 
+
+### Common R related Software 
+  * [R](https://cran.r-project.org/) — the interpreter can be installed on any operation system.
+  * [RStudio](https://www.rstudio.com/) — we recommend to use R Studio for (interactive) programming with R.
+  * [Git](https://git-scm.com/downloads) environment for your operating system. 
+  * For Windows users with little experience on the command line we recommend [GitHub Desktop](https://desktop.github.com/).
+  * [RQGIS installation guide](https://github.com/jannes-m/RQGIS/blob/master/vignettes/install_guide.Rmd).
+
+  
+### Specific packages  
+  * Jean-Romain Roussel, David Auty, Nicholas C. Coops, Piotr Tompalski, Tristan R.H. Goodbody, Andrew Sánchez Meador, Jean-François Bourdon, Florian de Boissieu, Alexis Achim,
+lidR: An R package for analysis of Airborne Laser Scanning (ALS) data, Remote Sensing of Environment, Volume 251, 2020, 112061, ISSN 0034-4257, [https://doi.org/10.1016/j.rse.2020.112061](https://doi.org/10.1016/j.rse.2020.112061).
+ * [The lidR package book](https://jean-romain.github.io/lidRbook/)  Perfect  manual for most `lidr` related stuff 
+  
+### Best Practices in Programming  
+  
+  * [r-bloggers](https://www.r-bloggers.com/r-code-best-practices/) best practices introduction
+  * [USGS](https://owi.usgs.gov/blog/intro-best-practices/) best practices introduction
+  * [workflowR](https://jdblischak.github.io/workflowr/)
+  * [usethis](https://usethis.r-lib.org/) 
+  * [Michael Dorman](http://132.72.155.230:3838/r/index.html) Introduction to Spatial Data Programming with R  gives a lot of support for all kind of spatio temporal programming issues
+* [Robert Hijmans](https://rspatial.org/) Spatial Data Science with R website provides a valuable insight in the `raster` and `terra` package with a lot of tutorials.
+* [Colin Gillespie](https://csgillespie.github.io/efficientR/) Efficient R programming If you want to know it really have allook at this book.
+  
+
+### r-spatial  Tutorials 
+ * [Geocomputation with R](https://geocompr.robinlovelace.net/) **HIGHLY Recommended** From the authors trio Lovelace, Nowosad & Muenchow 
+
+
+
+### Textbooks and more
+
+ * [The core of GIScience](http://www.charim.net/sites/default/files/handbook/datamanagement/3/3.3/The%20core%20of%20GIScience%2C%20a%20system%20-based%20approach.pdf) [Download](ftp://ftp.itc.nl/pub/ders/CoreBook2014_metadata.pdf) The editors Tolpekin & Stein 2012   are providing an excellent insight into GI concepts.
+ 
+## Data
+
+### Marburg open Forest database
+- The [MOF public data](https://github.com/MarburgOpenForest/MOFGeoDB) of Marburg Open Forest is a comprehensive data base for validation and testing purposes
+- The data server for [MOF data](http://gofile.me/3Z8AJ/c6m5CfvWZ). Please ignore insecure site warning.
+
+
+
+

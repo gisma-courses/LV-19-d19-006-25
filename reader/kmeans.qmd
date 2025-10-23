@@ -1,0 +1,13 @@
+---
+title: K-means Classification 
+author: Chris Reudenbach
+date: '2021-12-16'
+bibliography: references.bib
+subtitle: 'Clusteranalyse, Maximum-Likelihood and ML'
+title-block-banner: ../reader/images/harz2-sp.jpg
+title-block-banner-color: black
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
