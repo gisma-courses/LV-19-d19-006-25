@@ -20,10 +20,10 @@
      - Wir setzen zusätzlich --bs-primary-rgb, sonst bleibt .bg-primary oft blau.
      - Wir beeinflussen nur HTML; PDF/DOCX sind unberührt.
    ========================================================================== */
-
+@use "sass:color";
 /*-- scss:defaults --*/
 /* Compile-time Fallbacks für Bootstrap/Bootswatch */
-@use "sass:color";
+
 $brand: #33A0D4;     // ← wird vom Template ersetzt
 $brand-font: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;
 
@@ -38,7 +38,14 @@ $link-color: $brand;
   --brand: #{$brand};
   --bs-primary: var(--brand);
   /* wichtig: RGB setzen, damit .bg-primary zuverlässig gefärbt wird */
-  --bs-primary-rgb: #{color.red($brand)}, #{color.green($brand)}, #{color.blue($brand)};
+/* Light theme block */
+--bs-primary-rgb: #{to-rgb($brand)};  // ← uses Bootstrap’s helper
+
+/* Dark theme block */
+--bs-primary-rgb: #{to-rgb($brand)};
+
+/* Auto-contrast for navbar text */
+$nav-fg: color-contrast($brand);     
   --bs-link-color: var(--brand);
   --bs-link-hover-color: color-mix(in srgb, var(--brand) 85%, black);
 }
@@ -48,7 +55,14 @@ $link-color: $brand;
 .quarto-dark {
   --brand: #{$brand};
   --bs-primary: var(--brand);
-  --bs-primary-rgb: #{color.red($brand)}, #{color.green($brand)}, #{color.blue($brand)};
+/* Light theme block */
+--bs-primary-rgb: #{to-rgb($brand)};  // ← uses Bootstrap’s helper
+
+/* Dark theme block */
+--bs-primary-rgb: #{to-rgb($brand)};
+
+/* Auto-contrast for navbar text */
+$nav-fg: color-contrast($brand);     
   --bs-link-color: var(--brand);
   --bs-link-hover-color: color-mix(in srgb, var(--brand) 85%, white);
 }
