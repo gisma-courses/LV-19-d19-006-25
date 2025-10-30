@@ -489,51 +489,56 @@ A benchmark network should be traceable, representative, and reproducible—not 
 </section>
 <section id="reference-sites" class="level2">
 <h2 class="anchored" data-anchor-id="reference-sites">Reference Sites</h2>
-<p>The following table summarises five well-documented examples of mesoscale catchments (~200 km²) where the logic behind <em>why, where, and how</em> precipitation stations were deployed is explicitly or reconstructably described. These cases form the analytical reference for the conceptual network design for the Kellerwald.</p>
-<div class="table-responsive">
+<p>The following table summarises five well-documented examples of mesoscale catchments (~200 km²) where the logic behind <em>why, where, and how</em> precipitation stations were deployed is explicitly or reconstructably described. These cases form the analytical reference for the conceptual network design for the Kellerwald. ::: {.table-responsive}</p>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 45%">
+<col style="width: 16%">
+<col style="width: 15%">
+</colgroup>
 <thead>
 <tr class="header">
 <th><strong>Experiment / Basin (~Area)</strong></th>
 <th><strong>What the source provides (relevant to station deployment)</strong></th>
 <th><strong>Core network logic</strong></th>
-<th><strong>Open source / link</strong></th>
+<th><strong>Key reference(s)</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><strong>Walnut Gulch Experimental Watershed</strong> (Arizona, USA ≈ 149 km²)</td>
-<td>Long-term database and network description: dense rain-gauge array since 1950s; rationale discussed (convective hotspots, orographic gradients, ephemeral-channel hydrology).</td>
-<td>~95 manual + automatic gauges; layout driven by convective-storm footprints and ephemeral runoff networks rather than uniform spacing.</td>
-<td>Goodrich et al.&nbsp;2008 <em>J. Hydrometeorol.</em> 9: 322–334 (<a href="https://journals.ametsoc.org/view/journals/hydr/9/2/2008jhm940_1.xml">PDF</a>) · <a href="https://www.ars.usda.gov/pacific-west-area/tucson-az/southwest-watershed-research-center/docs/walnut-gulch-experimental-watershed-publications/">USDA ARS repository</a></td>
+<td>Long-term precipitation and runoff monitoring network; documentation of network evolution since the 1950s, including motivation for high-density gauge placement in convective storm environments.</td>
+<td>~95 gauges; stations located to capture short-range variability of intense convective rainfall and to control ephemeral channel runoff at small drainage scales rather than using a uniform grid.</td>
+<td>Goodrich, D.C., et al.&nbsp;(2008): Long-term precipitation and runoff database, Walnut Gulch Experimental Watershed, Arizona, United States. <em>Journal of Hydrometeorology</em>, 9(2), 322–334.</td>
 </tr>
 <tr class="even">
 <td><strong>Reynolds Creek Experimental Watershed</strong> (Idaho, USA ≈ 239 km²)</td>
-<td>Historical development of the hydrologic-instrument network; elevation- and snow-transition gradient explicitly used as main siting criterion.</td>
-<td>“Climatological-gradient design”: stations grouped by altitude (1100–2240 m) → each band with valley, slope, and ridge gauge; emphasis on rainfall–snowfall transition and wind exposure.</td>
-<td>Seyfried &amp; Flerchinger 2011 <em>Hydrol. Processes</em> 25: 149–158 (<a href="https://doi.org/10.1002/hyp.7794">DOI</a>) · <a href="https://www.ars.usda.gov/pacific-west-area/boise-id/northwest-watershed-research-center/docs/reynolds-creek-publications/">USDA ARS archive</a></td>
+<td>Historical development of the hydrometeorological network; explicit documentation of how stations were positioned along elevation and rain–snow transition gradients.</td>
+<td>“Climatological gradient design”: elevation-banded siting (valley / slope / ridge in each band); focus on orographic forcing, snow processes, wind exposure, and phase change of precipitation.</td>
+<td>Seyfried, M.S. &amp; Flerchinger, G.N. (2011): Hydrology of the Reynolds Creek Experimental Watershed. <em>Hydrological Processes</em>, 25, 146–158. (incl.&nbsp;network design aspects); Hanson, C.L. (2001): Climate and hydrology of the Reynolds Creek Experimental Watershed, Idaho. USDA-ARS Technical Report.</td>
 </tr>
 <tr class="odd">
 <td><strong>Attert / CAOS catchments</strong> (Luxembourg ≈ 288 km²)</td>
-<td>Papers and supplements describe <em>physiographic stratification</em> of monitoring sites (geology × land-use × topography); include maps and reasoning for site clusters.</td>
-<td>Design based on “hydrotop representativeness”: one site per land-use × geology × relief class; accessibility and data-communication constraints secondary.</td>
-<td>Zehe et al.&nbsp;2014 <em>HESS</em> 18: 2433–2455 (<a href="https://doi.org/10.5194/hess-18-2433-2014">DOI</a>) · Loritz et al.&nbsp;2018 <em>HESS</em> 22: 4437–4457 (<a href="https://doi.org/10.5194/hess-22-4437-2018">DOI</a>)</td>
+<td>Process-oriented observatory; site selection described in terms of geology × land use × topographic position; rationale for clustered monitoring sites across “hydrotopes.”</td>
+<td>“Physiographic stratification” / “hydrotop representativeness”: at least one representative monitoring unit per combination of substrate, land cover, and landscape position; access/telemetry constraints are secondary.</td>
+<td>Zehe, E., et al.&nbsp;(2014): HESS Opinions: From response units to functional units. <em>Hydrology and Earth System Sciences</em>, 18, 2433–2455. / Loritz, R., et al.&nbsp;(2018): Picturing and modeling catchments by representative hillslopes. <em>Hydrology and Earth System Sciences</em>, 22, 4437–4457.</td>
 </tr>
 <tr class="even">
 <td><strong>HYREX – Brue Catchment</strong> (SW England ≈ 132 km²)</td>
-<td>Official <em>HYREX Design Report</em> explains dense 52-gauge network; rationale: minimise radar–gauge residual and kriging variance at 15-min scale.</td>
-<td>Two-stage design: initial 5-km grid → adaptive densification in radar-uncertainty hotspots; combined with 3 C-band radars.</td>
-<td>Browning et al.&nbsp;1999 <em>NERC Open Research Archive</em> <a href="https://nora.nerc.ac.uk/id/eprint/10220/">PDF</a> · Collier et al.&nbsp;2000 <em>J. Hydrol.</em> 239: 1–25 (<a href="https://doi.org/10.1016/S0022-1694(00)00356-4">DOI</a>)</td>
+<td>Dense operational rain-gauge network combined with weather radar; formal description of siting strategy and subsequent adaptive densification.</td>
+<td>Two-stage optimisation: initial ~5 km spacing, then targeted infill in zones of high radar–gauge mismatch and high kriging variance at 15-minute resolution.</td>
+<td>Browning, K.A., et al.&nbsp;(1999): The HYREX project: hydrological radar experiment. HYREX Design Report / Institute of Hydrology / NERC; Collier, C.G., et al.&nbsp;(2000): Accuracy of rainfall estimates by radar and raingauges for hydrological applications. <em>Journal of Hydrology</em>, 239, 1–25.</td>
 </tr>
 <tr class="odd">
 <td><strong>Henriksen et al.&nbsp;2024 (Denmark ≈ 180 km²)</strong></td>
-<td>Modern design study: kriging-variance optimisation with emulated rainfields; quantifies information gain per added gauge.</td>
-<td>Budget-constrained ranking of candidate sites by Δvariance / Δsensor → explicit cost–benefit curve for network densification.</td>
-<td>Henriksen et al.&nbsp;2024 <em>J. Hydrol.</em> <a href="https://doi.org/10.1016/j.jhydrol.2024.131560">DOI</a></td>
+<td>Modern optimisation study using emulated rain fields and geostatistical criteria to quantify marginal information gain per additional gauge under budget constraints.</td>
+<td>“Information-gain optimisation”: rank candidate sites by expected reduction in interpolation uncertainty (e.g.&nbsp;kriging variance); explicit cost–benefit argument for network densification.</td>
+<td>Henriksen, H.J., et al.&nbsp;(2024): Emulator-based optimisation of rain-gauge networks at the mesoscale. <em>Journal of Hydrology</em>.</td>
 </tr>
 </tbody>
 </table>
-</div>
+<p>:::</p>
 </section>
 <section id="hierarchy-of-deployment-rationales" class="level2">
 <h2 class="anchored" data-anchor-id="hierarchy-of-deployment-rationales">Hierarchy of deployment rationales</h2>
@@ -672,13 +677,13 @@ Optimised ChatGPT prompt (template)
 <li>Prefer open-access or repository-backed documents (USDA-ARS, NERC/NORA, national hydrological services).</li>
 <li>Exclude short-term (&lt;2 years) campaigns and purely model/virtual networks.</li>
 </ul>
-<p>Deliverables:</p>
+<p><code>Deliverables</code>:</p>
 <ol type="1">
 <li>A concise table: Site | Area (km²) | Climate/Land cover | Gauge density &amp; time resolution | Dominant rationale (physiographic / information-gain / hydrological) | Why this site qualifies | Open link(s) (PDF/DOI/repository)</li>
 <li>4–6 bullet “selection/validation” notes (continuity, documentation quality, influence, data access).</li>
 <li>3–5 search strings for Web of Science / Scopus / Scholar.</li>
 </ol>
-<p>Important:</p>
+<p><code>Important</code>:</p>
 <ul>
 <li>Use web browsing to verify links (prefer PDF/DOI/repository).</li>
 <li>Cite exact titles and years; avoid non-authoritative sources.</li>
