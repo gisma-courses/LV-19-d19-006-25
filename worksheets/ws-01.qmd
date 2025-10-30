@@ -66,7 +66,7 @@ In general, such selections are validated by three criteria:
 
 This combination reflects both the **state of the art** in network optimisation and the **historical evolution** of hydrological monitoring practice—from empirically grown catchments (Walnut Gulch, Reynolds Creek) to analytically optimised modern systems (HYREX, CAOS, Henriksen 2024).
 
-::: {.callout-tip title="Instructor notes — Selection and validation of reference sites"}
+::: {.callout-tip title="Selection and validation of reference sites"}
 
 **Purpose**  
 Provide an explicit rationale for choosing benchmark catchments that reflect historical practice and current methodological standards in precipitation-network design.
@@ -82,7 +82,7 @@ Combine *empirical heritage* (Walnut Gulch, Reynolds Creek) with *analytical opt
 
 :::
 
-::: {.callout-warning title="Instructor notes — Common pitfalls in selecting reference networks"}
+::: {.callout-warning title="Common pitfalls in selecting reference networks"}
 
 **Typical mistakes**  
 - Using short-term campaigns (< 2 years) without continuity or QC.  
@@ -169,7 +169,7 @@ Prepare a **one-page concept note or mini-poster** including: (1) conceptual net
 
 ## Help
 
-::: {.callout-tip title="Instructor notes — Classical literature search (from broad to benchmarked shortlist)"}
+::: {.callout-tip title="Classical literature search (from broad to benchmarked shortlist)"}
 
 **A. Define scope & inclusion criteria (before searching)**  
 - Mesoscale (~100–300 km²) *field* catchments with dense rain-gauge networks.  
@@ -199,7 +199,7 @@ Prepare a **one-page concept note or mini-poster** including: (1) conceptual net
 
 :::
 
-::: {.callout-tip title="Instructor notes — Optimised ChatGPT prompt (template)"}
+::: {.callout-tip title="Optimised ChatGPT prompt (template)"}
 
 Use the following prompt when an assistant is allowed to browse the web and compile **benchmark observatories** with explicit deployment rationale.
 
