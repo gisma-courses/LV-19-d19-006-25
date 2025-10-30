@@ -125,6 +125,9 @@ At the **lowest functional level**, *hydrological coupling* links the precipitat
 - **Information-gain optimisation — analytical efficiency** (HYREX, Henriksen 2024).  
 - **Hydrological coupling — functional adequacy** (Walnut Gulch).
 
+
+# Assesment
+
 ## Task overview
 
 Work in **pairs**. Objective: understand how precipitation stations are deployed in field hydrology and apply this logic to the **Kellerwald region (~200 km²)**.
@@ -165,7 +168,7 @@ Separate **available** datasets (existing sources) from **missing/uncertain** on
 :::
 
 **Output**  
-Prepare a **one-page concept note or mini-poster** including: (1) conceptual network sketch, (2) key design rationale, (3) list of required datasets and measurement sources.
+Prepare a **one-page concept note or mini-poster** including: (1) conceptual network sketch, (2) key design rationale, (3) list of required datasets and measurement sources. Upload this as a PDF to the Ilias Folder Deliverables. Naming Convention: NAME1_NAME2_Task1.pdf
 
 ## Help
 
