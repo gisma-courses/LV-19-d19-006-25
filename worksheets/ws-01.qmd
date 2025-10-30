@@ -1,7 +1,7 @@
 ---
 title: "Understanding the Challenge"
 comments: false
-title-block-banner: "../images/climatroof-sp.jpg"
+title-block-banner: "../images/grubenwiese-sp.jpg"
 title-block-banner-color: "black"
 format:
   html:
