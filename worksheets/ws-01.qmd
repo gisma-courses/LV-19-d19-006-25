@@ -1,8 +1,8 @@
 ---
 title: "Understanding the Challenge"
 comments: false
-title-block-banner: "../images/grubenwiese-sp.jpg"
-title-block-banner-color: "black"
+title-block-banner: "../images/gw-sp.jpg"
+title-block-banner-color: "white"
 format:
   html:
     toc: true
