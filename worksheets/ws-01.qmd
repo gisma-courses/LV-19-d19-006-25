@@ -12,7 +12,7 @@ format:
 ---
 
 
-Designing a precipitation-monitoring network for a real forested catchment such as the **Kellerwald** is not a routine technical problem.  
+Designing a precipitation-monitoring network for a real forested catchment such as the **Burgwald** is not a routine technical problem.  
 It is a **multi-criteria design challenge** that requires combining spatial reasoning, process understanding, and data-driven optimisation.
 
 Before learning the analytical tools (e.g., Kriging, radar integration, hydrological modelling), you first need to understand **what makes such a network “good” or “bad”** — and why there is no single correct solution.
@@ -34,7 +34,7 @@ Before learning the analytical tools (e.g., Kriging, radar integration, hydrolog
 3. **Formulate**
    - Write a short personal note (5–10 lines) that answers two questions:
      1. *What can I already do confidently in the context of this problem?*  
-     2. *What do I need to learn or research further to be able to propose a credible Kellerwald network?*
+     2. *What do I need to learn or research further to be able to propose a credible Burgwald network?*
 
 You will later revisit these reflections when developing your final **Network Design Proposal**, where you will apply the methods learned throughout the course.
 
@@ -52,7 +52,7 @@ By completing this introductory reflection, you should:
 
 ## Background and problem definition
 
-Establishing a rain-gauge network in a complex forested upland such as the Kellerwald requires a clear understanding of how and why existing research catchments have organised their precipitation measurements. Gauge placement reflects climatic gradients, topographic controls, data uncertainty, and the need to link rainfall to hydrological response. To develop a robust concept for a new monitoring design, it is essential to study how benchmark field experiments have balanced spatial representativeness, measurement efficiency, and hydrological relevance.
+Establishing a rain-gauge network in a complex forested upland such as the Burgwald requires a clear understanding of how and why existing research catchments have organised their precipitation measurements. Gauge placement reflects climatic gradients, topographic controls, data uncertainty, and the need to link rainfall to hydrological response. To develop a robust concept for a new monitoring design, it is essential to study how benchmark field experiments have balanced spatial representativeness, measurement efficiency, and hydrological relevance.
 
 ### Selection and validation of reference sites
 
@@ -69,7 +69,7 @@ This combination reflects both the **state of the art** in network optimisation 
 
 ### Reference Sites
 
-The following table summarises five well-documented examples of mesoscale catchments (~200 km²) where the logic behind *why, where, and how* precipitation stations were deployed is explicitly or reconstructably described. These cases form the analytical reference for the conceptual network design for the Kellerwald.
+The following table summarises five well-documented examples of mesoscale catchments (~200 km²) where the logic behind *why, where, and how* precipitation stations were deployed is explicitly or reconstructably described. These cases form the analytical reference for the conceptual network design for the Burgwald.
 
 
 ::: {.table-responsive}
@@ -104,7 +104,7 @@ At the **lowest functional level**, *hydrological coupling* links the precipitat
 
 ### Task overview
 
-Work in **pairs**. Objective: understand how precipitation stations are deployed in field hydrology and apply this logic to the **Kellerwald region (~200 km²)**.
+Work in **pairs**. Objective: understand how precipitation stations are deployed in field hydrology and apply this logic to the **Burgwald region (~200 km²)**.
 
 #### 1. Study the examples
 
@@ -120,7 +120,7 @@ Summarise which rationale dominates in each example and why it fits the environm
 
 #### 2. Develop your own concept
 
-Design a **conceptual rain-gauge network** for the Kellerwald. Decide where gauges should be placed and explain the reasoning using the three rationales as a framework.
+Design a **conceptual rain-gauge network** for the Burgwald. Decide where gauges should be placed and explain the reasoning using the three rationales as a framework.
 
 ::: {.callout-tip title="Concept sketch"}
 Describe or visualise the proposed network layout (schematic or georeferenced). A hand-drawn sketch or simple diagram may be uploaded.
@@ -218,7 +218,7 @@ Use the following prompt when an assistant is allowed to browse the web and comp
 
 `Task`: Identify 5–7 benchmark hydrological field catchments (~100–300 km²) with dense rain-gauge networks where the deployment rationale (why/where/how gauges were placed) is explicitly documented in peer-reviewed papers or technical reports.
 
-`Context`: We are designing a rain-gauge network for the Kellerwald (forested upland, Germany). We need reference sites that reflect both state-of-the-art optimisation and historically grown observatories.
+`Context`: We are designing a rain-gauge network for the Burgwald (forested upland, Germany). We need reference sites that reflect both state-of-the-art optimisation and historically grown observatories.
 
 `Constraints & preferences`:
 
