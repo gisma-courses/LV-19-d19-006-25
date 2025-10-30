@@ -66,35 +66,6 @@ In general, such selections are validated by three criteria:
 
 This combination reflects both the **state of the art** in network optimisation and the **historical evolution** of hydrological monitoring practice—from empirically grown catchments (Walnut Gulch, Reynolds Creek) to analytically optimised modern systems (HYREX, CAOS, Henriksen 2024).
 
-::: {.callout-tip title="Selection and validation of reference sites"}
-
-**Purpose**  
-Provide an explicit rationale for choosing benchmark catchments that reflect historical practice and current methodological standards in precipitation-network design.
-
-**Selection logic**  
-- Long-term, quality-controlled hydro-meteorological data (>10 years).  
-- Explicit documentation of *why* and *where* gauges were deployed (peer-reviewed papers or technical reports).  
-- Representativeness across climatic and physiographic settings (arid–humid, lowland–upland, forested–open).  
-- Demonstrated influence in later modelling or network-optimisation studies.
-
-**Validation**  
-Combine *empirical heritage* (Walnut Gulch, Reynolds Creek) with *analytical optimisation* (HYREX, CAOS, Henriksen 2024) to cover state-of-the-art and historical evolution.
-
-:::
-
-::: {.callout-warning title="Common pitfalls in selecting reference networks"}
-
-**Typical mistakes**  
-- Using short-term campaigns (< 2 years) without continuity or QC.  
-- Choosing networks without metadata; if siting rationale or maintenance history cannot be reconstructed, comparisons lose value.  
-- Relying on model-derived “virtual stations” instead of physical gauge networks.  
-- Ignoring physiographic context (e.g., urban/agricultural networks as proxies for forested uplands).  
-- Assuming modern equals better; some historical observatories remain superior due to documentation and consistency.
-
-**Reminder**  
-A benchmark network should be traceable, representative, and reproducible—not merely new or data-rich.
-
-:::
 
 ## Reference Sites
 
@@ -174,6 +145,42 @@ Separate **available** datasets (existing sources) from **missing/uncertain** on
 Prepare a **one-page concept note or mini-poster** including: (1) conceptual network sketch, (2) key design rationale, (3) list of required datasets and measurement sources. Upload this as a PDF to the Ilias Folder Deliverables. Naming Convention: NAME1_NAME2_Task1.pdf
 
 ## Help
+
+### Selection of reference Designs
+
+
+::: {.callout-tip title="Selection and validation of reference sites"}
+
+**Purpose**  
+Provide an explicit rationale for choosing benchmark catchments that reflect historical practice and current methodological standards in precipitation-network design.
+
+**Selection logic**  
+- Long-term, quality-controlled hydro-meteorological data (>10 years).  
+- Explicit documentation of *why* and *where* gauges were deployed (peer-reviewed papers or technical reports).  
+- Representativeness across climatic and physiographic settings (arid–humid, lowland–upland, forested–open).  
+- Demonstrated influence in later modelling or network-optimisation studies.
+
+**Validation**  
+Combine *empirical heritage* (Walnut Gulch, Reynolds Creek) with *analytical optimisation* (HYREX, CAOS, Henriksen 2024) to cover state-of-the-art and historical evolution.
+
+:::
+
+::: {.callout-warning title="Common pitfalls in selecting reference networks"}
+
+**Typical mistakes**  
+- Using short-term campaigns (< 2 years) without continuity or QC.  
+- Choosing networks without metadata; if siting rationale or maintenance history cannot be reconstructed, comparisons lose value.  
+- Relying on model-derived “virtual stations” instead of physical gauge networks.  
+- Ignoring physiographic context (e.g., urban/agricultural networks as proxies for forested uplands).  
+- Assuming modern equals better; some historical observatories remain superior due to documentation and consistency.
+
+**Reminder**  
+A benchmark network should be traceable, representative, and reproducible—not merely new or data-rich.
+
+:::
+
+
+### How To find such references
 
 ::: {.callout-tip title="Classical literature search (from broad to benchmarked shortlist)"}
 
