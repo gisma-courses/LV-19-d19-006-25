@@ -19,7 +19,7 @@ Before learning the analytical tools (e.g., Kriging, radar integration, hydrolog
 
 ---
 
-### Your task for this introduction
+## Your task for this worksheet
 
 1. **Read and explore**
    - Study the examples and rationale hierarchy presented below.
@@ -40,7 +40,7 @@ You will later revisit these reflections when developing your final **Network De
 
 ---
 
-### Learning outcome of this phase
+## Learning outcome of this phase
 
 By completing this introductory reflection, you should:
 - Recognise that station deployment is not a static task but a **spatial optimisation problem** under hydrological constraints.  
@@ -67,7 +67,7 @@ In general, such selections are validated by three criteria:
 This combination reflects both the **state of the art** in network optimisation and the **historical evolution** of hydrological monitoring practice—from empirically grown catchments (Walnut Gulch, Reynolds Creek) to analytically optimised modern systems (HYREX, CAOS, Henriksen 2024).
 
 
-## Reference Sites
+### Reference Sites
 
 The following table summarises five well-documented examples of mesoscale catchments (~200 km²) where the logic behind *why, where, and how* precipitation stations were deployed is explicitly or reconstructably described. These cases form the analytical reference for the conceptual network design for the Kellerwald.
 
@@ -86,7 +86,7 @@ The following table summarises five well-documented examples of mesoscale catchm
 
 
 
-## Hierarchy of deployment rationales
+### Hierarchy of deployment rationales
 
 Across the benchmark catchments in the table, deployment rationales follow a **hierarchical, not equal**, structure. At the **upper structural level**, *physiographic stratification* defines the spatial framework of the network. This principle is explicit in Reynolds Creek and Attert/CAOS, where gauges were distributed along dominant gradients of elevation, geology, and land cover to guarantee structural representativeness before any statistical optimisation.
 
@@ -100,13 +100,13 @@ At the **lowest functional level**, *hydrological coupling* links the precipitat
 - **Hydrological coupling — functional adequacy** (Walnut Gulch).
 
 
-# Assesment
+## Assesment
 
-## Task overview
+### Task overview
 
 Work in **pairs**. Objective: understand how precipitation stations are deployed in field hydrology and apply this logic to the **Kellerwald region (~200 km²)**.
 
-### 1. Study the examples
+#### 1. Study the examples
 
 Read the table and the section on deployment rationales. Identify, for each case study, which principle dominates:
 
@@ -118,7 +118,7 @@ Read the table and the section on deployment rationales. Identify, for each case
 Summarise which rationale dominates in each example and why it fits the environmental setting.
 :::
 
-### 2. Develop your own concept
+#### 2. Develop your own concept
 
 Design a **conceptual rain-gauge network** for the Kellerwald. Decide where gauges should be placed and explain the reasoning using the three rationales as a framework.
 
@@ -126,7 +126,7 @@ Design a **conceptual rain-gauge network** for the Kellerwald. Decide where gaug
 Describe or visualise the proposed network layout (schematic or georeferenced). A hand-drawn sketch or simple diagram may be uploaded.
 :::
 
-### 3. Identify required datasets
+#### 3. Identify required datasets
 
 List the **data and measurements** needed to implement the design. Focus on **primary environmental and technical inputs**, not pre-interpreted map products.
 
