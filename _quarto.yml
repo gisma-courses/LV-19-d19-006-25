@@ -68,22 +68,22 @@ website:
           - href: reader/mc_2025_0.qmd
           # - reader/swiss_models_one_legend_bluewhite.html 
           - href:  reader/mc_2025_1.qmd
-          - href:  reader/mc_2025_microclimate_viewer_merged.qmd
-          - href:  reader/mc_2025_tec.qmd
-          - href:  reader/mc_2025_data.qmd
+          # - href:  reader/mc_2025_microclimate_viewer_merged.qmd
+          # - href:  reader/mc_2025_tec.qmd
+          # - href:  reader/mc_2025_data.qmd
             text: Filling the Gaps
-          - href: reader/cd2.qmd
-            text: Data retrieval
-          - href: slides/slides_session1.qmd
-            text: Spatial Pattern Description
+          # - href: reader/cd2.qmd
+          #   text: Data retrieval
+          # - href: slides/slides_session1.qmd
+          #   text: Spatial Pattern Description
           - href: slides/slides_session2.qmd
             text: Landscape Patterns
-          - href: slides/slides_session3.qmd
-            text: Landscape Patterns Reloaded
-          - href: slides/slides_session4.qmd
-            text: Pattern-based spatial analysis
-          - href: slides/slides_session5.qmd
-            text: Continous data spatial analysis
+          # - href: slides/slides_session3.qmd
+          #   text: Landscape Patterns Reloaded
+          # - href: slides/slides_session4.qmd
+          #   text: Pattern-based spatial analysis
+          # - href: slides/slides_session5.qmd
+          #   text: Continous data spatial analysis
 
       - text: "---"
       - section: "Worksheets"
