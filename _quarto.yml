@@ -28,7 +28,7 @@ website:
   navbar:
     background: primary
     foreground: light
-    logo: images/logo.png
+#    logo: images/logo.png
     left:
       - icon: question-square-fill
         text: FAQ
@@ -89,7 +89,7 @@ website:
       - section: "Worksheets"
         contents:
           - slides/slide0.qmd
-          - worksheets/comingsoon.qmd
+          - worksheets/ws-01.qmd
           - worksheets/comingsoon.qmd
           - worksheets/comingsoon.qmd
           - worksheets/comingsoon.qmd

@@ -4,89 +4,47 @@ format:
   revealjs:
     theme: simple
     transition: fade
-include-in-header:
-  text: |
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({ startOnLoad: true });</script>      
 ---
 
+## Scientific Process – Overview
 
+:::: {.columns}
+::: {.column width="50%"}
 
-## Scientific Process – Overview {.tightgrid}
-
-<style>
-:root{
-  --c-primary:#6b7280; --bg-primary:#f3f4f6;
-  --c-q:#2563eb;       --bg-q:#eff6ff;
-  --c-lit:#7c3aed;     --bg-lit:#f5f3ff;
-  --c-methods:#059669; --bg-methods:#ecfdf5;
-  --c-adv:#0ea5e9;     --bg-adv:#f0f9ff;
-  --c-path:#d97706;    --bg-path:#fff7ed;
-  --c-results:#ea580c; --bg-results:#fff1eb;
-  --c-loop:#dc2626;    --bg-loop:#fff1f2;
-}
-
-/* Layout: 2 Spalten, etwas größer */
-.tightgrid .grid{
-  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:.6rem 1.2rem; max-width:1200px; margin:0 auto;
-}
-@media (max-width:1100px){ .tightgrid .grid{ grid-template-columns:1fr; } }
-
-/* Box-Stil: größer + Farbe deutlich sichtbar */
-.tightgrid .box{
-  padding:.4rem 0.6rem; border-radius:14px; border-width:2px; border-style:solid;
-  text-align:center; font-size:1.05rem; line-height:1.2;
-  box-shadow:0 2px 6px rgba(0,0,0,.06);
-  font-weight:600;
-}
-
-/* Farben je Kategorie */
-.primary{ border-color:var(--c-primary); background:var(--bg-primary); }
-.q      { border-color:var(--c-q);       background:var(--bg-q); }
-.lit    { border-color:var(--c-lit);     background:var(--bg-lit); }
-.methods{ border-color:var(--c-methods); background:var(--bg-methods); }
-.adv    { border-color:var(--c-adv);     background:var(--bg-adv); }
-.path   { border-color:var(--c-path);    background:var(--bg-path); }
-.results{ border-color:var(--c-results); background:var(--bg-results); }
-.loop   { border-color:var(--c-loop);    background:var(--bg-loop); }
-
-/* Untertitel etwas größer/kontrast */
-.sub{ display:block; margin-top:.15rem; font-weight:500; font-size:.95rem; color:#374151; }
-</style>
-
-::: {.grid}
-::: {.box .primary .fragment}
-Foundations / Background  
-<span class="sub">theory, domain context</span>
-:::
-::: {.box .q .fragment}
-Research Question  
-<span class="sub">precise, testable, scoped</span>
-:::
-::: {.box .lit .fragment}
-State of the Art (Literature)  
-<span class="sub">knowns, gaps, hypotheses</span>
-:::
-::: {.box .methods .fragment}
-Necessary Methods & Workflow  
-<span class="sub">data, preprocessing, validation, metrics</span>
-:::
-::: {.box .adv .fragment}
-Advanced Methods  
-<span class="sub">models, tuning, ablations</span>
+::: {.callout-note .fragment title="Foundations" appearance="minimal"}
+theory, domain context
 :::
 
-::: {.box .path .fragment}
-Applied Solution Path  
-<span class="sub">implementation & assumptions</span>
+::: {.callout-note .fragment title="Research Questions" appearance="minimal"}
+precise, testable, scoped
 :::
-::: {.box .results .fragment}
-Results  
-<span class="sub">findings, uncertainty, limitations</span>
+
+::: {.callout-note .fragment title="State of the Art (Literature)" appearance="minimal"}
+knowns, gaps, hypotheses
 :::
-::: {.box .loop .fragment}
-Loopback → Evaluation & Improvement  
-<span class="sub">error analysis, robustness checks, iteration</span>
+
+::: {.callout-caution .fragment title="Necessary Methods & Workflow" appearance="minimal"}
+data, preprocessing, validation, metrics
 :::
+
 :::
+::: {.column width="50%"}
+
+::: {.callout-caution .fragment title="Advanced Methods" appearance="minimal"}
+models, tuning, ablations
+:::
+
+::: {.callout-caution .fragment title="Applied Solution Path" appearance="minimal"}
+implementation & assumptions
+:::
+
+::: {.callout-caution .fragment title="Results" appearance="minimal"}
+findings, uncertainty, limitations
+:::
+
+::: {.callout-tip .fragment title="Loopback, Evaluation & Improvement" appearance="minimal"}
+error analysis, robustness checks, iteration
+:::
+
+:::
+::::

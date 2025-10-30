@@ -1,0 +1,27 @@
+@startuml
+' Layout
+left to right direction
+skinparam Shadowing false
+skinparam rectangle {
+  RoundCorner 12
+  FontSize 16
+  BorderColor #374151
+  BackgroundColor #f3f4f6
+}
+skinparam arrow {
+  Color #6b7280
+  Thickness 1.2
+}
+
+rectangle "Foundations / Background\n(theory, domain context)" as A
+rectangle "Research Question\n(precise, testable, scoped)" as B
+rectangle "State of the Art (Literature)\n(knowns, gaps, hypotheses)" as C
+rectangle "Necessary Methods & Workflow\n(data, preprocessing, validation, metrics)" as D
+rectangle "Advanced Methods\n(models, tuning, ablations)" as E
+rectangle "Applied Solution Path\n(implementation & assumptions)" as F
+rectangle "Results\n(findings, uncertainty, limitations)" as G
+rectangle "Loopback -> Evaluation & Improvement\n(error analysis, robustness checks, iteration)" as H
+
+A --> B --> C --> D --> E --> F --> G --> H
+H ..> B : iterate
+@enduml

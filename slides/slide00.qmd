@@ -1,0 +1,127 @@
+---
+title: "Flow — Minimal JS/CSS (no deps)"
+format:
+  revealjs:
+    theme: simple
+    transition: fade
+    # optional, falls Inline-HTML blockiert ist: images statt inline SVG verwenden
+    # allow-html: true
+---
+
+## Scientific Process – Overview
+
+<style>
+  .flow{
+    --box-bg:#f3f4f6; --box-border:#374151; --text:#111;
+    --edge:#6b7280; --edge-dash:6 5;
+    position:relative; width:100%; min-height:240px; padding:12px;
+    display:grid; grid-auto-flow:column; gap:24px; align-items:start;
+  }
+  .node{
+    background:var(--box-bg); color:var(--text);
+    border:1px solid var(--box-border); border-radius:12px;
+    padding:10px 12px; width:260px; box-sizing:border-box;
+    font:600 16px system-ui, Segoe UI, Roboto, Arial; line-height:1.25;
+  }
+  .node small{ display:block; font:400 13px system-ui, Segoe UI, Roboto, Arial; color:#374151 }
+  .flow svg.connector{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+</style>
+
+<div class="flow"
+     data-edges="A>B, B>C, C>D, D>E, E>F, F>G, G>H, H>B:iterate(dashed)"
+     style="--box-bg:#f3f4f6; --box-border:#374151; --edge:#6b7280">
+  <div class="node" data-id="A">Foundations / Background<small>theory, domain context</small></div>
+  <div class="node" data-id="B">Research Question<small>precise, testable, scoped</small></div>
+  <div class="node" data-id="C">State of the Art (Literature)<small>knowns, gaps, hypotheses</small></div>
+  <div class="node" data-id="D">Necessary Methods & Workflow<small>data, preprocessing, validation, metrics</small></div>
+  <div class="node" data-id="E">Advanced Methods<small>models, tuning, ablations</small></div>
+  <div class="node" data-id="F">Applied Solution Path<small>implementation & assumptions</small></div>
+  <div class="node" data-id="G">Results<small>findings, uncertainty, limitations</small></div>
+  <div class="node" data-id="H">Loopback → Evaluation & Improvement<small>error analysis, robustness checks, iteration</small></div>
+  <!-- SVG wird per JS eingefügt -->
+</div>
+
+<script>
+(() => {
+  function parseEdges(str){
+    // Syntax: "A>B, H>B:iterate(dashed)"
+    return String(str||"").split(",").map(s=>s.trim()).filter(Boolean).map(s=>{
+      const [st, meta=""] = s.split(":");
+      const [src,tgt] = st.split(">").map(x=>x.trim());
+      const label = meta.replace(/\(.*\)/,"").trim() || "";
+      const flags = (meta.match(/\((.*)\)/)?.[1]||"").split(/\s+/).filter(Boolean);
+      return {src,tgt,label, dashed: flags.includes("dashed")};
+    });
+  }
+  function centerOf(el, root){
+    const r = el.getBoundingClientRect(), R = root.getBoundingClientRect();
+    return { x: (r.left+r.right)/2 - R.left, y: (r.top+r.bottom)/2 - R.top };
+  }
+  function render(container){
+    // remove old svg
+    container.querySelectorAll("svg.connector").forEach(s=>s.remove());
+    const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.classList.add("connector");
+    // defs: arrow
+    const defs = document.createElementNS(svg.namespaceURI,"defs");
+    const marker = document.createElementNS(svg.namespaceURI,"marker");
+    marker.setAttribute("id","arrow");
+    marker.setAttribute("viewBox","0 0 10 10");
+    marker.setAttribute("refX","9"); marker.setAttribute("refY","5");
+    marker.setAttribute("markerWidth","10"); marker.setAttribute("markerHeight","10");
+    marker.setAttribute("orient","auto-start-reverse");
+    const pathArrow = document.createElementNS(svg.namespaceURI,"path");
+    pathArrow.setAttribute("d","M0 0 L10 5 L0 10 Z");
+    pathArrow.setAttribute("fill", getComputedStyle(container).getPropertyValue("--edge").trim() || "#6b7280");
+    marker.appendChild(pathArrow); defs.appendChild(marker); svg.appendChild(defs);
+
+    const nodes = new Map();
+    container.querySelectorAll(".node[data-id]").forEach(n => nodes.set(n.dataset.id, n));
+    const edges = parseEdges(container.dataset.edges);
+
+    edges.forEach(e=>{
+      const a = nodes.get(e.src), b = nodes.get(e.tgt);
+      if(!a || !b) return;
+      const A = centerOf(a, container), B = centerOf(b, container);
+      // leichte Bezier-Kurve: horizontaler Fluss
+      const dx = (B.x - A.x) * 0.5;
+      const d = `M ${A.x} ${A.y} C ${A.x+dx} ${A.y}, ${B.x-dx} ${B.y}, ${B.x} ${B.y}`;
+      const p = document.createElementNS(svg.namespaceURI,"path");
+      p.setAttribute("d", d);
+      p.setAttribute("fill","none");
+      p.setAttribute("stroke","var(--edge)");
+      p.setAttribute("stroke-width","1.4");
+      if(e.dashed) p.setAttribute("stroke-dasharray","var(--edge-dash)");
+      p.setAttribute("marker-end","url(#arrow)");
+      svg.appendChild(p);
+      if(e.label){
+        // Label in der Mitte der Kurve (simple)
+        const tx = (A.x + B.x)/2, ty = (A.y + B.y)/2 - 6;
+        const t = document.createElementNS(svg.namespaceURI,"text");
+        t.setAttribute("x", tx); t.setAttribute("y", ty);
+        t.setAttribute("text-anchor","middle");
+        t.setAttribute("font-size","12");
+        t.setAttribute("fill","#444");
+        t.textContent = e.label;
+        svg.appendChild(t);
+      }
+    });
+    container.appendChild(svg);
+  }
+  function init(container){
+    const ro = new ResizeObserver(()=>render(container));
+    ro.observe(container);
+    // for Reveal: relayout on slide show events
+    if(window.Reveal){
+      Reveal.on('ready', ()=>render(container));
+      Reveal.on('slidechanged', ()=>render(container));
+      Reveal.on('resize', ()=>render(container));
+    } else {
+      window.addEventListener('load', ()=>render(container));
+      window.addEventListener('resize', ()=>render(container));
+      render(container);
+    }
+  }
+  document.querySelectorAll('.flow').forEach(init);
+})();
+</script>

@@ -1,28 +1,243 @@
 ---
-title: "Prerequisies"
+title: "Understanding the Challenge"
 comments: false
-title-block-banner: ../images/climatroof-sp.jpg
-title-block-banner-color: black
+title-block-banner: "../images/climatroof-sp.jpg"
+title-block-banner-color: "black"
+format:
+  html:
+    toc: true
+    theme: flatly
+  pdf:
+    toc: true
+---
+
+
+Designing a precipitation-monitoring network for a real forested catchment such as the **Kellerwald** is not a routine technical problem.  
+It is a **multi-criteria design challenge** that requires combining spatial reasoning, process understanding, and data-driven optimisation.
+
+Before learning the analytical tools (e.g., Kriging, radar integration, hydrological modelling), you first need to understand **what makes such a network “good” or “bad”** — and why there is no single correct solution.
+
+---
+
+### Your task for this introduction
+
+1. **Read and explore**
+   - Study the examples and rationale hierarchy presented below.
+   - Follow at least one cited link to a source document and see how *real* hydrological field networks were justified.
+
+2. **Reflect**
+   - Ask yourself:
+     - What do I already understand about spatial data, gradients, or uncertainty?
+     - What am I missing to design such a network responsibly?
+     - Which skills or data would I need to evaluate whether my design works?
+
+3. **Formulate**
+   - Write a short personal note (5–10 lines) that answers two questions:
+     1. *What can I already do confidently in the context of this problem?*  
+     2. *What do I need to learn or research further to be able to propose a credible Kellerwald network?*
+
+You will later revisit these reflections when developing your final **Network Design Proposal**, where you will apply the methods learned throughout the course.
+
+---
+
+### Learning outcome of this phase
+
+By completing this introductory reflection, you should:
+- Recognise that station deployment is not a static task but a **spatial optimisation problem** under hydrological constraints.  
+- Identify your current methodological baseline.  
+- Establish a **research orientation** for the semester: what tools, data, and reasoning you will need to reach a defensible design.
 
 ---
 
 
+## Background and problem definition
 
-## Prerequisites
+Establishing a rain-gauge network in a complex forested upland such as the Kellerwald requires a clear understanding of how and why existing research catchments have organised their precipitation measurements. Gauge placement reflects climatic gradients, topographic controls, data uncertainty, and the need to link rainfall to hydrological response. To develop a robust concept for a new monitoring design, it is essential to study how benchmark field experiments have balanced spatial representativeness, measurement efficiency, and hydrological relevance.
 
-Participants are expected to have a working recent version of R and RStudio installed, along with several R packages listed below.
+### Selection and validation of reference sites
 
-- R: <https://cloud.r-project.org/>
-- RStudio: <https://posit.co/download/rstudio-desktop/#download>
+The five case studies were selected to represent **well-documented hydrological observatories** that combine long-term operation with explicit methodological transparency. Together they cover a broad spectrum of **climatic regimes** (arid to humid), **land cover** (semi-desert shrubland to temperate forest), and **network-design philosophies** (physiographic, statistical, and hydrological rationales). Each site provides publicly accessible metadata, peer-reviewed documentation, and a traceable evolution of its instrumentation, which allows the *why* and *where* of station deployment to be reconstructed rather than inferred.
 
-```r
-install.packages("remotes")
-pkg_list = c("terra", "sf", "landscapemetrics", "motif", "tidyr", "dplyr")
-remotes::install_cran(pkg_list)
-```
+In general, such selections are validated by three criteria:
 
-## Exercises
+1. **Continuity and data quality** – multi-decadal, quality-controlled precipitation (and discharge) records are available.  
+2. **Explicit methodological reporting** – publications or technical reports describe the logic or adjustment of station placement.  
+3. **Scientific influence and reproducibility** – the site serves as a benchmark or reference in later network-design or model-validation studies.
 
-The slides are accompanied by practical exercises.
-The best way to get them is to download the exercises repository as a ZIP file from <https://github.com/gisma-courses/LV-19-d19-006-24/blob/main/assets/exercises-session1.zip> and unpack it on your computer.
-Then, you can open the `.Rproj` file and start working on the exercises in RStudio.
+This combination reflects both the **state of the art** in network optimisation and the **historical evolution** of hydrological monitoring practice—from empirically grown catchments (Walnut Gulch, Reynolds Creek) to analytically optimised modern systems (HYREX, CAOS, Henriksen 2024).
+
+::: {.callout-tip title="Instructor notes — Selection and validation of reference sites"}
+
+**Purpose**  
+Provide an explicit rationale for choosing benchmark catchments that reflect historical practice and current methodological standards in precipitation-network design.
+
+**Selection logic**  
+- Long-term, quality-controlled hydro-meteorological data (>10 years).  
+- Explicit documentation of *why* and *where* gauges were deployed (peer-reviewed papers or technical reports).  
+- Representativeness across climatic and physiographic settings (arid–humid, lowland–upland, forested–open).  
+- Demonstrated influence in later modelling or network-optimisation studies.
+
+**Validation**  
+Combine *empirical heritage* (Walnut Gulch, Reynolds Creek) with *analytical optimisation* (HYREX, CAOS, Henriksen 2024) to cover state-of-the-art and historical evolution.
+
+:::
+
+::: {.callout-warning title="Instructor notes — Common pitfalls in selecting reference networks"}
+
+**Typical mistakes**  
+- Using short-term campaigns (< 2 years) without continuity or QC.  
+- Choosing networks without metadata; if siting rationale or maintenance history cannot be reconstructed, comparisons lose value.  
+- Relying on model-derived “virtual stations” instead of physical gauge networks.  
+- Ignoring physiographic context (e.g., urban/agricultural networks as proxies for forested uplands).  
+- Assuming modern equals better; some historical observatories remain superior due to documentation and consistency.
+
+**Reminder**  
+A benchmark network should be traceable, representative, and reproducible—not merely new or data-rich.
+
+:::
+
+## Reference Sites
+
+The following table summarises five well-documented examples of mesoscale catchments (~200 km²) where the logic behind *why, where, and how* precipitation stations were deployed is explicitly or reconstructably described. These cases form the analytical reference for the conceptual network design for the Kellerwald.
+
+::: {.table-responsive}
+
+| **Experiment / Basin (~Area)** | **What the source provides (relevant to station deployment)** | **Core network logic** | **Open source / link** |
+|--------------------------------|----------------------------------------------------------------|------------------------|-------------------------|
+| **Walnut Gulch Experimental Watershed** (Arizona, USA ≈ 149 km²) | Long-term database and network description: dense rain-gauge array since 1950s; rationale discussed (convective hotspots, orographic gradients, ephemeral-channel hydrology). | ~95 manual + automatic gauges; layout driven by convective-storm footprints and ephemeral runoff networks rather than uniform spacing. | Goodrich et al. 2008 *J. Hydrometeorol.* 9: 322–334 ([PDF](https://journals.ametsoc.org/view/journals/hydr/9/2/2008jhm940_1.xml)) · [USDA ARS repository](https://www.ars.usda.gov/pacific-west-area/tucson-az/southwest-watershed-research-center/docs/walnut-gulch-experimental-watershed-publications/) |
+| **Reynolds Creek Experimental Watershed** (Idaho, USA ≈ 239 km²) | Historical development of the hydrologic-instrument network; elevation- and snow-transition gradient explicitly used as main siting criterion. | “Climatological-gradient design”: stations grouped by altitude (1100–2240 m) → each band with valley, slope, and ridge gauge; emphasis on rainfall–snowfall transition and wind exposure. | Seyfried & Flerchinger 2011 *Hydrol. Processes* 25: 149–158 ([DOI](https://doi.org/10.1002/hyp.7794)) · [USDA ARS archive](https://www.ars.usda.gov/pacific-west-area/boise-id/northwest-watershed-research-center/docs/reynolds-creek-publications/) |
+| **Attert / CAOS catchments** (Luxembourg ≈ 288 km²) | Papers and supplements describe *physiographic stratification* of monitoring sites (geology × land-use × topography); include maps and reasoning for site clusters. | Design based on “hydrotop representativeness”: one site per land-use × geology × relief class; accessibility and data-communication constraints secondary. | Zehe et al. 2014 *HESS* 18: 2433–2455 ([DOI](https://doi.org/10.5194/hess-18-2433-2014)) · Loritz et al. 2018 *HESS* 22: 4437–4457 ([DOI](https://doi.org/10.5194/hess-22-4437-2018)) |
+| **HYREX – Brue Catchment** (SW England ≈ 132 km²) | Official *HYREX Design Report* explains dense 52-gauge network; rationale: minimise radar–gauge residual and kriging variance at 15-min scale. | Two-stage design: initial 5-km grid → adaptive densification in radar-uncertainty hotspots; combined with 3 C-band radars. | Browning et al. 1999 *NERC Open Research Archive* [PDF](https://nora.nerc.ac.uk/id/eprint/10220/) · Collier et al. 2000 *J. Hydrol.* 239: 1–25 ([DOI](https://doi.org/10.1016/S0022-1694(00)00356-4)) |
+| **Henriksen et al. 2024 (Denmark ≈ 180 km²)** | Modern design study: kriging-variance optimisation with emulated rainfields; quantifies information gain per added gauge. | Budget-constrained ranking of candidate sites by Δvariance / Δsensor → explicit cost–benefit curve for network densification. | Henriksen et al. 2024 *J. Hydrol.* [DOI](https://doi.org/10.1016/j.jhydrol.2024.131560) |
+
+:::
+
+## Hierarchy of deployment rationales
+
+Across the benchmark catchments in the table, deployment rationales follow a **hierarchical, not equal**, structure. At the **upper structural level**, *physiographic stratification* defines the spatial framework of the network. This principle is explicit in Reynolds Creek and Attert/CAOS, where gauges were distributed along dominant gradients of elevation, geology, and land cover to guarantee structural representativeness before any statistical optimisation.
+
+At the **intermediate analytical level**, *information-gain optimisation* refines density and placement **within** those strata. This rationale is most evident in HYREX (Brue Catchment) and Henriksen et al. 2024, where new gauges were allocated according to the marginal reduction of kriging variance or radar–gauge residuals under explicit budget constraints. The network evolves adaptively, responding to measured or modelled uncertainty rather than to fixed geometry.
+
+At the **lowest functional level**, *hydrological coupling* links the precipitation network to discharge response. This coupling guided Walnut Gulch, where each ephemeral drainage required at least one gauge to translate storm rainfall into local runoff volumes. Modern frameworks couple this validation loop with statistical optimisation: unsatisfactory P→Q coherence or water-balance residuals trigger iterative refinement of both gauge density and stratification boundaries.
+
+**Summary of the hierarchy**  
+- **Physiographic stratification — structural representativeness** (Reynolds Creek, Attert/CAOS).  
+- **Information-gain optimisation — analytical efficiency** (HYREX, Henriksen 2024).  
+- **Hydrological coupling — functional adequacy** (Walnut Gulch).
+
+## Task overview
+
+Work in **pairs**. Objective: understand how precipitation stations are deployed in field hydrology and apply this logic to the **Kellerwald region (~200 km²)**.
+
+### 1. Study the examples
+
+Read the table and the section on deployment rationales. Identify, for each case study, which principle dominates:
+
+- **Physiographic stratification**  
+- **Information-gain optimisation**  
+- **Hydrological coupling**
+
+::: {.callout-note title="Your notes"}
+Summarise which rationale dominates in each example and why it fits the environmental setting.
+:::
+
+### 2. Develop your own concept
+
+Design a **conceptual rain-gauge network** for the Kellerwald. Decide where gauges should be placed and explain the reasoning using the three rationales as a framework.
+
+::: {.callout-tip title="Concept sketch"}
+Describe or visualise the proposed network layout (schematic or georeferenced). A hand-drawn sketch or simple diagram may be uploaded.
+:::
+
+### 3. Identify required datasets
+
+List the **data and measurements** needed to implement the design. Focus on **primary environmental and technical inputs**, not pre-interpreted map products.
+
+**Examples**  
+- Digital elevation model (DEM) and derived slope/exposure  
+- Land-cover and forest-structure data  
+- Radar reflectivity or gauge-adjusted precipitation fields  
+- Stream-gauge and discharge records  
+- Infrastructure and accessibility (power, communication, roads)
+
+::: {.callout-note title="Data requirements"}
+Separate **available** datasets (existing sources) from **missing/uncertain** ones that would require acquisition.
+:::
+
+**Output**  
+Prepare a **one-page concept note or mini-poster** including: (1) conceptual network sketch, (2) key design rationale, (3) list of required datasets and measurement sources.
+
+## Help
+
+::: {.callout-tip title="Instructor notes — Classical literature search (from broad to benchmarked shortlist)"}
+
+**A. Define scope & inclusion criteria (before searching)**  
+- Mesoscale (~100–300 km²) *field* catchments with dense rain-gauge networks.  
+- Must have: multi-year QC’d P (and ideally Q), documented siting/deployment rationale, accessible metadata.  
+- Ensure diversity: include at least one arid/semi-arid, one temperate upland/forested, and one radar-coupled design study.  
+- Exclude: < 2 years duration; purely model/virtual networks; no siting documentation.
+
+**B. Seed the search (databases)**  
+- Web of Science / Scopus (structured), Google Scholar (recall), institutional repositories (USDA-ARS, NERC/NORA, national hydrological services).  
+- Boolean examples:  
+  - `("rain gauge" OR pluviometer) AND (network OR deployment OR siting) AND (catchment OR watershed) AND (design OR optimisation OR "kriging variance" OR "conditional entropy")`  
+  - Add scale: `("experimental watershed" OR observatory) AND (km2 OR "km²")`  
+  - Add context: `forest* OR orograph* OR upland`, and for radar-coupled: `radar AND gauge AND merging`.
+
+**C. Backward & forward snowballing**  
+- Backward: screen reference lists of key hits (observatories, radar–gauge reviews, optimisation papers).  
+- Forward: “Cited by” / “Times cited” to find design/upgrade papers and technical reports.  
+- For observatories: combine catchment name with `"technical report" OR "instrumentation plan" OR "site manual"`.
+
+**D. Screen & extract (mini-PRISMA mindset)**  
+- Maintain a log (query → results → screened → included; record exclusion reasons).  
+- Extract into a table: *Site | Area | Climate/Land cover | Gauge count & resolution | Deployment rationale (physiographic / info-gain / hydrological) | Docs/Links*.  
+- Validate with checklist: continuity ≥ 10 y; explicit siting rationale; scientific influence; data access.
+
+**E. Stop rule**  
+- When each rationale has ≥ 1 high-quality case and ≥ 2 climatic/physiographic regimes are covered, freeze the shortlist and justify it with the checklist.
+
+:::
+
+::: {.callout-tip title="Instructor notes — Optimised ChatGPT prompt (template)"}
+
+Use the following prompt when an assistant is allowed to browse the web and compile **benchmark observatories** with explicit deployment rationale.
+
+
+
+You are an expert research assistant for an advanced MSc GIS/RS methods course.
+Task: Identify 5–7 benchmark hydrological field catchments (~100–300 km²) with dense rain-gauge networks where the deployment rationale (why/where/how gauges were placed) is explicitly documented in peer-reviewed papers or technical reports.
+
+Context: We are designing a rain-gauge network for the Kellerwald (forested upland, Germany). We need reference sites that reflect both state-of-the-art optimisation and historically grown observatories.
+
+Constraints & preferences:
+
+* Prioritize sources with explicit siting/deployment rationale (not just data).
+* Include at least one arid/semi-arid, one temperate upland/forested, and one radar–gauge optimisation study.
+* Prefer open-access or repository-backed documents (USDA-ARS, NERC/NORA, national hydrological services).
+* Exclude short-term (<2 years) campaigns and purely model/virtual networks.
+
+Deliverables:
+
+1. A concise table:
+   Site | Area (km²) | Climate/Land cover | Gauge density & time resolution |
+   Dominant rationale (physiographic / information-gain / hydrological) |
+   Why this site qualifies | Open link(s) (PDF/DOI/repository)
+2. 4–6 bullet “selection/validation” notes (continuity, documentation quality, influence, data access).
+3. 3–5 search strings for Web of Science / Scopus / Scholar.
+
+Important:
+
+* Use web browsing to verify links (prefer PDF/DOI/repository).
+* Cite exact titles and years; avoid non-authoritative sources.
+* If the siting rationale is only in a technical report, include that report.
+
+Now begin. First list planned search queries, then produce the table and notes.
+
+
+
+**Rationale**  
+Role specification + constraints + explicit deliverables increase reproducibility and the proportion of authoritative sources returned.
+
+:::
+

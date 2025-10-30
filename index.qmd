@@ -2,6 +2,10 @@
 title: ""
 title-block-banner: images/hinterland-sp.jpg
 title-block-banner-color: black
+format:
+  html:
+    toc: false
+    theme: flatly
 
 open-graph:
   description: "Advanced Introduction TO GIS and Remote Sensing"
@@ -12,37 +16,79 @@ twitter-card:
 comments: false
 ---
 
-![](images/hinterland-sp.jpg)
 
-One could claim that the fact living on the surface of the earth and only get to know a small space through direct personal experience is the most important motivation for most of the geographic work. Compensation for this lack of direct experience has been and is being made, especially in scientific geography, with the help of efficient spatio-temporal techniques of abstraction.
 
-Knowledge of spatial and/or temporal aspects of our environment is increasingly in demand for action-relevant relationships. Whether we ask as tourists, consumers, producers or planners spatial information, or even knowledge.
+## Course Deliverable — Kellerwald Network Design Project
 
-Geographic Information Science (GIS) is based on versatile and powerful software tools that are used in modeling, analysis, data mining merging and numerous other spatio-temporal applications. Nevertheless the most powerful tool is our mind developing the concepts and developing the necessary algorithms.
+### Course objective
 
-# Intended learning outcomes
+Throughout this course you will learn how to **design, analyse, and evaluate a spatially explicit hydrological monitoring network**.  
+Your overarching goal is to develop a *reproducible and defensible rain-gauge network concept* for the Kellerwald region (~200 km²).  
+This is not a purely technical mapping task, but a research-oriented design challenge that connects spatial reasoning, remote-sensing data, and hydrological process understanding.
 
-At the end of this course you should be able
+The project evolves in three conceptual phases:
 
-- Understand, adapt and develop geoinformatics methods
-- Design workflows that are suitable for solving  spatio-temporal data-related regionalization issues
-- Critically evaluate their spatio-temporal analysis
-- Communicate their workflows and analysis results
+1. **Exploration** – Identify what makes a precipitation network “good” or “bad”, and define what “optimal” could mean in this context.  
+2. **Development** – Apply methods learned in class (Kriging, radar bias correction, RS integration, uncertainty analysis) to iteratively refine your network.  
+3. **Synthesis** – Present and defend a transparent, reproducible network design that links rainfall monitoring to hydrological response at sub-catchment scale.
 
-# Course features
+---
 
-The course is intended as a blended learning module in our study program although the provided introductions, explanations and examples might be useful for self-study, too.
+### Final deliverables
 
-# Deliverables
+At the end of the course each group submits **three complementary products**:
 
-The graded exam is based on a scientific presentation of 10 + 10 minutes (discussion) on a topic of your choice, applying the main techniques taught in the course. The topic should be motivated by personal interest and based on available data sets/your own classifications. Motivation, research questions and selected results as well as a critical discussion should be part of the presentation. The presentation as well as the scripts and sources used are to be published as a team portfolio (2 persons) on Github. One week before the presentation, an abstract of no more than one page is to be submitted.
+#### 1. Transparent repository (core submission)
+A public or shared repository (e.g. GitHub, GitLab, or institutional server) that contains:
+- All data sources, scripts, and documentation used to derive your final network.  
+- A reproducible workflow that shows how you went from raw data to station selection and evaluation.  
+- Clear version control and short README explaining structure and logic.  
+The repository represents the **traceable backbone** of your project and demonstrates reproducibility and collaboration.
 
-::: callout-note
-The presentation will take place in the last course session of the semester. 
+#### 2. Poster 
+A concise visual summary of:
+- The final proposed network (map and rationale).  
+- The main methodological steps (e.g. interpolation, uncertainty analysis).  
+- Key results or validation indicators.  
+- A short reflection on limitations and future improvement.  
+The poster must communicate the project as if presented at a professional hydrology or GIS conference.
+
+#### 3. Five-minute pitch (presentation)
+Each group presents their poster in a short oral pitch (max 5 min).  
+The goal is to **argue convincingly** why your design is optimal *for its chosen criteria* (coverage, efficiency, hydrological adequacy).  
+The pitch should demonstrate technical understanding, critical reasoning, and teamwork.
+
+---
+
+### Evaluation criteria (final synthesis)
+
+Each submission is evaluated across **five dimensions**, 0–2 points each (max 10 pts):
+
+| Criterion | 0 | 1 | 2 |
+|------------|---|---|---|
+| **Spatial reasoning** | arbitrary placement | partial coverage of key gradients | systematic physiographic logic (Luv–Lee, elevation, forest density) |
+| **Hydrological integration** | no link to runoff | implicit link to subcatchments | explicit precipitation–discharge coupling and closure logic |
+| **Methodological rigour** | ad-hoc reasoning | partial quantitative justification | reproducible workflow using kriging, RS, or uncertainty metrics |
+| **Transparency & reproducibility** | no documentation | partial scripts / missing metadata | complete, documented, and reproducible repository |
+| **Communication quality** | unclear poster / pitch | partially coherent argument | clear, concise, and scientifically convincing presentation |
+
+---
+
+### Competition element
+
+The Kellerwald Network Design Project is structured as a **friendly competition**:  
+the group achieving the highest total score becomes the *Course Design Champion*.  
+In case of a tie, the tiebreaker is **Hydrological integration**, since the final goal is a coherent rainfall–runoff framework, not aesthetic map design.
+
+---
+
+### Learning outcome
+
+By completing the full project you will be able to:
+- Formulate and test design hypotheses for spatial monitoring networks.  
+- Apply geostatistical, RS, and modelling tools to evaluate network performance.  
+- Document and communicate your workflow transparently.  
+- Defend a reasoned, evidence-based concept of “optimality” in hydrological monitoring.
+
 :::
 
-
-# Preparation and prerequisites
-
-
-The courses assumes basic knowledge and skills in remote sensing and GIS.

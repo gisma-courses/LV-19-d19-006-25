@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Prerequisies – Advanced GIS &amp; RS</title>
+<title>Understanding the Challenge – Advanced GIS &amp; RS</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,41 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -64,6 +29,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../worksheets/comingsoon.html" rel="next">
+<link href="../slides/slide0.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -73,7 +40,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2e6b1159dd83cca6b45a185263b00ab0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-49a930e0cc36337c4330d80e666fb292.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -121,7 +88,7 @@ background-size: cover;
 
 
 <link rel="stylesheet" href="../css/styles.css">
-<meta property="og:title" content="Prerequisies – Advanced GIS &amp; RS">
+<meta property="og:title" content="Understanding the Challenge – Advanced GIS &amp; RS">
 <meta property="og:description" content="">
 <meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/worksheets/images/banner.png">
 <meta property="og:site_name" content="Advanced GIS &amp; RS">
@@ -134,9 +101,6 @@ background-size: cover;
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/logo.png" alt="" class="navbar-logo">
-    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Advanced GIS &amp; RS</span>
     </a>
@@ -171,7 +135,7 @@ background-size: cover;
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">Prerequisies</h1>
+          <h1 class="quarto-secondary-nav-title">Understanding the Challenge</h1>
         </a>     
     </div>
   </nav>
@@ -180,7 +144,7 @@ background-size: cover;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">Prerequisies</h1>
+      <h1 class="title d-none d-lg-block">Understanding the Challenge</h1>
                       </div>
   </div>
     
@@ -347,14 +311,14 @@ background-size: cover;
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../worksheets/comingsoon.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Coming&nbsp;Soon</span></a>
+  <a href="../slides/slide0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Scientific Workflow from the applied Point of View</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../worksheets/comingsoon.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Coming&nbsp;Soon</span></a>
+  <a href="../worksheets/ws-01.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Understanding the Challenge</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -393,10 +357,23 @@ background-size: cover;
     <h2 id="toc-title">Auf dieser Seite</h2>
    
   <ul>
-  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link active" data-scroll-target="#prerequisites">Prerequisites</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#your-task-for-this-introduction" id="toc-your-task-for-this-introduction" class="nav-link active" data-scroll-target="#your-task-for-this-introduction">Your task for this introduction</a></li>
+  <li><a href="#learning-outcome-of-this-phase" id="toc-learning-outcome-of-this-phase" class="nav-link" data-scroll-target="#learning-outcome-of-this-phase">Learning outcome of this phase</a></li>
+  <li><a href="#background-and-problem-definition" id="toc-background-and-problem-definition" class="nav-link" data-scroll-target="#background-and-problem-definition">Background and problem definition</a>
+  <ul class="collapse">
+  <li><a href="#selection-and-validation-of-reference-sites" id="toc-selection-and-validation-of-reference-sites" class="nav-link" data-scroll-target="#selection-and-validation-of-reference-sites">Selection and validation of reference sites</a></li>
+  </ul></li>
+  <li><a href="#reference-sites" id="toc-reference-sites" class="nav-link" data-scroll-target="#reference-sites">Reference Sites</a></li>
+  <li><a href="#hierarchy-of-deployment-rationales" id="toc-hierarchy-of-deployment-rationales" class="nav-link" data-scroll-target="#hierarchy-of-deployment-rationales">Hierarchy of deployment rationales</a></li>
+  <li><a href="#task-overview" id="toc-task-overview" class="nav-link" data-scroll-target="#task-overview">Task overview</a>
+  <ul class="collapse">
+  <li><a href="#study-the-examples" id="toc-study-the-examples" class="nav-link" data-scroll-target="#study-the-examples">1. Study the examples</a></li>
+  <li><a href="#develop-your-own-concept" id="toc-develop-your-own-concept" class="nav-link" data-scroll-target="#develop-your-own-concept">2. Develop your own concept</a></li>
+  <li><a href="#identify-required-datasets" id="toc-identify-required-datasets" class="nav-link" data-scroll-target="#identify-required-datasets">3. Identify required datasets</a></li>
+  </ul></li>
+  <li><a href="#help" id="toc-help" class="nav-link" data-scroll-target="#help">Help</a></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Andere Formate</h2><ul><li><a href="ws-01.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -405,20 +382,305 @@ background-size: cover;
 
 
 
-<section id="prerequisites" class="level2">
-<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
-<p>Participants are expected to have a working recent version of R and RStudio installed, along with several R packages listed below.</p>
+<p>Designing a precipitation-monitoring network for a real forested catchment such as the <strong>Kellerwald</strong> is not a routine technical problem.<br>
+It is a <strong>multi-criteria design challenge</strong> that requires combining spatial reasoning, process understanding, and data-driven optimisation.</p>
+<p>Before learning the analytical tools (e.g., Kriging, radar integration, hydrological modelling), you first need to understand <strong>what makes such a network “good” or “bad”</strong> — and why there is no single correct solution.</p>
+<hr>
+<section id="your-task-for-this-introduction" class="level3">
+<h3 class="anchored" data-anchor-id="your-task-for-this-introduction">Your task for this introduction</h3>
+<ol type="1">
+<li><strong>Read and explore</strong>
 <ul>
-<li>R: <a href="https://cloud.r-project.org/" class="uri">https://cloud.r-project.org/</a></li>
-<li>RStudio: <a href="https://posit.co/download/rstudio-desktop/#download" class="uri">https://posit.co/download/rstudio-desktop/#download</a></li>
-</ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"remotes"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pkg_list <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"terra"</span>, <span class="st">"sf"</span>, <span class="st">"landscapemetrics"</span>, <span class="st">"motif"</span>, <span class="st">"tidyr"</span>, <span class="st">"dplyr"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_cran</span>(pkg_list)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<li>Study the examples and rationale hierarchy presented below.</li>
+<li>Follow at least one cited link to a source document and see how <em>real</em> hydrological field networks were justified.</li>
+</ul></li>
+<li><strong>Reflect</strong>
+<ul>
+<li>Ask yourself:
+<ul>
+<li>What do I already understand about spatial data, gradients, or uncertainty?</li>
+<li>What am I missing to design such a network responsibly?</li>
+<li>Which skills or data would I need to evaluate whether my design works?</li>
+</ul></li>
+</ul></li>
+<li><strong>Formulate</strong>
+<ul>
+<li>Write a short personal note (5–10 lines) that answers two questions:
+<ol type="1">
+<li><em>What can I already do confidently in the context of this problem?</em><br>
+</li>
+<li><em>What do I need to learn or research further to be able to propose a credible Kellerwald network?</em></li>
+</ol></li>
+</ul></li>
+</ol>
+<p>You will later revisit these reflections when developing your final <strong>Network Design Proposal</strong>, where you will apply the methods learned throughout the course.</p>
+<hr>
 </section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-<p>The slides are accompanied by practical exercises. The best way to get them is to download the exercises repository as a ZIP file from <a href="https://github.com/gisma-courses/LV-19-d19-006-24/blob/main/assets/exercises-session1.zip" class="uri">https://github.com/gisma-courses/LV-19-d19-006-24/blob/main/assets/exercises-session1.zip</a> and unpack it on your computer. Then, you can open the <code>.Rproj</code> file and start working on the exercises in RStudio.</p>
+<section id="learning-outcome-of-this-phase" class="level3">
+<h3 class="anchored" data-anchor-id="learning-outcome-of-this-phase">Learning outcome of this phase</h3>
+<p>By completing this introductory reflection, you should: - Recognise that station deployment is not a static task but a <strong>spatial optimisation problem</strong> under hydrological constraints.<br>
+- Identify your current methodological baseline.<br>
+- Establish a <strong>research orientation</strong> for the semester: what tools, data, and reasoning you will need to reach a defensible design.</p>
+<hr>
+</section>
+<section id="background-and-problem-definition" class="level2">
+<h2 class="anchored" data-anchor-id="background-and-problem-definition">Background and problem definition</h2>
+<p>Establishing a rain-gauge network in a complex forested upland such as the Kellerwald requires a clear understanding of how and why existing research catchments have organised their precipitation measurements. Gauge placement reflects climatic gradients, topographic controls, data uncertainty, and the need to link rainfall to hydrological response. To develop a robust concept for a new monitoring design, it is essential to study how benchmark field experiments have balanced spatial representativeness, measurement efficiency, and hydrological relevance.</p>
+<section id="selection-and-validation-of-reference-sites" class="level3">
+<h3 class="anchored" data-anchor-id="selection-and-validation-of-reference-sites">Selection and validation of reference sites</h3>
+<p>The five case studies were selected to represent <strong>well-documented hydrological observatories</strong> that combine long-term operation with explicit methodological transparency. Together they cover a broad spectrum of <strong>climatic regimes</strong> (arid to humid), <strong>land cover</strong> (semi-desert shrubland to temperate forest), and <strong>network-design philosophies</strong> (physiographic, statistical, and hydrological rationales). Each site provides publicly accessible metadata, peer-reviewed documentation, and a traceable evolution of its instrumentation, which allows the <em>why</em> and <em>where</em> of station deployment to be reconstructed rather than inferred.</p>
+<p>In general, such selections are validated by three criteria:</p>
+<ol type="1">
+<li><strong>Continuity and data quality</strong> – multi-decadal, quality-controlled precipitation (and discharge) records are available.<br>
+</li>
+<li><strong>Explicit methodological reporting</strong> – publications or technical reports describe the logic or adjustment of station placement.<br>
+</li>
+<li><strong>Scientific influence and reproducibility</strong> – the site serves as a benchmark or reference in later network-design or model-validation studies.</li>
+</ol>
+<p>This combination reflects both the <strong>state of the art</strong> in network optimisation and the <strong>historical evolution</strong> of hydrological monitoring practice—from empirically grown catchments (Walnut Gulch, Reynolds Creek) to analytically optimised modern systems (HYREX, CAOS, Henriksen 2024).</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Instructor notes — Selection and validation of reference sites">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Instructor notes — Selection and validation of reference sites
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Purpose</strong><br>
+Provide an explicit rationale for choosing benchmark catchments that reflect historical practice and current methodological standards in precipitation-network design.</p>
+<p><strong>Selection logic</strong><br>
+- Long-term, quality-controlled hydro-meteorological data (&gt;10 years).<br>
+- Explicit documentation of <em>why</em> and <em>where</em> gauges were deployed (peer-reviewed papers or technical reports).<br>
+- Representativeness across climatic and physiographic settings (arid–humid, lowland–upland, forested–open).<br>
+- Demonstrated influence in later modelling or network-optimisation studies.</p>
+<p><strong>Validation</strong><br>
+Combine <em>empirical heritage</em> (Walnut Gulch, Reynolds Creek) with <em>analytical optimisation</em> (HYREX, CAOS, Henriksen 2024) to cover state-of-the-art and historical evolution.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled" title="Instructor notes — Common pitfalls in selecting reference networks">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Instructor notes — Common pitfalls in selecting reference networks
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Typical mistakes</strong><br>
+- Using short-term campaigns (&lt; 2 years) without continuity or QC.<br>
+- Choosing networks without metadata; if siting rationale or maintenance history cannot be reconstructed, comparisons lose value.<br>
+- Relying on model-derived “virtual stations” instead of physical gauge networks.<br>
+- Ignoring physiographic context (e.g., urban/agricultural networks as proxies for forested uplands).<br>
+- Assuming modern equals better; some historical observatories remain superior due to documentation and consistency.</p>
+<p><strong>Reminder</strong><br>
+A benchmark network should be traceable, representative, and reproducible—not merely new or data-rich.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="reference-sites" class="level2">
+<h2 class="anchored" data-anchor-id="reference-sites">Reference Sites</h2>
+<p>The following table summarises five well-documented examples of mesoscale catchments (~200 km²) where the logic behind <em>why, where, and how</em> precipitation stations were deployed is explicitly or reconstructably described. These cases form the analytical reference for the conceptual network design for the Kellerwald.</p>
+<div class="table-responsive">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><strong>Experiment / Basin (~Area)</strong></th>
+<th><strong>What the source provides (relevant to station deployment)</strong></th>
+<th><strong>Core network logic</strong></th>
+<th><strong>Open source / link</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Walnut Gulch Experimental Watershed</strong> (Arizona, USA ≈ 149 km²)</td>
+<td>Long-term database and network description: dense rain-gauge array since 1950s; rationale discussed (convective hotspots, orographic gradients, ephemeral-channel hydrology).</td>
+<td>~95 manual + automatic gauges; layout driven by convective-storm footprints and ephemeral runoff networks rather than uniform spacing.</td>
+<td>Goodrich et al.&nbsp;2008 <em>J. Hydrometeorol.</em> 9: 322–334 (<a href="https://journals.ametsoc.org/view/journals/hydr/9/2/2008jhm940_1.xml">PDF</a>) · <a href="https://www.ars.usda.gov/pacific-west-area/tucson-az/southwest-watershed-research-center/docs/walnut-gulch-experimental-watershed-publications/">USDA ARS repository</a></td>
+</tr>
+<tr class="even">
+<td><strong>Reynolds Creek Experimental Watershed</strong> (Idaho, USA ≈ 239 km²)</td>
+<td>Historical development of the hydrologic-instrument network; elevation- and snow-transition gradient explicitly used as main siting criterion.</td>
+<td>“Climatological-gradient design”: stations grouped by altitude (1100–2240 m) → each band with valley, slope, and ridge gauge; emphasis on rainfall–snowfall transition and wind exposure.</td>
+<td>Seyfried &amp; Flerchinger 2011 <em>Hydrol. Processes</em> 25: 149–158 (<a href="https://doi.org/10.1002/hyp.7794">DOI</a>) · <a href="https://www.ars.usda.gov/pacific-west-area/boise-id/northwest-watershed-research-center/docs/reynolds-creek-publications/">USDA ARS archive</a></td>
+</tr>
+<tr class="odd">
+<td><strong>Attert / CAOS catchments</strong> (Luxembourg ≈ 288 km²)</td>
+<td>Papers and supplements describe <em>physiographic stratification</em> of monitoring sites (geology × land-use × topography); include maps and reasoning for site clusters.</td>
+<td>Design based on “hydrotop representativeness”: one site per land-use × geology × relief class; accessibility and data-communication constraints secondary.</td>
+<td>Zehe et al.&nbsp;2014 <em>HESS</em> 18: 2433–2455 (<a href="https://doi.org/10.5194/hess-18-2433-2014">DOI</a>) · Loritz et al.&nbsp;2018 <em>HESS</em> 22: 4437–4457 (<a href="https://doi.org/10.5194/hess-22-4437-2018">DOI</a>)</td>
+</tr>
+<tr class="even">
+<td><strong>HYREX – Brue Catchment</strong> (SW England ≈ 132 km²)</td>
+<td>Official <em>HYREX Design Report</em> explains dense 52-gauge network; rationale: minimise radar–gauge residual and kriging variance at 15-min scale.</td>
+<td>Two-stage design: initial 5-km grid → adaptive densification in radar-uncertainty hotspots; combined with 3 C-band radars.</td>
+<td>Browning et al.&nbsp;1999 <em>NERC Open Research Archive</em> <a href="https://nora.nerc.ac.uk/id/eprint/10220/">PDF</a> · Collier et al.&nbsp;2000 <em>J. Hydrol.</em> 239: 1–25 (<a href="https://doi.org/10.1016/S0022-1694(00)00356-4">DOI</a>)</td>
+</tr>
+<tr class="odd">
+<td><strong>Henriksen et al.&nbsp;2024 (Denmark ≈ 180 km²)</strong></td>
+<td>Modern design study: kriging-variance optimisation with emulated rainfields; quantifies information gain per added gauge.</td>
+<td>Budget-constrained ranking of candidate sites by Δvariance / Δsensor → explicit cost–benefit curve for network densification.</td>
+<td>Henriksen et al.&nbsp;2024 <em>J. Hydrol.</em> <a href="https://doi.org/10.1016/j.jhydrol.2024.131560">DOI</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="hierarchy-of-deployment-rationales" class="level2">
+<h2 class="anchored" data-anchor-id="hierarchy-of-deployment-rationales">Hierarchy of deployment rationales</h2>
+<p>Across the benchmark catchments in the table, deployment rationales follow a <strong>hierarchical, not equal</strong>, structure. At the <strong>upper structural level</strong>, <em>physiographic stratification</em> defines the spatial framework of the network. This principle is explicit in Reynolds Creek and Attert/CAOS, where gauges were distributed along dominant gradients of elevation, geology, and land cover to guarantee structural representativeness before any statistical optimisation.</p>
+<p>At the <strong>intermediate analytical level</strong>, <em>information-gain optimisation</em> refines density and placement <strong>within</strong> those strata. This rationale is most evident in HYREX (Brue Catchment) and Henriksen et al.&nbsp;2024, where new gauges were allocated according to the marginal reduction of kriging variance or radar–gauge residuals under explicit budget constraints. The network evolves adaptively, responding to measured or modelled uncertainty rather than to fixed geometry.</p>
+<p>At the <strong>lowest functional level</strong>, <em>hydrological coupling</em> links the precipitation network to discharge response. This coupling guided Walnut Gulch, where each ephemeral drainage required at least one gauge to translate storm rainfall into local runoff volumes. Modern frameworks couple this validation loop with statistical optimisation: unsatisfactory P→Q coherence or water-balance residuals trigger iterative refinement of both gauge density and stratification boundaries.</p>
+<p><strong>Summary of the hierarchy</strong><br>
+- <strong>Physiographic stratification — structural representativeness</strong> (Reynolds Creek, Attert/CAOS).<br>
+- <strong>Information-gain optimisation — analytical efficiency</strong> (HYREX, Henriksen 2024).<br>
+- <strong>Hydrological coupling — functional adequacy</strong> (Walnut Gulch).</p>
+</section>
+<section id="task-overview" class="level2">
+<h2 class="anchored" data-anchor-id="task-overview">Task overview</h2>
+<p>Work in <strong>pairs</strong>. Objective: understand how precipitation stations are deployed in field hydrology and apply this logic to the <strong>Kellerwald region (~200 km²)</strong>.</p>
+<section id="study-the-examples" class="level3">
+<h3 class="anchored" data-anchor-id="study-the-examples">1. Study the examples</h3>
+<p>Read the table and the section on deployment rationales. Identify, for each case study, which principle dominates:</p>
+<ul>
+<li><strong>Physiographic stratification</strong><br>
+</li>
+<li><strong>Information-gain optimisation</strong><br>
+</li>
+<li><strong>Hydrological coupling</strong></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled" title="Your notes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Your notes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Summarise which rationale dominates in each example and why it fits the environmental setting.</p>
+</div>
+</div>
+</section>
+<section id="develop-your-own-concept" class="level3">
+<h3 class="anchored" data-anchor-id="develop-your-own-concept">2. Develop your own concept</h3>
+<p>Design a <strong>conceptual rain-gauge network</strong> for the Kellerwald. Decide where gauges should be placed and explain the reasoning using the three rationales as a framework.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Concept sketch">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Concept sketch
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Describe or visualise the proposed network layout (schematic or georeferenced). A hand-drawn sketch or simple diagram may be uploaded.</p>
+</div>
+</div>
+</section>
+<section id="identify-required-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="identify-required-datasets">3. Identify required datasets</h3>
+<p>List the <strong>data and measurements</strong> needed to implement the design. Focus on <strong>primary environmental and technical inputs</strong>, not pre-interpreted map products.</p>
+<p><strong>Examples</strong><br>
+- Digital elevation model (DEM) and derived slope/exposure<br>
+- Land-cover and forest-structure data<br>
+- Radar reflectivity or gauge-adjusted precipitation fields<br>
+- Stream-gauge and discharge records<br>
+- Infrastructure and accessibility (power, communication, roads)</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Data requirements">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Data requirements
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Separate <strong>available</strong> datasets (existing sources) from <strong>missing/uncertain</strong> ones that would require acquisition.</p>
+</div>
+</div>
+<p><strong>Output</strong><br>
+Prepare a <strong>one-page concept note or mini-poster</strong> including: (1) conceptual network sketch, (2) key design rationale, (3) list of required datasets and measurement sources.</p>
+</section>
+</section>
+<section id="help" class="level2">
+<h2 class="anchored" data-anchor-id="help">Help</h2>
+<div class="callout callout-style-default callout-tip callout-titled" title="Instructor notes — Classical literature search (from broad to benchmarked shortlist)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Instructor notes — Classical literature search (from broad to benchmarked shortlist)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>A. Define scope &amp; inclusion criteria (before searching)</strong><br>
+- Mesoscale (~100–300 km²) <em>field</em> catchments with dense rain-gauge networks.<br>
+- Must have: multi-year QC’d P (and ideally Q), documented siting/deployment rationale, accessible metadata.<br>
+- Ensure diversity: include at least one arid/semi-arid, one temperate upland/forested, and one radar-coupled design study.<br>
+- Exclude: &lt; 2 years duration; purely model/virtual networks; no siting documentation.</p>
+<p><strong>B. Seed the search (databases)</strong><br>
+- Web of Science / Scopus (structured), Google Scholar (recall), institutional repositories (USDA-ARS, NERC/NORA, national hydrological services).<br>
+- Boolean examples:<br>
+- <code>("rain gauge" OR pluviometer) AND (network OR deployment OR siting) AND (catchment OR watershed) AND (design OR optimisation OR "kriging variance" OR "conditional entropy")</code><br>
+- Add scale: <code>("experimental watershed" OR observatory) AND (km2 OR "km²")</code><br>
+- Add context: <code>forest* OR orograph* OR upland</code>, and for radar-coupled: <code>radar AND gauge AND merging</code>.</p>
+<p><strong>C. Backward &amp; forward snowballing</strong><br>
+- Backward: screen reference lists of key hits (observatories, radar–gauge reviews, optimisation papers).<br>
+- Forward: “Cited by” / “Times cited” to find design/upgrade papers and technical reports.<br>
+- For observatories: combine catchment name with <code>"technical report" OR "instrumentation plan" OR "site manual"</code>.</p>
+<p><strong>D. Screen &amp; extract (mini-PRISMA mindset)</strong><br>
+- Maintain a log (query → results → screened → included; record exclusion reasons).<br>
+- Extract into a table: <em>Site | Area | Climate/Land cover | Gauge count &amp; resolution | Deployment rationale (physiographic / info-gain / hydrological) | Docs/Links</em>.<br>
+- Validate with checklist: continuity ≥ 10 y; explicit siting rationale; scientific influence; data access.</p>
+<p><strong>E. Stop rule</strong><br>
+- When each rationale has ≥ 1 high-quality case and ≥ 2 climatic/physiographic regimes are covered, freeze the shortlist and justify it with the checklist.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Instructor notes — Optimised ChatGPT prompt (template)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Instructor notes — Optimised ChatGPT prompt (template)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use the following prompt when an assistant is allowed to browse the web and compile <strong>benchmark observatories</strong> with explicit deployment rationale.</p>
+<p>You are an expert research assistant for an advanced MSc GIS/RS methods course. Task: Identify 5–7 benchmark hydrological field catchments (~100–300 km²) with dense rain-gauge networks where the deployment rationale (why/where/how gauges were placed) is explicitly documented in peer-reviewed papers or technical reports.</p>
+<p>Context: We are designing a rain-gauge network for the Kellerwald (forested upland, Germany). We need reference sites that reflect both state-of-the-art optimisation and historically grown observatories.</p>
+<p>Constraints &amp; preferences:</p>
+<ul>
+<li>Prioritize sources with explicit siting/deployment rationale (not just data).</li>
+<li>Include at least one arid/semi-arid, one temperate upland/forested, and one radar–gauge optimisation study.</li>
+<li>Prefer open-access or repository-backed documents (USDA-ARS, NERC/NORA, national hydrological services).</li>
+<li>Exclude short-term (&lt;2 years) campaigns and purely model/virtual networks.</li>
+</ul>
+<p>Deliverables:</p>
+<ol type="1">
+<li>A concise table: Site | Area (km²) | Climate/Land cover | Gauge density &amp; time resolution | Dominant rationale (physiographic / information-gain / hydrological) | Why this site qualifies | Open link(s) (PDF/DOI/repository)</li>
+<li>4–6 bullet “selection/validation” notes (continuity, documentation quality, influence, data access).</li>
+<li>3–5 search strings for Web of Science / Scopus / Scholar.</li>
+</ol>
+<p>Important:</p>
+<ul>
+<li>Use web browsing to verify links (prefer PDF/DOI/repository).</li>
+<li>Cite exact titles and years; avoid non-authoritative sources.</li>
+<li>If the siting rationale is only in a technical report, include that report.</li>
+</ul>
+<p>Now begin. First list planned search queries, then produce the table and notes.</p>
+<p><strong>Rationale</strong><br>
+Role specification + constraints + explicit deliverables increase reproducibility and the proportion of authoritative sources returned.</p>
+</div>
+</div>
 
 
 </section>
@@ -844,6 +1106,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
   </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../slides/slide0.html" class="pagination-link" aria-label="A Scientific Workflow from the applied Point of View">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">A Scientific Workflow from the applied Point of View</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../worksheets/comingsoon.html" class="pagination-link" aria-label="Coming&amp;nbsp;Soon">
+        <span class="nav-page-text">Coming&nbsp;Soon</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">

@@ -1,0 +1,706 @@
+---
+title: "PipeModel Idealized valley microclimate sandbox "
+subtitle: "with robust modeling, spatial CV, and land-cover physics"
+author: "gisma"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    code-fold: true
+    number-sections: true
+    embed-resources: true
+execute:
+  echo: true
+  warning: false
+  message: false
+  results: hide
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# Why the PipeModel?
+
+The **PipeModel** is a deliberately idealized yet physically plausible
+valley scenario. It distills terrain to the essentials (parabolic
+cross-valley profile) and optional features (left-side hill, right-side
+pond or hollow), so that dominant **microclimate drivers** become
+visible and testable:
+
+-   **Radiation** via terrain exposure `cos(i)` from slope & aspect
+-   **Elevation**: daytime negative lapse; pre-dawn weak inversion
+-   **Cold-air pooling** along the valley axis (Gaussian trough)
+-   **Surface type / land-cover** (grass / forest / water / bare soil /
+    maize) alters heating, shading, roughness and nocturnal behaviour
+
+You can sample synthetic stations, train interpolators (IDW, Kriging
+variants, RF, GAM), and assess them with **spatial LBO-CV**.
+
+> 🔧 This document keeps the previous behaviour but extends the physics
+> with a modular **land-cover layer** that feeds into both daytime and
+> night fields.
+
+![](images/pipe.png)
+
+
+
+# D. Physics & Scenario Builder — Cheat Sheet (enhanced LC model)
+
+## D.1 Generated rasters & derived fields
+
+| Name | Unit | What it is | How it’s built |
+|------------|-----------:|--------------|----------------------------------|
+| `E` (`elev`) | m | Ground elevation | Parabolic “half-pipe” across **y**; + optional hill; − optional pond/hollow |
+| `slp`, `asp` | rad | Slope, aspect | `terra::terrain(E, "slope"/"aspect", "radians")` |
+| `I14`, `I05` | – | Cosine solar incidence at 14/05 UTC | `cosi_fun(alt, az, slp, asp)`, clamped to `[0,1]` |
+| `lc` | cat | Land-cover class | {Forest, Water, Bare Soil, Maize}; rules from hill/slope/water masks |
+| `hillW` | 0–1 | Hill weight (1 inside footprint) | Disk/Gaussian on left third; combines main + optional micro-hills |
+| `lake` | 0/1 | Water mask | 1 only when `lake_choice == "water"` (disk on right third) |
+| `I14_eff` | – | **Shaded** incidence (day) | `I14 * shade_fac_by_lc[lc]` |
+| `αI(lc)` | – | Daytime solar sensitivity by LC | Look-up from `alpha_I_by_lc` |
+| `dawn_bias(lc)` | °C | Additive pre-dawn bias by LC | Look-up from `dawn_bias_by_lc` |
+| `pool_fac(lc)` | – | Pooling multiplier by LC | Look-up from `pool_fac_by_lc` |
+| `R14` (`T14`) | °C | Daytime “truth” temperature field | Eq. (below) |
+| `R05` (`T05`) | °C | Pre-dawn “truth” temperature field | Eq. (below) |
+
+## D.2 Governing equations
+
+Let \$\overline{E}\$ be the domain-mean elevation. Define the
+cross-valley cold-pool kernel
+
+$$
+\texttt{pool\_base} \;=\; A \exp\!\left[-(d_y/w)^2\right],\quad d_y=|y-y_0|,
+$$
+
+blocked over the hill by `(1 − pool_block_gain * hillW)`.
+
+**Day (14 UTC)**
+
+$$
+T_{14} \;=\; T0_{14} \;+\; \texttt{lapse\_14}\,(E-\overline{E})
+\;+\; \alpha_I(\texttt{lc})\, I_{14}^{\text{eff}}
+\;+\; \varepsilon_{14},
+\quad
+I_{14}^{\text{eff}} = I_{14}\cdot \texttt{shade\_fac}(\texttt{lc}).
+$$
+
+**Pre-dawn (05 UTC)**
+
+$$
+T_{05} \;=\; T0_{05} \;+\; \texttt{inv\_05}\,(E-\overline{E})
+\;+\; \eta_{\text{slope}}\;\texttt{slp}
+\;-\; \texttt{pool\_base}\cdot(1-\texttt{pool\_block\_gain}\cdot\texttt{hillW})\cdot \texttt{pool\_fac}(\texttt{lc})
+\;+\; \texttt{dawn\_bias}(\texttt{lc})
+\;+\; \varepsilon_{05}.
+$$
+
+Noise \$\varepsilon\_{14},\varepsilon\_{05}
+\sim \mathcal{N}(0,,0.3\^2)\$ i.i.d.
+
+> **Note vs. predecessor:** the former `warm_bias_water_dawn * lake`
+> term is now folded into `dawn_bias(lc)` (class “Water”); daytime
+> `α_map` became `αI(lc) * I14_eff` with explicit canopy shading.
+
+## D.3 Dials
+
+### Global scalars
+
+| Parameter | Default | Sensible range | Affects | Visual signature (+) |
+|-------------|------------:|------------:|-------------|--------------------|
+| `T0_14` | 26.0 °C | 20–35 | T14 baseline | Uniform warming |
+| `lapse_14` | −0.0065 °C/m | −0.01…−0.002 | T14 vs elevation | Cooler rims, warmer floor |
+| `T0_05` | 8.5 °C | 3–15 | T05 baseline | Uniform warming |
+| `inv_05` | +0.003 °C/m | 0–0.008 | T05 vs elevation | Rims warmer vs floor |
+| `η_slope` | 0.6 | 0–1.5 | T05 slope flow proxy | Steeper slopes a bit warmer at dawn |
+| `pool_base` amplitude | 4.0 K | 1–8 | T05 pooling depth | Stronger blue band on valley axis |
+| `w_pool` | 70 m | 40–150 | T05 pooling width | Narrower/broader cold band |
+| `pool_block_gain` | 0.4 | 0–1 | Hill blocking | Warm “tongue” over hill at dawn |
+| `noise σ` | 0.3 K | 0–1 | Both | Fine speckle/random texture |
+
+### Land-cover coefficients (by class)
+
+Defaults used in the code:
+
+| LC class | `alpha_I_by_lc` | `shade_fac_by_lc` | `dawn_bias_by_lc` (°C) | `pool_fac_by_lc` |
+|--------------|-------------:|-------------:|---------------:|-------------:|
+| Forest | 3.5 | 0.6 | +0.3 | 0.7 |
+| Water | 1.5 | 1.0 | +1.2 | 0.8 |
+| Bare Soil | 6.0 | 1.0 | −0.5 | 1.1 |
+| Maize | 4.5 | 0.9 | +0.1 | 1.0 |
+
+**Interpretation:** *Bare Soil* heats most by day and **enhances
+pooling** (factor \> 1) and cool bias at dawn; *Forest* damps radiation
+by day (shading) and **reduces pooling** (factor \< 1); *Water* heats
+little by day, gets a **positive dawn bias** and reduced pooling;
+*Maize* sits between grass and forest.
+
+### Geometry/toggles
+
+| Parameter | Default | Options / range | Effect |
+|--------------|--------------|--------------|--------------------------------|
+| `lake_choice` | `"water"` | `"none"`, `"water"`, `"hollow"` | Controls depression; only `"water"` sets LC=Water (thermal effects). |
+| `hill_choice` | `"bump"` | `"none"`, `"bump"` | Adds blocking & relief. |
+| `lake_diam_m` | 80 | 40–150 | Size of pond/hollow. |
+| `lake_depth_m` | 10 | 5–30 | Depression depth. |
+| `hill_diam_m` | 80 | 40–150 | Hill footprint. |
+| `hill_height_m` | 50 | 10–120 | Hill relief. |
+| `smooth_edges` | `FALSE` | bool | Soft pond rim if `TRUE`. |
+| `hill_smooth` | `FALSE` | bool | Gaussian hill if `TRUE`. |
+| *(optional)* micro-hills | off | `random_hills`, `micro_*` | Adds sub-footprint relief; included in `hillW`. |
+
+## D.4 Quick “recipes”
+
+-   **Cloud/haze day** → ↓ `alpha_I_by_lc` (all classes, esp.
+    Bare/Maize) → daytime LC contrasts fade; models lean on
+    elevation/smoothness.
+-   **Hotter afternoon** → ↑ `T0_14` (+1…+3 K) → uniform bias shift;
+    rankings unchanged.
+-   **Stronger pooling** → ↑ `pool_base` and/or ↓ `w_pool` → sharper,
+    deeper trough; drift-aware models gain.
+-   **Water vs hollow** → `"water"` sets LC=Water → ↓ daytime heating, ↑
+    dawn warm bias, ↓ pooling; `"hollow"` keeps only geometry (no water
+    thermals).
+-   **Hill blocking** → ↑ `pool_block_gain` → warm dawn tongue over
+    hill; harder CV across blocks.
+-   **Cover swaps** (what if): set a patch to *Bare Soil* → warmer day,
+    **colder dawn & stronger pooling**; to *Forest* → cooler day,
+    **weaker pooling & slight dawn warm-up**.
+
+## Scaled demo: Compact Physics Dossier
+
+Here’s a clear, didactic walkthrough of the **“scaled teaching” scenario** and exactly what **`R_true14`** and **`R_true05`** are.
+
+
+## Lake–Bump–Dense: Compact Physics Dossier 
+
+**Goal.** A clear, didactic synthetic scenario that (a) looks realistic, (b) drives temperature with topography + land-cover + sun, and (c) plays nicely with blocked CV and R\*-tuning. Class 4 is **meadows** (not maize).
+
+
+## G Diagnostic
+
+let’s read your **baseline (no R\*)** results explicitly through
+the lens of **process** (what drives T) and **scale** (over what
+distances the drivers operate), model-by-model and time-by-time, then
+close with a scale+process summary and concrete upgrades.
+
+------------------------------------------------------------------------
+
+# T14 (daytime)
+
+**Process you’re trying to capture**
+
+-   **Shortwave forcing** projected by **slope/aspect** → very **local**
+    facet contrasts.
+-   **Land-cover (LC)** modulates heating (forest shade, water inertia)
+    at **patch scale**.
+-   A mild **negative lapse** with elevation (broad scale).
+-   **Anisotropy** is limited; key is **small-scale** facet/LC
+    contrasts.
+
+**Observed performance (LBO-CV)** RMSE ↓ / R² ↑: **GAM (0.436 / 0.642)**
+\< **KED (0.446 / 0.630)** ≈ **RF (0.449 / 0.619)** ≪ **IDW (0.813 /
+0.060)**, **Voronoi (0.828 / 0.025)**, **OK (0.848 / 0.085)**. Bias is
+small for the top 3 (GAM +0.032, KED +0.014, RF +0.050 °C).
+
+### What the diagnostics mean model-by-model
+
+-   **GAM — best alignment to process and scale**
+
+    -   **Boxplots:** tight across blocks → it’s matching
+        **facet/patch** scales.
+    -   **Obs–Pred:** near 1:1 with mild underfit only at the hottest
+        facets.
+    -   **Residual density:** narrow, centered at \~0 → low variance,
+        low bias.
+    -   **Why:** smooth terms over **cos(i), slope, z, LC** let it bend
+        at the right (small) scales without oversmoothing.
+
+-   **KED — close second but still smoothing across LC edges**
+
+    -   **Boxplots:** slightly wider tails in blocks crossing **LC
+        transitions**.
+    -   **Obs–Pred:** more scatter than GAM; extremes compressed a bit.
+    -   **Residual density:** centered but broader.
+    -   **Why (scale):** isotropic variogram + untuned drift scale →
+        **blurs patch edges**. You need LC as drifts and
+        **R\*-smoothed** topography terms.
+
+-   **RF — competitive third; sensitive to micro-texture**
+
+    -   **Boxplots:** a tad broader tails → some **patchy flicker** in
+        blocks.
+    -   **Obs–Pred:** good alignment; small warm bias (+0.05 °C).
+    -   **Residual density:** narrow, near-zero mean.
+    -   **Why (scale):** with raw x,y and unsmoothed features it can
+        pick up **too-fine** structure; it still handles **LC×cos(i)**
+        nonlinearity well.
+
+-   **OK / IDW / Voronoi — scale/process mismatch**
+
+    -   **Boxplots:** wide with outliers → **leakage** across sharp
+        contrasts.
+    -   **Obs–Pred:** under-dispersion (slope \< 1 feel), big scatter.
+    -   **Residual density:** broad / skewed.
+    -   **Why:** purely spatial kernels **ignore physics**; their
+        smoothing scale is wrong for **facet/patch** structure.
+
+**Day takeaway:** day is **short-scale, LC-modulated**. Models that
+encode that structure (GAM, RF) win; kriging needs **right drifts at the
+right scale** to catch up.
+
+------------------------------------------------------------------------
+
+# T05 (pre-dawn)
+
+**Process you’re trying to capture**
+
+-   **Cold-air pooling**: a **cross-valley trough** (short scale
+    **across**, longer **along** → **anisotropy**).
+-   **Slope** term (drainage tendency).
+-   **LC offsets** (water warmest, bare coolest) and small **inversion**
+    with elevation.
+
+**Observed performance (LBO-CV)** RMSE ↓ / R² ↑: **RF (0.434 / 0.939)**
+\< **GAM (0.622 / 0.864)** ≪ **KED (0.900 / 0.707)** \< **OK (1.121 /
+0.547)** \< **Voronoi (1.271 / 0.440)** \< **IDW (1.457 / 0.246)**.
+Bias: RF −0.018 (tiny cool), GAM −0.005, **KED +0.106** (under-cools),
+**IDW −0.137** (over-cools).
+
+### What the diagnostics mean model-by-model
+
+-   **RF — clear winner; nails nonlinear pooling+LC**
+
+    -   **Boxplots:** tightest by far → **right scale** and good
+        generalization.
+    -   **Obs–Pred:** almost exactly 1:1 → calibrated.
+    -   **Residual density:** slim, centered slightly negative (\~−0.02
+        °C).
+    -   **Why (process):** tree splits capture **trough + slope + LC**
+        interactions; less sensitive to isotropy assumptions.
+
+-   **GAM — strong second; smooth but misses sharp minima**
+
+    -   **Boxplots:** tight but a bit wider than RF on trough blocks.
+    -   **Obs–Pred:** close to 1:1; modest extra spread.
+    -   **Residual density:** centered, slightly wider than RF.
+    -   **Why (scale):** splines smooth; without **R\*-tuned features**
+        they can **round off** the deepest pooled cold.
+
+-   **KED — middle of the pack; wrong mean for pooling**
+
+    -   **Boxplots:** broader with tails in trough/blocked-flow blocks.
+    -   **Obs–Pred:** under-dispersion; misses deep minima.
+    -   **Residual density:** shifted **positive** (+0.106 °C) →
+        **under-cooling**.
+    -   **Why (process & anisotropy):** elevation drift ≠ pooling;
+        variogram likely **isotropic**, so it leaks across the
+        cross-valley gradient. Needs **distance-to-axis, cross-valley
+        coordinate, hill-block mask**, and **anisotropic** variogram.
+
+-   **OK / Voronoi / IDW — struggle in anisotropic pooling**
+
+    -   **Boxplots:** very wide; many outliers → big **scale mismatch**.
+    -   **Obs–Pred:** noisy; IDW shows global over-cool bias.
+    -   **Residual density:** broad (IDW skewed negative).
+    -   **Why:** they smooth across the **short cross-valley scale** and
+        ignore LC offsets.
+
+**Night takeaway:** night is **anisotropic** and **thresholdy**. RF
+handles that best; GAM is close with proper feature scale. Kriging
+**must** get the **mean field** right and adopt **directional scale** to
+compete.
+
+------------------------------------------------------------------------
+
+# Scale & process, integrated (what each model is buying/missing)
+
+| Time | Model | What process it encodes | How it treats scale | What the metrics+plots say |
+|-------------|-------------|-------------|-------------|----------------------|
+| T14 | **GAM** | cos(i) × LC × z interactions (smooth) | Implicit via spline basis; good at **patch/facet** | **Best RMSE/R²**; tight boxes; slender residuals → matched to **small** scales |
+| T14 | **RF** | Nonlinear LC × cos(i) well; can chase micro-texture | Learns whatever scale is in features (and x,y) | Near-best metrics; slightly broader boxes → **feature scale** not tuned |
+| T14 | **KED** | Mean = linear drifts (z, slope, cosi, maybe LC) | Variogram smooths **across** LC edges | Good but behind GAM; **tails** at LC transitions |
+| T14 | **OK/IDW/Voro** | None | Kernel/variogram at one scale | Broad tails, under-dispersion → **process blind** |
+| T05 | **RF** | Pooling trough + slope + LC (thresholdy) | Chooses effective scales from features | **Top RMSE/R²**, clean calibration; best boxes/density |
+| T05 | **GAM** | Smooth trough + slope + LC offsets | Smooths; needs tuned features | Strong second; misses sharp minima a bit |
+| T05 | **KED** | Wrong mean for pooling if only z/slope | Variogram often **isotropic** | Warm bias (+0.106 °C), broad boxes → **needs pooling drifts & anisotropy** |
+| T05 | **OK/IDW/Voro** | None | One isotropic smoothing scale | Very wide tails; density broad/skewed |
+
+------------------------------------------------------------------------
+
+# What to change (small steps, big benefits)
+
+**1) Add the missing *process* to kriging (both times)**
+
+-   **Day:** include **cos(i)** and **LC dummies** as external drifts;
+    compute cos(i) from the actual sun.
+-   **Night:** add **cross-valley coordinate / distance-to-axis**, a
+    **hill-block mask**, and **LC offsets** as drifts.
+-   This makes KED’s **mean** physically right; the variogram only
+    cleans **residual** texture.
+
+**2) Match the *scale* of the features (R\*)**
+
+-   For **z, slope, cos(i)**, scan **R** over a practical range (e.g.,
+    variogram **L50→L95**) with **blocked CV** and rebuild features at
+    **R\***.
+-   Expect **narrower boxplots** and slimmer residual densities for
+    **GAM (T14)** and **RF (T05)**; KED gains a lot too.
+
+**3) Respect *anisotropy* at night**
+
+-   Rotate to **(s,t)** (along/cross-valley); give **shorter range in
+    t** for variograms.
+-   Even without an explicit anisotropic variogram, feeding **t** as a
+    drift and smoothing features at **R\*** helps.
+
+**4) Hybridize: regression-kriging**
+
+-   Mean = **GAM (T14)** / **RF (T05)**; residuals = **OK/KED** with
+    short-range, anisotropic structure.
+-   Keeps the physics-savvy mean and mops up local spatial leftovers.
+
+**5) RF hygiene (avoid coordinate memorization)**
+
+-   Drop raw **x,y** or replace with oriented **(s,t)**; rely on
+    **R\*-smoothed** z/slope/cos(i) + LC and pooling drifts.
+-   This keeps process, reduces overfitting to station layout.
+
+**6) Validation remains scale-aware**
+
+-   Keep **LBO**; try a few **random grid origins** (tiling jitter) and
+    confirm ranks stay stable.
+
+------------------------------------------------------------------------
+
+## Summary
+
+**Daytime temperature** is controlled by **very local** facet and **LC**
+effects layered over a gentle lapse; models that **encode those drivers
+at the right (small) scale**—notably **GAM**, then **RF**—generalize
+across blocks with low error.
+
+**Pre-dawn temperature** is **anisotropic** with a **short cross-valley
+pooling scale**, **slope**, and **LC offsets**; **RF** captures these
+thresholdy interactions best, with **GAM** second. Purely spatial
+smoothers (OK/IDW/Voronoi) underperform because their **smoothing scale
+and mean process are mismatched**.
+
+Bring kriging back into contention by giving it the **right drifts**
+(cos(i), LC, distance-to-axis, hill-block) at **tuned feature scales
+(R\*)**, and by acknowledging **anisotropy** at night; if you want the
+best of both worlds, use **regression-kriging** with the learned mean
+from **GAM/RF** and an anisotropic residual field.
+
+# Critical review: does the winner take it all?
+
+Short answer: **no**. Even though the baseline shows **GAM (day)** and
+**RF (pre-dawn)** leading on block-CV, a “winner-takes-all” policy is
+brittle because:
+
+-   **Regime shifts:** Day vs. night, clear vs. cloudy, dry vs. wet
+    canopy, snow, leaf-on/off—each changes the **dominant process** and
+    therefore the **right scale**. Your “winner” can flip.
+-   **Sampling artifacts:** With a different station layout or fewer
+    stations, RF can overfit locations; kriging can swing with a refit
+    variogram; GAM can underfit sharp minima if features aren’t
+    scale-tuned.
+-   **Extrapolation:** RF/GAM extrapolate poorly beyond the **feature
+    envelope** (new hill, bigger lake). Kriging extrapolates linearly in
+    the drift but may **oversmooth**. The best model **by CV** is not
+    always the safest out-of-sample.
+-   **Uncertainty:** Kriging gives a variance; RF/GAM need extra work
+    (quantile/ensembles) for predictive intervals. If you “winner take
+    all,” you may lose **calibrated uncertainty** where you need it
+    most.
+
+# “Information bias” between models
+
+Different learners consume different information channels and bring
+their own priors. That creates **systematic biases** you can anticipate
+and manage.
+
+| Model | Preferred info | Built-in bias | Typical failure mode |
+|---------------|----------------|----------------|--------------------------|
+| **Voronoi/IDW** | **Distance only** to stations | **Locality bias**; no physics | Edge artefacts; oversmooth across LC boundaries; anisotropy ignored |
+| **OK** | Distance + **stationarity** (residual field) | **Global smoothing scale**; isotropy unless told otherwise | Under-dispersion of extremes; leakage across cross-valley trough |
+| **KED** | OK + **drifts** (z, slope, cos(i), LC) | Mean = whatever drifts encode; **scale of drift matters** | If drift misses physics (pooling), mean is wrong → biased; if drift scale is off → blur |
+| **GAM** | Smooth **functions of features** (z, slope, cos(i), LC) | **Smoothness bias**; picks a scale implied by basis | Rounds off sharp minima/maxima if features aren’t **R\***-tuned |
+| **RF** | **Nonlinear interactions** in features; can use x,y | **Sample-density & coordinate bias** (memorization) | Patchy “salt-and-pepper”; poor extrapolation; learns layout if x,y left in |
+
+**How to reduce these biases**
+
+-   **RF:** remove raw **x,y** (or replace with oriented **s,t**), feed
+    **R\***-smoothed z/slope/cos(i) + explicit pooling/LC drifts → makes
+    it learn **process**, not **positions**.
+-   **GAM:** ensure **R\*** on features so the spline’s smoothness
+    matches the **process scale**.
+-   **KED/OK:** add the **right drifts** (cos(i)@day; distance-to-axis,
+    hill-block, LC\@night) and consider **anisotropic** variograms or
+    rotated coords.
+
+------------------------------------------------------------------------
+
+# What the current results imply (winner vs. information bias)
+
+**Day (T14)**
+
+-   **GAM wins** because it converts **facet + LC** physics into smooth
+    effects at the **correct small scales**. *Bias watch:* will
+    **under-hit** extremes if features are raw/noisy → fix with **R\***.
+-   **RF close**; if x,y are present or features are too fine, it may
+    **overfit micro-texture**. *Mitigation:* drop x,y; use **R\***
+    features.
+-   **KED behind** because the drift/variogram combo **blurs LC edges**;
+    give it **cos(i)+LC** drifts and **R\*** to recover.
+
+**Pre-dawn (T05)**
+
+-   **RF wins** by capturing **pooling×slope×LC** interactions
+    (thresholdy, anisotropic). *Bias watch:* if station layout changes,
+    performance can drift—guard with **spatial CV** and **no x,y**.
+-   **GAM** close but **smooths** the deepest minima unless features
+    reflect the trough’s **short cross-valley scale** → tune **R\***.
+-   **KED/OK** underperform without an explicit **pooling drift** and
+    **anisotropy**; that’s *information bias*: they’re limited by what
+    you tell the mean and by isotropic smoothing.
+
+------------------------------------------------------------------------
+
+# Don’t pick one—blend them (practical recipe)
+
+1.  **Regime-aware mean**
+
+-   Use **GAM** for T14, **RF** for T05 **means** (after **R\*** tuning
+    and with physics features).
+-   Remove **x,y** from RF; use **(s,t)** if you need location signals.
+
+2.  **Residual kriging**
+
+-   Krige residuals from the mean with a **short-range**,
+    **anisotropic** variogram (short across-valley, longer
+    along-valley). This adds local spatial coherence and gives an
+    **uncertainty surface**.
+
+3.  **Stacking with block-CV**
+
+-   Train a simple meta-learner on **out-of-block predictions** (GAM,
+    RF, KED) → get **weights** that vary by time/regime.
+-   Or **per-block weights**: $w_m(b) \propto 1/\text{RMSE}_{m,b}$, then
+    blend predictions inside each block and smooth the weights.
+
+4.  **Agreement/diagnostic maps**
+
+-   Export **disagreement maps** (max–min across models) and
+    **which-model-won** maps per block/time. High disagreement = **low
+    trust** areas.
+
+5.  **Uncertainty**
+
+-   Keep **kriging variance** from residual-OK. For RF, add **quantile
+    forest**; for GAM, use **posterior SE** as a rough guide (not
+    predictive). Report a **combined interval** (mean ± kriging SD ⊕
+    model spread).
+
+------------------------------------------------------------------------
+
+# Bottom line
+
+-   The current leaders (GAM\@day, RF\@night) **deserve their
+    spots**—they align best with the **dominant processes and scales**.
+-   But each model carries **information bias** (smoothness,
+    stationarity, coordinate focus) that will bite under **layout
+    changes**, **regime shifts**, or **extrapolation**.
+-   Replace “winner takes all” with a **process-aware ensemble**:
+    **R\***-tuned features, **regime-specific mean** (GAM/RF),
+    **anisotropic residual kriging**, and **CV-weighted stacking**.
+-   Always publish a **skill map**, a **disagreement map**, and
+    **uncertainty**—that’s how you turn a good score into a **reliable
+    microclimate product**.
+
+## I. Scale analysis — L50/L95 & tuned KED drift (R\*)
+
+This section adds a four-stage pipeline:
+
+1)  **Scale inference**: global variogram → **L50/L95**\
+2)  **Scale-matched predictors**: drift from smoothed **E** at radius
+    **R**\
+3)  **Tune R\*** with **blocked CV** (U-curve)\
+4)  **Diagnostics**: full benchmark + **simple error budget**
+
+> **Why:** Matching the **model scale** to the **process scale** reduces
+> scale-mismatch error and makes gains attributable to *scale* rather
+> than algorithm choice.
+
+
+
+
+### Reading the outputs
+
+-   **Variogram**: dotted sill; dashed **L50/L95** → *scale anchors* for
+    smoothing and block sizes.\
+-   **U-curve**: **R\*** at lowest blocked-CV RMSE; include **R = 0** so
+    the tuner can prefer the raw drift.\
+-   **Benchmark**: compare **OK / KED / GAM / RF / IDW / Voronoi** under
+    the same blocked CV; document block size and R\*.\
+-   **Error budget** (illustrative): OK → KED(base) → KED(R\*) shows
+    gains from drift and from **scale matching**.
+
+> **From concept to practice (pipeline mapping).**
+>
+> 1.  Estimate scales: variogram $\rightarrow$ $\sigma_{\text{proc}}^2$,
+>     $L_{50}$, $L_{95}$.
+> 2.  Couple scales: smooth predictors / choose grids according to
+>     $R_{\text{micro}}$, $R_{\text{local}}$.
+> 3.  Tune $R^*$: block‑CV, U‑curve $\rightarrow$ stable drift radius.
+> 4.  Benchmark methods: compare OK/KED/GAM/RF/Trend/IDW/Voronoi at
+>     $R^*$ (RMSE/MAE/Bias, document block size).
+> 5.  Products: write maps/grids at $R^*$ (and optionally $L_{95}$);
+>     report the error budget.
+
+> **Key takeaway:** *The “smartest” algorithm doesn’t win — the one
+> whose scale matches the process does.*
+
+### I.5 Reading the outputs (tables & plots)
+
+This section explains **how to interpret** the key tables and figures
+produced by the pipeline and how to turn them into a **model choice**
+and a **scale statement**.
+
+#### 1) Variogram & scale table (chunk `scale-Ls`)
+
+-   **What you see:** Empirical variogram points/line, horizontal dotted
+    line at the **(structural) sill**, and vertical dashed lines at
+    **L50** and **L95**.
+
+-   **How to read it:**
+
+    -   **Nugget** (near‑zero intercept) ≈ measurement/microscale noise.
+        A large nugget means close points differ substantially; no
+        method can beat this noise floor.
+    -   **Sill** (plateau) ≈ total variance once pairs are effectively
+        uncorrelated.
+    -   **L50 / L95** ≈ pragmatic correlation distances (half vs. \~all
+        structure spent). They are your **scale anchors** for smoothing
+        radii, neighborhood ranges, and CV block sizes.
+
+-   **Quality checks:**
+
+    -   If no clear plateau: trend/non‑stationarity is likely → consider
+        a drift (elev/sun terms) or a larger domain.
+    -   If L95 is near the domain size: scales are long; block sizes
+        should be generous to avoid leakage.
+    -   If the variogram is noisy at large lags: rely more on **L50**
+        and the U‑curve outcome.
+
+#### 2) U‑curve for tuned drift (chunk `scale-tune`)
+
+-   **What you see:** A line plot of **RMSE vs. smoothing radius R** for
+    KED under **blocked CV**.
+
+-   **Decision rule:** **R\*** is the radius with the **lowest
+    CV‑RMSE**.
+
+-   **What shapes mean:**
+
+    -   **Left side high** (too small R): drift carries microscale noise
+        → overfitting → higher CV error.
+    -   **Right side high** (too large R): drift is oversmoothed → loses
+        meaningful gradient → bias ↑.
+    -   **Flat bottom/plateau:** a range of R values are equivalent →
+        pick the smallest R on the plateau for parsimony.
+
+-   **Edge cases:** If the minimum sits at the **search boundary**,
+    widen the R grid and re‑run; if still at the boundary, the field may
+    be trend‑dominated or the covariate is weak.
+
+#### 3) LBO‑CV metrics table (`res$metrics`)
+
+For each model (Voronoi, IDW, OK, KED, GAM, RF) we report:
+
+-   **RMSE** (primary): square‑error penalty; most sensitive to
+    outliers. **Use this to rank models.**
+-   **MAE**: median‑like robustness; a useful tie‑breaker alongside
+    RMSE.
+-   **Bias** (mean error): systematic over/under‑prediction; prefer
+    \|Bias\| close to 0.
+-   **R²**: variance explained in held‑out blocks; interpret cautiously
+    under spatial CV.
+-   **n**: number of held‑out predictions contributing.
+
+**Choosing a winner:**
+
+1.  Rank by **lowest RMSE** under the **tuned** configuration.
+2.  If RMSEs are within \~5–10%: prefer the model with **lower MAE**,
+    **lower \|Bias\|**, and **more stable block‑wise errors** (see next
+    point).
+3.  If KED (R\*) ≈ OK: the drift adds little; the covariate is weak or
+    the process is long‑range. If GAM/RF wins, the relationship is
+    **nonlinear** or **interaction‑rich**.
+
+#### 4) Block‑wise diagnostics
+
+-   **Block error boxes/scatter:** Look for **narrow distributions**
+    (stable across space). Large spread or outliers indicate
+    location‑dependent performance.
+-   **Stability index (optional):**
+    `CV_rmse = sd(RMSE_block) / mean(RMSE_block)`. Values \< 0.25 are
+    typically stable; \> 0.4 suggests uneven performance.
+-   **Obs vs Pred scatter:** Slope \~1 and tight cloud = good
+    calibration; bowed patterns imply bias or missing drift terms.
+
+#### 5) Error budget table (`make_simple_error_budget`)
+
+Three rows show how error decreases as structure is added and matched:
+
+-   **Baseline (OK):** no drift; sets a structure‑free reference.
+-   **Add drift (KED base):** uses raw covariate; improvement here
+    quantifies **signal in the covariate**.
+-   **Scale‑match drift (KED R\*):** covariate smoothed at **R\***;
+    additional gain isolates **scale alignment**. The `Gain_vs_prev`
+    column is the **incremental improvement** at each step.
+
+> If **KED base** \~ **KED R\***, scale matching adds little (either the
+> raw drift is already at a compatible scale, or the field is
+> insensitive to R). If **OK** \> **KED base**, the covariate may inject
+> noise or the drift term is mis‑specified.
+
+### I.6 Deciding on the *best* model (and documenting the scale)
+
+Use this practical, auditable rule set:
+
+1.  **Primary criterion:** Lowest **CV‑RMSE** under blocked CV.
+2.  **Tie‑breakers:** Lower **MAE**, smaller **\|Bias\|**, and better
+    **block‑stability**.
+3.  **Parsimony:** If multiple models tie, choose the **simplest**
+    (OK/KED \< GAM \< RF).
+4.  **Scale sanity check:** Report **L50/L95** and verify that **R\***
+    lies roughly in \[L50, 1.5·L95\]. If not, discuss why (e.g., strong
+    trend, weak covariate, anisotropy).
+5.  **Reproducibility:** Record the **block size**, **R grid**, winning
+    **R\***, and the full metrics table.
+
+### I.7 Typical patterns & what they imply
+
+-   **High nugget, short L50:** Expect modest absolute accuracy; prefer
+    **coarser R** and conservative models. IDW/OK with tight
+    neighborhoods can perform on par with KED.
+-   **Long L95, clear sill:** Favor larger neighborhoods and smoother
+    drifts; **KED (R\*)** often dominates.
+-   **GAM/RF \> KED:** Nonlinear covariate effects or interactions
+    (e.g., slope×aspect). Still align covariates to **R\*** to avoid
+    noise chasing.
+-   **OK \~ KED:** Elevation (or chosen drift) is weak for this
+    synthetic setup; consider enriching covariates (slope/aspect/TRI) at
+    matched scales.
+
+### I.8 Checklist before you trust the numbers
+
+-   Block size reflects **correlation scale** (≈ L95).
+-   U‑curve scanned a **broad enough R** range; minimum not at boundary.
+-   **R\*** reported along with **L50/L95**.
+-   Winner chosen by **blocked CV** (not random folds).
+-   Bias near zero; residuals pattern‑free in space.
+-   Figures/tables archived for reproducibility.
+
+
+

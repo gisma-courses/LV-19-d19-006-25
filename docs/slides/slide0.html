@@ -120,8 +120,6 @@
       margin-right: 0; 
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-  <script>mermaid.initialize({ startOnLoad: true });</script>
 <meta property="og:title" content="A Scientific Workflow from the applied Point of View – Advanced GIS &amp; RS">
 <meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/slides/images/banner.png">
 <meta property="og:site_name" content="Advanced GIS &amp; RS">
@@ -137,82 +135,108 @@
 </div>
 
 </section>
-<section id="scientific-process-overview" class="slide level2 tightgrid">
+<section id="scientific-process-overview" class="slide level2">
 <h2>Scientific Process – Overview</h2>
-<style>
-:root{
-  --c-primary:#6b7280; --bg-primary:#f3f4f6;
-  --c-q:#2563eb;       --bg-q:#eff6ff;
-  --c-lit:#7c3aed;     --bg-lit:#f5f3ff;
-  --c-methods:#059669; --bg-methods:#ecfdf5;
-  --c-adv:#0ea5e9;     --bg-adv:#f0f9ff;
-  --c-path:#d97706;    --bg-path:#fff7ed;
-  --c-results:#ea580c; --bg-results:#fff1eb;
-  --c-loop:#dc2626;    --bg-loop:#fff1f2;
-}
-
-/* Layout: 2 Spalten, etwas größer */
-.tightgrid .grid{
-  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:.6rem 1.2rem; max-width:1200px; margin:0 auto;
-}
-@media (max-width:1100px){ .tightgrid .grid{ grid-template-columns:1fr; } }
-
-/* Box-Stil: größer + Farbe deutlich sichtbar */
-.tightgrid .box{
-  padding:.4rem 0.6rem; border-radius:14px; border-width:2px; border-style:solid;
-  text-align:center; font-size:1.05rem; line-height:1.2;
-  box-shadow:0 2px 6px rgba(0,0,0,.06);
-  font-weight:600;
-}
-
-/* Farben je Kategorie */
-.primary{ border-color:var(--c-primary); background:var(--bg-primary); }
-.q      { border-color:var(--c-q);       background:var(--bg-q); }
-.lit    { border-color:var(--c-lit);     background:var(--bg-lit); }
-.methods{ border-color:var(--c-methods); background:var(--bg-methods); }
-.adv    { border-color:var(--c-adv);     background:var(--bg-adv); }
-.path   { border-color:var(--c-path);    background:var(--bg-path); }
-.results{ border-color:var(--c-results); background:var(--bg-results); }
-.loop   { border-color:var(--c-loop);    background:var(--bg-loop); }
-
-/* Untertitel etwas größer/kontrast */
-.sub{ display:block; margin-top:.15rem; font-weight:500; font-size:.95rem; color:#374151; }
-</style>
-<div class="grid">
-<div class="box primary fragment">
-<p>Foundations / Background<br>
-<span class="sub">theory, domain context</span></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="fragment" title="Foundations">
+<div class="callout callout-note no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Foundations</strong></p>
 </div>
-<div class="box q fragment">
-<p>Research Question<br>
-<span class="sub">precise, testable, scoped</span></p>
-</div>
-<div class="box lit fragment">
-<p>State of the Art (Literature)<br>
-<span class="sub">knowns, gaps, hypotheses</span></p>
-</div>
-<div class="box methods fragment">
-<p>Necessary Methods &amp; Workflow<br>
-<span class="sub">data, preprocessing, validation, metrics</span></p>
-</div>
-<div class="box adv fragment">
-<p>Advanced Methods<br>
-<span class="sub">models, tuning, ablations</span></p>
-</div>
-<div class="box path fragment">
-<p>Applied Solution Path<br>
-<span class="sub">implementation &amp; assumptions</span></p>
-</div>
-<div class="box results fragment">
-<p>Results<br>
-<span class="sub">findings, uncertainty, limitations</span></p>
-</div>
-<div class="box loop fragment">
-<p>Loopback → Evaluation &amp; Improvement<br>
-<span class="sub">error analysis, robustness checks, iteration</span></p>
+<div class="callout-content">
+<p>theory, domain context</p>
 </div>
 </div>
+</div>
+</div>
+<div class="fragment" title="Research Questions">
+<div class="callout callout-note no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Research Questions</strong></p>
+</div>
+<div class="callout-content">
+<p>precise, testable, scoped</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment" title="State of the Art (Literature)">
+<div class="callout callout-note no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>State of the Art (Literature)</strong></p>
+</div>
+<div class="callout-content">
+<p>knowns, gaps, hypotheses</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment" title="Necessary Methods &amp; Workflow">
+<div class="callout callout-caution no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Necessary Methods &amp; Workflow</strong></p>
+</div>
+<div class="callout-content">
+<p>data, preprocessing, validation, metrics</p>
+</div>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="fragment" title="Advanced Methods">
+<div class="callout callout-caution no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Advanced Methods</strong></p>
+</div>
+<div class="callout-content">
+<p>models, tuning, ablations</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment" title="Applied Solution Path">
+<div class="callout callout-caution no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Applied Solution Path</strong></p>
+</div>
+<div class="callout-content">
+<p>implementation &amp; assumptions</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment" title="Results">
+<div class="callout callout-caution no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Results</strong></p>
+</div>
+<div class="callout-content">
+<p>findings, uncertainty, limitations</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment" title="Loopback, Evaluation &amp; Improvement">
+<div class="callout callout-tip no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Loopback, Evaluation &amp; Improvement</strong></p>
+</div>
+<div class="callout-content">
+<p>error analysis, robustness checks, iteration</p>
+</div>
+</div>
+</div>
+</div>
+</div></div>
 
 
 </section>
