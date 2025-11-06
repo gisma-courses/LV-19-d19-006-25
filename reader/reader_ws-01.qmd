@@ -1,5 +1,6 @@
 ---
 title: "Understanding the Challenge"
+author: "Chris Reudenbach"
 comments: false
 title-block-banner: "../images/gw-sp.png"
 title-block-banner-color: "white"

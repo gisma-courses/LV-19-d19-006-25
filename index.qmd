@@ -1,26 +1,22 @@
 ---
-title: ""
-title-block-banner: images/hinterland-sp.jpg
-title-block-banner-color: black
+title: "Advanced GIS and Remote Sensing"
+subtitle: "Toward an Optimized Rainfall Monitoring Network across the Kellerwald Region"
+author: "Chris Reudenbach"
+#title-block-banner:  images/grubenwiese2-sp.jpg
+title-block-banner-color: white
 format:
   html:
     toc: false
     theme: flatly
   pdf:
-    toc: true
+    toc: false
 open-graph:
   description: "Advanced Introduction TO GIS and Remote Sensing"
-  image: /images/park-4987155_1920.jpg
-twitter-card:
-  description: "Advanced Introduction TO GIS and Remote Sensing"
-  image: /images/park-4987155_1920.jpg
+  image: /images/grubenwiese2-sp.jpg
 comments: false
 ---
 
-
-
-
-## Course Deliverable — Kellerwald Network Design Project
+![](images/grubenwiese2-sp.jpg)
 
 ### Course objective
 

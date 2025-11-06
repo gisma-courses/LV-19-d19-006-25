@@ -1,5 +1,6 @@
 ---
 title: "A Scientific Workflow from the applied Point of View"
+author: "Chris Reudenbach"
 format:
   revealjs:
     theme: [../_extensions/metropolis-theme/metropolis.scss]

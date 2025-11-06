@@ -1,6 +1,6 @@
 ---
-title: "#2. Resources & Pitch Update"
-
+title: "2. Resources & Pitch Update"
+author: "Chris Reudenbach"
 title-block-banner: "../images/gw-sp.png"
 title-block-banner-color: "white"
 format:

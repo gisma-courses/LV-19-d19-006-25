@@ -5,10 +5,10 @@ author: "Chris Reudenbach"
 execute:
   eval: false
   echo: true
-title-slide-attributes:
-  data-background-image: slide1/preview-image-mof.png
+#title-slide-attributes:
+#  data-background-image: slide1/preview-image-mof.png
   #data-background-size: contain
-  data-background-opacity: "0.5"
+#  data-background-opacity: "0.5"
 format:
   revealjs:
     theme: [../_extensions/metropolis-theme/metropolis.scss]
@@ -16,7 +16,7 @@ format:
     toc-depth: 2
     chalkboard: true
     slide-number: true
-    footer: "<gisma 2024>"
+    footer: "<gisma 2025>"
     menu: true
     title-slide: true
     include-in-header: ../includes/back.html

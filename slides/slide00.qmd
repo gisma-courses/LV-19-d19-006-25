@@ -1,7 +1,9 @@
 ---
 title: "Flow — Minimal JS/CSS (no deps)"
+author: "Chris Reudenbach"
 format:
   revealjs:
+    footer: "<gisma 2025>"
     theme: simple
     transition: fade
     # optional, falls Inline-HTML blockiert ist: images statt inline SVG verwenden
