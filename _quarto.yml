@@ -63,21 +63,24 @@ website:
       - text: "---"
       - section: "Lectures"
         contents:
-          - href: reader/cd-1.qmd
-            text: Spatial data classification
-          - href: reader/mc_2025_0.qmd
+          - slides/slide0.qmd
+          - reader/reader_ws-01.qmd
+          - slides/slides_ws-02.qmd
+          # - href: reader/cd-1.qmd
+          #   text: Spatial data classification
+          # - href: reader/mc_2025_0.qmd
           # - reader/swiss_models_one_legend_bluewhite.html 
-          - href:  reader/mc_2025_1.qmd
+          # - href:  reader/mc_2025_1.qmd
           # - href:  reader/mc_2025_microclimate_viewer_merged.qmd
           # - href:  reader/mc_2025_tec.qmd
           # - href:  reader/mc_2025_data.qmd
-            text: Filling the Gaps
+            # text: Filling the Gaps
           # - href: reader/cd2.qmd
           #   text: Data retrieval
           # - href: slides/slides_session1.qmd
           #   text: Spatial Pattern Description
-          - href: slides/slides_session2.qmd
-            text: Landscape Patterns
+          # - href: slides/slides_session2.qmd
+          #   text: Landscape Patterns
           # - href: slides/slides_session3.qmd
           #   text: Landscape Patterns Reloaded
           # - href: slides/slides_session4.qmd
@@ -88,8 +91,9 @@ website:
       - text: "---"
       - section: "Worksheets"
         contents:
-          - slides/slide0.qmd
           - worksheets/ws-01.qmd
+          - worksheets/ws-02.qmd
+
           - worksheets/comingsoon.qmd
           - worksheets/comingsoon.qmd
           - worksheets/comingsoon.qmd

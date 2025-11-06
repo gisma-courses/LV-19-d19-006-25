@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Chris Reudenbach">
+<meta name="author" content="Chris Reudenbach, Philipps University Marburg (PUM)">
 
-<title>K-means Classification – Advanced GIS &amp; RS</title>
+<title>Data Sources – Advanced GIS &amp; RS</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -34,7 +34,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
@@ -66,37 +65,21 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Suchen"
   }
 }</script>
-<style>
-
-      .quarto-title-block .quarto-title-banner h1,
-      .quarto-title-block .quarto-title-banner h2,
-      .quarto-title-block .quarto-title-banner h3,
-      .quarto-title-block .quarto-title-banner h4,
-      .quarto-title-block .quarto-title-banner h5,
-      .quarto-title-block .quarto-title-banner h6
-      {
-        color: black;
-      }
-
-      .quarto-title-block .quarto-title-banner {
-        color: black;
-background-image: url(../reader/images/harz2-sp.jpg);
-background-size: cover;
-      }
-</style>
 
 
 <link rel="stylesheet" href="../css/styles.css">
-<meta property="og:title" content="K-means Classification – Advanced GIS &amp; RS">
-<meta property="og:description" content="Clusteranalyse, Maximum-Likelihood and ML">
-<meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/reader/images/banner.png">
+<meta property="og:title" content="Data Sources – Advanced GIS &amp; RS">
+<meta property="og:description" content="Tutorial: EON Summer School 2025">
+<meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/images/mc4.png">
 <meta property="og:site_name" content="Advanced GIS &amp; RS">
+<meta property="og:image:height" content="433">
+<meta property="og:image:width" content="1037">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -134,42 +117,13 @@ background-size: cover;
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">K-means Classification</h1>
+          <h1 class="quarto-secondary-nav-title">Data Sources</h1>
         </a>     
     </div>
   </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">K-means Classification</h1>
-            <p class="subtitle lead">Clusteranalyse, Maximum-Likelihood and ML</p>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      <div>
-      <div class="quarto-title-meta-heading">Autor:in</div>
-      <div class="quarto-title-meta-contents">
-               <p>Chris Reudenbach </p>
-            </div>
-    </div>
-      
-      <div>
-      <div class="quarto-title-meta-heading">Veröffentlichungsdatum</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">16. Dezember 2021</p>
-      </div>
-    </div>
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="sidebar-menu-container"> 
@@ -237,6 +191,12 @@ background-size: cover;
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+ <span class="menu-text">slides/slide0.qm</span>
+  </li>
+          <li class="sidebar-item">
+ <span class="menu-text">slides/slide0_network-planning.qm</span>
+  </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reader/cd-1.html" class="sidebar-item-text sidebar-link">
@@ -316,20 +276,86 @@ background-size: cover;
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Auf dieser Seite</h2>
+  <ul>
+  <li><a href="#tutorial-data" id="toc-tutorial-data" class="nav-link active" data-scroll-target="#tutorial-data">Tutorial Data</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<div class="quarto-about-solana column-body">
+  <div class="about-entity">
+    <div class="entity-contents">
+      <header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Data Sources</h1>
+<p class="subtitle lead">Tutorial: EON Summer School 2025</p>
+</div>
+<div class="quarto-title-meta">
+    <div>
+    <div class="quarto-title-meta-heading">Autor:in</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Reudenbach, Philipps University Marburg (PUM) </p>
+          </div>
+  </div>
+    <div>
+    <div class="quarto-title-meta-heading">Veröffentlichungsdatum</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">30. August 2025</p>
+    </div>
+  </div>
+  </div>
+</header> <div class="about-links">
+  <a href="https://www.ecowitt.net/home/index?id=149300" class="about-link" rel="" target="">
+    <i class="bi bi-shop-window"></i>
+     <span class="about-link-text">2023 Station — Dead Fir plot (Ecowitt dashboard; login required)</span>
+  </a>
+  <a href="https://www.ecowitt.net/home/index?id=20166" class="about-link" rel="" target="">
+    <i class="bi bi-shop-window"></i>
+     <span class="about-link-text">2023 Station — Clear-cut site (Ecowitt dashboard; login required)</span>
+  </a>
+  <a href="https://github.com/HannaMeyer/EON2023/blob/main/mc_session/data/stations_prelim.zip" class="about-link" rel="" target="">
+    <i class="bi bi-shop-window"></i>
+     <span class="about-link-text">2023 Position data (climate stations)</span>
+  </a>
+  <a href="https://github.com/earth-observation-network/EON2024/blob/main/mc_session/data/raw_positions_2024.csv" class="about-link" rel="" target="">
+    <i class="bi bi-shop-window"></i>
+     <span class="about-link-text">2024 Position data (climate stations)</span>
+  </a>
+  <a href="https://www.ecowitt.net/home/share?authorize=6KX30B" class="about-link" rel="" target="">
+    <i class="bi bi-shop-window"></i>
+     <span class="about-link-text">2024 Station data (Ecowitt share link)</span>
+  </a>
+  <a href="https://www.ecowitt.net/home/index?id=20166" class="about-link" rel="" target="">
+    <i class="bi bi-shop-window"></i>
+     <span class="about-link-text">2025 Station data — Douglas Fir (site 20166; Ecowitt)</span>
+  </a>
+  <a href="https://www.ecowitt.net/home/index?id=20163" class="about-link" rel="" target="">
+    <i class="bi bi-shop-window"></i>
+     <span class="about-link-text">2025 Station data — Douglas Fir (site 20163; Ecowitt)</span>
+  </a>
+  <a href="https://github.com/earth-observation-network/EON2025/blob/main/block4_5/data/Mikroklima_Stationen_EON25.gpkg" class="about-link" rel="" target="">
+    <i class="bi bi-shop-window"></i>
+     <span class="about-link-text">2025 Position data (climate stations)</span>
+  </a>
+</div>
+      <div class="about-contents"><main class="content" id="quarto-document-content">
+
+<section id="tutorial-data" class="level2">
+<h2 data-anchor-id="tutorial-data">Tutorial Data</h2>
+<p>Download the <a href="https://next.hessenbox.de/index.php/s/c749MW3esYBqgTQ">exercises repository</a> (as a ZIP), then unpack it locally. Open the <code>.Rproj</code> in <strong>RStudio</strong> and start with the provided exercises.</p>
 
 
-
-
-
-
-
-
-</main> <!-- /main -->
+</section>
+</main></div>
+    </div>
+    <img src="../images/mc4.png" class="about-image
+  rounded " style="width: 25em;">
+  </div>
+</div>
+ <!-- /main -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   // Jahr einsetzen
@@ -346,13 +372,6 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     

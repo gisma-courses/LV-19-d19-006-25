@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Chris Reudenbach, Philipps University Marburg (PUM)">
 
-<title>Microclimate Sensors &amp; Power-Supply Units – Advanced GIS &amp; RS</title>
+<title>aGIS-RS Ressources – Advanced GIS &amp; RS</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -34,6 +33,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
@@ -65,19 +65,36 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Suchen"
   }
 }</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: black;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: black;
+background: ../images/sard-sp.png;
+      }
+</style>
 
 
 <link rel="stylesheet" href="../css/styles.css">
-<meta property="og:title" content="Microclimate Sensors &amp; Power-Supply Units – Advanced GIS &amp; RS">
-<meta property="og:description" content="Tutorial: EON Summer School 2025">
-<meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/images/froggit_1.jpg">
+<meta property="og:title" content="aGIS-RS Ressources – Advanced GIS &amp; RS">
+<meta property="og:description" content="Supplemental Ressources for advanced GIS/RS">
+<meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/reader/images/banner.png">
 <meta property="og:site_name" content="Advanced GIS &amp; RS">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -115,13 +132,30 @@ ul.task-list li input[type="checkbox"] {
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">Microclimate Sensors &amp; Power-Supply Units</h1>
+          <h1 class="quarto-secondary-nav-title">aGIS-RS Ressources</h1>
         </a>     
     </div>
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title d-none d-lg-block">aGIS-RS Ressources</h1>
+            <p class="subtitle lead">Supplemental Ressources for advanced GIS/RS</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="sidebar-menu-container"> 
@@ -189,6 +223,12 @@ ul.task-list li input[type="checkbox"] {
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+ <span class="menu-text">slides/slide0.qm</span>
+  </li>
+          <li class="sidebar-item">
+ <span class="menu-text">slides/slide0_network-planning.qm</span>
+  </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reader/cd-1.html" class="sidebar-item-text sidebar-link">
@@ -273,93 +313,91 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Auf dieser Seite</h2>
    
   <ul>
-  <li><a href="#features" id="toc-features" class="nav-link active" data-scroll-target="#features">Features</a>
+  <li><a href="#data-readings-and-more" id="toc-data-readings-and-more" class="nav-link active" data-scroll-target="#data-readings-and-more">Data, Readings and more</a>
   <ul class="collapse">
-  <li><a href="#calibration-concept" id="toc-calibration-concept" class="nav-link" data-scroll-target="#calibration-concept">Calibration Concept</a></li>
+  <li><a href="#forest-related-ressources" id="toc-forest-related-ressources" class="nav-link" data-scroll-target="#forest-related-ressources">Forest related ressources</a></li>
+  <li><a href="#common-r-related-software" id="toc-common-r-related-software" class="nav-link" data-scroll-target="#common-r-related-software">Common R related Software</a></li>
+  <li><a href="#specific-packages" id="toc-specific-packages" class="nav-link" data-scroll-target="#specific-packages">Specific packages</a></li>
+  <li><a href="#best-practices-in-programming" id="toc-best-practices-in-programming" class="nav-link" data-scroll-target="#best-practices-in-programming">Best Practices in Programming</a></li>
+  <li><a href="#r-spatial-tutorials" id="toc-r-spatial-tutorials" class="nav-link" data-scroll-target="#r-spatial-tutorials">r-spatial Tutorials</a></li>
+  <li><a href="#textbooks-and-more" id="toc-textbooks-and-more" class="nav-link" data-scroll-target="#textbooks-and-more">Textbooks and more</a></li>
+  </ul></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a>
+  <ul class="collapse">
+  <li><a href="#marburg-open-forest-database" id="toc-marburg-open-forest-database" class="nav-link" data-scroll-target="#marburg-open-forest-database">Marburg open Forest database</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
-<div class="quarto-about-solana column-body">
-  <div class="about-entity">
-    <div class="entity-contents">
-      <header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title d-none d-lg-block">Microclimate Sensors &amp; Power-Supply Units</h1>
-<p class="subtitle lead">Tutorial: EON Summer School 2025</p>
-</div>
-<div class="quarto-title-meta">
-    <div>
-    <div class="quarto-title-meta-heading">Autor:in</div>
-    <div class="quarto-title-meta-contents">
-             <p>Chris Reudenbach, Philipps University Marburg (PUM) </p>
-          </div>
-  </div>
-    <div>
-    <div class="quarto-title-meta-heading">Veröffentlichungsdatum</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">30. August 2025</p>
-    </div>
-  </div>
-  </div>
-</header> <div class="about-links">
-  <a href="https://www.froggit.de/?cat=c40_Raumklima-und-Luftqualitaet---IP-Wettersysteme-dp-serie.html" class="about-link" rel="" target="">
-    <i class="bi bi-shop-window"></i>
-     <span class="about-link-text">Froggit shop [DE]</span>
-  </a>
-  <a href="https://shop.ecowitt.com/collections/wifi-sensor" class="about-link" rel="" target="">
-    <i class="bi bi-shop-window"></i>
-     <span class="about-link-text">Ecowitt shop [US]</span>
-  </a>
-  <a href="https://www.foshk.com/" class="about-link" rel="" target="">
-    <i class="bi bi-building-gear"></i>
-     <span class="about-link-text">Fine Offset</span>
-  </a>
-</div>
-      <div class="about-contents"><div id="image-heading">
-<p>The sensors from <code>Fine Offset</code> are re-branded and partly modified by the resellers. This article deals with sensors from the german re-seller <code>froggit</code> and the US re-seller <code>ecowitt</code>. More precise the <a href="https://www.foshk.com/Wifi_Weather_Station/GW1100.html">DP-/GW SmartHubs</a> WiFi Gateway with temperature, humidity &amp; Pressure which is developed by fine offset. The unique selling point of the LoRa-Wifi gateway is the extraordinarily extensive possibility of connecting radio-bound sensors.</p>
-</div></div>
-    </div>
-    <img src="../images/froggit_1.jpg" class="about-image
-  round " style="height: 10em; width: 10em;">
-  </div>
-</div>
 
-<section id="features" class="level1">
-<h1>Features</h1>
-<p>Currently, depending on the gateway, a maximum of 8 sensors of the following types can be connected at the same time:</p>
+<section id="data-readings-and-more" class="level2">
+<h2 class="anchored" data-anchor-id="data-readings-and-more">Data, Readings and more</h2>
+<section id="forest-related-ressources" class="level3">
+<h3 class="anchored" data-anchor-id="forest-related-ressources">Forest related ressources</h3>
 <ul>
-<li><a href="https://www.froggit.de/media/products/DP150_BDA_EN.pdf">DP150/WN51</a> soil temperature sensors,</li>
-<li><a href="https://www.froggit.de/media/products/DP50_BDA(DE).pdf">DP50/WH31</a> multi channel temperature and humidity sensors</li>
-<li><a href="https://osswww.ecowitt.net/uploads/20220803/WN34S%20WN34L%20Manual.pdf">WN34</a> wire probe thermometer</li>
-<li><a href="https://www.froggit.de/media/products/DP10_BDA_EN.pdf">DP10/WN35</a> leaf wetness sensors</li>
-<li><a href="https://www.froggit.de/media/products/DP100_BDA(DE).pdf">DP100</a> soil moisture sensors;</li>
+<li>del Río, M., Pretzsch, H., Alberdi, I. et al.&nbsp;Characterization of the structure, dynamics, and productivity of mixed-species stands: review and perspectives. Eur J Forest Res 135, 23–49 (2016). <a href="https://doi.org/10.1007/s10342-015-0927-6">https://doi.org/10.1007/s10342-015-0927-6</a>. (VPN necessary)</li>
+<li>Estimating Forest Structure Indices for Evalution of Forest Bird Habitats by an Airborne Laser-Scanner H. Hashimoto, J. Imanishi, A. Hagiwara, Y. Morimoto, K. Kitada <a href="https://www.isprs.org/proceedings/xxxvi/8-w2/HASHIMOTO.pdf">Conference Paper</a></li>
+<li>Barnes, C.; Balzter, H.; Barrett, K.; Eddy, J.; Milner, S.; Suárez, J.C. Individual Tree Crown Delineation from Airborne Laser Scanning for Diseased Larch Forest Stands. Remote Sens. 2017, 9, 231. <a href="https://doi.org/10.3390/rs9030231">https://doi.org/10.3390/rs9030231</a></li>
+<li>Jakubowski, M.K.; Li, W.; Guo, Q.; Kelly, M. Delineating Individual Trees from Lidar Data: A Comparison of Vector- and Raster-based Segmentation Approaches. Remote Sens. 2013, 5, 4163-4186. <a href="https://doi.org/10.3390/rs5094163">https://doi.org/10.3390/rs5094163</a></li>
+<li>Special Issue <a href="https://www.mdpi.com/si/26165">Lidar Remote Sensing of Forest Structure, Biomass and Dynamics</a></li>
 </ul>
-<p>a maximum of 4:</p>
+</section>
+<section id="common-r-related-software" class="level3">
+<h3 class="anchored" data-anchor-id="common-r-related-software">Common R related Software</h3>
 <ul>
-<li><a href="https://www.froggit.de/media/products/DP200_BDA(DE)_1.pdf">DP200/WH41/WH43</a> PM2.5/PM10 sensors</li>
-<li><a href="https://osswww.ecowitt.net/uploads/20220803/WH55%20Manual.pdf">WH45</a> Water leak sensors</li>
+<li><a href="https://cran.r-project.org/">R</a> — the interpreter can be installed on any operation system.</li>
+<li><a href="https://www.rstudio.com/">RStudio</a> — we recommend to use R Studio for (interactive) programming with R.</li>
+<li><a href="https://git-scm.com/downloads">Git</a> environment for your operating system.</li>
+<li>For Windows users with little experience on the command line we recommend <a href="https://desktop.github.com/">GitHub Desktop</a>.</li>
+<li><a href="https://github.com/jannes-m/RQGIS/blob/master/vignettes/install_guide.Rmd">RQGIS installation guide</a>.</li>
 </ul>
-<p>a maximum of 2:</p>
+</section>
+<section id="specific-packages" class="level3">
+<h3 class="anchored" data-anchor-id="specific-packages">Specific packages</h3>
 <ul>
-<li><a href="https://www.froggit.de/product_info.php?info=p483_dp250-5-in-1-co2-pm2-5-pm10-temperatur-luftfeuchte-innenraum-luftqualitaets-funksensor.html">DP250/WH45</a> CO2 / PM2.5 / PM10 / temperatur / moisture sensor</li>
-<li><a href="https://www.froggit.de/media/products/DP60-Manual_EN_.pdf">DP60/WH57</a> Lightning sensor</li>
+<li>Jean-Romain Roussel, David Auty, Nicholas C. Coops, Piotr Tompalski, Tristan R.H. Goodbody, Andrew Sánchez Meador, Jean-François Bourdon, Florian de Boissieu, Alexis Achim, lidR: An R package for analysis of Airborne Laser Scanning (ALS) data, Remote Sensing of Environment, Volume 251, 2020, 112061, ISSN 0034-4257, <a href="https://doi.org/10.1016/j.rse.2020.112061">https://doi.org/10.1016/j.rse.2020.112061</a>.</li>
+<li><a href="https://jean-romain.github.io/lidRbook/">The lidR package book</a> Perfect manual for most <code>lidr</code> related stuff</li>
 </ul>
-<p>For the basic weather parameters as rain, wind vector insolation temperature and humidity one of the compatible outdoor basis units as the <a href="https://www.froggit.de/media/products/DP1100_BDA_DE_.pdf">DP1100</a> or <a href="https://www.froggit.de/media/products/WH3000_BDA_Ausseneinheit_DE_.pdf">WH3000</a></p>
-<section id="calibration-concept" class="level2">
-<h2 data-anchor-id="calibration-concept">Calibration Concept</h2>
-<p>The low budget sensors are usually lacking of a stable measurement quality. To obtain reliable micro climate data a two step calibration process is suggested.</p>
-<ol type="1">
-<li>The measurements of all sensors (preferably in a climate chamber) will be statistically analysed to identify sensor which produce systematic and significant outliers.</li>
-<li>The sensors are calibrated against an operational running high price reference station in the field.</li>
-</ol>
-
+</section>
+<section id="best-practices-in-programming" class="level3">
+<h3 class="anchored" data-anchor-id="best-practices-in-programming">Best Practices in Programming</h3>
+<ul>
+<li><a href="https://www.r-bloggers.com/r-code-best-practices/">r-bloggers</a> best practices introduction</li>
+<li><a href="https://owi.usgs.gov/blog/intro-best-practices/">USGS</a> best practices introduction</li>
+<li><a href="https://jdblischak.github.io/workflowr/">workflowR</a></li>
+<li><a href="https://usethis.r-lib.org/">usethis</a></li>
+<li><a href="http://132.72.155.230:3838/r/index.html">Michael Dorman</a> Introduction to Spatial Data Programming with R gives a lot of support for all kind of spatio temporal programming issues</li>
+<li><a href="https://rspatial.org/">Robert Hijmans</a> Spatial Data Science with R website provides a valuable insight in the <code>raster</code> and <code>terra</code> package with a lot of tutorials.</li>
+<li><a href="https://csgillespie.github.io/efficientR/">Colin Gillespie</a> Efficient R programming If you want to know it really have allook at this book.</li>
+</ul>
+</section>
+<section id="r-spatial-tutorials" class="level3">
+<h3 class="anchored" data-anchor-id="r-spatial-tutorials">r-spatial Tutorials</h3>
+<ul>
+<li><a href="https://geocompr.robinlovelace.net/">Geocomputation with R</a> <strong>HIGHLY Recommended</strong> From the authors trio Lovelace, Nowosad &amp; Muenchow</li>
+</ul>
+</section>
+<section id="textbooks-and-more" class="level3">
+<h3 class="anchored" data-anchor-id="textbooks-and-more">Textbooks and more</h3>
+<ul>
+<li><a href="http://www.charim.net/sites/default/files/handbook/datamanagement/3/3.3/The%20core%20of%20GIScience%2C%20a%20system%20-based%20approach.pdf">The core of GIScience</a> <a href="ftp://ftp.itc.nl/pub/ders/CoreBook2014_metadata.pdf">Download</a> The editors Tolpekin &amp; Stein 2012 are providing an excellent insight into GI concepts.</li>
+</ul>
+</section>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<section id="marburg-open-forest-database" class="level3">
+<h3 class="anchored" data-anchor-id="marburg-open-forest-database">Marburg open Forest database</h3>
+<ul>
+<li>The <a href="https://github.com/MarburgOpenForest/MOFGeoDB">MOF public data</a> of Marburg Open Forest is a comprehensive data base for validation and testing purposes</li>
+<li>The data server for <a href="http://gofile.me/3Z8AJ/c6m5CfvWZ">MOF data</a>. Please ignore insecure site warning.</li>
+</ul>
 
 
 </section>
@@ -382,6 +420,13 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     

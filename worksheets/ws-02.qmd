@@ -1,15 +1,111 @@
 ---
-title: "Worksheet 1: Warm Up Exercises"
+title: "#2. Resources & Pitch Update"
 
-title-block-banner: ../images/splash_L03.png
-title-block-banner-color: black
-
+title-block-banner: "../images/gw-sp.png"
+title-block-banner-color: "white"
+format:
+  html:
+    toc: true
+    theme: flatly
+  pdf:
+    toc: true
 ---
 
-## Exercises WS 1
+## Assesment
 
-1. Read the data from `exdata/lc_small.tif` and visualize it. What is the location of the data? What are the extent of the data and its spatial resolution? How many categories it contains?
-1. Calculate **Aggregation Index** (AI) for the raster. Interpret the results.
-1. Calculate **Total Edge** (TE) for the raster. Interpret the results. Next, read the data from `exdata/lc_small2.tif, calculate AI and TE for this raster, and compare the results with the previous raster.
-1. **Calculate Total Edge** (TE) for the raster, but this time in a *moving window* of 9 by 9 cells. Visualize the results.
-1. (Extra) Using the `read_sf()` function from the **sf** package, read the `exdata/points.gpkg` file. Next, calculate SHDI and AI of an area of 3000 meters from each sampling point (see the `sample_lsm()` function).
+## Purpose
+Your network concept should become **practically feasible**.  
+To achieve this, identify the **data, methods, infrastructure, and validation steps** required — including **gaps and how to resolve them**.
+
+
+
+## 1) Topic & Goal (1–2 Sentences)
+State:
+- The **focus** of your network design (planning logic, sub-area, or process emphasis).
+- What you aim to achieve with **≤ 20 stations**.
+
+*Example:*  
+"We design a physiographically stratified precipitation network for the northern Burgwald, aiming to represent elevation and canopy gradients while maintaining operational feasibility with 14–18 permanent stations."
+
+
+
+## 2) Resource Plan (Required)
+
+Fill out the following table in Markdown:
+
+| Resource / Dataset / Tool | Source (Link / DOI) | Spatial / Temporal Resolution & Format | Access Status (available / open / request / uncertain) | Processing / Method Needed | Validation Anchor (Double / Open–Wood / P–Q) | Gap / Risk (permits, cost, reliability) | Mitigation / Next Step |
+|---|---|---|---|---|---|---|---|
+|  |  |  |  |  |  |  |  |
+|  |  |  |  |  |  |  |  |
+
+*Goal:* make visible what is **available**, what is **missing**, and how you will **obtain or substitute** missing items.
+
+
+
+## 3) Method Components (max. 1 Page, Bullet Points)
+
+Choose **2–3 core methods**. For each method, describe:
+
+- **Purpose** (what question does it answer?)
+- **Required Inputs** (refer to Resource Plan)
+- **Output / Metric** (e.g., hot-spot map, bias estimate, number of P–Q pairs)
+- **Minimal Workflow** (1–4 steps)
+
+*Example (short form):*
+- **Radar–Gauge Merge (Bias Correction)**
+  - Inputs: DWD RADOLAN RW, open-field reference gauge
+  - Output: corrected 5–60 min rainfall fields
+  - Steps: Align grids → compute residuals → apply correction factor → validate via double-station
+
+
+
+## 4) Minimal Workflow (6–10 Numbered Steps)
+
+Describe your *implementation pipeline*, from data to final pitch.
+
+*Example:*
+1. Collect DEM + forest structure + baseline gauges
+2. Identify physiographic strata (slope / aspect / canopy)
+3. Generate candidate station zones
+4. Assign roles (Backbone / Infill / P–Q / Open–Wood / Reference / Event-Scout)
+5. Prioritize stations A/B
+6. Define three validation anchors
+7. Produce map + station table
+8. Check feasibility (access, power, telemetry)
+9. Prepare pitch slide + justification paragraph
+
+
+
+## 5) Literature (3–5 Sources + One Justification Paragraph)
+
+- Use **primary sources** (peer-reviewed papers, technical reports, observatory design descriptions).
+- Include DOI or direct link.
+- Write **one paragraph** explaining how these sources **support your resource & method decisions**.
+
+*Example (structure):*
+> We include an open-field vs. forest-understory measurement pair because Findus  & Petterson (1998, DOI: 10.1029/98WR01336) demonstrate that interception losses vary strongly with LAI in humid, temperate forests comparable to the Burgwald. This supports the choice of at least one Open–Wood validation anchor and guides expected signal magnitude.
+
+
+
+## 6) Pitch Update (1 Page, PDF)
+
+Your pitch page must include:
+- **Map or diagram** of your station network
+- **Station list (≤ 20)** with **role** (Backbone / Infill / Event-Scout / Reference / P–Q) and **priority** (A = essential, B = optional)
+- **Three evaluation metrics**, e.g.:
+  - Physiographic coverage
+  - Variance / uncertainty reduction
+  - Number of functional P–Q pairs
+  - Interception contrast (Open–Wood)
+  - Accessibility / maintenance feasibility
+
+Also include **1–2 sentences linking back to the Resource Plan** showing feasibility and known limitations.
+
+
+
+## Submission Format
+Submit **one document containing:
+- Sections **1–5**
+- Plus a **PDF** for the **Pitch Update (Section 6)**
+
+

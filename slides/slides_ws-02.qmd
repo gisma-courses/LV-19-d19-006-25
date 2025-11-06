@@ -1,0 +1,127 @@
+---
+title: "Burgwald Rain Gauge Network Design"
+subtitle: "Focussing the Concept"
+author: "Chris Reudenbach"
+execute:
+  eval: false
+  echo: true
+title-slide-attributes:
+  data-background-image: slide1/preview-image-mof.png
+  #data-background-size: contain
+  data-background-opacity: "0.5"
+format:
+  revealjs:
+    theme: [../_extensions/metropolis-theme/metropolis.scss]
+    toc: false
+    toc-depth: 2
+    chalkboard: true
+    slide-number: true
+    footer: "<gisma 2024>"
+    menu: true
+    title-slide: true
+lightbox: true
+spotlight:
+      useAsPointer: true
+      size: 5
+---
+
+## Session Overview (Today)
+
+| Block | Activity | Outcome |
+|------|----------|---------|
+| **1** | Short pitches of initial concepts | Shared understanding of starting points |
+| **2** | Cluster rotation: Planning Logics | Each group selects a guiding siting strategy |
+| **3** | Design Sprint: Build the Network | 20 stations + roles + priority A/B defined |
+| **4** | Group Pitches + Focused Feedback | Clarity of reasoning and justification improved |
+| Homework | Specify required data, methods, station roles, and validation anchors; support **your specific** key design choice with a literature source. | Feasible and justified network concept |
+
+---
+
+
+## Context
+- Mixed forest upland catchment (~200 km²)
+- Strong spatial variability in rainfall
+- Goal: **build a functional & quality-assured network** (≤ 20 stations)
+
+---
+
+## **Kickoff: Initial Concepts – Short Pitch (3 min)**
+
+Surface the **starting assumptions** of each group, so that the later design steps
+(Planning Logic → Network Design → Validation) rest on **clearly stated intentions**.
+
+### **Your Pitch (3 Minutes)**
+Answer **exactly these four points** — **no map detail required**, no 20-station list yet:
+
+1) **Focus / Question**  
+   → What spatial or hydrological phenomenon do you want the network to reveal?  
+   *(e.g., canopy interception? storm cells? elevation gradient? runoff response?)*
+
+2) **Working Hypothesis**  
+   One sentence about how rainfall **varies** in the Burgwald.  
+   *(e.g., “We expect stronger variability along elevation + aspect transitions.”)*
+
+3) **Draft Region(s) of Interest**  
+   Point to **zones**, not specific coordinates.  
+   *(e.g., ridge zone / valley corridors / spruce–beech transition belts.)*
+
+4) **Known Constraint / Risk**  
+   A practical or conceptual **uncertainty** you already see.  
+   *(e.g., access, canopy closure, radar bias, limited open-field space.)*
+
+### **Time**
+- **5 min** pitch per group
+- **3 min** *clarifying!!* questions
+- **No critique yet** — goal is *shared orientation*, not evaluation.
+
+
+---
+
+## Planning Logics (Siting Strategies)
+1. Physiographic coverage (elevation / aspect / forest types)
+2. Information gain (uncertainty reduction / hot-spot infill)
+3. Hydrological coupling (rain → runoff coherence)
+4. Hybrid (forest interception + temporary event scouts + radar integration)
+
+---
+
+## Cluster Exercise – Planning Logic
+**Your task:**
+- Define **3 siting criteria**
+- Describe **2 typical location signatures**
+- Identify **1 risk**
+- Mark approximate areas on the map
+
+*Template: Planning Logic Worksheet (Etherpad)*
+
+---
+
+## Design Sprint – Build the Network
+**Goal:** Create a 20-station design.
+
+Assign roles:
+- Backbone (core representation)
+- Infill / Hot-spot reduction
+- P–Q pair (rain → runoff)
+- Forest vs. open-field (interception)
+- Event scout (temporary, mobile)
+- Reference (long-term bias control)
+
+*Template: Network & Roles (OnlyOffice)*
+
+---
+
+## Validation Strategy (Quality Control)
+**Three anchor points:**
+1. **Co-located double station** → measurement quality check
+2. **Open-field vs. forest under-canopy pair** → interception effect
+3. **P–Q pair** → hydrological response testing
+
+*Template: Validation Anchors (.docx)*
+
+---
+
+## Between Sessions
+- Select **one reference** supporting a key design decision
+- Write **one justification paragraph**
+- Mark **three validation anchors** on your network map
