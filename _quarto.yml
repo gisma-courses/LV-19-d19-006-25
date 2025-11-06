@@ -3,6 +3,9 @@ project:
   output-dir: docs/
   resources:
     - images/**
+  render:
+    - "*.qmd"        # render nur QMD im Projektwurzel/Unterordnern …
+    - "!drafts/**"   # … aber nichts im Ordner drafts/
 resource-path:
   - images
   - .
@@ -39,11 +42,13 @@ website:
         href: "https://ilias.uni-marburg.de/ilias.php?baseClass=ilrepositorygui&ref_id=4407827"
 
   sidebar:
+    collapse: section   # globales Standardverhalten
     pinned: true
     align: center
     style: docked
     contents:
       - section: "GIS Basics"
+        collapse: true      
         contents:
           - href: https://gisma--courses-github-io.translate.goog/geoinfo-basis-qgis//unit01/unit01-01_reader_geo_raum.html?_x_tr_sl=de&_x_tr_tl=en&_x_tr_hl=de&_x_tr_pto=wapp
             text: Space needs a scope
@@ -52,6 +57,7 @@ website:
 
       - text: "---"
       - section: "R-Spatial Basics"
+        collapse: true
         contents:
           - href: https://gisma-courses.github.io/LV-19-d19-006/morea/geocomputation-with-r/reading-screencast-spatial-r-gis-2.html
             text: Some Pros & Cons for R-Spatial

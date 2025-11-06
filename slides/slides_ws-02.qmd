@@ -19,6 +19,8 @@ format:
     footer: "<gisma 2024>"
     menu: true
     title-slide: true
+    include-in-header: ../includes/back.html
+
 lightbox: true
 spotlight:
       useAsPointer: true
@@ -92,7 +94,7 @@ Answer **exactly these four points** — **no map detail required**, no 20-stati
 - Identify **1 risk**
 - Mark approximate areas on the map
 
-*Template: Planning Logic Worksheet (Etherpad)*
+*Template: Planning Logic Worksheet (Etherpad Ilias)*
 
 ---
 
@@ -107,7 +109,7 @@ Assign roles:
 - Event scout (temporary, mobile)
 - Reference (long-term bias control)
 
-*Template: Network & Roles (OnlyOffice)*
+*Template: Network & Roles (OnlyOffice Ilias)*
 
 ---
 
@@ -117,11 +119,5 @@ Assign roles:
 2. **Open-field vs. forest under-canopy pair** → interception effect
 3. **P–Q pair** → hydrological response testing
 
-*Template: Validation Anchors (.docx)*
+*Template: Validation Anchors (OnlyOffice Ilias)*
 
----
-
-## Between Sessions
-- Select **one reference** supporting a key design decision
-- Write **one justification paragraph**
-- Mark **three validation anchors** on your network map

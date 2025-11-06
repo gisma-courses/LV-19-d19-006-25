@@ -6,7 +6,8 @@ format:
   html:
     toc: false
     theme: flatly
-
+  pdf:
+    toc: true
 open-graph:
   description: "Advanced Introduction TO GIS and Remote Sensing"
   image: /images/park-4987155_1920.jpg

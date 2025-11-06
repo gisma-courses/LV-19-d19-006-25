@@ -1,0 +1,560 @@
+---
+title: "Change Detection - Sentinel"
+draft: true
+#author: Chris Reudenbach
+#date: '2024-12-06'
+bibliography: references.bib
+subtitle: "Clusteranalysis, Maximum-Likelihood and ML"
+title-block-banner: images/hinterland-sp.jpg
+title-block-banner-color: green
+editor:
+  markdown:
+    wrap: sentence
+---
+
+```{r cdse-auth, include=FALSE}
+#| message: false
+#| warning: false
+# Gemeinsame Flags/Objekte
+eval_cdse   <- FALSE
+OAuthClient <- NULL
+
+# Einmalig .Renviron nachladen, falls Session schon läuft:
+try(readRenviron("~/.Renviron"), silent = TRUE)
+
+id     <- Sys.getenv("CDSE_CLIENT_ID")
+secret <- Sys.getenv("CDSE_CLIENT_SECRET")
+off    <- Sys.getenv("CDSE_OFF")
+
+if (!nzchar(off) && nzchar(id) && nzchar(secret)) {
+  if (!requireNamespace("CDSE", quietly = TRUE)) {
+    stop("Paket 'CDSE' ist nicht installiert (oder nicht geladen).")
+  }
+  OAuthClient <- tryCatch(
+    CDSE::GetOAuthClient(id = id, secret = secret),
+    error = function(e) { message("CDSE OAuth fehlgeschlagen: ", e$message); NULL }
+  )
+  eval_cdse <- !is.null(OAuthClient)
+} else {
+  message("CDSE deaktiviert (CDSE_OFF gesetzt) oder fehlende Credentials.")
+}
+```
+
+
+```{r setup, include=FALSE}
+# Globale Chunk-Defaults – vermeidet doppelte Optionen in einzelnen Chunks
+knitr::opts_chunk$set(
+  echo   = TRUE,
+  message= FALSE,
+  warning= FALSE
+)
+
+
+```
+
+In the geosciences, remote sensing is the only measurement technique that allows complete coverage of large spatial areas, up to the entire Earth's surface.
+Its successful application requires both the use of existing methods and the adaptation and development of new ones.
+
+## Introduction
+
+In geospatial or environmental informatics, the detection of changes to the Earth's surface using satellite, aircraft or drone images, known as change detection analysis, is an important application.
+These results are often linked to biophysical, geophysical or anthropogenic processes in order to gain both a deeper understanding and the possibility of developing predictive models.
+Methods of image analysis are of outstanding importance for generating spatial information from the underlying processes.
+Since both the quantity and quality of this "image data" are playing an increasingly important role in environmental monitoring and modeling, it is becoming more and more necessary to integrate "big data" concepts into the analyses.
+This means performing reproducible analyses with large amounts of data (>> 1 TB). This is essential for both scientific knowledge gain and future societal challenges.
+
+As already explained in the introduction, we start with a scalable change detection analysis of forest damage in low mountain ranges, which is a typical application-oriented task.
+Scalable means that we limit the analysis to a manageable area, the Nordwestharz, and to two time slices.
+However, the resulting algorithm can be applied to different or larger areas and to more time slices.
+
+## Goals
+
+This example shows how change detection methods can be applied conventionally to individual satellite scenes and in a modern way in cloud computing environments using [`rstac`](https://cran.r-project.org/package=rstac) [@rstac] and [`gdalcubes`](https://cran.r-project.org/package=gdalcubes) [@gdalcubes] or [`openeo`](https://cran.r-project.org/package=openeo) [@openeo]. In addition to classical supervised classification methods such as Maximum Likelihood and Random Forest, the [`bfast`](https://cran.r-project.org/package=bfast) [@bfast] is used, which includes an unsupervised method for detecting structural breaks in vegetation index time series.
+
+Other packages used in this tutorial include [`stars`](https://cran.r-project.org/package=stars) [@stars], [`tmap`](https://cran.r-project.org/package=tmap) [@tmap] and [`mapview`](https://cran.r-project.org/package=mapview) [@mapview] for creating interactive maps, [`sf`](https://cran.r-project.org/package=sf) [@sf] for processing vector data, and [`colorspace`](https://cran.r-project.org/package=colorspace) [@colorspace] for visualizations with accessible colors.
+
+This study employs a variety of approaches to time series and difference analyses with different indices, using the Harz Mountains as a case study for the period between 2018 and 2023. The objective is to analyze or classify the data.
+
+## Information from satellite imagery
+
+Unprocessed satellite images are not necessarily informative.
+While our eyes can interpret a true-color image relatively conclusively and intuitively, a reliable and reproducible, i.e. scientifically sound, interpretation requires other approaches.
+A major advantage of typical image analysis methods over visual interpretation is the derivation of additional, so-called *invisible* information.
+
+To obtain useful or meaningful information, e.g. about the land cover in an area, we have to analyze the data according to the question at hand. Probably the best known and most widely used approach is the supervised classification of image data into categories of interest.
+
+In this unit, you will learn about the classification of satellite image data. This includes both data acquisition on the Copernicus portal and the various steps from digitising the training data to evaluating the quality of the classifications.
+
+We will cover the following topics:
+
+* [Theoretical principles](#theoretical-principles)
+* [Case Study Harz Mountains](#change-detection-case-study-harz-mountains)
+
+  * [Preparing the work environment](#setting-up-the-work-environment)
+  * [Retrieving Sentinel and auxilliary data](#step-1-retrieving-sentinel-data)
+  * [Unsupervised classification](#step2-overview--unsupervised-classification) (k-means clustering)
+  * [Recording training areas](#step-3---generating-training-data)
+  * [Supervised classification](#step-4---supervised-classification) (Random Forest, Maximum Likelihood)
+  * [Estimating model quality](#step-5-estimation-model-quality)
+
+## Theoretical principles
+
+Please note that all types of classification usually require extensive data pre-processing.
+The focus is then on model building and quality assessment, which can be seen as the technical basis for classification, in order to finally derive the interpretation of the results in terms of content in the data post-processing.
+
+We will go through this process step by step.
+
+### Unsupervised Classification - k-means clustering
+
+Probably the best-known unsupervised classification technique is K-means clustering, which is also referred to as the *"simplest machine learning algorithm"*.
+
+K-means clustering is a technique commonly used in satellite image classification to group pixels with similar spectral characteristics. Treating each pixel as an observation, the algorithm assigns pixels to clusters based on their spectral values, with each cluster having a mean (or centroid) that represents its central spectral signature. This results in the segmentation of the image into distinct regions (similar to Voronoi cells) corresponding to land cover types, such as water, vegetation or urban areas, facilitating further analysis. It is often used to obtain an initial overview of whether the raster data can be sufficiently separated in feature space.
+
+<a title="Chire, CC BY-SA 4.0 &lt;https://creativecommons.org/licenses/by-sa/4.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:K-means_convergence.gif"><img width="512" alt="K-means convergence" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/K-means_convergence.gif/512px-K-means_convergence.gif?20170530143526"></a>
+
+Figure: Convergence of k-means clustering from an unfavorable starting position (two initial cluster centers are fairly close). [Chire](https://commons.wikimedia.org/wiki/User:Chire) [CC BY-SA 4.0] via wikipedia.org
+
+### Supervised classification
+
+In supervised land cover classification, a model is derived from a limited amount of training land cover data that predicts land cover for the entire data set.
+The land cover types are defined *a priori*, and the model attempts to predict these types based on the similarity between the characteristics of the training data and the rest of the data set.
+
+![](images/supervised_classification.jpg)
+
+Classifiers (e.g. the maximum likelihood classifier) or machine learning algorithms (such as Random Forest) use the training data to determine descriptive models that represent statistical signatures, classification trees or other functions.
+Within the limits of the quality of the training data, such models are suitable and representative for making predictions for areas if the predictors from the model are available for the entire area.
+
+We now want to predict the spatial characteristics of clear-felling/no forest using a maximum likelihood classification and random forest, and apply standard methods of random validation and model quality assessment.
+
+The goal is to separate clearcuts from all other pixels and to quantify the differences between 2018 and 2022.
+
+#### Maximum Likelihood Classification
+
+Maximum likelihood classification assumes that the distribution of data for each class and in each channel is normally distributed.
+Under this assumption, the probability that a particular pixel belongs to a particular class is calculated.
+Since the probabilities can also be specified as a threshold, without this restriction, *all* pixels are assigned regardless of how unlikely they are.
+Each pixel is assigned to the class that has the highest probability (i.e., the maximum probability).
+
+![](images/max.png)
+
+#### Random forest
+
+Random forests can be used for both regression and classification tasks, with the latter being particularly relevant in environmental remote sensing.
+Like any machine learning method, the random forest model learns to recognize patterns and structures in the data itself.
+Since the random forest algorithm also requires training data, it is also a supervised learning method.
+
+![](images/Random_forest_diagram_complete.png)
+
+Figure: Simplified illustration of data classification by random forest during training.
+Venkata Jagannath [CC BY-SA 4.0] via wikipedia.org
+
+From a pragmatic point of view, classification tasks generally require the following steps:
+
+* Creation of a comprehensive input data set that contains one or more raster layers.
+* Selection of training areas, i.e. subsets of the input data set for which the land cover type is known to the remote sensing expert. Knowledge of the land cover can be obtained, for example, from one's own or third-party in situ observations, management information or other remote sensing products (e.g. high-resolution aerial photographs).
+* Training a model using the training sites. For validation purposes, the training sites are often subdivided into one or more test and training sites to evaluate the performance of the model algorithm.
+* Applying the trained model to the entire data set, i.e. predicting the land cover type based on the similarity of the data at each site to the class characteristics of the training data set.
+
+## Change detection case study: Harz Mountains
+
+Since 2018, there has been a notable increase in the incidence of extensive forest dieback in the Harz Mountains. During this period, the combination of repeated years of drought, extreme heat waves and the resulting weakening of the spruce trees led to an exponential increase in the population of bark beetles. The combined impact of these factors resulted in the extensive mortality of spruce stands across an area of approximately 30,000 hectares over a period of approximately five to six years. This equates to approximately 35% of the total forest area of the Harz.
+
+It is important to note that the prolonged drought in 2018, 2019 and 2020, which is considered one of the most severe in the region, has significantly exacerbated the damage in the Harz Mountains.
+
+In this context, a time series analysis or a change detection analysis is an essential technique for quantifying and localising the damage and characterising its dynamics.
+
+### Setting up the work environment
+
+```{r setup-packages}
+# ---- 0 Project Setup ----
+require("pacman")
+# Achtung: OpenStreetMap nicht laden (zieht rJava)
+pacman::p_load(
+  mapview, mapedit, tmap, tmaptools,
+  raster, terra, stars, gdalcubes, sf,
+  webshot, dplyr, downloader, tidyverse,
+  RStoolbox, rprojroot, exactextractr,
+  randomForest, ranger, e1071, caret,
+  link2GI, rstac, colorspace, ows4R, httr
+)
+
+root_folder <- rprojroot::find_rstudio_root_file()
+
+ndvi.col <- function(n) rev(colorspace::sequential_hcl(n, "Green-Yellow"))
+ano.col  <- colorspace::diverging_hcl(7, palette = "Red-Green",  register = "rg")
+```
+
+Please add any missing or defective packages in the above setup script (if error messages occur). On the basis of the available Sentinel data, the first step should be to identify suitable data sets for a surface classification.
+
+### Defining the Area of Interest
+
+```{r geometries}
+# download training data (also used for extent)
+utils::download.file(
+  url      = "https://github.com/gisma/gismaData/raw/master/geoinfo/train_areas_2019_2020.gpkg",
+  destfile = file.path(root_folder, "data/train_areas_2019_2020.gpkg"),
+  mode     = "wb"
+)
+train_areas_2019_2020 <- sf::st_read(file.path(root_folder, "data/train_areas_2019_2020.gpkg"), quiet = TRUE)
+bbox <- sf::st_bbox(train_areas_2019_2020)
+
+# CORINE forest mask (optional step, cached)
+if (!file.exists(file.path(root_folder,"data/corine_harz.tif"))){
+  corine <- terra::rast(file.path(root_folder,"data/U2018_CLC2018_V2020_20u1.tif"))
+  corine <- terra::project(corine,"EPSG:4326")
+  corine_harz <- terra::crop(corine, terra::vect(train_areas_2019_2020))
+  terra::writeRaster(corine_harz, file.path(root_folder,"data/corine_harz.tif"), overwrite=TRUE)
+}
+corine_harz <- terra::rast(file.path(root_folder,"data/corine_harz.tif"))
+
+# Forest mask codes: 22..25 -> 1, else 0
+rclmat <- matrix(c(-100,22,0, 22,26,1, 26,500,0), ncol = 3, byrow = TRUE)
+harz_forest_mask <- terra::classify(corine_harz, rclmat, include.lowest = TRUE)
+
+# quick view (optional)
+# mapview::mapview(corine_harz) + mapview::mapview(train_areas_2019_2020, zcol="class") + harz_forest_mask
+```
+
+## Step 1: Retrieving Sentinel data
+
+### Alternative 1: Using `gdalcubes` with STAC
+
+#### STAC & earth-search
+
+```{r stac2}
+# search the data stack for the given period and area
+s <- rstac::stac("https://earth-search.aws.element84.com/v0")
+
+items <- s |>
+  rstac::stac_search(
+    collections = "sentinel-s2-l2a-cogs",
+    bbox       = c(bbox["xmin"], bbox["ymin"], bbox["xmax"], bbox["ymax"]),
+    datetime   = "2018-06-01/2022-09-01",
+    limit      = 600
+  ) |>
+  rstac::post_request()
+
+items
+```
+
+```{r add_cube_assets}
+s2_collection <- gdalcubes::stac_image_collection(
+  items$features,
+  asset_names = c("B01","B02","B03","B04","B05","B06","B07","B08","B8A","B09","B11","SCL"),
+  property_filter = function(x) { x[["eo:cloud_cover"]] < 5 }
+)
+s2_collection
+```
+
+```{r create_cubeview}
+bbox_utm <- sf::st_as_sfc(bbox) |> sf::st_transform("EPSG:32632") |> sf::st_bbox()
+v <- gdalcubes::cube_view(
+  srs = "EPSG:32632",
+  extent = list(
+    t0 = "2018-06", t1 = "2022-09",
+    left = bbox_utm["xmin"] - 10, right = bbox_utm["xmax"] + 10,
+    bottom = bbox_utm["ymin"] - 10, top  = bbox_utm["ymax"] + 10
+  ),
+  dx = 10, dy = 10, dt = "P1M",
+  aggregation = "median", resampling = "bilinear"
+)
+v
+```
+
+```{r get_data_write_ncdf, eval=FALSE}
+# Only when you actually want to materialize the cube
+s2_mask <- gdalcubes::image_mask("SCL", values = c(3,8,9))
+gdalcubes::gdalcubes_options(parallel = 16, ncdf_compression_level = 5)
+gdalcubes::raster_cube(s2_collection, v, mask = s2_mask) |>
+  gdalcubes::write_ncdf(file.path(root_folder,"data/harz_2018_2022_all.nc"), overwrite = TRUE)
+```
+
+```{r forest_kndvi, eval=FALSE}
+# Requires the netCDF produced above
+gdalcubes::ncdf_cube(file.path(root_folder,"data/harz_2018_2022_all.nc")) |>
+  gdalcubes::apply_pixel("tanh(((B08-B04)/(B08+B04))^2)", "kNDVI") |>
+  gdalcubes::reduce_time("mean(kNDVI)") |>
+  plot(key.pos = 1, col = ndvi.col(11), nbreaks = 12)
+```
+
+### Alternative 2: Copernicus Data Space Ecosystem (CDSE)
+
+> **Hinweis:** In CI werden diese Chunks ausgeschaltet (`eval=eval_cdse`), damit keine Secrets nötig sind.
+
+```{r cdse, eval=eval_cdse}
+
+library(CDSE); library(purrr); library(tibble)
+
+safe_get <- function() {
+  tryCatch(CDSE::GetCollections(as_data_frame = FALSE), error = function(e) NULL)
+}
+
+collections_raw <- safe_get()
+if (is.null(collections_raw)) {
+  message("CDSE GetCollections fehlgeschlagen – überspringe Anzeige.")
+} else {
+  keys <- c("id","title","description","license","stac_version","sci:doi","keywords","type")
+  collections <- map(collections_raw, function(x) {
+    vals <- lapply(keys, function(k) if (!is.null(x[[k]])) x[[k]] else NA)
+    names(vals) <- keys
+    as_tibble(vals)
+  }) |> list_rbind()
+  collections
+}
+```
+
+```{r cdse-download, eval=eval_cdse}
+images <- CDSE::SearchCatalog(
+  bbox = sf::st_bbox(train_areas_2019_2020),
+  from = "2018-05-01", to = "2022-12-31",
+  collection = "sentinel-2-l2a", with_geometry = TRUE,
+  client = OAuthClient
+)
+images
+summary(images$areaCoverage)
+day <- images[order(images$tileCloudCover), ]$acquisitionDate[1:30]
+```
+
+```{r cdse-products, eval=eval_cdse}
+script_file_raw   <- system.file("scripts", "RawBands.js", package = "CDSE")
+script_file_kndvi <- "kndvi.js"
+script_file_savi  <- "savi.js"
+script_file_evi   <- "evi.js"
+
+raw_2018_07_01 <- CDSE::GetImage(
+  bbox = sf::st_bbox(train_areas_2019_2020), time_range = day[12],
+  script = script_file_raw, collection = "sentinel-2-l2a",
+  format = "image/tiff", mosaicking_order = "leastCC",
+  resolution = 10, mask = TRUE, buffer = 0.01, client = OAuthClient
+)
+names(raw_2018_07_01) <- c("B01","B02","B03","B04","B05","B06","B07","B08","B8A","B09","B11","B12")
+
+kndvi_2018_07_01 <- CDSE::GetImage(
+  bbox = sf::st_bbox(train_areas_2019_2020), time_range = day[12],
+  script = script_file_kndvi, collection = "sentinel-2-l2a",
+  format = "image/tiff", mosaicking_order = "leastCC",
+  resolution = 10, mask = TRUE, buffer = 0.01, client = OAuthClient
+)
+names(kndvi_2018_07_01)[1] <- "kNDVI"
+
+savi_2018_07_01 <- CDSE::GetImage(
+  bbox = sf::st_bbox(train_areas_2019_2020), time_range = day[12],
+  script = script_file_savi, collection = "sentinel-2-l2a",
+  format = "image/tiff", mosaicking_order = "leastCC",
+  resolution = 10, mask = TRUE, buffer = 0.01, client = OAuthClient
+)
+names(savi_2018_07_01)[1] <- "SAVI"
+
+evi_2018_07_01 <- CDSE::GetImage(
+  bbox = sf::st_bbox(train_areas_2019_2020), time_range = day[12],
+  script = script_file_evi, collection = "sentinel-2-l2a",
+  format = "image/tiff", mosaicking_order = "leastCC",
+  resolution = 10, mask = TRUE, buffer = 0.01, client = OAuthClient
+)
+names(evi_2018_07_01)[1] <- "EVI"
+
+pred_stack_2018 <- c(raw_2018_07_01, evi_2018_07_01[[1]], kndvi_2018_07_01[[1]], savi_2018_07_01[[1]])
+```
+
+```{r cdse-products-2022, eval=eval_cdse}
+raw_2022_06_23 <- CDSE::GetImage(
+  bbox = sf::st_bbox(train_areas_2019_2020), time_range = day[1],
+  script = script_file_raw, collection = "sentinel-2-l2a",
+  format = "image/tiff", mosaicking_order = "leastCC",
+  resolution = 10, mask = TRUE, buffer = 0.01, client = OAuthClient
+)
+names(raw_2022_06_23) <- c("B01","B02","B03","B04","B05","B06","B07","B08","B8A","B09","B11","B12")
+
+kndvi_2022_06_23 <- CDSE::GetImage(
+  bbox = sf::st_bbox(train_areas_2019_2020), time_range = day[1],
+  script = script_file_kndvi, collection = "sentinel-2-l2a",
+  format = "image/tiff", mosaicking_order = "leastCC",
+  resolution = 10, mask = TRUE, buffer = 0.01, client = OAuthClient
+)
+names(kndvi_2022_06_23)[1] <- "kNDVI"
+
+savi_2022_06_23 <- CDSE::GetImage(
+  bbox = sf::st_bbox(train_areas_2019_2020), time_range = day[1],
+  script = script_file_savi, collection = "sentinel-2-l2a",
+  format = "image/tiff", mosaicking_order = "leastCC",
+  resolution = 10, mask = TRUE, buffer = 0.01, client = OAuthClient
+)
+names(savi_2022_06_23)[1] <- "SAVI"
+
+evi_2022_06_23 <- CDSE::GetImage(
+  bbox = sf::st_bbox(train_areas_2019_2020), time_range = day[1],
+  script = script_file_evi, collection = "sentinel-2-l2a",
+  format = "image/tiff", mosaicking_order = "leastCC",
+  resolution = 10, mask = TRUE, buffer = 0.01, client = OAuthClient
+)
+names(evi_2022_06_23)[1] <- "EVI"
+
+pred_stack_2022 <- c(raw_2022_06_23, evi_2022_06_23[[1]], kndvi_2022_06_23[[1]], savi_2022_06_23[[1]])
+
+terra::writeRaster(pred_stack_2018, file.path(root_folder,"data/pred_stack_2018.tif"), overwrite=TRUE)
+terra::writeRaster(pred_stack_2022, file.path(root_folder,"data/pred_stack_2022.tif"), overwrite=TRUE)
+```
+
+## Step2: Overview – Unsupervised classification
+
+### k-means clustering
+
+```{r kmeans}
+# Requires pred_stack_2018/2022 (CDSE) or create equivalent stacks otherwise
+if (!exists("pred_stack_2018")) pred_stack_2018 <- terra::rast(file.path(root_folder,"data/pred_stack_2018.tif"))
+if (!exists("pred_stack_2022")) pred_stack_2022 <- terra::rast(file.path(root_folder,"data/pred_stack_2022.tif"))
+
+prediction_kmeans_2018 <- RStoolbox::unsuperClass(
+  pred_stack_2018, nClasses = 5, norm = TRUE, algorithm = "MacQueen"
+)
+plot(prediction_kmeans_2018$map, main = "k-means 2018")
+
+prediction_kmeans_2022 <- RStoolbox::unsuperClass(
+  pred_stack_2022, nClasses = 5, norm = TRUE, algorithm = "MacQueen"
+)
+plot(prediction_kmeans_2022$map, main = "k-means 2022")
+```
+
+### bfast: Spatial identification of magnitudes and time periods of kNDVI changes
+
+```{r calc_bfast, eval=FALSE}
+gdalcubes::gdalcubes_options(parallel = 16)
+
+gdalcubes::ncdf_cube(file.path(root_folder,"data/harz_2018_2022_all.nc")) |>
+  gdalcubes::reduce_time(names = c("change_date","change_magnitude"), FUN = function(x) {
+    knr   <- exp(-((x["B08",]/10000)-(x["B04",]/10000))^2/(2))
+    kndvi <- (1 - knr) / (1 + knr)
+    if (all(is.na(kndvi))) return(c(NA,NA))
+    kndvi_ts <- ts(kndvi, start = c(2018,1), frequency = 12)
+    library(bfast)
+    tryCatch({
+      res <- bfast::bfastmonitor(kndvi_ts, start = c(2019,1), level = 0.01)
+      c(res$breakpoint, res$magnitude)
+    }, error = function(e) c(NA,NA))
+  }) |>
+  gdalcubes::write_ncdf(file.path(root_folder,"data/bfast_results.nc"), overwrite = TRUE)
+```
+
+```{r plot_bfast, eval=FALSE}
+gdalcubes::ncdf_cube(file.path(root_folder,"data/bfast_results.nc")) |>
+  plot(key.pos = 1, col = ndvi.col(11), nbreaks = 12)
+```
+
+## Step 3 - Generating training data
+
+```{r tdf}
+pred_stack_2018 <- terra::rast(file.path(root_folder,"data/pred_stack_2018.tif"))
+pred_stack_2022 <- terra::rast(file.path(root_folder,"data/pred_stack_2022.tif"))
+
+tDF_2019 <- exactextractr::exact_extract(
+  pred_stack_2018, dplyr::filter(train_areas_2019_2020, year == 2019),
+  force_df = TRUE, include_cell = TRUE, include_xy = TRUE, full_colnames = TRUE, include_cols = "class"
+)
+tDF_2020 <- exactextractr::exact_extract(
+  pred_stack_2022, dplyr::filter(train_areas_2019_2020, year == 2020),
+  force_df = TRUE, include_cell = TRUE, include_xy = TRUE, full_colnames = TRUE, include_cols = "class"
+)
+
+tDF_2019 <- dplyr::bind_rows(tDF_2019); tDF_2019$year <- 2019
+tDF_2020 <- dplyr::bind_rows(tDF_2020); tDF_2020$year <- 2020
+
+tDF_2019 <- tDF_2019[complete.cases(tDF_2019), ]
+tDF_2020 <- tDF_2020[complete.cases(tDF_2020), ]
+
+tDF <- rbind(tDF_2019, tDF_2020)
+saveRDS(tDF, file.path(root_folder,"data/tDF_2018_2022.rds"))
+```
+
+## Step 4 - supervised classification
+
+### Maximum Likelihood Classification
+
+```{r maxlike, eval=FALSE}
+set.seed(123)
+tDF <- readRDS(file.path(root_folder,"data/tDF_2018_2022.rds"))
+
+idx      <- caret::createDataPartition(tDF$class, list = FALSE, p = 0.05)
+trainDat <- tDF[idx,]
+testDat  <- tDF[-idx,]
+
+trainDat$class <- as.factor(trainDat$class)
+testDat$class  <- as.factor(testDat$class)
+
+sp_trainDat <- trainDat
+sp_testDat  <- testDat
+sp::coordinates(sp_trainDat) <- ~x+y
+sp::coordinates(sp_testDat)  <- ~x+y
+sp::proj4string(sp_trainDat) <- terra::crs(pred_stack_2018)
+sp::proj4string(sp_testDat)  <- terra::crs(pred_stack_2018)
+
+prediction_mlc_2018 <- RStoolbox::superClass(
+  pred_stack_2018, trainData = sp_trainDat[,1:16], valData = sp_testDat[,1:16],
+  responseCol = "class", model = "mlc", tuneLength = 1,
+  trainPartition = 0.3, verbose = TRUE,
+  filename = file.path(root_folder,"data/prediction_mlc_2018.tif")
+)
+
+prediction_mlc_2022 <- RStoolbox::superClass(
+  pred_stack_2022, trainData = sp_trainDat[,1:16], valData = sp_testDat[,1:16],
+  responseCol = "class", model = "mlc", tuneLength = 1,
+  trainPartition = 0.3, verbose = TRUE,
+  filename = file.path(root_folder,"data/prediction_mlc_2022.tif")
+)
+
+saveRDS(prediction_mlc_2018, file.path(root_folder,"data/prediction_mlc_2018.rds"))
+saveRDS(prediction_mlc_2022, file.path(root_folder,"data/prediction_mlc_2022.rds"))
+```
+
+### Random forest
+
+```{r random_forest, eval=FALSE}
+ctrlh <- caret::trainControl(method = "cv", number = 10, savePredictions = TRUE)
+
+rf_model <- caret::train(
+  x = trainDat[,2:16], y = trainDat[,1],
+  method = "rf", metric = "Kappa",
+  trControl = ctrlh, importance = TRUE
+)
+rf_model
+saveRDS(rf_model, file.path(root_folder,"data/rf_model.rds"))
+```
+
+### Prediction on the original data
+
+```{r klassifikation2018, eval=FALSE}
+rf_model <- readRDS(file.path(root_folder,"data/rf_model.rds"))
+
+prediction_rf_2018 <- terra::predict(pred_stack_2018, rf_model)
+prediction_rf_2022 <- terra::predict(pred_stack_2022, rf_model)
+
+saveRDS(prediction_rf_2018, file.path(root_folder,"data/prediction_rf_2018.rds"))
+saveRDS(prediction_rf_2022, file.path(root_folder,"data/prediction_rf_2022.rds"))
+```
+
+```{r comparison_classifications, eval=FALSE}
+prediction_rf_2018  <- readRDS(file.path(root_folder,"data/prediction_rf_2018.rds"))
+prediction_rf_2022  <- readRDS(file.path(root_folder,"data/prediction_rf_2022.rds"))
+prediction_mlc_2018 <- terra::rast(file.path(root_folder,"data/prediction_mlc_2018.tif"))
+prediction_mlc_2022 <- terra::rast(file.path(root_folder,"data/prediction_mlc_2022.tif"))
+
+mask <- terra::resample(harz_forest_mask, pred_stack_2022)
+
+plot(mask*prediction_rf_2022 - mask*prediction_rf_2018, main="RF Δ 2022–2018") 
+plot(mask*prediction_mlc_2022 - mask*prediction_mlc_2018, main="MLC Δ 2022–2018")
+```
+
+### Step 5: Estimation model quality
+
+```{r konfusiomatrix2018, eval=FALSE}
+cm_rf <- caret::confusionMatrix(
+  data = predict(rf_model, newdata = testDat),
+  reference = testDat$class
+)
+cm_rf
+```
+
+## Final Remarks
+
+You may have noticed that we have mixed two different approaches …
+
+

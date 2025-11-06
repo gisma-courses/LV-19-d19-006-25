@@ -2,8 +2,20 @@
 title: "A Scientific Workflow from the applied Point of View"
 format:
   revealjs:
-    theme: simple
+    theme: [../_extensions/metropolis-theme/metropolis.scss]
     transition: fade
+    toc: false
+    chalkboard: true
+    slide-number: true
+    footer: "<gisma 2024>"
+    menu: true
+    title-slide: true
+    include-in-header: ../includes/back.html
+
+lightbox: true
+spotlight:
+      useAsPointer: true
+      size: 5
 ---
 
 ## Scientific Process – Overview
