@@ -475,13 +475,13 @@
   {
     "objectID": "slides/slide0.html#scientific-process-overview",
     "href": "slides/slide0.html#scientific-process-overview",
-    "title": "A Scientific Workflow from the applied Point of View",
+    "title": "Scientific Workflow",
     "section": "Scientific Process – Overview",
-    "text": "Scientific Process – Overview\n\n\n\n\n\n\nFoundations\n\n\ntheory, domain context\n\n\n\n\n\n\n\n\nResearch Questions\n\n\nprecise, testable, scoped\n\n\n\n\n\n\n\n\nState of the Art (Literature)\n\n\nknowns, gaps, hypotheses\n\n\n\n\n\n\n\n\nNecessary Methods & Workflow\n\n\ndata, preprocessing, validation, metrics\n\n\n\n\n\n\n\n\n\nAdvanced Methods\n\n\nmodels, tuning, ablations\n\n\n\n\n\n\n\n\nApplied Solution Path\n\n\nimplementation & assumptions\n\n\n\n\n\n\n\n\nResults\n\n\nfindings, uncertainty, limitations\n\n\n\n\n\n\n\n\nLoopback, Evaluation & Improvement\n\n\nerror analysis, robustness checks, iteration",
+    "text": "Scientific Process – Overview\n\n\n\n\n\n\n\n\n\nframing the problem\n\n\n\n\n\n\n\n\n\n\n\nFoundations\n\n\ntheory, domain context\n\n\n\n\n\n\n\n\nResearch Questions\n\n\nprecise, testable, scoped\n\n\n\n\n\n\n\n\nState of the Art\n\n\nknowns, gaps, hypotheses\n\n\n\n\n\n\n\n\n\nfinding and evaluating the solution\n\n\n\n\n\n\n\n\n\n\n\nNecessary Methods\n\n\ndata, preprocessing, validation, metrics, models, tuning, ablations\n\n\n\n\n\n\n\n\nApplied Solution Path\n\n\nimplementation & assumptions\n\n\n\n\n\n\n\n\nResults\n\n\nfindings, uncertainty, limitations\n\n\n\n\n\n\n\n\n\n\n\n\nreflecting and improving\n\n\n\n\n\n\n\n\n\n\n\nLoopback, Evaluation & Improvement\n\n\nerror analysis, robustness checks, iteration",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "A Scientific Workflow from the applied Point of View"
+      "Scientific Workflow"
     ]
   },
   {
@@ -489,7 +489,7 @@
     "href": "slides/slidelist.html",
     "title": "Presentations",
     "section": "",
-    "text": "Sortieren nach\n      Voreinstellung\n      \n        Titel\n      \n      \n        Autor:in\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitel\n\n\n\nAutor:in\n\n\n\n\n\n\n\n\nA Scientific Workflow from the applied Point of View\n\n\nChris Reudenbach\n\n\n\n\n\n\nBurgwald Rain Gauge Network Design\n\n\nChris Reudenbach\n\n\n\n\n\n\nChange detection part 1\n\n\nChris Reudenbach\n\n\n\n\n\n\nFlow — Minimal JS/CSS (no deps)\n\n\nChris Reudenbach\n\n\n\n\n\n\nLandscape Metrics Reloaded\n\n\nChris Reudenbach\n\n\n\n\n\n\nLandscape Patterns\n\n\nChris Reudenbach\n\n\n\n\n\n\nPattern-based spatial analysis\n\n\nChris Reudenbach\n\n\n\n\n\n\nSlides and extensions\n\n\ngisma team\n\n\n\n\n\n\nSpatial Patterns\n\n\nChris Reudenbach\n\n\n\n\n\n\nSpatial patterns of non-categorical rasters\n\n\nChris Reudenbach\n\n\n\n\n\n\nKeine Treffer"
+    "text": "Sortieren nach\n      Voreinstellung\n      \n        Titel\n      \n      \n        Autor:in\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitel\n\n\n\nAutor:in\n\n\n\n\n\n\n\n\nBurgwald Rain Gauge Network Design\n\n\nChris Reudenbach\n\n\n\n\n\n\nChange detection part 1\n\n\nChris Reudenbach\n\n\n\n\n\n\nFlow — Minimal JS/CSS (no deps)\n\n\nChris Reudenbach\n\n\n\n\n\n\nLandscape Metrics Reloaded\n\n\nChris Reudenbach\n\n\n\n\n\n\nLandscape Patterns\n\n\nChris Reudenbach\n\n\n\n\n\n\nPattern-based spatial analysis\n\n\nChris Reudenbach\n\n\n\n\n\n\nScientific Workflow\n\n\nChris Reudenbach\n\n\n\n\n\n\nSlides and extensions\n\n\ngisma team\n\n\n\n\n\n\nSpatial Patterns\n\n\nChris Reudenbach\n\n\n\n\n\n\nSpatial patterns of non-categorical rasters\n\n\nChris Reudenbach\n\n\n\n\n\n\nKeine Treffer"
   },
   {
     "objectID": "slides/slides_session2.html#landscape-metrics",
@@ -833,6 +833,18 @@
       "FAQ",
       "Worksheets",
       "1. First Design"
+    ]
+  },
+  {
+    "objectID": "slides/slide0.html#scientific-process",
+    "href": "slides/slide0.html#scientific-process",
+    "title": "Scientific Workflow",
+    "section": "Scientific Process",
+    "text": "Scientific Process\n\n\n\n\n\n\nframing the research problem\n\n\n\n\n\n\n\n\n\n\n\nFoundations\n\n\ntheory, domain context\n\n\n\n\n\n\n\n\nResearch Questions\n\n\nprecise, testable, scoped\n\n\n\n\n\n\n\n\nState of the Art\n\n\nknowns, gaps, hypotheses\n\n\n\n\n\n\n\n\n\nfinding and evaluating the solution\n\n\n\n\n\n\n\n\n\n\n\nNecessary Methods\n\n\ndata, preprocessing, validation, metrics, models, tuning, ablations\n\n\n\n\n\n\n\n\nApplied Solution Path\n\n\nimplementation & assumptions\n\n\n\n\n\n\n\n\nResults\n\n\nfindings, uncertainty, limitations\n\n\n\n\n\n\n\n\n\nreflecting and improving\n\n\n\n\n\n\n\n\n\n\n\nLoopback, Evaluation & Improvement\n\n\nerror analysis, robustness checks, iteration",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Scientific Workflow"
     ]
   }
 ]

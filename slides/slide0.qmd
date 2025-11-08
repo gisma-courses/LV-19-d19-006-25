@@ -1,28 +1,37 @@
 ---
-title: "A Scientific Workflow from the applied Point of View"
+title: "Scientific Workflow"
 author: "Chris Reudenbach"
 format:
   revealjs:
-    theme: [../_extensions/metropolis-theme/metropolis.scss]
+    title-slide: false
+    theme: [default]
     transition: fade
     toc: false
     chalkboard: true
     slide-number: true
-    footer: "<gisma 2024>"
     menu: true
-    title-slide: true
-    include-in-header: ../includes/back.html
-
+    layout: true
+    # include-in-header: ../includes/back.html   # nur aktivieren, wenn die Datei existiert
 lightbox: true
 spotlight:
-      useAsPointer: true
-      size: 5
+  useAsPointer: true
+  size: 5
 ---
 
-## Scientific Process – Overview
+<style>
+.reveal .columns { display:flex !important; gap:1.5rem; }
+.reveal .column { flex:0 0 auto; }
+</style>
+
+## Scientific Process
 
 :::: {.columns}
-::: {.column width="50%"}
+
+::: {.column width="30%"}
+
+::: {.callout-note title= "framing the research problem     "  icon=false}
+
+:::
 
 ::: {.callout-note .fragment title="Foundations" appearance="minimal"}
 theory, domain context
@@ -32,20 +41,27 @@ theory, domain context
 precise, testable, scoped
 :::
 
-::: {.callout-note .fragment title="State of the Art (Literature)" appearance="minimal"}
+::: {.callout-note .fragment title="State of the Art" appearance="minimal"}
 knowns, gaps, hypotheses
 :::
 
-::: {.callout-caution .fragment title="Necessary Methods & Workflow" appearance="minimal"}
-data, preprocessing, validation, metrics
-:::
+
 
 :::
-::: {.column width="50%"}
 
-::: {.callout-caution .fragment title="Advanced Methods" appearance="minimal"}
-models, tuning, ablations
+::: {.column width="40%"}
+
+::: {.callout-caution title="finding and evaluating the solution"  icon=false}
+
 :::
+
+
+
+::: {.callout-caution .fragment title="Necessary Methods" appearance="minimal"}
+data, preprocessing, validation, metrics, models, tuning, ablations
+:::
+
+
 
 ::: {.callout-caution .fragment title="Applied Solution Path" appearance="minimal"}
 implementation & assumptions
@@ -54,6 +70,16 @@ implementation & assumptions
 ::: {.callout-caution .fragment title="Results" appearance="minimal"}
 findings, uncertainty, limitations
 :::
+
+:::
+
+::: {.column width="30%"}
+
+::: {.callout-tip title="reflecting and improving" icon=false }
+
+:::
+
+
 
 ::: {.callout-tip .fragment title="Loopback, Evaluation & Improvement" appearance="minimal"}
 error analysis, robustness checks, iteration

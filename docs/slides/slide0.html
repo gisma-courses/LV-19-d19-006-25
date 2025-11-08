@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.7.32">
 
   <meta name="author" content="Chris Reudenbach">
-  <title>Advanced GIS &amp; RS – A Scientific Workflow from the applied Point of View</title>
+  <title>Advanced GIS &amp; RS – Scientific Workflow</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -29,7 +29,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-83ba8bf49a63c47ab6793c327c4e96ad.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -123,53 +123,16 @@
       margin-right: 0; 
     }
   </style>
-  <style>
-  /* Abstand zwischen Button und Seitennummer (default: 72px ≈ Buttonbreite + Puffer) */
-  :root { --back-btn-gap: 72px; }
-
-  /* Button unten rechts */
-  #back-home {
-    position: fixed;
-    bottom: 12px;
-    right: 12px;
-    z-index: 1000;
-    opacity: .35;
-    background: rgba(255,255,255,.65);
-    backdrop-filter: blur(2px);
-    padding: .35rem .55rem;
-    border: 1px solid #bbb;
-    border-radius: .4rem;
-    font-size: .85rem;
-    transition: opacity .2s;
-  }
-  #back-home:hover {
-    opacity: 1;
-  }
-
-  /* Seitennummer nach links schieben, damit kein Überlappen */
-  .reveal .slide-number {
-    right: calc(12px + var(--back-btn-gap));
-  }
-
-  /* Im PDF/Speaker-View nicht anzeigen */
-  @media print {
-    #back-home { display: none; }
-  }
-  </style>
-
-  <meta property="og:title" content="A Scientific Workflow from the applied Point of View – Advanced GIS &amp; RS">
+<meta property="og:title" content="Scientific Workflow – Advanced GIS &amp; RS">
 <meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/slides/images/grubenwiese2-sp.jpg">
 <meta property="og:site_name" content="Advanced GIS &amp; RS">
-</head><body class="quarto-light"><div id="back-home">
-    <a href="https://gisma-courses.github.io/LV-19-d19-006-25/" style="text-decoration:none;color:#333;">⟵ Kurs</a>
-  </div>
-
-
+</head>
+<body class="quarto-light">
   <div class="reveal">
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">A Scientific Workflow from the applied Point of View</h1>
+  <h1 class="title">Scientific Workflow</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -180,10 +143,29 @@ Chris Reudenbach
 </div>
 
 </section>
-<section id="scientific-process-overview" class="slide level2">
-<h2>Scientific Process – Overview</h2>
+<section class="slide level2">
+
+<style>
+.reveal .columns { display:flex !important; gap:1.5rem; }
+.reveal .column { flex:0 0 auto; }
+</style>
+</section>
+<section id="scientific-process" class="slide level2">
+<h2>Scientific Process</h2>
 <div class="columns">
-<div class="column" style="width:50%;">
+<div class="column" style="width:30%;">
+<div title="framing the research problem     ">
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>framing the research problem</strong></p>
+</div>
+<div class="callout-content">
+
+</div>
+</div>
+</div>
+</div>
 <div class="fragment" title="Foundations">
 <div class="callout callout-note no-icon callout-titled callout-style-simple">
 <div class="callout-body">
@@ -208,11 +190,11 @@ Chris Reudenbach
 </div>
 </div>
 </div>
-<div class="fragment" title="State of the Art (Literature)">
+<div class="fragment" title="State of the Art">
 <div class="callout callout-note no-icon callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
-<p><strong>State of the Art (Literature)</strong></p>
+<p><strong>State of the Art</strong></p>
 </div>
 <div class="callout-content">
 <p>knowns, gaps, hypotheses</p>
@@ -220,27 +202,27 @@ Chris Reudenbach
 </div>
 </div>
 </div>
-<div class="fragment" title="Necessary Methods &amp; Workflow">
+</div><div class="column" style="width:40%;">
+<div title="finding and evaluating the solution">
+<div class="callout callout-caution no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>finding and evaluating the solution</strong></p>
+</div>
+<div class="callout-content">
+
+</div>
+</div>
+</div>
+</div>
+<div class="fragment" title="Necessary Methods">
 <div class="callout callout-caution no-icon callout-titled callout-style-simple">
 <div class="callout-body">
 <div class="callout-title">
-<p><strong>Necessary Methods &amp; Workflow</strong></p>
+<p><strong>Necessary Methods</strong></p>
 </div>
 <div class="callout-content">
-<p>data, preprocessing, validation, metrics</p>
-</div>
-</div>
-</div>
-</div>
-</div><div class="column" style="width:50%;">
-<div class="fragment" title="Advanced Methods">
-<div class="callout callout-caution no-icon callout-titled callout-style-simple">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Advanced Methods</strong></p>
-</div>
-<div class="callout-content">
-<p>models, tuning, ablations</p>
+<p>data, preprocessing, validation, metrics, models, tuning, ablations</p>
 </div>
 </div>
 </div>
@@ -269,6 +251,19 @@ Chris Reudenbach
 </div>
 </div>
 </div>
+</div><div class="column" style="width:30%;">
+<div title="reflecting and improving">
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>reflecting and improving</strong></p>
+</div>
+<div class="callout-content">
+
+</div>
+</div>
+</div>
+</div>
 <div class="fragment" title="Loopback, Evaluation &amp; Improvement">
 <div class="callout callout-tip no-icon callout-titled callout-style-simple">
 <div class="callout-body">
@@ -288,7 +283,7 @@ Chris Reudenbach
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>&lt;gisma 2024&gt;</p>
+
 </div>
 </div></div>
 
