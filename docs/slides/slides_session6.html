@@ -219,7 +219,7 @@ Chris Reudenbach
 <div class="callout callout-important no-icon callout-style-simple">
 <div class="callout-body">
 <div class="callout-content">
-
+<p>This section introduces data access and prerequisites.</p>
 </div>
 </div>
 </div>
@@ -233,18 +233,18 @@ Chris Reudenbach
 </section>
 <section id="cloud-optimised-geotiffs-cogs" class="slide level2">
 <h2>Cloud-Optimised GeoTIFFs (COGs)</h2>
-<p>Unfortunately, the official <a href="https://scihub.copernicus.eu/dhus/#/home">Sentinel-2 archives</a> are anything but user-friendly. Even with very convenient tools such as <a href="https://sen2r.ranghetti.info/"><code>sen2r</code></a> it is sometimes tedious to process them.Technically, the processed product levels are available for download pre-processed as L1C and L2A products in JP2K format. The preferred file format is JP2K, which is storage efficient but has to be downloaded in its entirety locally by the user, resulting in high access costs and huge local storage requirements. The cloud-optimised GeoTIFFs (COGs) allow only the areas of interest to be downloaded and are also much faster to process. However, this requires optimised cloud services and a technically different access logic than in the processing chains used so far.</p>
+<p>Unfortunately, the official <a href="https://scihub.copernicus.eu/dhus/#/home">Sentinel-2 archives</a> are anything but user-friendly. Even with very convenient tools such as <a href="https://sen2r.ranghetti.info/"><code>sen2r</code></a> it is sometimes tedious to process them. Technically, the processed product levels are available for download pre-processed as L1C and L2A products in JP2K format. The preferred file format is JP2K, which is storage efficient but has to be downloaded in its entirety locally by the user, resulting in high access costs and huge local storage requirements. The cloud-optimised GeoTIFFs (COGs) allow only the areas of interest to be downloaded and are also much faster to process. However, this requires optimised cloud services and a technically different access logic than in the processing chains used so far.</p>
 </section>
 <section id="spatiotemporal-asset-catalog-stac" class="slide level2">
 <h2>SpatioTemporal Asset Catalog (STAC)</h2>
-<p>The [Spatial-Temporal Asset Catalogue] (https://stacspec.org/) (STAC) provides a common language for simplified indexing and discovery of geospatial data. A “Spatio-Temporal Asset” is a file that contains information in a specific space and time.</p>
+<p>The <a href="https://stacspec.org/">Spatial-Temporal Asset Catalogue</a> (STAC) provides a common language for simplified indexing and discovery of geospatial data. A “Spatio-Temporal Asset” is a file that contains information in a specific space and time.</p>
 <p>This approach allows any provider of spatio-temporal data (imagery, SAR, point clouds, data cubes, full motion video, etc.) to provide Spatio-Temporal Asset Catalogues (STAC) for their data. STAC focuses on an easy-to-implement standard that organisations can use to make their data available in a durable and reliable way.</p>
 <p><a href="https://www.element84.com/">Element84</a> has provided a public API called Earth-search, a central search catalogue for all public AWS datasets using STAC (including the new Sentinel-2 COGs), which contains more than 11.4 million Sentinel-2 scenes worldwide as of 1 November 2017.</p>
 </section></section>
 <section id="goals" class="title-slide slide level1 center">
 <h1>Goals</h1>
-<p>This example shows how complex times series methods from external R packages can be applied in cloud computing environments using <a href="https://cran.r-project.org/package=rstac"><code>[rstac</code></a> <span class="citation" data-cites="rstac">[@rstac]</span> and <a href="https://cran.r-project.org/package=gdalcubes"><code>gdalcubes</code></a> <span class="citation" data-cites="gdalcubes">[@gdalcubes]</span>. We will use the <a href="https://cran.r-project.org/package=bfast"><code>bfast</code> R package</a> containing unsupervised change detection methods identifying structural breakpoints in vegetation index time series. Specifically, we will use the <code>bfastmonitor()</code> function to monitor changes on a dedicated timeperiod of a time series of Sentinel-2 imagery.</p>
-<p>Other packages used in this tutorial include <a href="https://cran.r-project.org/package=stars"><code>stars</code></a> <span class="citation" data-cites="stars">[@stars]</span>, <a href="https://cran.r-project.org/package=tmap"><code>tmap</code></a> <span class="citation" data-cites="tmap">[@tmap]</span> and <a href="https://cran.r-project.org/package=tmap">mapview</a> <span class="citation" data-cites="mapview">[@mapview]</span> for creating interactive maps, <a href="https://cran.r-project.org/package=sf"><code>sf</code></a> <span class="citation" data-cites="sf">[@sf]</span> for processing vector data, and <a href="https://cran.r-project.org/package=colorspace"><code>colorspace</code></a> <span class="citation" data-cites="colorspace">[@colorspace]</span> for visualizations with accessible colors.</p>
+<p>This example shows how complex time series methods from external R packages can be applied in cloud computing environments using <a href="https://cran.r-project.org/package=rstac"><code>rstac</code></a> <span class="citation" data-cites="rstac">[@rstac]</span> and <a href="https://cran.r-project.org/package=gdalcubes"><code>gdalcubes</code></a> <span class="citation" data-cites="gdalcubes">[@gdalcubes]</span>. We will use the <a href="https://cran.r-project.org/package=bfast"><code>bfast</code> R package</a> containing unsupervised change detection methods identifying structural breakpoints in vegetation index time series. Specifically, we will use the <code>bfastmonitor()</code> function to monitor changes on a dedicated time period of a time series of Sentinel-2 imagery.</p>
+<p>Other packages used in this tutorial include <a href="https://cran.r-project.org/package=stars"><code>stars</code></a> <span class="citation" data-cites="stars">[@stars]</span>, <a href="https://cran.r-project.org/package=tmap"><code>tmap</code></a> <span class="citation" data-cites="tmap">[@tmap]</span> and <a href="https://cran.r-project.org/package=mapview"><code>mapview</code></a> <span class="citation" data-cites="mapview">[@mapview]</span> for creating interactive maps, <a href="https://cran.r-project.org/package=sf"><code>sf</code></a> <span class="citation" data-cites="sf">[@sf]</span> for processing vector data, and <a href="https://cran.r-project.org/package=colorspace"><code>colorspace</code></a> <span class="citation" data-cites="colorspace">[@colorspace]</span> for visualizations with accessible colors.</p>
 <p>Various approaches to time series and difference analyses with different indices will be applied using the example of the MOF AOI for the time period 1997 - 2021.</p>
 </section>
 
@@ -272,24 +272,19 @@ Chris Reudenbach
 <span id="cb1-14"><a></a><span class="fu">library</span>(colorspace)</span>
 <span id="cb1-15"><a></a><span class="fu">library</span>(rstac)</span>
 <span id="cb1-16"><a></a></span>
-<span id="cb1-17"><a></a></span>
-<span id="cb1-18"><a></a>ndvi.col <span class="ot">=</span> <span class="cf">function</span>(n) {</span>
-<span id="cb1-19"><a></a>  <span class="fu">rev</span>(<span class="fu">sequential_hcl</span>(n, <span class="st">"Green-Yellow"</span>))</span>
-<span id="cb1-20"><a></a>}</span>
-<span id="cb1-21"><a></a></span>
-<span id="cb1-22"><a></a>ano.col <span class="ot">=</span> <span class="fu">diverging_hcl</span>(<span class="dv">7</span>, <span class="at">palette =</span> <span class="st">"Red-Green"</span>,  <span class="at">register =</span> <span class="st">"rg"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-17"><a></a>ndvi.col <span class="ot">=</span> <span class="cf">function</span>(n) {</span>
+<span id="cb1-18"><a></a>  <span class="fu">rev</span>(<span class="fu">sequential_hcl</span>(n, <span class="st">"Green-Yellow"</span>))</span>
+<span id="cb1-19"><a></a>}</span>
+<span id="cb1-20"><a></a></span>
+<span id="cb1-21"><a></a>ano.col <span class="ot">=</span> <span class="fu">diverging_hcl</span>(<span class="dv">7</span>, <span class="at">palette =</span> <span class="st">"Red-Green"</span>,  <span class="at">register =</span> <span class="st">"rg"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="defining-the-area-of-interest" class="slide level2">
 <h2>Defining the Area of Interest</h2>
 <p>One major challenge is the fact that most of the earth surface related remote sensing activities are heavily <em>“disturbed”</em> by the atmosphere, especially by clouds. So to find cloud free satellite imagery is a common and cumbersome task. This task is supported by the <code>rstac</code> package which provides a convenient tool to find and filter adequate Sentinel-2 images out of the COG data storage. However, to address the AOI we need to provide the extend via the <code>bbox</code> argument of the corresponding function <code>stac_search()</code>. So first we need to derive and transform the required bounding box to WGS84 geo-coordinates, easily done with the <code>sf</code> functions <code>st_bbox()</code> and <code>st_transform()</code>. In addition we adapt the projection of the referencing vector objects to all other later projection needs.</p>
-<div class="boxSuccess">
-<p><br></p>
-<p class="textline">
-</p><p>Please note to project to three different CRS is for this examples convenience and clarity and somewhat superfluous. Only the corner coordinates of the sections are required and not the complete geometries. However, it creates more clarity for the later process to already have the data needed in different projections.<br>
-</p>
+<div class="callout-success">
+<p><strong>Note.</strong> Projecting to three different CRSs here is mainly for convenience/clarity. Only corner coordinates would actually be required, but having geometries ready in multiple CRSs simplifies later steps.</p>
 </div>
-<p></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">library</span>(tmap)</span>
 <span id="cb2-2"><a></a><span class="fu">library</span>(tmaptools)</span>
@@ -297,21 +292,20 @@ Chris Reudenbach
 <span id="cb2-4"><a></a></span>
 <span id="cb2-5"><a></a>forest_mask <span class="ot">=</span> <span class="fu">st_read</span>(<span class="st">"../data/MOF_CORE.gpkg"</span>)</span>
 <span id="cb2-6"><a></a>sf<span class="sc">::</span><span class="fu">st_crs</span>(forest_mask) <span class="ot">&lt;-</span> <span class="dv">4326</span></span>
-<span id="cb2-7"><a></a>fm<span class="ot">=</span><span class="fu">bb</span>(forest_mask,<span class="at">projection=</span><span class="dv">4326</span>)</span>
-<span id="cb2-8"><a></a>forest_4326 <span class="ot">=</span><span class="fu">st_transform</span>(forest_mask,<span class="at">crs =</span> <span class="dv">4326</span>)</span>
-<span id="cb2-9"><a></a>forest_3035 <span class="ot">=</span><span class="fu">st_transform</span>(forest_mask,<span class="at">crs =</span> <span class="dv">3035</span>)</span>
-<span id="cb2-10"><a></a>forest_32632 <span class="ot">=</span><span class="fu">st_transform</span>(forest_mask,<span class="at">crs =</span> <span class="dv">32632</span>)</span>
+<span id="cb2-7"><a></a>fm <span class="ot">=</span> <span class="fu">bb</span>(forest_mask, <span class="at">projection =</span> <span class="dv">4326</span>)</span>
+<span id="cb2-8"><a></a>forest_4326  <span class="ot">=</span> <span class="fu">st_transform</span>(forest_mask, <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb2-9"><a></a>forest_3035  <span class="ot">=</span> <span class="fu">st_transform</span>(forest_mask, <span class="at">crs =</span> <span class="dv">3035</span>)</span>
+<span id="cb2-10"><a></a>forest_32632 <span class="ot">=</span> <span class="fu">st_transform</span>(forest_mask, <span class="at">crs =</span> <span class="dv">32632</span>)</span>
 <span id="cb2-11"><a></a></span>
-<span id="cb2-12"><a></a></span>
-<span id="cb2-13"><a></a><span class="co"># call background map</span></span>
-<span id="cb2-14"><a></a>osm_forest <span class="ot">&lt;-</span> tmaptools<span class="sc">::</span><span class="fu">read_osm</span>(fm,<span class="at">type =</span> <span class="st">"bing"</span>)</span>
-<span id="cb2-15"><a></a></span>
-<span id="cb2-16"><a></a><span class="co"># mapping the extents and boundaries of the choosen geometries</span></span>
-<span id="cb2-17"><a></a><span class="fu">tmap_mode</span>(<span class="st">"view"</span>)</span>
-<span id="cb2-18"><a></a><span class="fu">tmap_options</span>(<span class="at">check.and.fix =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
-<span id="cb2-19"><a></a>  <span class="fu">tm_basemap</span>(<span class="at">server =</span> <span class="fu">c</span>(<span class="st">"Esri.WorldGrayCanvas"</span>, <span class="st">"OpenStreetMap"</span>, <span class="st">"Esri.WorldTopoMap"</span>,<span class="st">"Esri.WorldImagery"</span>)) <span class="sc">+</span></span>
-<span id="cb2-20"><a></a>  <span class="fu">tm_shape</span>(forest_mask) <span class="sc">+</span>   </span>
-<span id="cb2-21"><a></a>  <span class="fu">tm_polygons</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">col=</span><span class="st">"mainTreeSp"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-12"><a></a><span class="co"># call background map</span></span>
+<span id="cb2-13"><a></a>osm_forest <span class="ot">&lt;-</span> tmaptools<span class="sc">::</span><span class="fu">read_osm</span>(fm, <span class="at">type =</span> <span class="st">"bing"</span>)</span>
+<span id="cb2-14"><a></a></span>
+<span id="cb2-15"><a></a><span class="co"># mapping the extents and boundaries of the chosen geometries</span></span>
+<span id="cb2-16"><a></a><span class="fu">tmap_mode</span>(<span class="st">"view"</span>)</span>
+<span id="cb2-17"><a></a><span class="fu">tmap_options</span>(<span class="at">check.and.fix =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
+<span id="cb2-18"><a></a>  <span class="fu">tm_basemap</span>(<span class="at">server =</span> <span class="fu">c</span>(<span class="st">"Esri.WorldGrayCanvas"</span>, <span class="st">"OpenStreetMap"</span>, <span class="st">"Esri.WorldTopoMap"</span>,<span class="st">"Esri.WorldImagery"</span>)) <span class="sc">+</span></span>
+<span id="cb2-19"><a></a>  <span class="fu">tm_shape</span>(forest_mask) <span class="sc">+</span>   </span>
+<span id="cb2-20"><a></a>  <span class="fu">tm_polygons</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">col=</span><span class="st">"mainTreeSp"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Our study area is pretty small, covering roughly 2.5 by 2.5 km forest area northwest of Marburg. The core part of the AOI is the Marburg Open Forest (MOF) a field research facility of the Philipps University Marburg.</p>
 <h3 id="querying-images-with-rstac">Querying images with <code>rstac</code></h3>
@@ -340,51 +334,52 @@ Chris Reudenbach
 <p>To obtain a Sentinel data cube, a gdalcube image collection must be created from the STAC query result. To do this, the asset names must be explicitly named in order to apply the SCL channel with the quality characteristics per pixel (classification as clouds, cloud shadows, etc.). In this query, a filter is set to cloud cover &lt;= 50%.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">library</span>(gdalcubes)</span>
-<span id="cb4-2"><a></a>assets <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"B01"</span>,<span class="st">"B02"</span>,<span class="st">"B03"</span>,<span class="st">"B04"</span>,<span class="st">"B05"</span>,<span class="st">"B06"</span>, <span class="st">"B07"</span>,<span class="st">"B08"</span>,<span class="st">"B8A"</span>,<span class="st">"B09"</span>,<span class="st">"B11"</span>,<span class="st">"SCL"</span>)</span>
-<span id="cb4-3"><a></a>s2_collection <span class="ot">=</span> <span class="fu">stac_image_collection</span>(items<span class="sc">$</span>features, <span class="at">asset_names =</span> assets, <span class="at">property_filter =</span> <span class="cf">function</span>(x) {x[[<span class="st">"eo:cloud_cover"</span>]] <span class="sc">&lt;</span> <span class="dv">50</span>}) </span>
-<span id="cb4-4"><a></a>s2_collection</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a></a>assets <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"B01"</span>,<span class="st">"B02"</span>,<span class="st">"B03"</span>,<span class="st">"B04"</span>,<span class="st">"B05"</span>,<span class="st">"B06"</span>,<span class="st">"B07"</span>,<span class="st">"B08"</span>,<span class="st">"B8A"</span>,<span class="st">"B09"</span>,<span class="st">"B11"</span>,<span class="st">"SCL"</span>)</span>
+<span id="cb4-3"><a></a>s2_collection <span class="ot">=</span> <span class="fu">stac_image_collection</span>(items<span class="sc">$</span>features, <span class="at">asset_names =</span> assets,</span>
+<span id="cb4-4"><a></a>  <span class="at">property_filter =</span> <span class="cf">function</span>(x) { x[[<span class="st">"eo:cloud_cover"</span>]] <span class="sc">&lt;</span> <span class="dv">50</span> }</span>
+<span id="cb4-5"><a></a>) </span>
+<span id="cb4-6"><a></a>s2_collection</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The result is 107 images, i.e.&nbsp;approx. 1.8 images per month, from which we can now create a data cube. To do this, we use the UTM bounding box of our polygon as a spatial boundary, a spatial resolution of 10 metres, a bilinear spatial interpolation (useful for the spatially lower-resolution sentinel channels) and calculate monthly median values for all pixel values from the available images of a month. In addition, we add a buffer (b) on each side of the cube.</p>
-<div class="boxSuccess">
-<p><br></p>
-<p class="textline">
-</p><p>The <em>gdalcube image collection</em> can be considered as a proxy structure object which will be applied on the COGs.</p>
+<div class="callout-success">
+<p><strong>Note.</strong> The <em>gdalcubes image collection</em> acts as a proxy structure over the COGs.</p>
 </div>
-<p></p>
 <div class="cell" data-messages="false" data-warnings="false">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>b <span class="ot">=</span> <span class="dv">100</span></span>
-<span id="cb5-2"><a></a>v <span class="ot">=</span> <span class="fu">cube_view</span>(<span class="at">srs =</span> <span class="st">"EPSG:32632"</span>, </span>
-<span id="cb5-3"><a></a>              <span class="at">dx =</span> <span class="dv">10</span>, </span>
-<span id="cb5-4"><a></a>              <span class="at">dy =</span> <span class="dv">10</span>, </span>
-<span id="cb5-5"><a></a>              <span class="at">dt =</span> <span class="st">"P1M"</span>,  </span>
-<span id="cb5-6"><a></a>              <span class="at">aggregation =</span> <span class="st">"median"</span>, </span>
-<span id="cb5-7"><a></a>              <span class="at">extent =</span> <span class="fu">list</span>(<span class="at">t0 =</span> <span class="st">"2018-01-01"</span>,</span>
-<span id="cb5-8"><a></a>                            <span class="at">t1 =</span> <span class="st">"2022-12-31"</span>, </span>
-<span id="cb5-9"><a></a>                            <span class="at">left =</span> <span class="fu">st_bbox</span>(forest_32632)[<span class="st">"xmin"</span>] <span class="sc">-</span> b, </span>
-<span id="cb5-10"><a></a>                            <span class="at">right =</span> <span class="fu">st_bbox</span>(forest_32632)[<span class="st">"xmax"</span>] <span class="sc">+</span> b,</span>
-<span id="cb5-11"><a></a>                            <span class="at">bottom =</span> <span class="fu">st_bbox</span>(forest_32632)[<span class="st">"ymin"</span>] <span class="sc">-</span> b, </span>
-<span id="cb5-12"><a></a>                            <span class="at">top =</span> <span class="fu">st_bbox</span>(forest_32632)[<span class="st">"ymax"</span>] <span class="sc">+</span> b),</span>
-<span id="cb5-13"><a></a>              <span class="at">resampling =</span> <span class="st">"bilinear"</span>)</span>
-<span id="cb5-14"><a></a>v</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-2"><a></a>v <span class="ot">=</span> <span class="fu">cube_view</span>(</span>
+<span id="cb5-3"><a></a>  <span class="at">srs =</span> <span class="st">"EPSG:32632"</span>, </span>
+<span id="cb5-4"><a></a>  <span class="at">dx =</span> <span class="dv">10</span>, </span>
+<span id="cb5-5"><a></a>  <span class="at">dy =</span> <span class="dv">10</span>, </span>
+<span id="cb5-6"><a></a>  <span class="at">dt =</span> <span class="st">"P1M"</span>,  </span>
+<span id="cb5-7"><a></a>  <span class="at">aggregation =</span> <span class="st">"median"</span>, </span>
+<span id="cb5-8"><a></a>  <span class="at">extent =</span> <span class="fu">list</span>(</span>
+<span id="cb5-9"><a></a>    <span class="at">t0 =</span> <span class="st">"2018-01-01"</span>,</span>
+<span id="cb5-10"><a></a>    <span class="at">t1 =</span> <span class="st">"2022-12-31"</span>, </span>
+<span id="cb5-11"><a></a>    <span class="at">left   =</span> <span class="fu">st_bbox</span>(forest_32632)[<span class="st">"xmin"</span>] <span class="sc">-</span> b, </span>
+<span id="cb5-12"><a></a>    <span class="at">right  =</span> <span class="fu">st_bbox</span>(forest_32632)[<span class="st">"xmax"</span>] <span class="sc">+</span> b,</span>
+<span id="cb5-13"><a></a>    <span class="at">bottom =</span> <span class="fu">st_bbox</span>(forest_32632)[<span class="st">"ymin"</span>] <span class="sc">-</span> b, </span>
+<span id="cb5-14"><a></a>    <span class="at">top    =</span> <span class="fu">st_bbox</span>(forest_32632)[<span class="st">"ymax"</span>] <span class="sc">+</span> b</span>
+<span id="cb5-15"><a></a>  ),</span>
+<span id="cb5-16"><a></a>  <span class="at">resampling =</span> <span class="st">"bilinear"</span></span>
+<span id="cb5-17"><a></a>)</span>
+<span id="cb5-18"><a></a>v</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next we create a data cube, subset the red and near infrared bands and crop by our polygon, which simply sets pixel values outside the polygon to NA. We then save the data cube as a single netCDF file. Note that this is not necessary, but saving intermediate results sometimes makes debugging easier, especially if the methods applied afterwards are computationally intensive.</p>
-<div class="boxSuccess">
-<p><br></p>
-<p class="textline">
-</p><p>Only calling a final <em>action</em> will start the processing on the COG-Server. In this case ‘write_ncdf’.</p>
+<div class="callout-success">
+<p><strong>Action.</strong> Processing on the COG server starts only with a terminal action. Here: <code>write_ncdf</code>.</p>
 </div>
-<p></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># we "download" the data and write it t a netcdf file</span></span>
-<span id="cb6-2"><a></a>  s2.mask <span class="ot">=</span> <span class="fu">image_mask</span>(<span class="st">"SCL"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">8</span>,<span class="dv">9</span>))</span>
-<span id="cb6-3"><a></a>  <span class="fu">gdalcubes_options</span>(<span class="at">parallel =</span> <span class="dv">16</span>, <span class="at">ncdf_compression_level =</span> <span class="dv">5</span>)</span>
-<span id="cb6-4"><a></a>  <span class="fu">raster_cube</span>(s2_collection, v, <span class="at">mask =</span> s2.mask) <span class="sc">|&gt;</span></span>
-<span id="cb6-5"><a></a>    <span class="fu">write_ncdf</span>(<span class="st">"../data/MOF_10_2.nc"</span>,<span class="at">overwrite=</span><span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># "download" the data and write it to a netcdf file</span></span>
+<span id="cb6-2"><a></a>s2.mask <span class="ot">=</span> <span class="fu">image_mask</span>(<span class="st">"SCL"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">8</span>,<span class="dv">9</span>))</span>
+<span id="cb6-3"><a></a><span class="fu">gdalcubes_options</span>(<span class="at">parallel =</span> <span class="dv">16</span>, <span class="at">ncdf_compression_level =</span> <span class="dv">5</span>)</span>
+<span id="cb6-4"><a></a><span class="fu">raster_cube</span>(s2_collection, v, <span class="at">mask =</span> s2.mask) <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a></a>  <span class="fu">write_ncdf</span>(<span class="st">"../data/MOF_10_2.nc"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In the following examples we will show a simple plot in a generic pipe. However, a more common visualisation is quite simple. A typical pipe might be Save a resulting netCDF file <code>-&gt;</code> Convert it to a <code>stars</code> object <code>-&gt;</code> Visualise the results with <code>tmap</code>, <code>mapview</code>, <code>ggplot2</code> or whatever package you prefer to produce (interactive) map(s).</p>
+</section>
 <section id="reductions" class="slide level2">
 <h2>Reductions</h2>
-<p>Possible <em>reducers</em> include <code>min"</code>, <code>mean"</code>, <code>median"</code>, <code>max"</code>, <code>count"</code> (count non-missing values), <code>sum"</code>, <code>var"</code> (variance), and <code>sd"</code> (standard deviation). Reducer expressions are always given as a string, starting with the reducer name, followed by the band name in parentheses. Note that it is possible to mix reducers and bands.</p>
+<p>Possible <em>reducers</em> include <code>min</code>, <code>mean</code>, <code>median</code>, <code>max</code>, <code>count</code> (count non-missing values), <code>sum</code>, <code>var</code> (variance), and <code>sd</code> (standard deviation). Reducer expressions are always given as a string, starting with the reducer name, followed by the band name in parentheses. Note that it is possible to mix reducers and bands.</p>
 <h3 id="counting">Counting</h3>
 <p>To get an idea of the data, we can compute simple summary statistics using a ‘reducer’ function over dimensions. For example, using the <code>count</code> reducer, we can learn about the temporal coverage for each aggregated pixel, giving us an initial understanding of the temporal quality of the dataset.</p>
 <div class="cell" data-messages="false" data-warnings="false">
@@ -393,19 +388,19 @@ Chris Reudenbach
 <span id="cb7-3"><a></a>  <span class="fu">plot</span>(<span class="at">key.pos =</span> <span class="dv">1</span>,  <span class="at">col =</span> viridis<span class="sc">::</span>viridis, <span class="at">nbreaks =</span> <span class="dv">10</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can see that most time series contain valid observations of around 60 months, which should be sufficient for our example. Similarly, it is also possible to reduce over space, leading to summary time series.</p>
-<p>Below you will find various examples dealing with the common NDVI and the <a href="https://advances.sciencemag.org/content/7/9/eabc7447">kNDVI</a> Indices.</p>
+<p>Below you will find various examples dealing with the common NDVI and the <a href="https://advances.science.org/doi/10.1126/sciadv.abc7447">kNDVI</a> indices.</p>
 <h3 id="kndvi">kNDVI</h3>
-<p>Below, we derive mean monthly kNdvi values over all pixel time series.</p>
+<p>Below, we derive mean monthly kNDVI values over all pixel time series.</p>
 <div class="cell" data-messages="false" data-warnings="false">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10_2.nc"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a></a>    <span class="fu">apply_pixel</span>(<span class="st">"tanh(((B08-B04)/(B08+B04))^2)"</span>, <span class="st">"kNDVI"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a></a>  <span class="fu">apply_pixel</span>(<span class="st">"tanh(((B08-B04)/(B08+B04))^2)"</span>, <span class="st">"kNDVI"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb8-3"><a></a>  <span class="fu">reduce_time</span>(<span class="st">"mean(kNDVI)"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb8-4"><a></a>  <span class="fu">plot</span>(<span class="at">key.pos =</span> <span class="dv">1</span>,  <span class="at">col =</span> ndvi.col, <span class="at">nbreaks =</span> <span class="dv">12</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="ndvi" class="slide level2">
 <h2>NDVI</h2>
-<p>Below, we derive mean monthly Ndvi values over all pixel time series.</p>
+<p>Below, we derive mean monthly NDVI values over all pixel time series.</p>
 <div class="cell" data-messages="false" data-warnings="false">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10_2.nc"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb9-2"><a></a>  <span class="fu">apply_pixel</span>(<span class="st">"(B08-B04)/(B08+B04)"</span>, <span class="st">"NDVI"</span>) <span class="sc">|&gt;</span></span>
@@ -416,11 +411,11 @@ Chris Reudenbach
 <div class="cell" data-messages="false" data-warnings="false">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>zstats <span class="ot">=</span> <span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10_2.nc"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb10-2"><a></a>  <span class="fu">apply_pixel</span>(<span class="st">"(B08-B04)/(B08+B04)"</span>, <span class="st">"NDVI"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-3"><a></a>  <span class="fu">extract_geom</span>(forest_32632,<span class="at">FUN=</span>median) </span>
+<span id="cb10-3"><a></a>  <span class="fu">extract_geom</span>(forest_32632, <span class="at">FUN =</span> median)</span>
 <span id="cb10-4"><a></a></span>
 <span id="cb10-5"><a></a>forest_32632<span class="sc">$</span>FID <span class="ot">=</span> <span class="fu">rownames</span>(forest_32632)</span>
 <span id="cb10-6"><a></a>x <span class="ot">=</span> <span class="fu">merge</span>(forest_32632, zstats, <span class="at">by =</span> <span class="st">"FID"</span>)</span>
-<span id="cb10-7"><a></a><span class="fu">mapview</span>(x[x<span class="sc">$</span>time <span class="sc">==</span> <span class="st">"2020-07"</span>, <span class="st">"NDVI"</span>],<span class="at">col.regions =</span> ndvi.col)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-7"><a></a><span class="fu">mapview</span>(x[x<span class="sc">$</span>time <span class="sc">==</span> <span class="st">"2020-07"</span>, <span class="st">"NDVI"</span>], <span class="at">col.regions =</span> ndvi.col)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <h3 id="timeseries">Timeseries</h3>
 <div class="cell" data-messages="false" data-warnings="false">
@@ -430,65 +425,72 @@ Chris Reudenbach
 <span id="cb11-4"><a></a>  <span class="fu">plot</span>(<span class="at">join.timeseries =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <h3 id="calculate-the-annual-ndvi-difference---using-functions">Calculate the annual NDVI difference - using functions</h3>
-<p>The following function will iterate through 3 years of NDVI data and calculating NDVI difference maps for each pair of years.</p>
+<p>The following function will iterate through 3 years of NDVI data and calculate NDVI difference maps for each pair of years.</p>
 <div class="cell" data-messages="false" data-warnings="false">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">gdalcubes_options</span>(<span class="at">parallel =</span>  <span class="dv">12</span>)</span>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">gdalcubes_options</span>(<span class="at">parallel =</span> <span class="dv">12</span>)</span>
 <span id="cb12-2"><a></a></span>
 <span id="cb12-3"><a></a><span class="co"># ndvi operand</span></span>
 <span id="cb12-4"><a></a>ndvi_type <span class="ot">=</span> <span class="st">"median(kNDVI)"</span></span>
 <span id="cb12-5"><a></a></span>
 <span id="cb12-6"><a></a><span class="co"># time slots as tibble</span></span>
-<span id="cb12-7"><a></a>ts <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">t0 =</span> <span class="fu">c</span>(<span class="st">"2018-04-01"</span>,<span class="st">"2019-04-01"</span>,<span class="st">"2020-04-01"</span>,<span class="st">"2021-04-01"</span>), </span>
-<span id="cb12-8"><a></a>            <span class="at">t1=</span> <span class="fu">c</span>(<span class="st">"2018-09-01"</span>,<span class="st">"2019-09-01"</span>,<span class="st">"2020-09-01"</span>,<span class="st">"2021-09-01"</span>))</span>
-<span id="cb12-9"><a></a></span>
-<span id="cb12-10"><a></a><span class="co"># names of the time slots</span></span>
-<span id="cb12-11"><a></a>names_ndvi <span class="ot">=</span> <span class="fu">paste</span>(ts<span class="sc">$</span>t0,ts<span class="sc">$</span>t1,<span class="at">sep =</span> <span class="st">" to "</span>)</span>
-<span id="cb12-12"><a></a></span>
-<span id="cb12-13"><a></a>basic_kndvi <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">fncube=</span><span class="cn">NULL</span>, <span class="at">t0=</span><span class="cn">NULL</span>, <span class="at">t1=</span><span class="cn">NULL</span>) {</span>
-<span id="cb12-14"><a></a>  <span class="fu">ncdf_cube</span>(fncube) <span class="sc">|&gt;</span> </span>
-<span id="cb12-15"><a></a>    <span class="fu">select_bands</span>(<span class="fu">c</span>(<span class="st">"B04"</span>, <span class="st">"B08"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb12-16"><a></a>    <span class="fu">select_time</span>(<span class="fu">c</span>(t0,t1)) <span class="sc">|&gt;</span></span>
-<span id="cb12-17"><a></a>  <span class="fu">apply_pixel</span>(<span class="st">"tanh(((B08-B04)/(B08+B04))^2)"</span>, <span class="st">"kNDVI"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb12-18"><a></a>    <span class="fu">reduce_time</span>(ndvi_type)</span>
-<span id="cb12-19"><a></a>}</span>
-<span id="cb12-20"><a></a></span>
-<span id="cb12-21"><a></a><span class="co"># (stac-search -&gt; stac and cloud filter image collection -&gt; create cube -&gt; call user function)</span></span>
-<span id="cb12-22"><a></a>ndvi <span class="ot">=</span> <span class="fu">list</span>()</span>
-<span id="cb12-23"><a></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(ts)){</span>
-<span id="cb12-24"><a></a>  <span class="co"># call user function</span></span>
-<span id="cb12-25"><a></a>  <span class="fu">basic_kndvi</span>(<span class="at">fncube =</span> <span class="st">"../data/MOF_10.nc"</span>, <span class="at">t0 =</span> ts<span class="sc">$</span>t0[i], <span class="at">t1 =</span> ts<span class="sc">$</span>t1[i]) <span class="sc">%&gt;%</span></span>
-<span id="cb12-26"><a></a>    <span class="fu">st_as_stars</span>() <span class="ot">-&gt;</span> ndvi[[i]]</span>
-<span id="cb12-27"><a></a>  </span>
+<span id="cb12-7"><a></a>ts <span class="ot">=</span> <span class="fu">tibble</span>(</span>
+<span id="cb12-8"><a></a>  <span class="at">t0 =</span> <span class="fu">c</span>(<span class="st">"2018-04-01"</span>,<span class="st">"2019-04-01"</span>,<span class="st">"2020-04-01"</span>,<span class="st">"2021-04-01"</span>), </span>
+<span id="cb12-9"><a></a>  <span class="at">t1 =</span> <span class="fu">c</span>(<span class="st">"2018-09-01"</span>,<span class="st">"2019-09-01"</span>,<span class="st">"2020-09-01"</span>,<span class="st">"2021-09-01"</span>)</span>
+<span id="cb12-10"><a></a>)</span>
+<span id="cb12-11"><a></a></span>
+<span id="cb12-12"><a></a><span class="co"># names of the time slots</span></span>
+<span id="cb12-13"><a></a>names_ndvi <span class="ot">=</span> <span class="fu">paste</span>(ts<span class="sc">$</span>t0, ts<span class="sc">$</span>t1, <span class="at">sep =</span> <span class="st">" to "</span>)</span>
+<span id="cb12-14"><a></a></span>
+<span id="cb12-15"><a></a>basic_kndvi <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">fncube =</span> <span class="cn">NULL</span>, <span class="at">t0 =</span> <span class="cn">NULL</span>, <span class="at">t1 =</span> <span class="cn">NULL</span>) {</span>
+<span id="cb12-16"><a></a>  <span class="fu">ncdf_cube</span>(fncube) <span class="sc">|&gt;</span> </span>
+<span id="cb12-17"><a></a>    <span class="fu">select_bands</span>(<span class="fu">c</span>(<span class="st">"B04"</span>, <span class="st">"B08"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb12-18"><a></a>    <span class="fu">select_time</span>(<span class="fu">c</span>(t0, t1)) <span class="sc">|&gt;</span></span>
+<span id="cb12-19"><a></a>    <span class="fu">apply_pixel</span>(<span class="st">"tanh(((B08-B04)/(B08+B04))^2)"</span>, <span class="st">"kNDVI"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-20"><a></a>    <span class="fu">reduce_time</span>(ndvi_type)</span>
+<span id="cb12-21"><a></a>}</span>
+<span id="cb12-22"><a></a></span>
+<span id="cb12-23"><a></a><span class="co"># (stac-search -&gt; stac and cloud filter image collection -&gt; create cube -&gt; call user function)</span></span>
+<span id="cb12-24"><a></a>ndvi <span class="ot">=</span> <span class="fu">list</span>()</span>
+<span id="cb12-25"><a></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(ts)) {</span>
+<span id="cb12-26"><a></a>  <span class="fu">basic_kndvi</span>(<span class="at">fncube =</span> <span class="st">"../data/MOF_10.nc"</span>, <span class="at">t0 =</span> ts<span class="sc">$</span>t0[i], <span class="at">t1 =</span> ts<span class="sc">$</span>t1[i]) <span class="sc">|&gt;</span></span>
+<span id="cb12-27"><a></a>    <span class="fu">st_as_stars</span>() <span class="ot">-&gt;</span> ndvi[[i]]</span>
 <span id="cb12-28"><a></a>}</span>
 <span id="cb12-29"><a></a></span>
 <span id="cb12-30"><a></a><span class="co"># now we may create a mask according to the NDVI extent and resolution</span></span>
-<span id="cb12-31"><a></a>stars<span class="sc">::</span><span class="fu">write_stars</span>(ndvi[[<span class="dv">1</span>]] <span class="sc">*</span> <span class="dv">0</span>, <span class="fu">paste0</span>(tutorialDir,<span class="st">"forest/only_forestmask.tif"</span>))</span>
-<span id="cb12-32"><a></a>gi<span class="ot">=</span>link2GI<span class="sc">::</span><span class="fu">linkGDAL</span>(<span class="at">searchLocation =</span> <span class="st">"/usr/bin/"</span>)</span>
-<span id="cb12-33"><a></a>cmd<span class="ot">=</span>gi<span class="sc">$</span>bin[[<span class="dv">1</span>]]<span class="sc">$</span>gdal_bin[<span class="dv">14</span>]</span>
-<span id="cb12-34"><a></a><span class="fu">system</span>(<span class="fu">paste</span>(cmd ,<span class="st">'-burn 1.0 -tr 10.0 10.0 -a_nodata 0.0 -te '</span>, <span class="fu">st_bbox</span>(ndvi[[<span class="dv">1</span>]])<span class="sc">$</span>xmin,<span class="st">' '</span>,<span class="fu">st_bbox</span>(ndvi[[<span class="dv">1</span>]])<span class="sc">$</span>ymin,<span class="st">' '</span>,<span class="fu">st_bbox</span>(ndvi[[<span class="dv">1</span>]])<span class="sc">$</span>xmax,<span class="st">' '</span>,<span class="fu">st_bbox</span>(ndvi[[<span class="dv">1</span>]])<span class="sc">$</span>ymax,<span class="st">' -ot Float32 -of GTiff'</span>, <span class="fu">paste0</span>(tutorialDir,<span class="st">"forest/MOF_mask_pr.shp "</span>),<span class="fu">paste0</span>(tutorialDir,<span class="st">"forest/only_forestmask.tif"</span>)))</span>
-<span id="cb12-35"><a></a>mask <span class="ot">&lt;-</span> <span class="fu">raster</span>(<span class="fu">paste0</span>(tutorialDir,<span class="st">"forest/only_forestmask.tif"</span>))</span>
-<span id="cb12-36"><a></a><span class="fu">plot</span>(mask)                                </span>
-<span id="cb12-37"><a></a></span>
-<span id="cb12-38"><a></a>mask[mask <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
-<span id="cb12-39"><a></a></span>
-<span id="cb12-40"><a></a><span class="co"># mapping the results</span></span>
-<span id="cb12-41"><a></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
-<span id="cb12-42"><a></a>tm_ndvi <span class="ot">=</span> <span class="fu">lapply</span>(<span class="fu">seq</span>(<span class="dv">2</span><span class="sc">:</span><span class="fu">length</span>(names_ndvi) <span class="sc">-</span><span class="dv">1</span>),<span class="cf">function</span>(i){</span>
-<span id="cb12-43"><a></a>  m <span class="ot">=</span> <span class="fu">tm_shape</span>(osm_forest) <span class="sc">+</span> <span class="fu">tm_rgb</span>() <span class="sc">+</span></span>
-<span id="cb12-44"><a></a>    <span class="fu">tm_shape</span>((ndvi[[i]] <span class="sc">-</span> ndvi[[i<span class="sc">+</span><span class="dv">1</span>]]) <span class="sc">*</span> <span class="fu">st_as_stars</span>(mask )) <span class="sc">+</span></span>
-<span id="cb12-45"><a></a>    <span class="fu">tm_raster</span>(<span class="at">title =</span> ndvi_type,<span class="at">pal =</span><span class="fu">diverging_hcl</span>(<span class="dv">11</span>, <span class="st">"rg"</span>)) <span class="sc">+</span></span>
-<span id="cb12-46"><a></a>    <span class="fu">tm_layout</span>(<span class="at">panel.labels =</span> <span class="fu">paste</span>(<span class="st">"Difference "</span>,names_ndvi[[i]],<span class="st">"/"</span>,names_ndvi[[i<span class="sc">+</span><span class="dv">1</span>]]),</span>
-<span id="cb12-47"><a></a>              <span class="at">legend.show =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb12-48"><a></a>              <span class="at">panel.label.color =</span> <span class="st">"darkblue"</span>,</span>
-<span id="cb12-49"><a></a>              <span class="at">panel.label.size =</span><span class="fl">0.5</span>,</span>
-<span id="cb12-50"><a></a>              <span class="at">panel.label.height=</span><span class="fl">1.2</span>,</span>
-<span id="cb12-51"><a></a>              <span class="at">legend.text.size =</span> <span class="fl">0.3</span>,</span>
-<span id="cb12-52"><a></a>              <span class="at">legend.outside =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb12-53"><a></a>    <span class="fu">tm_grid</span>()</span>
-<span id="cb12-54"><a></a>})</span>
-<span id="cb12-55"><a></a></span>
-<span id="cb12-56"><a></a></span>
-<span id="cb12-57"><a></a><span class="co"># tmap_arrange(tm_ndvi,nrow = 1,asp = NA,widths = c(0.33,0.33,0.33),outer.margins = 0.001)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-31"><a></a>stars<span class="sc">::</span><span class="fu">write_stars</span>(ndvi[[<span class="dv">1</span>]] <span class="sc">*</span> <span class="dv">0</span>, <span class="fu">paste0</span>(tutorialDir, <span class="st">"forest/only_forestmask.tif"</span>))</span>
+<span id="cb12-32"><a></a>gi  <span class="ot">=</span> link2GI<span class="sc">::</span><span class="fu">linkGDAL</span>(<span class="at">searchLocation =</span> <span class="st">"/usr/bin/"</span>)</span>
+<span id="cb12-33"><a></a>cmd <span class="ot">=</span> gi<span class="sc">$</span>bin[[<span class="dv">1</span>]]<span class="sc">$</span>gdal_bin[<span class="dv">14</span>]</span>
+<span id="cb12-34"><a></a><span class="fu">system</span>(<span class="fu">paste</span>(</span>
+<span id="cb12-35"><a></a>  cmd,</span>
+<span id="cb12-36"><a></a>  <span class="st">"-burn 1.0 -tr 10.0 10.0 -a_nodata 0.0 -te"</span>,</span>
+<span id="cb12-37"><a></a>  <span class="fu">st_bbox</span>(ndvi[[<span class="dv">1</span>]])<span class="sc">$</span>xmin, <span class="fu">st_bbox</span>(ndvi[[<span class="dv">1</span>]])<span class="sc">$</span>ymin,</span>
+<span id="cb12-38"><a></a>  <span class="fu">st_bbox</span>(ndvi[[<span class="dv">1</span>]])<span class="sc">$</span>xmax, <span class="fu">st_bbox</span>(ndvi[[<span class="dv">1</span>]])<span class="sc">$</span>ymax,</span>
+<span id="cb12-39"><a></a>  <span class="st">"-ot Float32 -of GTiff"</span>,</span>
+<span id="cb12-40"><a></a>  <span class="fu">paste0</span>(tutorialDir, <span class="st">"forest/MOF_mask_pr.shp"</span>),</span>
+<span id="cb12-41"><a></a>  <span class="fu">paste0</span>(tutorialDir, <span class="st">"forest/only_forestmask.tif"</span>)</span>
+<span id="cb12-42"><a></a>))</span>
+<span id="cb12-43"><a></a>mask <span class="ot">&lt;-</span> <span class="fu">raster</span>(<span class="fu">paste0</span>(tutorialDir, <span class="st">"forest/only_forestmask.tif"</span>))</span>
+<span id="cb12-44"><a></a><span class="fu">plot</span>(mask)</span>
+<span id="cb12-45"><a></a></span>
+<span id="cb12-46"><a></a>mask[mask <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb12-47"><a></a></span>
+<span id="cb12-48"><a></a><span class="co"># mapping the results</span></span>
+<span id="cb12-49"><a></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb12-50"><a></a>tm_ndvi <span class="ot">=</span> <span class="fu">lapply</span>(<span class="fu">seq</span>(<span class="dv">2</span><span class="sc">:</span><span class="fu">length</span>(names_ndvi) <span class="sc">-</span> <span class="dv">1</span>), <span class="cf">function</span>(i) {</span>
+<span id="cb12-51"><a></a>  <span class="fu">tm_shape</span>(osm_forest) <span class="sc">+</span> <span class="fu">tm_rgb</span>() <span class="sc">+</span></span>
+<span id="cb12-52"><a></a>    <span class="fu">tm_shape</span>((ndvi[[i]] <span class="sc">-</span> ndvi[[i<span class="sc">+</span><span class="dv">1</span>]]) <span class="sc">*</span> <span class="fu">st_as_stars</span>(mask)) <span class="sc">+</span></span>
+<span id="cb12-53"><a></a>    <span class="fu">tm_raster</span>(<span class="at">title =</span> ndvi_type, <span class="at">pal =</span> <span class="fu">diverging_hcl</span>(<span class="dv">11</span>, <span class="st">"rg"</span>)) <span class="sc">+</span></span>
+<span id="cb12-54"><a></a>    <span class="fu">tm_layout</span>(</span>
+<span id="cb12-55"><a></a>      <span class="at">panel.labels      =</span> <span class="fu">paste</span>(<span class="st">"Difference "</span>, names_ndvi[[i]], <span class="st">"/"</span>, names_ndvi[[i<span class="sc">+</span><span class="dv">1</span>]]),</span>
+<span id="cb12-56"><a></a>      <span class="at">legend.show       =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb12-57"><a></a>      <span class="at">panel.label.color =</span> <span class="st">"darkblue"</span>,</span>
+<span id="cb12-58"><a></a>      <span class="at">panel.label.size  =</span> <span class="fl">0.5</span>,</span>
+<span id="cb12-59"><a></a>      <span class="at">panel.label.height=</span> <span class="fl">1.2</span>,</span>
+<span id="cb12-60"><a></a>      <span class="at">legend.text.size  =</span> <span class="fl">0.3</span>,</span>
+<span id="cb12-61"><a></a>      <span class="at">legend.outside    =</span> <span class="cn">TRUE</span></span>
+<span id="cb12-62"><a></a>    ) <span class="sc">+</span></span>
+<span id="cb12-63"><a></a>    <span class="fu">tm_grid</span>()</span>
+<span id="cb12-64"><a></a>})</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <h4 id="resulting-maps">Resulting maps</h4>
 </section>
@@ -497,9 +499,9 @@ Chris Reudenbach
 <p>To apply a more complex time series method such as <code>bfastmonitor()</code>, the data cube operations below allow to provide custom user-defined R functions instead of string expressions, which translate to built-in reducers. It is very important that these functions receive arrays as input and must return arrays as output, too. Depending on the operation, the dimensionality of the arrays is different:</p>
 <table class="caption-top">
 <colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
+<col style="width: 19%">
+<col style="width: 49%">
+<col style="width: 30%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -512,7 +514,7 @@ Chris Reudenbach
 <tr class="odd">
 <td style="text-align: left;"><code>apply_pixel</code></td>
 <td style="text-align: left;">Vector of band values for one pixel</td>
-<td style="text-align: left;">Vector of band values of one pixel</td>
+<td style="text-align: left;">Vector of band values</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><code>reduce_time</code></td>
@@ -521,20 +523,18 @@ Chris Reudenbach
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><code>reduce_space</code></td>
-<td style="text-align: left;">Three-dimensional array with dimensions bands, x, and y</td>
+<td style="text-align: left;">3-D array (bands, x, y)</td>
 <td style="text-align: left;">Vector of band values</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><code>apply_time</code></td>
 <td style="text-align: left;">Multi-band time series as a matrix</td>
-<td style="text-align: left;">Multi-band time series as a matrix</td>
+<td style="text-align: left;">Multi-band time series</td>
 </tr>
 </tbody>
 </table>
-<p>There is almost no limit of what R function we use, but we must take care of a few things: 1. The reducer function is executed in a new R process without access to the current workspace. It is not possible to access variables defined outside of the function and packages must be loaded <strong>within</strong> the function. 2. The reducer function <strong>must</strong> always return a vector with the same length (for all time series). 3. It is a good idea to think about <code>NA</code> values, i.e.&nbsp;you should check whether the complete time series is <code>NA</code>, and that missing values do not produce errors.</p>
-<p>Another possibility to apply R functions to data cubes is of course to convert data cubes to <code>stars</code> objects and use the <code>stars</code> package for further analysis.</p>
+<p>There is almost no limit of what R function we use, but we must take care of a few things: 1) the reducer runs in a fresh R process (load packages inside), 2) it <strong>must</strong> always return a vector of constant length, 3) handle <code>NA</code>s.</p>
 <h3 id="applying-bfastmonitor-as-a-user-defined-reducer-function">Applying <code>bfastmonitor</code> as a user-defined reducer function</h3>
-<p>In our example, <code>bfastmonitor</code> returns change date and change magnitude values per time series so we can use <code>reduce_time()</code>. The script below (1) calculates the <a href="https://advances.sciencemag.org/content/7/9/eabc7447">kNDVI</a>, (2) applies <code>bfastmonitor()</code>, and properly handles errors e.g.&nbsp;due to missing data with <code>tryCatch()</code>, and (3) finally writes out the resulting change dates and magnitudes of change for all pixels of the time series as a netCDF file. The results shows the changes starting at 1/2019 until 12/2021 and identify pretty well the dynamical impacts of drought and bark beetle in the Marburg University Forest (MOF).</p>
 <div class="cell" data-messages="false" data-warnings="false">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">library</span>(sf)</span>
 <span id="cb13-2"><a></a><span class="fu">library</span>(tmap)</span>
@@ -542,65 +542,70 @@ Chris Reudenbach
 <span id="cb13-4"><a></a><span class="fu">library</span>(gdalcubes)</span>
 <span id="cb13-5"><a></a><span class="fu">library</span>(stars)</span>
 <span id="cb13-6"><a></a><span class="fu">library</span>(colorspace)</span>
-<span id="cb13-7"><a></a>ndvi.col <span class="ot">=</span> <span class="cf">function</span>(n) {</span>
-<span id="cb13-8"><a></a>  <span class="fu">rev</span>(<span class="fu">sequential_hcl</span>(n, <span class="st">"Green-Yellow"</span>))</span>
-<span id="cb13-9"><a></a>}</span>
-<span id="cb13-10"><a></a>tutorialDir <span class="ot">=</span> <span class="fu">path.expand</span>(<span class="st">"~/edu/agis/doc/data/tutorial/"</span>)</span>
-<span id="cb13-11"><a></a></span>
-<span id="cb13-12"><a></a>figtrim <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
-<span id="cb13-13"><a></a>  img <span class="ot">&lt;-</span> magick<span class="sc">::</span><span class="fu">image_trim</span>(magick<span class="sc">::</span><span class="fu">image_read</span>(path))</span>
-<span id="cb13-14"><a></a>  magick<span class="sc">::</span><span class="fu">image_write</span>(img, path)</span>
-<span id="cb13-15"><a></a>  path</span>
-<span id="cb13-16"><a></a>}</span>
-<span id="cb13-17"><a></a><span class="fu">gdalcubes_options</span>(<span class="at">parallel =</span> <span class="dv">12</span>)</span>
-<span id="cb13-18"><a></a><span class="do">## start analysis</span></span>
-<span id="cb13-19"><a></a><span class="fu">system.time</span>(</span>
-<span id="cb13-20"><a></a>  <span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10.nc"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb13-21"><a></a>    <span class="fu">reduce_time</span>(<span class="at">names =</span> <span class="fu">c</span>(<span class="st">"change_date"</span>, <span class="st">"change_magnitude"</span>,<span class="st">"kndvi"</span>), <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
-<span id="cb13-22"><a></a>      kndvi <span class="ot">=</span> <span class="fu">tanh</span>(((x[<span class="st">'B08'</span>,]<span class="sc">-</span>x[<span class="st">'B04'</span>,])<span class="sc">/</span>(x[<span class="st">'B08'</span>,]<span class="sc">+</span>x[<span class="st">'B04'</span>,]))<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb13-23"><a></a>      <span class="cf">if</span> (<span class="fu">all</span>(<span class="fu">is.na</span>(kndvi))) {</span>
-<span id="cb13-24"><a></a>        <span class="fu">return</span>(<span class="fu">c</span>(<span class="cn">NA</span>,<span class="cn">NA</span>))</span>
-<span id="cb13-25"><a></a>      }</span>
-<span id="cb13-26"><a></a>      kndvi_ts <span class="ot">=</span> <span class="fu">ts</span>(kndvi, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2017</span>, <span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
-<span id="cb13-27"><a></a>      <span class="fu">library</span>(bfast)</span>
-<span id="cb13-28"><a></a>      <span class="fu">tryCatch</span>({</span>
-<span id="cb13-29"><a></a>        result <span class="ot">=</span> <span class="fu">bfastmonitor</span>(kndvi_ts, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">1</span>), </span>
-<span id="cb13-30"><a></a>                              <span class="at">history =</span> <span class="st">"all"</span>, <span class="at">level =</span> <span class="fl">0.01</span>)</span>
-<span id="cb13-31"><a></a>        <span class="fu">return</span>(<span class="fu">c</span>(result<span class="sc">$</span>breakpoint, result<span class="sc">$</span>magnitude))</span>
-<span id="cb13-32"><a></a>      }, <span class="at">error =</span> <span class="cf">function</span>(x) {</span>
-<span id="cb13-33"><a></a>        <span class="fu">return</span>(<span class="fu">c</span>(<span class="cn">NA</span>,<span class="cn">NA</span>))</span>
-<span id="cb13-34"><a></a>      })</span>
-<span id="cb13-35"><a></a>    }) <span class="sc">|&gt;</span></span>
-<span id="cb13-36"><a></a>    <span class="fu">write_ncdf</span>(<span class="fu">paste0</span>(tutorialDir,<span class="st">"bf_results.nc"</span>),<span class="at">overwrite =</span> <span class="cn">TRUE</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-7"><a></a></span>
+<span id="cb13-8"><a></a>ndvi.col <span class="ot">=</span> <span class="cf">function</span>(n) {</span>
+<span id="cb13-9"><a></a>  <span class="fu">rev</span>(<span class="fu">sequential_hcl</span>(n, <span class="st">"Green-Yellow"</span>))</span>
+<span id="cb13-10"><a></a>}</span>
+<span id="cb13-11"><a></a>tutorialDir <span class="ot">=</span> <span class="fu">path.expand</span>(<span class="st">"~/edu/agis/doc/data/tutorial/"</span>)</span>
+<span id="cb13-12"><a></a></span>
+<span id="cb13-13"><a></a>figtrim <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb13-14"><a></a>  img <span class="ot">&lt;-</span> magick<span class="sc">::</span><span class="fu">image_trim</span>(magick<span class="sc">::</span><span class="fu">image_read</span>(path))</span>
+<span id="cb13-15"><a></a>  magick<span class="sc">::</span><span class="fu">image_write</span>(img, path)</span>
+<span id="cb13-16"><a></a>  path</span>
+<span id="cb13-17"><a></a>}</span>
+<span id="cb13-18"><a></a></span>
+<span id="cb13-19"><a></a><span class="fu">gdalcubes_options</span>(<span class="at">parallel =</span> <span class="dv">12</span>)</span>
+<span id="cb13-20"><a></a></span>
+<span id="cb13-21"><a></a><span class="fu">system.time</span>(</span>
+<span id="cb13-22"><a></a>  <span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10.nc"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-23"><a></a>    <span class="fu">reduce_time</span>(<span class="at">names =</span> <span class="fu">c</span>(<span class="st">"change_date"</span>, <span class="st">"change_magnitude"</span>, <span class="st">"kndvi"</span>),</span>
+<span id="cb13-24"><a></a>      <span class="at">FUN =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb13-25"><a></a>        kndvi <span class="ot">=</span> <span class="fu">tanh</span>(((x[<span class="st">'B08'</span>,]<span class="sc">-</span>x[<span class="st">'B04'</span>,])<span class="sc">/</span>(x[<span class="st">'B08'</span>,]<span class="sc">+</span>x[<span class="st">'B04'</span>,]))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb13-26"><a></a>        <span class="cf">if</span> (<span class="fu">all</span>(<span class="fu">is.na</span>(kndvi))) <span class="fu">return</span>(<span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>))</span>
+<span id="cb13-27"><a></a>        kndvi_ts <span class="ot">=</span> <span class="fu">ts</span>(kndvi, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2017</span>, <span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb13-28"><a></a>        <span class="fu">library</span>(bfast)</span>
+<span id="cb13-29"><a></a>        <span class="fu">tryCatch</span>({</span>
+<span id="cb13-30"><a></a>          result <span class="ot">=</span> <span class="fu">bfastmonitor</span>(kndvi_ts, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>,<span class="dv">1</span>), <span class="at">history =</span> <span class="st">"all"</span>, <span class="at">level =</span> <span class="fl">0.01</span>)</span>
+<span id="cb13-31"><a></a>          <span class="fu">return</span>(<span class="fu">c</span>(result<span class="sc">$</span>breakpoint, result<span class="sc">$</span>magnitude))</span>
+<span id="cb13-32"><a></a>        }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb13-33"><a></a>          <span class="fu">return</span>(<span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>))</span>
+<span id="cb13-34"><a></a>        })</span>
+<span id="cb13-35"><a></a>      }</span>
+<span id="cb13-36"><a></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb13-37"><a></a>    <span class="fu">write_ncdf</span>(<span class="fu">paste0</span>(tutorialDir, <span class="st">"bf_results.nc"</span>), <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-38"><a></a>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we can use the netCDF file and map the results with any preferred visualisation tool. In this case <code>tmap</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">library</span>(tmap)</span>
 <span id="cb14-2"><a></a></span>
 <span id="cb14-3"><a></a>mask <span class="ot">&lt;-</span> <span class="fu">raster</span>(<span class="fu">paste0</span>(tutorialDir,<span class="st">"forest/only_forestmask.tif"</span>))</span>
-<span id="cb14-4"><a></a><span class="co"># plotting it from the local ncdf  </span></span>
-<span id="cb14-5"><a></a><span class="fu">tmap_mode</span>(<span class="st">"view"</span>)</span>
-<span id="cb14-6"><a></a>gdalcubes<span class="sc">::</span><span class="fu">ncdf_cube</span>(<span class="fu">paste0</span>(tutorialDir,<span class="st">"bf_results.nc"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb14-7"><a></a>  stars<span class="sc">::</span><span class="fu">st_as_stars</span>() <span class="ot">-&gt;</span> x</span>
+<span id="cb14-4"><a></a><span class="fu">tmap_mode</span>(<span class="st">"view"</span>)</span>
+<span id="cb14-5"><a></a>gdalcubes<span class="sc">::</span><span class="fu">ncdf_cube</span>(<span class="fu">paste0</span>(tutorialDir,<span class="st">"bf_results.nc"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb14-6"><a></a>  stars<span class="sc">::</span><span class="fu">st_as_stars</span>() <span class="ot">-&gt;</span> x</span>
+<span id="cb14-7"><a></a></span>
 <span id="cb14-8"><a></a><span class="fu">tm_shape</span>(osm_forest) <span class="sc">+</span> <span class="fu">tm_rgb</span>() <span class="sc">+</span></span>
-<span id="cb14-9"><a></a>  <span class="fu">tm_shape</span>(x[<span class="dv">1</span>] <span class="sc">*</span> <span class="fu">st_as_stars</span>(mask )) <span class="sc">+</span> </span>
+<span id="cb14-9"><a></a>  <span class="fu">tm_shape</span>(x[<span class="dv">1</span>] <span class="sc">*</span> <span class="fu">st_as_stars</span>(mask)) <span class="sc">+</span> </span>
 <span id="cb14-10"><a></a>  <span class="fu">tm_raster</span>(<span class="at">n =</span> <span class="dv">6</span>)  <span class="sc">+</span></span>
 <span id="cb14-11"><a></a>  <span class="fu">tm_layout</span>(</span>
 <span id="cb14-12"><a></a>    <span class="at">legend.show =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb14-13"><a></a>    <span class="at">panel.label.height=</span><span class="fl">0.6</span>,</span>
-<span id="cb14-14"><a></a>    <span class="at">panel.label.size=</span><span class="fl">0.6</span>,</span>
-<span id="cb14-15"><a></a>    <span class="at">legend.text.size =</span> <span class="fl">0.4</span>,</span>
-<span id="cb14-16"><a></a>    <span class="at">legend.outside =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb14-17"><a></a>  <span class="fu">tm_grid</span>()</span>
-<span id="cb14-18"><a></a></span>
-<span id="cb14-19"><a></a><span class="fu">tm_shape</span>(osm_forest) <span class="sc">+</span> <span class="fu">tm_rgb</span>() <span class="sc">+</span></span>
-<span id="cb14-20"><a></a>  <span class="fu">tm_shape</span>(x[<span class="dv">2</span>]<span class="sc">*</span> <span class="fu">st_as_stars</span>(mask ))  <span class="sc">+</span> <span class="fu">tm_raster</span>() <span class="sc">+</span></span>
-<span id="cb14-21"><a></a>  <span class="fu">tm_layout</span>(<span class="at">legend.title.size =</span> <span class="dv">1</span>,</span>
-<span id="cb14-22"><a></a>            <span class="at">panel.label.height=</span><span class="fl">0.6</span>,</span>
-<span id="cb14-23"><a></a>            <span class="at">panel.label.size=</span><span class="fl">0.6</span>,</span>
-<span id="cb14-24"><a></a>            <span class="at">legend.text.size =</span> <span class="fl">0.4</span>,</span>
-<span id="cb14-25"><a></a>            <span class="at">legend.outside =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb14-26"><a></a>  <span class="fu">tm_grid</span>()</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-13"><a></a>    <span class="at">panel.label.height =</span> <span class="fl">0.6</span>,</span>
+<span id="cb14-14"><a></a>    <span class="at">panel.label.size   =</span> <span class="fl">0.6</span>,</span>
+<span id="cb14-15"><a></a>    <span class="at">legend.text.size   =</span> <span class="fl">0.4</span>,</span>
+<span id="cb14-16"><a></a>    <span class="at">legend.outside     =</span> <span class="cn">TRUE</span></span>
+<span id="cb14-17"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb14-18"><a></a>  <span class="fu">tm_grid</span>()</span>
+<span id="cb14-19"><a></a></span>
+<span id="cb14-20"><a></a><span class="fu">tm_shape</span>(osm_forest) <span class="sc">+</span> <span class="fu">tm_rgb</span>() <span class="sc">+</span></span>
+<span id="cb14-21"><a></a>  <span class="fu">tm_shape</span>(x[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">st_as_stars</span>(mask)) <span class="sc">+</span> <span class="fu">tm_raster</span>() <span class="sc">+</span></span>
+<span id="cb14-22"><a></a>  <span class="fu">tm_layout</span>(</span>
+<span id="cb14-23"><a></a>    <span class="at">legend.title.size   =</span> <span class="dv">1</span>,</span>
+<span id="cb14-24"><a></a>    <span class="at">panel.label.height  =</span> <span class="fl">0.6</span>,</span>
+<span id="cb14-25"><a></a>    <span class="at">panel.label.size    =</span> <span class="fl">0.6</span>,</span>
+<span id="cb14-26"><a></a>    <span class="at">legend.text.size    =</span> <span class="fl">0.4</span>,</span>
+<span id="cb14-27"><a></a>    <span class="at">legend.outside      =</span> <span class="cn">TRUE</span></span>
+<span id="cb14-28"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb14-29"><a></a>  <span class="fu">tm_grid</span>()</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <iframe valign="center" src="m2.html" width="1024" height="960" frameborder="0" allowfullscreen="allowfullscreen">
 </iframe>
@@ -608,26 +613,25 @@ Chris Reudenbach
 <em>Magnitude Change Map</em>
 </figcaption>
 <p>
+</p>
 <iframe valign="center" src="m1.html" width="1024" height="960" frameborder="0" allowfullscreen="allowfullscreen">
 </iframe>
-</p><figcaption>
+<figcaption>
 <em>Period of Change Map</em>
 </figcaption>
 <p>Running <code>bfastmonitor()</code> is computationally expensive. However, since in common (<em>not in our case</em>) the data should be located in the cloud, it would be obvious to launch one of the (payed) more powerful machine instance types with many processors. Parallelization within one instance can be controlled entirely by <code>gdalcubes</code> using <code>gdalcubes_options()</code> which is extremely simple.</p>
 <p>From a scientific point of view we need to tune some aspects. The kNDVI Index together with the <code>bfastmonitor</code> approach is somewhat sophisticated and need a validation strategy. Also the correlation to the different tree species could be promising. So there is certainly a need for more analysis to understand the processes and to identify false results.</p>
-</section>
+</section></section>
 <section id="summary" class="title-slide slide level1 center">
 <h1>Summary</h1>
 <p>This examples have shown, how simple and more more complex methods can be applied on data cubes. Especially the chosen approach to just <em>“download”</em> the data from a COG server and perform the processing on the local machine is kind of promising due to the fact that the code can be run almost identically on a cloud instance. The use of more common or well known functionalities and packages helps a lot migrating to <code>gdalcubes</code> concept.</p>
 <p>It is even more powerful to use this workflow for extremely comfortable multisensor multiscale approaches.</p>
 </section>
 
+<section>
 <section id="references" class="title-slide slide level1 center">
 <h1>References</h1>
-<p>:::</p>
-<p>::::</p>
-<p>:::::</p>
-<hr>
+
 </section>
 <section id="minimum-temperature-c" class="slide level2">
 <h2>Minimum temperature (°C)</h2>
@@ -649,18 +653,13 @@ Chris Reudenbach
 </div></div>
 
 
-</section>
-
-</section></section></div>
-<div class="quarto-auto-generated-content" style="display: none;">
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
 <p>&lt;gisma 2024&gt;</p>
 </div>
 </div></div>
-
-
-    
-  
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
   <script src="../site_libs/revealjs/dist/reveal.js"></script>

@@ -123,11 +123,48 @@
       margin-right: 0; 
     }
   </style>
-<meta property="og:title" content="Scientific Workflow – Advanced GIS &amp; RS">
+  <style>
+  /* Abstand zwischen Button und Seitennummer (default: 72px ≈ Buttonbreite + Puffer) */
+  :root { --back-btn-gap: 72px; }
+
+  /* Button unten rechts */
+  #back-home {
+    position: fixed;
+    bottom: 12px;
+    right: 12px;
+    z-index: 1000;
+    opacity: .35;
+    background: rgba(255,255,255,.65);
+    backdrop-filter: blur(2px);
+    padding: .35rem .55rem;
+    border: 1px solid #bbb;
+    border-radius: .4rem;
+    font-size: .85rem;
+    transition: opacity .2s;
+  }
+  #back-home:hover {
+    opacity: 1;
+  }
+
+  /* Seitennummer nach links schieben, damit kein Überlappen */
+  .reveal .slide-number {
+    right: calc(12px + var(--back-btn-gap));
+  }
+
+  /* Im PDF/Speaker-View nicht anzeigen */
+  @media print {
+    #back-home { display: none; }
+  }
+  </style>
+
+  <meta property="og:title" content="Scientific Workflow – Advanced GIS &amp; RS">
 <meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/slides/images/grubenwiese2-sp.jpg">
 <meta property="og:site_name" content="Advanced GIS &amp; RS">
-</head>
-<body class="quarto-light">
+</head><body class="quarto-light"><div id="back-home">
+    <a href="https://gisma-courses.github.io/LV-19-d19-006-25/" style="text-decoration:none;color:#333;">⟵ Menu</a>
+  </div>
+
+
   <div class="reveal">
     <div class="slides">
 
@@ -280,7 +317,7 @@ Chris Reudenbach
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-
+<p>&lt;gisma 2025&gt;</p>
 </div>
 </div></div>
 
@@ -440,7 +477,7 @@ Chris Reudenbach
         previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'fade',
+        transition: 'none',
 
         // Transition speed (default/fast/slow)
         transitionSpeed: 'default',

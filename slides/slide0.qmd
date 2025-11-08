@@ -3,15 +3,15 @@ title: "Scientific Workflow"
 author: "Chris Reudenbach"
 format:
   revealjs:
-    title-slide: true
-    theme: [default]
-    transition: fade
+    #theme: [default, ../_extensions/metropolis-theme/metropolis.scss]
     toc: false
+    toc-depth: 2
     chalkboard: true
     slide-number: true
+    footer: "<gisma 2025>"
     menu: true
-    layout: true
-    # include-in-header: ../includes/back.html   # nur aktivieren, wenn die Datei existiert
+    title-slide: true
+    include-in-header: ../includes/back.html
 lightbox: true
 spotlight:
   useAsPointer: true
