@@ -473,11 +473,11 @@
     "text": "Comments & Suggestions"
   },
   {
-    "objectID": "slides/slide0.html#scientific-process-overview",
-    "href": "slides/slide0.html#scientific-process-overview",
+    "objectID": "slides/slide0.html#scientific-process",
+    "href": "slides/slide0.html#scientific-process",
     "title": "Scientific Workflow",
-    "section": "Scientific Process – Overview",
-    "text": "Scientific Process – Overview\n\n\n\n\n\n\n\n\n\nframing the problem\n\n\n\n\n\n\n\n\n\n\n\nFoundations\n\n\ntheory, domain context\n\n\n\n\n\n\n\n\nResearch Questions\n\n\nprecise, testable, scoped\n\n\n\n\n\n\n\n\nState of the Art\n\n\nknowns, gaps, hypotheses\n\n\n\n\n\n\n\n\n\nfinding and evaluating the solution\n\n\n\n\n\n\n\n\n\n\n\nNecessary Methods\n\n\ndata, preprocessing, validation, metrics, models, tuning, ablations\n\n\n\n\n\n\n\n\nApplied Solution Path\n\n\nimplementation & assumptions\n\n\n\n\n\n\n\n\nResults\n\n\nfindings, uncertainty, limitations\n\n\n\n\n\n\n\n\n\n\n\n\nreflecting and improving\n\n\n\n\n\n\n\n\n\n\n\nLoopback, Evaluation & Improvement\n\n\nerror analysis, robustness checks, iteration",
+    "section": "Scientific Process",
+    "text": "Scientific Process\n\n\n\n\n\n\nframing the research problem\n\n\n\n\n\n\n\n\n\n\n\nFoundations\n\n\ntheory, domain context\n\n\n\n\n\n\n\n\nResearch Questions\n\n\nprecise, testable, scoped\n\n\n\n\n\n\n\n\nState of the Art\n\n\nknowns, gaps, hypotheses\n\n\n\n\n\n\n\n\n\nfinding and evaluating the solution\n\n\n\n\n\n\n\n\n\n\n\nNecessary Methods\n\n\ndata, preprocessing, validation, metrics, models, tuning, ablations\n\n\n\n\n\n\n\n\nApplied Solution Path\n\n\nimplementation & assumptions\n\n\n\n\n\n\n\n\nResults\n\n\nfindings, uncertainty, limitations\n\n\n\n\n\n\n\n\n\nreflecting and improving\n\n\n\n\n\n\n\n\n\n\n\nLoopback, Evaluation & Improvement\n\n\nerror analysis, robustness checks, iteration",
     "crumbs": [
       "FAQ",
       "Lectures",
@@ -833,18 +833,6 @@
       "FAQ",
       "Worksheets",
       "1. First Design"
-    ]
-  },
-  {
-    "objectID": "slides/slide0.html#scientific-process",
-    "href": "slides/slide0.html#scientific-process",
-    "title": "Scientific Workflow",
-    "section": "Scientific Process",
-    "text": "Scientific Process\n\n\n\n\n\n\nframing the research problem\n\n\n\n\n\n\n\n\n\n\n\nFoundations\n\n\ntheory, domain context\n\n\n\n\n\n\n\n\nResearch Questions\n\n\nprecise, testable, scoped\n\n\n\n\n\n\n\n\nState of the Art\n\n\nknowns, gaps, hypotheses\n\n\n\n\n\n\n\n\n\nfinding and evaluating the solution\n\n\n\n\n\n\n\n\n\n\n\nNecessary Methods\n\n\ndata, preprocessing, validation, metrics, models, tuning, ablations\n\n\n\n\n\n\n\n\nApplied Solution Path\n\n\nimplementation & assumptions\n\n\n\n\n\n\n\n\nResults\n\n\nfindings, uncertainty, limitations\n\n\n\n\n\n\n\n\n\nreflecting and improving\n\n\n\n\n\n\n\n\n\n\n\nLoopback, Evaluation & Improvement\n\n\nerror analysis, robustness checks, iteration",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Scientific Workflow"
     ]
   }
 ]

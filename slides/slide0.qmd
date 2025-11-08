@@ -3,7 +3,7 @@ title: "Scientific Workflow"
 author: "Chris Reudenbach"
 format:
   revealjs:
-    title-slide: false
+    title-slide: true
     theme: [default]
     transition: fade
     toc: false
@@ -23,7 +23,7 @@ spotlight:
 .reveal .column { flex:0 0 auto; }
 </style>
 
-## Scientific Process
+
 
 :::: {.columns}
 
