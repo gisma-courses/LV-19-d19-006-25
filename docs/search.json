@@ -466,42 +466,72 @@
     "href": "reader/reader_ws-04.html",
     "title": "GIS & Remote Sensing Training Plan for Rainfall Network Design",
     "section": "",
-    "text": "This modular training program is designed for a seminar on physiographically-stratified rainfall networks in low mountain regions (e.g., Burgwald, Germany). It uses the R-spatial ecosystem and provides a mix of core and elective modules tailored to group projects. Each session is 3 hours long, with a maximum of 1 hour of instructor-led input."
+    "text": "This modular training program is designed for a seminar on physiographically-stratified rainfall networks in low mountain regions (e.g., Burgwald, Germany). It uses the R-spatial ecosystem and provides a mix of core and elective modules tailored to group projects. Each session is 3 hours long, with a maximum of 1 hour of instructor-led input.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "GIS & Remote Sensing Training Plan for Rainfall Network Design"
+    ]
   },
   {
     "objectID": "reader/reader_ws-04.html#goal",
     "href": "reader/reader_ws-04.html#goal",
     "title": "GIS & Remote Sensing Training Plan for Rainfall Network Design",
     "section": "",
-    "text": "This modular training program is designed for a seminar on physiographically-stratified rainfall networks in low mountain regions (e.g., Burgwald, Germany). It uses the R-spatial ecosystem and provides a mix of core and elective modules tailored to group projects. Each session is 3 hours long, with a maximum of 1 hour of instructor-led input."
+    "text": "This modular training program is designed for a seminar on physiographically-stratified rainfall networks in low mountain regions (e.g., Burgwald, Germany). It uses the R-spatial ecosystem and provides a mix of core and elective modules tailored to group projects. Each session is 3 hours long, with a maximum of 1 hour of instructor-led input.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "GIS & Remote Sensing Training Plan for Rainfall Network Design"
+    ]
   },
   {
     "objectID": "reader/reader_ws-04.html#structure",
     "href": "reader/reader_ws-04.html#structure",
     "title": "GIS & Remote Sensing Training Plan for Rainfall Network Design",
     "section": "Structure",
-    "text": "Structure\n\nTotal sessions: roughly 10 × 3h\nCore modules (required): 6 modules, spread over sessions 1–6\nAdvanced (toolkit) modules: Optional, to support specific project needs, scheduled flexibly across sessions 7–10"
+    "text": "Structure\n\nTotal sessions: roughly 10 × 3h\nCore modules (required): 6 modules, spread over sessions 1–6\nAdvanced (toolkit) modules: Optional, to support specific project needs, scheduled flexibly across sessions 7–10",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "GIS & Remote Sensing Training Plan for Rainfall Network Design"
+    ]
   },
   {
     "objectID": "reader/reader_ws-04.html#core-modules-for-all-groups",
     "href": "reader/reader_ws-04.html#core-modules-for-all-groups",
     "title": "GIS & Remote Sensing Training Plan for Rainfall Network Design",
     "section": "Core Modules (for all groups)",
-    "text": "Core Modules (for all groups)\n\nModule 1: Project Organization & FAIR Data Retrieval\n\nR project setup: renv, here, targets\nFAIR principles (Findable, Accessible, Interoperable, Reusable)\nOpen datasets: DGM (elevation), CORINE/ATKIS (land use), RADOLAN, Sentinel-2, stream gauge data\n\n\n\nModule 2: Geodata Preprocessing\n\nRaster and vector import, reprojection, masking (terra, sf, stars)\nDeriving morphometric indices: slope, aspect, convexity, TWI\nSimplifying land cover classes for analysis\n\n\n\nModule 3: Interpolation Techniques\n\nDeterministic: IDW, Spline, trend surfaces\nGeostatistical: Ordinary/Universal Kriging, CoKriging (elevation as covariate)\nParametric: Regression models based on physiographic predictors (PRISM-style)\n\n\n\nModule 4: Wind Fields & Luv-Lee Classification\n\nWind data (DWD stations, ERA5/COSMO reanalysis)\nDeriving dominant wind directions (seasonal, annual)\nLinking wind data with aspect for Luv/Lee mapping\n\n\n\nModule 5: Spatial Structuring & Stratification\n\nGoal: Segment study area into physiographically consistent zones\nClustering: kmeans, raster.kmeans\nNowosad-style landscape pattern analysis:\n\nsupercells: superpixel-based segmentation\nmotif: landscape pattern frequency analysis\nspQuery: neighborhood similarity queries\npatternogram: spatial pattern comparison\n\nSampling representative locations (spatSample, sf::st_sample())\n\n\n\nModule 6: Visualization & Mapping\n\nMapping with tmap, mapview, ggplot2\nComposite visual layers: terrain + stations + uncertainty + structure"
+    "text": "Core Modules (for all groups)\n\nModule 1: Project Organization & FAIR Data Retrieval\n\nR project setup: renv, here, targets\nFAIR principles (Findable, Accessible, Interoperable, Reusable)\nOpen datasets: DGM (elevation), CORINE/ATKIS (land use), RADOLAN, Sentinel-2, stream gauge data\n\n\n\nModule 2: Geodata Preprocessing\n\nRaster and vector import, reprojection, masking (terra, sf, stars)\nDeriving morphometric indices: slope, aspect, convexity, TWI\nSimplifying land cover classes for analysis\n\n\n\nModule 3: Interpolation Techniques\n\nDeterministic: IDW, Spline, trend surfaces\nGeostatistical: Ordinary/Universal Kriging, CoKriging (elevation as covariate)\nParametric: Regression models based on physiographic predictors (PRISM-style)\n\n\n\nModule 4: Wind Fields & Luv-Lee Classification\n\nWind data (DWD stations, ERA5/COSMO reanalysis)\nDeriving dominant wind directions (seasonal, annual)\nLinking wind data with aspect for Luv/Lee mapping\n\n\n\nModule 5: Spatial Structuring & Stratification\n\nGoal: Segment study area into physiographically consistent zones\nClustering: kmeans, raster.kmeans\nNowosad-style landscape pattern analysis:\n\nsupercells: superpixel-based segmentation\nmotif: landscape pattern frequency analysis\nspQuery: neighborhood similarity queries\npatternogram: spatial pattern comparison\n\nSampling representative locations (spatSample, sf::st_sample())\n\n\n\nModule 6: Visualization & Mapping\n\nMapping with tmap, mapview, ggplot2\nComposite visual layers: terrain + stations + uncertainty + structure",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "GIS & Remote Sensing Training Plan for Rainfall Network Design"
+    ]
   },
   {
     "objectID": "reader/reader_ws-04.html#advanced-toolkit-modules-optional-per-groupproject",
     "href": "reader/reader_ws-04.html#advanced-toolkit-modules-optional-per-groupproject",
     "title": "GIS & Remote Sensing Training Plan for Rainfall Network Design",
     "section": "Advanced Toolkit Modules (optional per group/project)",
-    "text": "Advanced Toolkit Modules (optional per group/project)\n\nFor Module 1 (Project organization):\n\nMetadata management with YAML, EML\nProject transparency with GitHub workflows\n\n\n\nFor Module 2 (Preprocessing):\n\nLandform classification (ridge/valley/slope)\nWatershed and flow direction (terra, whitebox, RSAGA)\n\n\n\nFor Module 3 (Interpolation):\n\nRadar-gauge bias correction (mean field bias, rolling bias)\nTime series smoothing, rolling event detection (zoo, hydroGOF)\n\n\n\nFor Module 4 (Wind):\n\nAutomated Luv/Lee classification per aspect and wind dominance\nWind-exposure stratification zones\n\n\n\nFor Module 5 (Structuring):\n\nCluster validation (silhouette score, within-cluster variance)\nComparison: PRISM/ASOADeK-type models vs. unsupervised clustering\n\n\n\nFor Module 6 (Visualization):\n\nOptional: interactive dashboards with shiny, leaflet"
+    "text": "Advanced Toolkit Modules (optional per group/project)\n\nFor Module 1 (Project organization):\n\nMetadata management with YAML, EML\nProject transparency with GitHub workflows\n\n\n\nFor Module 2 (Preprocessing):\n\nLandform classification (ridge/valley/slope)\nWatershed and flow direction (terra, whitebox, RSAGA)\n\n\n\nFor Module 3 (Interpolation):\n\nRadar-gauge bias correction (mean field bias, rolling bias)\nTime series smoothing, rolling event detection (zoo, hydroGOF)\n\n\n\nFor Module 4 (Wind):\n\nAutomated Luv/Lee classification per aspect and wind dominance\nWind-exposure stratification zones\n\n\n\nFor Module 5 (Structuring):\n\nCluster validation (silhouette score, within-cluster variance)\nComparison: PRISM/ASOADeK-type models vs. unsupervised clustering\n\n\n\nFor Module 6 (Visualization):\n\nOptional: interactive dashboards with shiny, leaflet",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "GIS & Remote Sensing Training Plan for Rainfall Network Design"
+    ]
   },
   {
     "objectID": "reader/reader_ws-04.html#suggested-timeline-flexible",
     "href": "reader/reader_ws-04.html#suggested-timeline-flexible",
     "title": "GIS & Remote Sensing Training Plan for Rainfall Network Design",
     "section": "Suggested Timeline (Flexible)",
-    "text": "Suggested Timeline (Flexible)\n\n\n\n\n\n\n\n\n\nSession\nTheme\nModule(s)\nFormat\n\n\n\n\n1\nProject & Data Infrastructure\nModule 1\nPlenary + group setup\n\n\n2\nData Preprocessing\nModule 2\nGuided workflow + maps\n\n\n3\nStructuring & Patterns\nModule 3\nCore + Nowosad extensions\n\n\n4\nWind Fields & Luv/Lee\nModule 4\nAnalysis + map output\n\n\n5\nInterpolation Basics\nModule 5\nDemo + application\n\n\n6\nVisualization\nModule 6\nOutput & comparison\n\n\n7–10\nWorkshops\nAdvanced modules\nProject-specific tutorials\n\n\n\n\nThis structure ensures every group acquires key spatial methods while allowing targeted deep-dives into advanced techniques, including the use of cutting-edge spatial pattern tools from the Nowosad ecosystem."
+    "text": "Suggested Timeline (Flexible)\n\n\n\n\n\n\n\n\n\nSession\nTheme\nModule(s)\nFormat\n\n\n\n\n1\nProject & Data Infrastructure\nModule 1\nPlenary + group setup\n\n\n2\nData Preprocessing\nModule 2\nGuided workflow + maps\n\n\n3\nStructuring & Patterns\nModule 3\nCore + Nowosad extensions\n\n\n4\nWind Fields & Luv/Lee\nModule 4\nAnalysis + map output\n\n\n5\nInterpolation Basics\nModule 5\nDemo + application\n\n\n6\nVisualization\nModule 6\nOutput & comparison\n\n\n7–10\nWorkshops\nAdvanced modules\nProject-specific tutorials\n\n\n\n\nThis structure ensures every group acquires key spatial methods while allowing targeted deep-dives into advanced techniques, including the use of cutting-edge spatial pattern tools from the Nowosad ecosystem.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "GIS & Remote Sensing Training Plan for Rainfall Network Design"
+    ]
   },
   {
     "objectID": "slides/slide00.html#scientific-process-overview",
