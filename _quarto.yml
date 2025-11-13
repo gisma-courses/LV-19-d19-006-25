@@ -94,7 +94,7 @@ website:
         contents:
           - worksheets/ws-01.qmd
           - worksheets/ws-02.qmd
-          - worksheets/ws-02.qmd
+          - worksheets/ws-03.qmd
           - worksheets/comingsoon.qmd
 
 
