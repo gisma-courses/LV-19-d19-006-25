@@ -1,0 +1,105 @@
+---
+title: "GIS & Remote Sensing Training Plan for Rainfall Network Design"
+author: "Chris Reudenbach"
+comments: false
+title-block-banner: "../images/gw-sp.png"
+title-block-banner-color: "white"
+format:
+  html:
+    toc: true
+    theme: flatly
+  pdf:
+    toc: true
+---
+
+
+## Goal
+This modular training program is designed for a seminar on physiographically-stratified rainfall networks in low mountain regions (e.g., Burgwald, Germany). It uses the R-spatial ecosystem and provides a mix of core and elective modules tailored to group projects. Each session is 3 hours long, with a maximum of 1 hour of instructor-led input.
+
+## Structure
+- **Total sessions:** roughly 10 × 3h
+- **Core modules (required):** 6 modules, spread over sessions 1–6
+- **Advanced (toolkit) modules:** Optional, to support specific project needs, scheduled flexibly across sessions 7–10
+
+---
+
+## Core Modules (for all groups)
+
+### Module 1: Project Organization & FAIR Data Retrieval
+- R project setup: `renv`, `here`, `targets`
+- FAIR principles (Findable, Accessible, Interoperable, Reusable)
+- Open datasets: DGM (elevation), CORINE/ATKIS (land use), RADOLAN, Sentinel-2, stream gauge data
+
+### Module 2: Geodata Preprocessing
+- Raster and vector import, reprojection, masking (`terra`, `sf`, `stars`)
+- Deriving morphometric indices: slope, aspect, convexity, TWI
+- Simplifying land cover classes for analysis
+
+### Module 3: Interpolation Techniques
+- Deterministic: IDW, Spline, trend surfaces
+- Geostatistical: Ordinary/Universal Kriging, CoKriging (elevation as covariate)
+- Parametric: Regression models based on physiographic predictors (PRISM-style)
+
+### Module 4: Wind Fields & Luv-Lee Classification
+- Wind data (DWD stations, ERA5/COSMO reanalysis)
+- Deriving dominant wind directions (seasonal, annual)
+- Linking wind data with aspect for Luv/Lee mapping
+
+### Module 5: Spatial Structuring & Stratification
+- **Goal:** Segment study area into physiographically consistent zones
+- Clustering: `kmeans`, `raster.kmeans`
+- Nowosad-style landscape pattern analysis:
+  - `supercells`: superpixel-based segmentation
+  - `motif`: landscape pattern frequency analysis
+  - `spQuery`: neighborhood similarity queries
+  - `patternogram`: spatial pattern comparison
+- Sampling representative locations (`spatSample`, `sf::st_sample()`)
+
+### Module 6: Visualization & Mapping
+- Mapping with `tmap`, `mapview`, `ggplot2`
+- Composite visual layers: terrain + stations + uncertainty + structure
+
+---
+
+## Advanced Toolkit Modules (optional per group/project)
+
+### For Module 1 (Project organization):
+- Metadata management with YAML, `EML`
+- Project transparency with GitHub workflows
+
+### For Module 2 (Preprocessing):
+- Landform classification (ridge/valley/slope)
+- Watershed and flow direction (`terra`, `whitebox`, `RSAGA`)
+
+### For Module 3 (Interpolation):
+- Radar-gauge bias correction (mean field bias, rolling bias)
+- Time series smoothing, rolling event detection (`zoo`, `hydroGOF`)
+
+### For Module 4 (Wind):
+- Automated Luv/Lee classification per aspect and wind dominance
+- Wind-exposure stratification zones
+
+### For Module 5 (Structuring):
+- Cluster validation (silhouette score, within-cluster variance)
+- Comparison: PRISM/ASOADeK-type models vs. unsupervised clustering
+
+### For Module 6 (Visualization):
+- Optional: interactive dashboards with `shiny`, `leaflet`
+
+---
+
+## Suggested Timeline (Flexible)
+
+| Session | Theme                         | Module(s)        | Format                     |
+|---------|-------------------------------|------------------|----------------------------|
+| 1       | Project & Data Infrastructure | Module 1         | Plenary + group setup      |
+| 2       | Data Preprocessing            | Module 2         | Guided workflow + maps     |
+| 3       | Structuring & Patterns          | Module 3         |Core + Nowosad extensions          |
+| 4       | Wind Fields & Luv/Lee         | Module 4         | Analysis + map output      |
+| 5       |   Interpolation Basics      | Module 5         | Demo + application  |
+| 6       | Visualization                 | Module 6         | Output & comparison        |
+| 7–10    | Workshops                     | Advanced modules  | Project-specific tutorials |
+
+---
+
+This structure ensures every group acquires key spatial methods while allowing targeted deep-dives into advanced techniques, including the use of cutting-edge spatial pattern tools from the Nowosad ecosystem.
