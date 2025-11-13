@@ -1,5 +1,5 @@
 ---
-title: "Core Module Project Organization & Reproducible Setup"
+title: "3. Core Module 1: Project Organization & Reproducible Setup"
 author: "Chris Reudenbach"
 title-block-banner: "../images/gw-sp.png"
 title-block-banner-color: "white"
@@ -170,7 +170,7 @@ Each group must:
    - the metadata file,
    - the setup and download scripts.
 
-The next session (Module 2) will assume that **all groups can load at least one DGM file and one RADOLAN file from `data/raw`** using `here::here()`.
+The next session (Module 2) will assume that **all groups can load at least their DGM file and one specific other data set from `data/raw`** using `here::here()`.
 
 ---
 
