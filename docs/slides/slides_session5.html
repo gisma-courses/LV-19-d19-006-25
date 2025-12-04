@@ -6,11 +6,11 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+  <meta name="generator" content="quarto-1.8.26">
 
   <meta name="author" content="Chris Reudenbach">
   <title>Advanced GIS &amp; RS – Spatial patterns of non-categorical rasters</title>
@@ -98,7 +98,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-83ba8bf49a63c47ab6793c327c4e96ad.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-8e23f0bd124465ac8630e771a76dbc45.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -218,15 +218,15 @@ Chris Reudenbach
 <h2>Climate data - best practicse</h2>
 <p>First we need to setup our environment.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">install.packages</span>(<span class="st">"geodata"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">install.packages</span>(<span class="st">"geodata"</span>)</span>
 <span id="cb1-2"><a></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"Nowosad/spquery"</span>)</span>
 <span id="cb1-3"><a></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"Nowosad/patternogram"</span>)</span>
 <span id="cb1-4"><a></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"Nowosad/supercells"</span>)</span>
-<span id="cb1-5"><a></a><span class="fu">library</span>(terra); <span class="fu">library</span>(sf);<span class="fu">library</span>(geodata);<span class="fu">library</span>(mapview);<span class="fu">library</span>(spquery);<span class="fu">library</span>(patternogram)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a></a><span class="fu">library</span>(terra); <span class="fu">library</span>(sf);<span class="fu">library</span>(geodata);<span class="fu">library</span>(mapview);<span class="fu">library</span>(spquery);<span class="fu">library</span>(patternogram)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Using the <code>geodata</code> package (helper package for <code>terra</code>) we can download in a very comfortable often used core data sets. In this case Worldclim and</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># German border on top level (nation)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># German border on top level (nation)</span></span>
 <span id="cb2-2"><a></a>de <span class="ot">=</span> geodata<span class="sc">::</span><span class="fu">gadm</span>(<span class="at">country =</span> <span class="st">"DEU"</span>,<span class="at">level =</span> <span class="dv">0</span>,<span class="at">path =</span> <span class="fu">tempdir</span>())</span>
 <span id="cb2-3"><a></a><span class="co"># Worldclim historical climate data for Germany https://www.worldclim.org/data/index.html</span></span>
 <span id="cb2-4"><a></a>wc_tmin_de <span class="ot">=</span> <span class="fu">worldclim_country</span>(<span class="st">"Germany"</span>, <span class="at">var=</span><span class="st">"tmin"</span>, <span class="at">path=</span><span class="fu">tempdir</span>())</span>
@@ -239,7 +239,7 @@ Chris Reudenbach
 <span id="cb2-11"><a></a>nf <span class="ot">&lt;-</span> <span class="fu">layout</span>( <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">ncol=</span><span class="dv">2</span>) )</span>
 <span id="cb2-12"><a></a></span>
 <span id="cb2-13"><a></a><span class="fu">plot</span>(cmip_tmin_2_5_de)</span>
-<span id="cb2-14"><a></a><span class="fu">plot</span>(wc_tmin_de)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-14"><a></a><span class="fu">plot</span>(wc_tmin_de)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-important no-icon callout-style-simple">
 <div class="callout-body">
@@ -274,7 +274,7 @@ Chris Reudenbach
 <div class="[.columns]">
 <div class="column" style="width:45%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># get Marburg and make it a spatial point</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># get Marburg and make it a spatial point</span></span>
 <span id="cb3-2"><a></a>mr <span class="ot">=</span> <span class="fu">st_sf</span>(<span class="fu">st_sfc</span>(<span class="fu">st_point</span>(<span class="fu">c</span>( <span class="fl">8.770833</span>, <span class="fl">50.810001</span>)),</span>
 <span id="cb3-3"><a></a>                  <span class="at">crs =</span> <span class="st">"EPSG:4326"</span>))</span>
 <span id="cb3-4"><a></a>vec <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">extract</span>(wc_tmin_de, mr, <span class="at">ID =</span> <span class="cn">FALSE</span>))</span>
@@ -286,7 +286,7 @@ Chris Reudenbach
 <span id="cb3-10"><a></a><span class="co"># visualize</span></span>
 <span id="cb3-11"><a></a><span class="fu">plot</span>(search_tmin,</span>
 <span id="cb3-12"><a></a>     <span class="at">plg =</span> <span class="fu">list</span>( <span class="at">loc =</span> <span class="st">"topright"</span>,<span class="at">title =</span> <span class="st">"Dissimilarity"</span>))</span>
-<span id="cb3-13"><a></a><span class="fu">plot</span>(mr, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col=</span><span class="st">'red'</span>, <span class="at">lwd=</span><span class="dv">4</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-13"><a></a><span class="fu">plot</span>(mr, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col=</span><span class="st">'red'</span>, <span class="at">lwd=</span><span class="dv">4</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -296,7 +296,7 @@ Chris Reudenbach
 </div>
 </div><div class="column" style="width:45%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># some cleaning</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># some cleaning</span></span>
 <span id="cb4-2"><a></a>crop<span class="ot">=</span> <span class="fu">crop</span>( wc_tmin_de,cmip_tmin_2_5_de)</span>
 <span id="cb4-3"><a></a>res <span class="ot">=</span> <span class="fu">resample</span>(crop,cmip_tmin_2_5_de)</span>
 <span id="cb4-4"><a></a></span>
@@ -308,7 +308,7 @@ Chris Reudenbach
 <span id="cb4-10"><a></a><span class="fu">plot</span>(compare_tmin,</span>
 <span id="cb4-11"><a></a>     <span class="at">plg =</span> <span class="fu">list</span>( <span class="at">loc =</span> <span class="st">"topright"</span>,<span class="at">title =</span> <span class="st">"Dissimilarity"</span>), </span>
 <span id="cb4-12"><a></a>     <span class="at">col =</span><span class="fu">viridis</span>(<span class="dv">256</span>))</span>
-<span id="cb4-13"><a></a><span class="fu">plot</span>(mr, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col=</span><span class="st">'red'</span>, <span class="at">lwd=</span><span class="dv">4</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-13"><a></a><span class="fu">plot</span>(mr, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col=</span><span class="st">'red'</span>, <span class="at">lwd=</span><span class="dv">4</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -328,7 +328,7 @@ Chris Reudenbach
 <li>investigate spatial autocorrelation of categorical spatial patterns</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">library</span>(patternogram)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">library</span>(patternogram)</span>
 <span id="cb5-2"><a></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb5-3"><a></a>pg1_100 <span class="ot">=</span> <span class="fu">patternogram</span>(wc_tmin_de, <span class="at">sample_size =</span> <span class="dv">10</span>)</span>
 <span id="cb5-4"><a></a>pg2_100 <span class="ot">=</span> <span class="fu">patternogram</span>(cmip_tmin_2_5_de, <span class="at">sample_size =</span> <span class="dv">10</span>)</span>
@@ -341,10 +341,10 @@ Chris Reudenbach
 <span id="cb5-11"><a></a>           <span class="fu">geom_point</span>(<span class="at">data=</span>pg1_500, <span class="fu">aes</span>(<span class="at">x=</span>dist, <span class="at">y=</span>dissimilarity), <span class="at">color=</span><span class="st">'blue'</span>) <span class="sc">+</span></span>
 <span id="cb5-12"><a></a>           <span class="fu">geom_point</span>(<span class="at">data=</span>pg2_500, <span class="fu">aes</span>(<span class="at">x=</span>dist, <span class="at">y=</span>dissimilarity), <span class="at">color=</span><span class="st">'lightblue'</span>) <span class="sc">+</span></span>
 <span id="cb5-13"><a></a>           <span class="fu">geom_point</span>(<span class="at">data=</span>pg1_1000, <span class="fu">aes</span>(<span class="at">x=</span>dist, <span class="at">y=</span>dissimilarity), <span class="at">color=</span><span class="st">'green'</span>) <span class="sc">+</span></span>
-<span id="cb5-14"><a></a>           <span class="fu">geom_point</span>(<span class="at">data=</span>pg2_1000, <span class="fu">aes</span>(<span class="at">x=</span>dist, <span class="at">y=</span>dissimilarity), <span class="at">color=</span><span class="st">'darkgreen'</span>)            </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-14"><a></a>           <span class="fu">geom_point</span>(<span class="at">data=</span>pg2_1000, <span class="fu">aes</span>(<span class="at">x=</span>dist, <span class="at">y=</span>dissimilarity), <span class="at">color=</span><span class="st">'darkgreen'</span>)            </span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">library</span>(patternogram)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">library</span>(patternogram)</span>
 <span id="cb6-2"><a></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb6-3"><a></a>pg1_100 <span class="ot">=</span> <span class="fu">patternogram</span>(wc_tmin_de, <span class="at">width =</span> <span class="dv">100</span>, <span class="at">sample_size =</span> <span class="dv">10</span>)</span>
 <span id="cb6-4"><a></a>pg2_100 <span class="ot">=</span> <span class="fu">patternogram</span>(cmip_tmin_2_5_de, <span class="at">width =</span> <span class="dv">100</span> ,<span class="at">sample_size =</span> <span class="dv">10</span>)</span>
@@ -357,7 +357,7 @@ Chris Reudenbach
 <span id="cb6-11"><a></a>           <span class="fu">geom_point</span>(<span class="at">data=</span>pg1_500, <span class="fu">aes</span>(<span class="at">x=</span>dist, <span class="at">y=</span>dissimilarity), <span class="at">color=</span><span class="st">'blue'</span>) <span class="sc">+</span></span>
 <span id="cb6-12"><a></a>           <span class="fu">geom_point</span>(<span class="at">data=</span>pg2_500, <span class="fu">aes</span>(<span class="at">x=</span>dist, <span class="at">y=</span>dissimilarity), <span class="at">color=</span><span class="st">'lightblue'</span>) <span class="sc">+</span></span>
 <span id="cb6-13"><a></a>           <span class="fu">geom_point</span>(<span class="at">data=</span>pg1_1000, <span class="fu">aes</span>(<span class="at">x=</span>dist, <span class="at">y=</span>dissimilarity), <span class="at">color=</span><span class="st">'green'</span>) <span class="sc">+</span></span>
-<span id="cb6-14"><a></a>           <span class="fu">geom_point</span>(<span class="at">data=</span>pg2_1000, <span class="fu">aes</span>(<span class="at">x=</span>dist, <span class="at">y=</span>dissimilarity), <span class="at">color=</span><span class="st">'darkgreen'</span>)            </span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-14"><a></a>           <span class="fu">geom_point</span>(<span class="at">data=</span>pg2_1000, <span class="fu">aes</span>(<span class="at">x=</span>dist, <span class="at">y=</span>dissimilarity), <span class="at">color=</span><span class="st">'darkgreen'</span>)            </span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section class="slide level2">
@@ -411,7 +411,7 @@ Abbildung&nbsp;1
 <section id="code-examples" class="slide level2">
 <h2>Code examples</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">library</span>(terra)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">library</span>(terra)</span>
 <span id="cb7-2"><a></a><span class="fu">library</span>(supercells)</span>
 <span id="cb7-3"><a></a><span class="co"># Version 1</span></span>
 <span id="cb7-4"><a></a>mintemp_zones <span class="ot">=</span> <span class="fu">supercells</span>(cmip_tmin_2_5_de, <span class="at">k =</span> <span class="dv">250</span>, <span class="at">compactness =</span> <span class="dv">4</span>)</span>
@@ -421,7 +421,7 @@ Abbildung&nbsp;1
 <span id="cb7-8"><a></a><span class="fu">plot</span>(cmip_tmin_2_5_de[[<span class="dv">1</span>]]); <span class="fu">plot</span>(mintemp_zones, <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="cn">NA</span>)</span>
 <span id="cb7-9"><a></a><span class="co"># Version 3</span></span>
 <span id="cb7-10"><a></a>mintemp_zones <span class="ot">=</span> <span class="fu">supercells</span>(cmip_tmin_2_5_de, <span class="at">k =</span> <span class="dv">250</span>, <span class="at">compactness =</span> <span class="dv">1</span>)</span>
-<span id="cb7-11"><a></a><span class="fu">plot</span>(cmip_tmin_2_5_de[[<span class="dv">1</span>]]); <span class="fu">plot</span>(mintemp_zones, <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="cn">NA</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-11"><a></a><span class="fu">plot</span>(cmip_tmin_2_5_de[[<span class="dv">1</span>]]); <span class="fu">plot</span>(mintemp_zones, <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="cn">NA</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="fig-elephants" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig">
@@ -463,7 +463,7 @@ Abbildung&nbsp;2
 
 <h3 id="code-examples---helper-functions">Code Examples - Helper functions</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">library</span>(terra)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">library</span>(terra)</span>
 <span id="cb8-2"><a></a><span class="fu">library</span>(sf)</span>
 <span id="cb8-3"><a></a><span class="fu">library</span>(supercells)</span>
 <span id="cb8-4"><a></a><span class="fu">library</span>(rgeoda)</span>
@@ -512,13 +512,13 @@ Abbildung&nbsp;2
 <span id="cb8-47"><a></a>  </span>
 <span id="cb8-48"><a></a>  <span class="co"># rescale </span></span>
 <span id="cb8-49"><a></a>  <span class="fu">return</span>( (r<span class="sc">-</span>minmax_r[<span class="dv">1</span>]) <span class="sc">/</span> (<span class="fu">diff</span>(minmax_r)))</span>
-<span id="cb8-50"><a></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-50"><a></a>}</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="code-examples---regionalisation-based-on-supercells" class="slide level2">
 <h2>Code Examples - Regionalisation based on supercells</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="co"># create supercells based on the 2D time-series ---------------------------</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="co"># create supercells based on the 2D time-series ---------------------------</span></span>
 <span id="cb9-2"><a></a>sp <span class="ot">=</span> <span class="fu">supercells</span>(<span class="fu">c</span>(ta, pr), <span class="at">step =</span> <span class="dv">15</span>, <span class="at">compactness =</span> <span class="fl">0.01</span>, <span class="at">dist_fun =</span> dtw_2d)</span>
 <span id="cb9-3"><a></a><span class="fu">plot</span>(sp)</span>
 <span id="cb9-4"><a></a></span>
@@ -527,7 +527,7 @@ Abbildung&nbsp;2
 <span id="cb9-7"><a></a></span>
 <span id="cb9-8"><a></a><span class="fu">tm_shape</span>(sp_regions) <span class="sc">+</span></span>
 <span id="cb9-9"><a></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
-<span id="cb9-10"><a></a>  <span class="fu">tm_facets</span>(<span class="st">"k"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-10"><a></a>  <span class="fu">tm_facets</span>(<span class="st">"k"</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="exercises" class="slide level2">
@@ -732,7 +732,7 @@ Abbildung&nbsp;2
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -844,13 +844,14 @@ Abbildung&nbsp;2
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

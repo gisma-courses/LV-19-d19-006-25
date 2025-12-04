@@ -6,11 +6,11 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+  <meta name="generator" content="quarto-1.8.26">
 
   <meta name="author" content="Chris Reudenbach">
   <title>Advanced GIS &amp; RS – Change detection part 1</title>
@@ -98,7 +98,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-83ba8bf49a63c47ab6793c327c4e96ad.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-8e23f0bd124465ac8630e771a76dbc45.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -256,7 +256,7 @@ Chris Reudenbach
 <section id="setup-the-working-environment" class="slide level2">
 <h2>Setup the working environment</h2>
 <div class="cell" data-warnings="false">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="co"># adapt your directory this is following the concept of the envimaR structure</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="co"># adapt your directory this is following the concept of the envimaR structure</span></span>
 <span id="cb1-2"><a></a>tutorialDir <span class="ot">=</span> <span class="fu">path.expand</span>(<span class="st">"data/"</span>)</span>
 <span id="cb1-3"><a></a></span>
 <span id="cb1-4"><a></a><span class="fu">library</span>(sf)</span>
@@ -276,7 +276,7 @@ Chris Reudenbach
 <span id="cb1-18"><a></a>  <span class="fu">rev</span>(<span class="fu">sequential_hcl</span>(n, <span class="st">"Green-Yellow"</span>))</span>
 <span id="cb1-19"><a></a>}</span>
 <span id="cb1-20"><a></a></span>
-<span id="cb1-21"><a></a>ano.col <span class="ot">=</span> <span class="fu">diverging_hcl</span>(<span class="dv">7</span>, <span class="at">palette =</span> <span class="st">"Red-Green"</span>,  <span class="at">register =</span> <span class="st">"rg"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-21"><a></a>ano.col <span class="ot">=</span> <span class="fu">diverging_hcl</span>(<span class="dv">7</span>, <span class="at">palette =</span> <span class="st">"Red-Green"</span>,  <span class="at">register =</span> <span class="st">"rg"</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="defining-the-area-of-interest" class="slide level2">
@@ -286,7 +286,7 @@ Chris Reudenbach
 <p><strong>Note.</strong> Projecting to three different CRSs here is mainly for convenience/clarity. Only corner coordinates would actually be required, but having geometries ready in multiple CRSs simplifies later steps.</p>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">library</span>(tmap)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">library</span>(tmap)</span>
 <span id="cb2-2"><a></a><span class="fu">library</span>(tmaptools)</span>
 <span id="cb2-3"><a></a>utils<span class="sc">::</span><span class="fu">download.file</span>(<span class="at">url=</span><span class="st">"https://github.com/gisma/gismaData/raw/master/MOF/MOF_CORE.gpkg"</span>,<span class="at">destfile=</span><span class="st">"../data/MOF_CORE.gpkg"</span>)</span>
 <span id="cb2-4"><a></a></span>
@@ -305,13 +305,13 @@ Chris Reudenbach
 <span id="cb2-17"><a></a><span class="fu">tmap_options</span>(<span class="at">check.and.fix =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
 <span id="cb2-18"><a></a>  <span class="fu">tm_basemap</span>(<span class="at">server =</span> <span class="fu">c</span>(<span class="st">"Esri.WorldGrayCanvas"</span>, <span class="st">"OpenStreetMap"</span>, <span class="st">"Esri.WorldTopoMap"</span>,<span class="st">"Esri.WorldImagery"</span>)) <span class="sc">+</span></span>
 <span id="cb2-19"><a></a>  <span class="fu">tm_shape</span>(forest_mask) <span class="sc">+</span>   </span>
-<span id="cb2-20"><a></a>  <span class="fu">tm_polygons</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">col=</span><span class="st">"mainTreeSp"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-20"><a></a>  <span class="fu">tm_polygons</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">col=</span><span class="st">"mainTreeSp"</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Our study area is pretty small, covering roughly 2.5 by 2.5 km forest area northwest of Marburg. The core part of the AOI is the Marburg Open Forest (MOF) a field research facility of the Philipps University Marburg.</p>
 <h3 id="querying-images-with-rstac">Querying images with <code>rstac</code></h3>
 <p>Using the <code>rstac</code> package, we first request all available images from 2017 to 2020 that intersect with our region of interest. Here, since the polygon has WGS84 as CRS, we do <strong>not</strong> need to transform the bounding box before using the <code>stac_search()</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># search the data stack for the given period and area</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># search the data stack for the given period and area</span></span>
 <span id="cb3-2"><a></a><span class="fu">library</span>(rstac)</span>
 <span id="cb3-3"><a></a></span>
 <span id="cb3-4"><a></a>s <span class="ot">=</span> <span class="fu">stac</span>(<span class="st">"https://earth-search.aws.element84.com/v0"</span>)</span>
@@ -327,25 +327,25 @@ Chris Reudenbach
 <span id="cb3-14"><a></a>items</span>
 <span id="cb3-15"><a></a></span>
 <span id="cb3-16"><a></a><span class="co"># print date and time of first and last images</span></span>
-<span id="cb3-17"><a></a><span class="fu">range</span>(<span class="fu">sapply</span>(items<span class="sc">$</span>features, <span class="cf">function</span>(x) {x<span class="sc">$</span>properties<span class="sc">$</span>datetime}))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-17"><a></a><span class="fu">range</span>(<span class="fu">sapply</span>(items<span class="sc">$</span>features, <span class="cf">function</span>(x) {x<span class="sc">$</span>properties<span class="sc">$</span>datetime}))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This gives us 315 matching images recorded between Januar 2019 and December 2023.</p>
 <h3 id="creating-a-monthly-sentinel-2-data-cube">Creating a monthly Sentinel-2 data cube</h3>
 <p>To obtain a Sentinel data cube, a gdalcube image collection must be created from the STAC query result. To do this, the asset names must be explicitly named in order to apply the SCL channel with the quality characteristics per pixel (classification as clouds, cloud shadows, etc.). In this query, a filter is set to cloud cover &lt;= 50%.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">library</span>(gdalcubes)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">library</span>(gdalcubes)</span>
 <span id="cb4-2"><a></a>assets <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"B01"</span>,<span class="st">"B02"</span>,<span class="st">"B03"</span>,<span class="st">"B04"</span>,<span class="st">"B05"</span>,<span class="st">"B06"</span>,<span class="st">"B07"</span>,<span class="st">"B08"</span>,<span class="st">"B8A"</span>,<span class="st">"B09"</span>,<span class="st">"B11"</span>,<span class="st">"SCL"</span>)</span>
 <span id="cb4-3"><a></a>s2_collection <span class="ot">=</span> <span class="fu">stac_image_collection</span>(items<span class="sc">$</span>features, <span class="at">asset_names =</span> assets,</span>
 <span id="cb4-4"><a></a>  <span class="at">property_filter =</span> <span class="cf">function</span>(x) { x[[<span class="st">"eo:cloud_cover"</span>]] <span class="sc">&lt;</span> <span class="dv">50</span> }</span>
 <span id="cb4-5"><a></a>) </span>
-<span id="cb4-6"><a></a>s2_collection</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-6"><a></a>s2_collection</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The result is 107 images, i.e.&nbsp;approx. 1.8 images per month, from which we can now create a data cube. To do this, we use the UTM bounding box of our polygon as a spatial boundary, a spatial resolution of 10 metres, a bilinear spatial interpolation (useful for the spatially lower-resolution sentinel channels) and calculate monthly median values for all pixel values from the available images of a month. In addition, we add a buffer (b) on each side of the cube.</p>
 <div class="callout-success">
 <p><strong>Note.</strong> The <em>gdalcubes image collection</em> acts as a proxy structure over the COGs.</p>
 </div>
 <div class="cell" data-messages="false" data-warnings="false">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>b <span class="ot">=</span> <span class="dv">100</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>b <span class="ot">=</span> <span class="dv">100</span></span>
 <span id="cb5-2"><a></a>v <span class="ot">=</span> <span class="fu">cube_view</span>(</span>
 <span id="cb5-3"><a></a>  <span class="at">srs =</span> <span class="st">"EPSG:32632"</span>, </span>
 <span id="cb5-4"><a></a>  <span class="at">dx =</span> <span class="dv">10</span>, </span>
@@ -362,18 +362,18 @@ Chris Reudenbach
 <span id="cb5-15"><a></a>  ),</span>
 <span id="cb5-16"><a></a>  <span class="at">resampling =</span> <span class="st">"bilinear"</span></span>
 <span id="cb5-17"><a></a>)</span>
-<span id="cb5-18"><a></a>v</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-18"><a></a>v</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next we create a data cube, subset the red and near infrared bands and crop by our polygon, which simply sets pixel values outside the polygon to NA. We then save the data cube as a single netCDF file. Note that this is not necessary, but saving intermediate results sometimes makes debugging easier, especially if the methods applied afterwards are computationally intensive.</p>
 <div class="callout-success">
 <p><strong>Action.</strong> Processing on the COG server starts only with a terminal action. Here: <code>write_ncdf</code>.</p>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># "download" the data and write it to a netcdf file</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># "download" the data and write it to a netcdf file</span></span>
 <span id="cb6-2"><a></a>s2.mask <span class="ot">=</span> <span class="fu">image_mask</span>(<span class="st">"SCL"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">8</span>,<span class="dv">9</span>))</span>
 <span id="cb6-3"><a></a><span class="fu">gdalcubes_options</span>(<span class="at">parallel =</span> <span class="dv">16</span>, <span class="at">ncdf_compression_level =</span> <span class="dv">5</span>)</span>
 <span id="cb6-4"><a></a><span class="fu">raster_cube</span>(s2_collection, v, <span class="at">mask =</span> s2.mask) <span class="sc">|&gt;</span></span>
-<span id="cb6-5"><a></a>  <span class="fu">write_ncdf</span>(<span class="st">"../data/MOF_10_2.nc"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-5"><a></a>  <span class="fu">write_ncdf</span>(<span class="st">"../data/MOF_10_2.nc"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In the following examples we will show a simple plot in a generic pipe. However, a more common visualisation is quite simple. A typical pipe might be Save a resulting netCDF file <code>-&gt;</code> Convert it to a <code>stars</code> object <code>-&gt;</code> Visualise the results with <code>tmap</code>, <code>mapview</code>, <code>ggplot2</code> or whatever package you prefer to produce (interactive) map(s).</p>
 </section>
@@ -383,51 +383,51 @@ Chris Reudenbach
 <h3 id="counting">Counting</h3>
 <p>To get an idea of the data, we can compute simple summary statistics using a ‘reducer’ function over dimensions. For example, using the <code>count</code> reducer, we can learn about the temporal coverage for each aggregated pixel, giving us an initial understanding of the temporal quality of the dataset.</p>
 <div class="cell" data-messages="false" data-warnings="false">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10_2.nc"</span>) <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10_2.nc"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb7-2"><a></a>  <span class="fu">reduce_time</span>(<span class="st">"count(B04)"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb7-3"><a></a>  <span class="fu">plot</span>(<span class="at">key.pos =</span> <span class="dv">1</span>,  <span class="at">col =</span> viridis<span class="sc">::</span>viridis, <span class="at">nbreaks =</span> <span class="dv">10</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-3"><a></a>  <span class="fu">plot</span>(<span class="at">key.pos =</span> <span class="dv">1</span>,  <span class="at">col =</span> viridis<span class="sc">::</span>viridis, <span class="at">nbreaks =</span> <span class="dv">10</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can see that most time series contain valid observations of around 60 months, which should be sufficient for our example. Similarly, it is also possible to reduce over space, leading to summary time series.</p>
 <p>Below you will find various examples dealing with the common NDVI and the <a href="https://advances.science.org/doi/10.1126/sciadv.abc7447">kNDVI</a> indices.</p>
 <h3 id="kndvi">kNDVI</h3>
 <p>Below, we derive mean monthly kNDVI values over all pixel time series.</p>
 <div class="cell" data-messages="false" data-warnings="false">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10_2.nc"</span>) <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10_2.nc"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb8-2"><a></a>  <span class="fu">apply_pixel</span>(<span class="st">"tanh(((B08-B04)/(B08+B04))^2)"</span>, <span class="st">"kNDVI"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb8-3"><a></a>  <span class="fu">reduce_time</span>(<span class="st">"mean(kNDVI)"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-4"><a></a>  <span class="fu">plot</span>(<span class="at">key.pos =</span> <span class="dv">1</span>,  <span class="at">col =</span> ndvi.col, <span class="at">nbreaks =</span> <span class="dv">12</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-4"><a></a>  <span class="fu">plot</span>(<span class="at">key.pos =</span> <span class="dv">1</span>,  <span class="at">col =</span> ndvi.col, <span class="at">nbreaks =</span> <span class="dv">12</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="ndvi" class="slide level2">
 <h2>NDVI</h2>
 <p>Below, we derive mean monthly NDVI values over all pixel time series.</p>
 <div class="cell" data-messages="false" data-warnings="false">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10_2.nc"</span>) <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10_2.nc"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb9-2"><a></a>  <span class="fu">apply_pixel</span>(<span class="st">"(B08-B04)/(B08+B04)"</span>, <span class="st">"NDVI"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb9-3"><a></a>  <span class="fu">reduce_time</span>(<span class="st">"mean(NDVI)"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb9-4"><a></a>  <span class="fu">plot</span>(<span class="at">key.pos =</span> <span class="dv">1</span>, <span class="at">zlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>,<span class="dv">1</span>), <span class="at">col =</span> ndvi.col, <span class="at">nbreaks =</span> <span class="dv">12</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-4"><a></a>  <span class="fu">plot</span>(<span class="at">key.pos =</span> <span class="dv">1</span>, <span class="at">zlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.2</span>,<span class="dv">1</span>), <span class="at">col =</span> ndvi.col, <span class="at">nbreaks =</span> <span class="dv">12</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <h3 id="zonal-statistics">Zonal Statistics</h3>
 <div class="cell" data-messages="false" data-warnings="false">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>zstats <span class="ot">=</span> <span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10_2.nc"</span>) <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>zstats <span class="ot">=</span> <span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10_2.nc"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb10-2"><a></a>  <span class="fu">apply_pixel</span>(<span class="st">"(B08-B04)/(B08+B04)"</span>, <span class="st">"NDVI"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb10-3"><a></a>  <span class="fu">extract_geom</span>(forest_32632, <span class="at">FUN =</span> median)</span>
 <span id="cb10-4"><a></a></span>
 <span id="cb10-5"><a></a>forest_32632<span class="sc">$</span>FID <span class="ot">=</span> <span class="fu">rownames</span>(forest_32632)</span>
 <span id="cb10-6"><a></a>x <span class="ot">=</span> <span class="fu">merge</span>(forest_32632, zstats, <span class="at">by =</span> <span class="st">"FID"</span>)</span>
-<span id="cb10-7"><a></a><span class="fu">mapview</span>(x[x<span class="sc">$</span>time <span class="sc">==</span> <span class="st">"2020-07"</span>, <span class="st">"NDVI"</span>], <span class="at">col.regions =</span> ndvi.col)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-7"><a></a><span class="fu">mapview</span>(x[x<span class="sc">$</span>time <span class="sc">==</span> <span class="st">"2020-07"</span>, <span class="st">"NDVI"</span>], <span class="at">col.regions =</span> ndvi.col)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <h3 id="timeseries">Timeseries</h3>
 <div class="cell" data-messages="false" data-warnings="false">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10.nc"</span>) <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">ncdf_cube</span>(<span class="st">"../data/MOF_10.nc"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb11-2"><a></a>  <span class="fu">apply_pixel</span>(<span class="st">"tanh(((B08-B04)/(B08+B04))^2)"</span>, <span class="st">"kNDVI"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb11-3"><a></a>  <span class="fu">reduce_space</span>(<span class="st">"min(kNDVI)"</span>, <span class="st">"max(kNDVI)"</span>, <span class="st">"mean(kNDVI)"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb11-4"><a></a>  <span class="fu">plot</span>(<span class="at">join.timeseries =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-4"><a></a>  <span class="fu">plot</span>(<span class="at">join.timeseries =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <h3 id="calculate-the-annual-ndvi-difference---using-functions">Calculate the annual NDVI difference - using functions</h3>
 <p>The following function will iterate through 3 years of NDVI data and calculate NDVI difference maps for each pair of years.</p>
 <div class="cell" data-messages="false" data-warnings="false">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">gdalcubes_options</span>(<span class="at">parallel =</span> <span class="dv">12</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">gdalcubes_options</span>(<span class="at">parallel =</span> <span class="dv">12</span>)</span>
 <span id="cb12-2"><a></a></span>
 <span id="cb12-3"><a></a><span class="co"># ndvi operand</span></span>
 <span id="cb12-4"><a></a>ndvi_type <span class="ot">=</span> <span class="st">"median(kNDVI)"</span></span>
@@ -490,7 +490,7 @@ Chris Reudenbach
 <span id="cb12-61"><a></a>      <span class="at">legend.outside    =</span> <span class="cn">TRUE</span></span>
 <span id="cb12-62"><a></a>    ) <span class="sc">+</span></span>
 <span id="cb12-63"><a></a>    <span class="fu">tm_grid</span>()</span>
-<span id="cb12-64"><a></a>})</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-64"><a></a>})</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <h4 id="resulting-maps">Resulting maps</h4>
 </section>
@@ -536,7 +536,7 @@ Chris Reudenbach
 <p>There is almost no limit of what R function we use, but we must take care of a few things: 1) the reducer runs in a fresh R process (load packages inside), 2) it <strong>must</strong> always return a vector of constant length, 3) handle <code>NA</code>s.</p>
 <h3 id="applying-bfastmonitor-as-a-user-defined-reducer-function">Applying <code>bfastmonitor</code> as a user-defined reducer function</h3>
 <div class="cell" data-messages="false" data-warnings="false">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">library</span>(sf)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">library</span>(sf)</span>
 <span id="cb13-2"><a></a><span class="fu">library</span>(tmap)</span>
 <span id="cb13-3"><a></a><span class="fu">library</span>(tmaptools)</span>
 <span id="cb13-4"><a></a><span class="fu">library</span>(gdalcubes)</span>
@@ -573,11 +573,11 @@ Chris Reudenbach
 <span id="cb13-35"><a></a>      }</span>
 <span id="cb13-36"><a></a>    ) <span class="sc">|&gt;</span></span>
 <span id="cb13-37"><a></a>    <span class="fu">write_ncdf</span>(<span class="fu">paste0</span>(tutorialDir, <span class="st">"bf_results.nc"</span>), <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb13-38"><a></a>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-38"><a></a>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now we can use the netCDF file and map the results with any preferred visualisation tool. In this case <code>tmap</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">library</span>(tmap)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">library</span>(tmap)</span>
 <span id="cb14-2"><a></a></span>
 <span id="cb14-3"><a></a>mask <span class="ot">&lt;-</span> <span class="fu">raster</span>(<span class="fu">paste0</span>(tutorialDir,<span class="st">"forest/only_forestmask.tif"</span>))</span>
 <span id="cb14-4"><a></a><span class="fu">tmap_mode</span>(<span class="st">"view"</span>)</span>
@@ -605,7 +605,7 @@ Chris Reudenbach
 <span id="cb14-26"><a></a>    <span class="at">legend.text.size    =</span> <span class="fl">0.4</span>,</span>
 <span id="cb14-27"><a></a>    <span class="at">legend.outside      =</span> <span class="cn">TRUE</span></span>
 <span id="cb14-28"><a></a>  ) <span class="sc">+</span></span>
-<span id="cb14-29"><a></a>  <span class="fu">tm_grid</span>()</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-29"><a></a>  <span class="fu">tm_grid</span>()</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <iframe valign="center" src="m2.html" width="1024" height="960" frameborder="0" allowfullscreen="allowfullscreen">
 </iframe>
@@ -845,7 +845,7 @@ Chris Reudenbach
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -957,13 +957,14 @@ Chris Reudenbach
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

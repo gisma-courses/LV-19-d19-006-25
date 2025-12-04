@@ -1,0 +1,221 @@
+---
+title: "4 – Execute the Burgwald Data Pipeline"
+subtitle: "Clone · Configure · Run · Verify"
+author: "Chris Reudenbach"
+title-block-banner: "../images/gw-sp.png"
+title-block-banner-color: "white"
+format:
+  html:
+    toc: true
+    theme: flatly
+  pdf:
+    toc: true
+    toc-depth: 2
+execute:
+  cache: false
+---
+
+## Goals
+
+* Clone the course repository and open the RStudio project.
+* Run all core pipeline scripts **unchanged** on your own machine.
+* Verify that raw data, processed data, and predictor stacks are created.
+* Document any problems that prevent full reproducibility.
+
+---
+
+# Repository
+
+Clone this repository locally and open the `.Rproj`:
+
+[https://github.com/gisma/LV-19-d19-006-25-R.git](https://github.com/gisma/LV-19-d19-006-25-R.git)
+
+---
+
+# Task 1 – Basic project layout
+
+After cloning and opening the project, check that these top-level folders exist (create if missing):
+
+```text
+data-pipeline
+├── Setup
+│     └── 01_setup-burgwald.R
+├── Generic data retrievale
+│     └── 01-data-retrieval.R (plus helpers)
+├── External terrain tools
+│     └── 01-04-1-SAGA.Rexecute:
+  cache: false
+├── Sentinel-2 (CDSE)
+│     └── 01-2-CDSE-sentinel-data-retrieval.R
+├── Sentinel-2 (gdalcubes)
+│     └── 01-3-gdalcubes-sentinel-data-retrieval.R
+└── Output
+      └── NetCDF predictor stacks in data/predictor/
+```
+
+---
+
+# Task 2 – Run the setup
+
+**Script:** `01_setup-burgwald.R`
+
+* Open the script.
+* Run it from top to bottom **without any modifications**.
+* After successful execution, the following must exist:
+
+```text
+data/raw/AOI_Burgwald/
+data/processed/aoi_burgwald.gpkg
+src/01-fun-data-retrieval.R  (loaded without error)
+```
+
+Minimal check (optional in console):
+
+```r
+fs::dir_ls("data", recurse = TRUE)
+```
+
+---
+
+# Task 3 – Run generic data retrieval
+
+**Script:** `01-data-retrieval.R`
+
+* Run the script unchanged.
+* Afterwards, the following data must physically exist (content not relevant, existence is):
+
+  * DEM (GeoTIFF)
+  * OSM-by-key files
+  * CLC raster / GeoPackage
+  * DWD station data in `data/raw/dwd-stations/`
+  * processed DWD files in `data/processed/dwd/`
+
+Suggested quick check:
+
+```r
+fs::dir_ls("data", recurse = TRUE)
+```
+
+---
+
+# Task 4 – Test external API (SAGA)
+
+**Script:** `01-04-1-SAGA.R`
+
+* Adjust the SAGA binary path if needed (only this, nothing else).
+* Run the script.
+* At least **one new terrain raster** (e.g. slope, aspect) has to be created.
+* Note the file name and location.
+
+---
+
+# Task 5 – Sentinel-2 via CDSE
+
+**Script:** `01-2-CDSE-sentinel-data-retrieval.R`
+
+* Run the script unchanged.
+* Expected result (folder may vary slightly, adapt to repo):
+
+```text
+data/raw/s2/
+   └── <Sentinel-2 scenes or COG references>
+```
+
+* Count how many items were downloaded or referenced.
+* Check if a STAC JSON file was created (if implemented in the script).
+
+---
+
+# Task 6 – Sentinel-2 via gdalcubes
+
+**Script:** `01-3-gdalcubes-sentinel-data-retrieval.R`
+
+* Run the script unchanged.
+* Expected output:
+
+```text
+data/predictor/
+    └── <NetCDF file>   # e.g. s2_predictor_stack_summer.nc
+```
+
+* Confirm that the NetCDF file exists and can be opened, e.g.:
+
+```r
+stars::read_stars("data/predictor/<your-file>.nc")
+```
+
+---
+
+# Task 7 – Pipeline check
+
+Run this final check:
+
+```r
+list.files("data/raw", recurse = TRUE)
+list.files("data/processed", recurse = TRUE)
+list.files("data/predictor", recurse = TRUE)
+```
+
+Verify that all three stages exist on your system:
+
+* RAW DATA
+* PROCESSED DATA
+* PREDICTOR STACK(S)
+
+If any stage is missing, re-run the corresponding script or document the error.
+
+---
+
+# Task 8 – Short reproducibility log
+
+Write **one short paragraph** (max. 5–6 sentences) for your own log:
+
+* Did the full pipeline run on your machine?
+* Which scripts worked without issues?
+* Where did you have to change paths or credentials (e.g. SAGA, CDSE)?
+* Which errors (if any) stopped the pipeline?
+
+You will use this later to compare reproducibility between systems.
+
+---
+
+# Expected final structure
+
+The expected directory tree at the end of this worksheet is:
+
+```text
+data/
+  raw/
+    AOI_Burgwald/
+    dem/
+    osm_by_key/
+    dwd-stations/
+    s2/
+  processed/
+    aoi_burgwald.gpkg
+    dwd/
+  predictor/
+    *.nc
+src/
+  setup/
+  retrieval/
+  remote_sensing/
+outputs/
+  figures/
+  tables/
+```
+
+Take-home summary
+
+This pipeline forms the foundation for all later modelling tasks in the course.By running it successfully, you ensure that:
+
+all Burgwald base layers (DEM, OSM, CLC, DWD) are available,
+
+all Sentinel-2 sources (CDSE + gdalcubes) are standardised and reproducible,
+
+the project contains a clean, FAIR-aligned data structure, and
+
+downstream scripts (classification, predictors, modelling) can run without modification.
+
+In short: if this pipeline runs, every later analysis in the course becomes plug-and-play.
+

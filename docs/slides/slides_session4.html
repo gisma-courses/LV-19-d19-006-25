@@ -6,11 +6,11 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+  <meta name="generator" content="quarto-1.8.26">
 
   <meta name="author" content="Chris Reudenbach">
   <title>Advanced GIS &amp; RS – Pattern-based spatial analysis</title>
@@ -98,7 +98,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-83ba8bf49a63c47ab6793c327c4e96ad.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-8e23f0bd124465ac8630e771a76dbc45.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -433,22 +433,22 @@ Chris Reudenbach
 <h2>Examples</h2>
 <h3 id="coma">coma</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(terra)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(terra)</span>
 <span id="cb1-2"><a></a><span class="fu">library</span>(motif)</span>
 <span id="cb1-3"><a></a>r9 <span class="ot">=</span> <span class="fu">rast</span>(<span class="st">"../exdata/r9.tif"</span>)</span>
 <span id="cb1-4"><a></a>r9_sign_coma <span class="ot">=</span> <span class="fu">lsp_signature</span>(r9, <span class="at">type =</span> <span class="st">"coma"</span>)</span>
 <span id="cb1-5"><a></a>r9_sign_coma</span>
-<span id="cb1-6"><a></a>r9_sign_coma<span class="sc">$</span>signature</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a></a>r9_sign_coma<span class="sc">$</span>signature</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <h3 id="cove">cove</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>r9_sign <span class="ot">=</span> <span class="fu">lsp_signature</span>(r9, <span class="at">type =</span> <span class="st">"cove"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>r9_sign <span class="ot">=</span> <span class="fu">lsp_signature</span>(r9, <span class="at">type =</span> <span class="st">"cove"</span>)</span>
 <span id="cb2-2"><a></a>r9_sign</span>
-<span id="cb2-3"><a></a>r9_sign<span class="sc">$</span>signature</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a></a>r9_sign<span class="sc">$</span>signature</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <h3 id="search">search</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">library</span>(sf)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">library</span>(sf)</span>
 <span id="cb3-2"><a></a>landcover <span class="ot">=</span> <span class="fu">rast</span>(<span class="fu">system.file</span>(<span class="st">"raster/landcover2015s.tif"</span>, <span class="at">package =</span> <span class="st">"motif"</span>))</span>
 <span id="cb3-3"><a></a>ecoregions <span class="ot">=</span> <span class="fu">read_sf</span>(<span class="fu">system.file</span>(<span class="st">"vector/ecoregionss.gpkg"</span>, <span class="at">package =</span> <span class="st">"motif"</span>))</span>
 <span id="cb3-4"><a></a>ecoregion1 <span class="ot">=</span> ecoregions[<span class="dv">1</span>, ]</span>
@@ -459,17 +459,17 @@ Chris Reudenbach
 <span id="cb3-9"><a></a>search_result <span class="ot">=</span> <span class="fu">lsp_search</span>(landcover1, landcover, </span>
 <span id="cb3-10"><a></a>                           <span class="at">type =</span> <span class="st">"cove"</span>, <span class="at">dist_fun =</span> <span class="st">"jensen-shannon"</span>, <span class="at">window =</span> <span class="dv">25</span>,</span>
 <span id="cb3-11"><a></a>                           <span class="at">output =</span> <span class="st">"sf"</span>)</span>
-<span id="cb3-12"><a></a><span class="fu">plot</span>(search_result[<span class="st">"dist"</span>])</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-12"><a></a><span class="fu">plot</span>(search_result[<span class="st">"dist"</span>])</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <h3 id="minmax">min/max</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>search_result<span class="sc">$</span>id[<span class="fu">which.min</span>(search_result<span class="sc">$</span>dist)]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>search_result<span class="sc">$</span>id[<span class="fu">which.min</span>(search_result<span class="sc">$</span>dist)]</span>
 <span id="cb4-2"><a></a>search_results_75 <span class="ot">=</span> <span class="fu">lsp_extract</span>(landcover, <span class="at">window =</span> <span class="dv">25</span>, <span class="at">id =</span> <span class="dv">75</span>)</span>
 <span id="cb4-3"><a></a><span class="fu">plot</span>(search_results_75)</span>
 <span id="cb4-4"><a></a></span>
 <span id="cb4-5"><a></a>search_result<span class="sc">$</span>id[<span class="fu">which.max</span>(search_result<span class="sc">$</span>dist)]</span>
 <span id="cb4-6"><a></a>search_results_215 <span class="ot">=</span> <span class="fu">lsp_extract</span>(landcover, <span class="at">window =</span> <span class="dv">25</span>, <span class="at">id =</span> <span class="dv">215</span>)</span>
-<span id="cb4-7"><a></a><span class="fu">plot</span>(search_results_215)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-7"><a></a><span class="fu">plot</span>(search_results_215)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="exercises" class="slide level2">
@@ -675,7 +675,7 @@ Chris Reudenbach
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -787,13 +787,14 @@ Chris Reudenbach
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

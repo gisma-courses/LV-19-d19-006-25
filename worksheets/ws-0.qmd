@@ -1,0 +1,47 @@
+---
+title: "4. Classifiation"
+author: "Chris Reudenbach"
+title-block-banner: "../images/gw-sp.png"
+title-block-banner-color: "white"
+format:
+  html:
+    toc: true
+    theme: flatly
+  pdf:
+    toc: true
+---
+
+
+# Tasks
+
+1. **Set AOI**  
+   Load Burgwald AOI, transform to EPSG:4326, merge to one polygon.
+
+2. **Use project directory structure**  
+   Sentinel-2 data only in:  
+   `data/raw/AOI_Burgwald/s2/`  
+   Training areas in:  
+   `data/raw/AOI_Burgwald/train_areas_burgwald.gpkg`
+
+3. **Create training areas**  
+   Digitise polygons inside the AOI, assign attribute `class`.
+
+4. **Run STAC query**  
+   Use `intersects = AOI`,  
+   datetime = 2018-05-01 to 2022-12-31,  
+   send as **POST request**, then call `items_fetch()`.
+
+5. **Select suitable dates**  
+   Compute per-date scene count + mean cloud cover,  
+   rank by cloud cover, choose two low-cloud dates (≈2018 and ≈2022).
+
+6. **Build predictor stacks**  
+   For both dates: request raw bands + kNDVI + SAVI + EVI,  
+   merge into a raster stack, save as:  
+   `data/processed/pred_stack_2018.tif`  
+   `data/processed/pred_stack_2022.tif`
+
+7. **Check consistency**  
+   Ensure identical extent, resolution, and layer order in both stacks.
+
+8. **Document step**

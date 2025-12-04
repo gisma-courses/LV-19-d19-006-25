@@ -6,11 +6,11 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+  <meta name="generator" content="quarto-1.8.26">
 
   <meta name="author" content="Chris Reudenbach">
   <title>Advanced GIS &amp; RS – Spatial Patterns</title>
@@ -98,7 +98,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-83ba8bf49a63c47ab6793c327c4e96ad.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-8e23f0bd124465ac8630e771a76dbc45.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -354,16 +354,16 @@ Abbildung&nbsp;1: Examples for spatial patterns
 <h2>Code examples</h2>
 <p>Taken from : <a href="https://arxiv.org/pdf/2405.06559">“The landscapemetrics and motif packages for measuring landscape patterns and processes”</a></p>
 <h4 id="read-and-visualize-the-data">Read and visualize the data</h4>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(landscapemetrics)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(landscapemetrics)</span>
 <span id="cb1-2"><a></a><span class="fu">library</span>(terra)</span>
 <span id="cb1-3"><a></a>r9 <span class="ot">=</span> <span class="fu">rast</span>(<span class="st">"exdata/r9.tif"</span>)</span>
 <span id="cb1-4"><a></a>r1 <span class="ot">=</span> <span class="fu">rast</span>(<span class="st">"exdata/r1.tif"</span>)</span>
-<span id="cb1-5"><a></a><span class="fu">plot</span>(r1); <span class="fu">plot</span>(r9)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a></a><span class="fu">plot</span>(r1); <span class="fu">plot</span>(r9)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p><img data-src="../assets/unnamed-chunk-4-1.png" style="width:30.0%"><img data-src="../assets/unnamed-chunk-4-2.png" style="width:30.0%"></p>
 </section>
 <section id="get-the-indices" class="slide level2">
 <h2>Get the indices</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">lsm_l_shdi</span>(r9)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">lsm_l_shdi</span>(r9)</span>
 <span id="cb2-2"><a></a></span>
 <span id="cb2-3"><a></a><span class="co"># A tibble: 1 × 6</span></span>
 <span id="cb2-4"><a></a>  layer level     class    id metric value</span>
@@ -394,19 +394,19 @@ Abbildung&nbsp;1: Examples for spatial patterns
 <span id="cb2-29"><a></a><span class="dv">1</span>     <span class="dv">1</span> landscape    <span class="cn">NA</span>    <span class="cn">NA</span> ai     <span class="fl">98.7</span>   </span>
 <span id="cb2-30"><a></a><span class="dv">2</span>     <span class="dv">1</span> landscape    <span class="cn">NA</span>    <span class="cn">NA</span> shdi    <span class="fl">0.0811</span></span>
 <span id="cb2-31"><a></a><span class="dv">3</span>     <span class="dv">2</span> landscape    <span class="cn">NA</span>    <span class="cn">NA</span> ai     <span class="fl">82.1</span>   </span>
-<span id="cb2-32"><a></a><span class="dv">4</span>     <span class="dv">2</span> landscape    <span class="cn">NA</span>    <span class="cn">NA</span> shdi    <span class="fl">1.06</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-32"><a></a><span class="dv">4</span>     <span class="dv">2</span> landscape    <span class="cn">NA</span>    <span class="cn">NA</span> shdi    <span class="fl">1.06</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="code-examples-1" class="slide level2">
 <h2>Code examples</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>mat_window <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">11</span>, <span class="at">ncol =</span> <span class="dv">11</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>mat_window <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">11</span>, <span class="at">ncol =</span> <span class="dv">11</span>)</span>
 <span id="cb3-2"><a></a>w_result <span class="ot">=</span> <span class="fu">window_lsm</span>(r9, <span class="at">window =</span> mat_window, <span class="at">what =</span> <span class="st">"lsm_l_ai"</span>)</span>
-<span id="cb3-3"><a></a><span class="fu">plot</span>(r9); <span class="fu">plot</span>(w_result<span class="sc">$</span>layer_1<span class="sc">$</span>lsm_l_ai)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-3"><a></a><span class="fu">plot</span>(r9); <span class="fu">plot</span>(w_result<span class="sc">$</span>layer_1<span class="sc">$</span>lsm_l_ai)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <p><img data-src="../assets/unnamed-chunk-6-1.png" style="width:30.0%"><img data-src="../assets/unnamed-chunk-6-2.png" style="width:30.0%"></p>
 </section>
 <section id="package-landscapemetrics" class="slide level2">
 <h2>Package landscapemetrics</h2>
 <p><a href="https://r-spatialecology.github.io/landscapemetrics/">https://r-spatialecology.github.io/landscapemetrics/</a></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># A tibble: 133 × 5</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># A tibble: 133 × 5</span></span>
 <span id="cb4-2"><a></a>   metric name                                type           level function_name</span>
 <span id="cb4-3"><a></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>  <span class="er">&lt;</span>chr<span class="sc">&gt;</span>                               <span class="er">&lt;</span>chr<span class="sc">&gt;</span>          <span class="er">&lt;</span>chr<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span>        </span>
 <span id="cb4-4"><a></a> <span class="dv">1</span> area   patch area                          area and edge… patch lsm_p_area   </span>
@@ -414,7 +414,7 @@ Abbildung&nbsp;1: Examples for spatial patterns
 <span id="cb4-6"><a></a> <span class="dv">3</span> circle related circumscribing circle       shape metric   patch lsm_p_circle </span>
 <span id="cb4-7"><a></a> <span class="dv">4</span> contig contiguity index                    shape metric   patch lsm_p_contig </span>
 <span id="cb4-8"><a></a> <span class="dv">5</span> core   core area                           core area met… patch lsm_p_core   </span>
-<span id="cb4-9"><a></a><span class="co"># ℹ 134 more rows</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-9"><a></a><span class="co"># ℹ 134 more rows</span></span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>Sampling around points of interest</li>
 <li>Moving window calculations</li>
@@ -438,7 +438,7 @@ Abbildung&nbsp;1: Examples for spatial patterns
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>&lt;gisma 2023&gt;</p>
+<p>&lt;gisma 2025&gt;</p>
 </div>
 </div></div>
 
@@ -626,7 +626,7 @@ Abbildung&nbsp;1: Examples for spatial patterns
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -700,13 +700,14 @@ Abbildung&nbsp;1: Examples for spatial patterns
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

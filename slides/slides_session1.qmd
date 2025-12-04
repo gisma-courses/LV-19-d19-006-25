@@ -13,7 +13,7 @@ format:
     toc-depth: 2
     chalkboard: true
     slide-number: true
-    footer: <gisma 2023>
+    footer: <gisma 2025>
     menu: true
 lightbox: true
 spotlight:
@@ -26,7 +26,7 @@ spotlight:
 Discovering and describing spatial patterns is an important part of many geographical studies, and spatial patterns are linked to natural and social processes.
 
 ::: {#fig-patterns layout-ncol="2"}
-![[Corona Virus Distribution, https://coronavirus.jhu.edu/map.html](https://coronavirus.jhu.edu/map.html)](/assets/corona_hopkins.png){width="850%"}
+![[Corona Virus Distribution, https://coronavirus.jhu.edu/map.html](https://coronavirus.jhu.edu/map.html)](../assets/corona_hopkins.png){width="850%"}
 
 ![[IPCC Interactive Atlas, Bias Adjusted TX35](eyJ0eXBlIjoiQVRMQVMiLCJjb21tb25zIjp7ImxhdCI6MjUwNTIzMiwibG5nIjo3MjgxMzEsInpvb20iOjMsInByb2oiOiJFUFNHOjU0MDMwIiwibW9kZSI6ImNvbXBsZXRlX2F0bGFzIn0sInByaW1hcnkiOnsic2NlbmFyaW8iOiJzc3AxMjYiLCJwZXJpb2QiOiJuZWFyIiwic2Vhc29uIjoieWVhciIsImRhdGFzZXQiOiJDTUlQNiIsInZhcmlhYmxlIjoiVFgzNWJjIiwidmFsdWVUeXBlIjoiQU5PTUFMWSIsImhhdGNoaW5nIjoiU0lNUExFIiwicmVnaW9uU2V0IjoiYXI2IiwiYmFzZWxpbmUiOiJBUjUiLCJyZWdpb25zU2VsZWN0ZWQiOltdfSwicGxvdCI6eyJhY3RpdmVUYWIiOiJwbHVtZSIsIm1hc2siOiJub25lIiwic2NhdHRlcllNYWciOm51bGwsInNjYXR0ZXJZVmFyIjpudWxsLCJzaG93aW5nIjpmYWxzZX19)](/assets/ipcc.png)
 
