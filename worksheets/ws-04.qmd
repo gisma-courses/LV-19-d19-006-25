@@ -232,16 +232,13 @@ data/
 └── renv
 ```
 
-Take-home summary
+## Take-home summary
 
 This pipeline forms the foundation for all later modelling tasks in the course.By running it successfully, you ensure that:
 
 - all Burgwald base layers (DEM, OSM, CLC, DWD) are available,
-
 - all Sentinel-2 sources (CDSE + gdalcubes) are standardised and reproducible,
-
 - the project contains a clean, FAIR-aligned data structure, and
-
 - downstream scripts (classification, predictors, modelling) can run without modification.
 
 **In short: if this pipeline runs, every later analysis in the course becomes plug-and-play.**
