@@ -17,259 +17,287 @@ execute:
 
 ## Goals
 
-- Use the existing Burgwald data pipeline as a **fixed base**.
-- Run and understand two scripts:
-  - `bfast_kndvi_gdalcubes.R` (BFAST kNDVI on NetCDF cube)
-  - `04_classification_cdse_one_date.R` (single-date CDSE classification)
-- Create and use **training polygons** for supervised classification.
-- Generalise the **single-date RF classification** to multiple time points.
-- Build a **temporal classification stack** (multi-date RF maps in one cube).
-- Prepare the basis for later **stratification** and **similarity mapping**.
+-   Use the existing Burgwald data pipeline as a fixed base.
+-   Run and understand two key scripts:
+    -   `02-1-basic-classifications_cdse.R` (single-date CDSE classification)
+    -   `02-2-bfast-classification.R` (BFAST-based kNDVI change detection on a NetCDF cube)
+-   Create and use training polygons for supervised classification.
+-   Generalise the single-date RF classification to multiple time points.
+-   Build the conceptual basis for a temporal classification stack (multi-date RF maps in one cube).
+-   Prepare the basis for later stratification and similarity mapping.
 
----
+
+
+::: {.callout-tip title="Written output..." appearance="simple"}
+
+Please export all written answers as a PDF and save it in the project directory `docs/` using the filename convention `<Name1_NameN>_ws-05.pdf`. This helps you maintain a clean and consistent documentation of your work. 
+
+You are welcome to use ChatGPT for wording support, but the important part is that you genuinely understand the tasks and the underlying concepts — the AI is only meant to reduce typing effort, not replace your comprehension.
+
+:::
+
+::: {.callout-important title="How to use ChatGPT for this assignment"}
+You may use ChatGPT **only** to refine the wording of your own ideas.  
+Please follow this workflow:
+
+1. **Write your own bullet points first** (even rough or incomplete).
+2. Paste your bullets into ChatGPT and ask for **clarification, shortening, or better phrasing**.
+3. ChatGPT will only help with **language and structure**, not with content.
+4. If you are unsure about something, write: *“I’m not sure about X”* — ChatGPT may then give **hints or guiding questions**, but **no solutions**.
+5. Answers must remain **ultra-short and clear** (1–3 bullets or 1–2 sentences).
+6. Do **not** ask ChatGPT for full answers; the goal is that **you understand the task**, not that AI solves it.
+
+This ensures that the work remains genuinely yours while reducing unnecessary typing.
+:::
+
 
 ## Prerequisites
+Before you start, make sure that:
 
-Before starting this worksheet you must have completed:
+1.  You have cloned the course repository and opened the RStudio Project.
+2.  You have run `01_setup-burgwald.R` once in this project:
+    -   `here::here()` points to the project root.
+    -   The object `root_folder` exists and points to the same location.
+3.  The following input data are available (paths relative to the project root):
+    -   Monthly Sentinel-2 cube (gdalcubes NetCDF):
+        -   `data/burgwald_2018_2022_all.nc`
+    -   CDSE-based predictor stack for one reference date (e.g. 2018):
+        -   `data/pred_stack_2018.tif`
+    -   A training polygon layer with a `class` field:
+        -   `data/processed/train_areas_burgwald.gpkg`
+4.  The required R packages are installed:
+    -   `terra`, `sf`, `dplyr`, `exactextractr`, `caret`, `RStoolbox`, `randomForest`, `sp`
+    -   `gdalcubes`, `stars`, `tmap`, `bfast`
 
-- Worksheet **4 – Execute the Burgwald Data Pipeline**
-- A working project setup with:
-  - monthly Sentinel-2 NetCDF cube (e.g. `burgwald_2018_2022_all.nc`)
-  - at least **one** CDSE-based predictor stack (e.g. `pred_stack_2018.tif`)
-  - AOI, DEM, CLC, DWD, OSM as in WS-04
+If any of these elements are missing, go back to the corresponding previous exercise or script.
 
-If this is not the case: finish WS-04 first.
 
----
 
-# Task 0 – Create training polygons
+## Task 1 – Digitise training polygons for classification purpose
 
-Before any classification tasks, you must manually create a **training polygon layer**.
+This task prepares the training data required by `02-1-basic-classifications_cdse.R`.
 
-**Requirements:**
+1.  Open QGIS (or another GIS) with the Burgwald base data (e.g. Sentinel-2 composite, CHM, existing reference layers).
+2.  Create a new polygon layer (or extend an existing one) for **training areas**, with at least:
+    -   geometry type: polygons
+    -   coordinate reference system: identical to the CDSE stack (`pred_stack_2018.tif`)
+    -   attribute field: `class` (text or integer)
+3.  Digitise polygons for the land-cover / disturbance classes you want to separate (e.g. “clearcut”, “forest”, “agriculture”, “other”).
+4.  Make sure that:
+    -   each polygon has a valid `class` value,
+    -   polygons are sufficiently homogeneous (avoid mixing classes inside one polygon),
+    -   polygons cover representative examples of each class.
+5.  Save the polygon layer as:
+    -   `data/processed/train_areas_burgwald.gpkg`
+    -   with the attribute field exactly named `class`.
 
-- At least **two classes** (e.g. `clearcut`, `forest`, `other`).
-- Saved as **GeoPackage**: `data/processed/train_areas_burgwald.gpkg`.
-- Geometry: **POLYGON** / **MULTIPOLYGON**.
-- CRS identical to your CDSE predictor stacks.
-- Field name for labels: **`class`**.
+Short written output (bullet points/table):
 
-**Steps:**
+-   Which classes did you digitise?
+-   How many polygons per class (approximately)?
+-   Any obvious sources of ambiguity (mixed pixels, shadows, edge effects)?
 
-1. Open QGIS.
-2. Load Burgwald base layers (RGB, NDVI, DEM, etc.).
-3. Digitise polygons for the classes you want to separate.
-4. Save to:
 
-```text
-   data/processed/train_areas_burgwald.gpkg
+
+## Task 2 – Inspect the predictor stack
+
+Now connect the training polygons with the CDSE stack.
+
+1.  In RStudio, load the predictor stack and training layer:
+
+    ``` r
+    library(here)
+    library(terra)
+    library(sf)
+
+    pred_stack  <- terra::rast(here::here("data", "pred_stack_2018.tif"))
+    train_areas <- sf::st_read(here::here("data", "processed", "train_areas_burgwald.gpkg"))
+    ```
+
+2.  Short written output (bullet points/table):
+
+    -   How many layers does `pred_stack` contain?
+    -   Which types of predictors do you see in the layer names (e.g. spectral bands, indices, texture, CDSE components)?
+    -   Do the training polygons overlay the predictor raster correctly (no obvious misalignment)?
+
+3. Create one quick visual check (include the figure in your written PDF output):
+
+    -   Either a simple RGB plot of three layers;
+    -   or a plot of a single layer with training polygons overlaid.
+
+Written output: add brief comments on what you can clearly observe and detect (e.g., visible clearcuts vs. intact forest, obvious artefacts, unusual patterns, etc.), and also on what you obviously cannot identify from the imagery.
+
+
+## Task 3 – Run the single-date CDSE classification script
+
+In this step you use the script:
+
+``` text
+02-1-basic-classifications_cdse.R
 ```
 
-5. Verify structure in R:
+This script performs, for the single CDSE predictor stack `pred_stack_2018.tif`:
 
-   ```r
-   x <- sf::st_read("data/processed/train_areas_burgwald.gpkg")
-   names(x)
-   ```
+-   unsupervised k-means clustering,
+-   supervised Maximum Likelihood Classification (MLC) via `RStoolbox::superClass()`,
+-   supervised Random Forest (RF) via `caret + randomForest`,
+-   and computes a confusion matrix for the RF model.
 
-6. If `class` is missing, add it in QGIS and assign class labels.
+1.  Open `02-1-basic-classifications_cdse.R` in RStudio.
 
+2.  Check the input paths near the top of the script:
 
+    -   `pred_stack_file <- here::here("data", "pred_stack_2018.tif")`
+    -   `train_poly_file <- here::here("data", "processed", "train_areas_burgwald.gpkg")`
+    -   `class_field <- "class"` Adjust only if your filenames differ.
 
-# Task 1 – Run the BFAST kNDVI script (as is)
+3.  Run the script stepwise from top to bottom.
 
-**Script 1:** `bfast_kndvi_gdalcubes.R`
-(“BFAST-based kNDVI change detection on gdalcubes NetCDF”)
+4.  Confirm that the following outputs are written:
 
-1. Place (or reference) the script in your project (e.g. `src/04_bfast_kndvi_gdalcubes.R`).
-2. Make sure `root_folder <- here::here()` is available (from `01_setup-burgwald.R`).
-3. Run the script **unchanged**.
+    -   k-means map:
 
-**Expected input** (adapt if your filenames differ):
+        -   `data/classification_kmeans_2018.tif`
 
-* `data/burgwald_2018_2022_all.nc`
+    -   MLC map:
 
-**Expected output:**
+        -   `data/classification_mlc_2018.tif`
 
-* `data/burgwald_bfast_results.nc`
+    -   RF map:
 
-**Minimal checks:**
+        -   `data/classification_rf_2018.tif`
 
-* Confirm that `burgwald_bfast_results.nc` exists.
-* Optionally open it, e.g.:
+    -   RF model:
 
-  ```r
-  bfast_star <- stars::read_stars("data/burgwald_bfast_results.nc")
-  bfast_star
-  ```
+        -   `data/rf_model_2018_cdse.rds`
 
----
+    -   RF confusion matrix:
 
-# Task 2 – Run the single-date CDSE classification (as is)
+        -   `data/rf_confusion_2018_cdse.rds`
 
-**Script 2:** `04_classification_cdse_one_date.R`
-(“Perform classification for ONE CDSE-based predictor stack”)
+5.  Load and plot the classification maps (e.g. for the RF results):
 
-**Input assumptions:**
+    ``` r
+    rf_map <- terra::rast(here::here("data", "classification_rf_2018.tif"))
+    plot(rf_map)
+    ```
 
-* `data/pred_stack_2018.tif`  (single-date predictor stack)
-* `data/processed/train_areas_burgwald.gpkg` (training polygons with `class` field)
+Short written output:
 
-1. Check the paths in the script and adjust **only if absolutely necessary**:
+- Compare the three classification results (k-means, MLC, RF) with respect to your chosen class scheme, especially the distinction between *forest* and *non-forest*.
+- Describe where each method appears to produce reliable results and where it does not.
+- Identify areas where misclassifications are likely (e.g., mixed land cover, shadows, edges, cloud artefacts).
+- Summarise the qualitative differences between the three methods in terms of class separation, spatial coherence, and plausibility.
 
-   * `pred_stack_file`
-   * `train_poly_file`
-2. Run the script unchanged.
 
-**Expected outputs** (example names from the script):
 
-* `data/classification_kmeans_2018.tif`
-* `data/classification_mlc_2018.tif`
-* `data/classification_rf_2018.tif`
-* `data/rf_model_2018_cdse.rds`
-* `data/rf_confusion_2018_cdse.rds`
+## Task 4 – Identify the RF classification core in the script
 
----
+Still in `02-1-basic-classifications_cdse.R`:
 
-# Task 3 – Identify the RF classification core
+1.  Locate the block where Random Forest is trained:
 
-In `04_classification_cdse_one_date.R`:
+    -   Find the `caret::train(...)` call that creates the RF model.
 
-1. Locate the **Random Forest** training block (`caret::train(...)`):
+    -   Note:
 
-   * Which object holds the trained RF model?
-   * On which columns (`predictor_cols`) is it trained?
+        -   the name of the RF model object,
+        -   which columns are used as predictors (`predictor_cols`),
+        -   which column is the response (`class_field`).
 
-2. Locate the **RF map prediction**:
+2.  Locate the block where RF is applied to the raster:
 
-   * the line that calls `terra::predict(pred_stack, rf_model, ...)`
-   * the line that writes the RF map to disk (`classification_rf_2018.tif`)
+    -   Find the line where `terra::predict(pred_stack, rf_model, ...)` is called.
+    -   Find the line where the resulting RF map is written to disk as `classification_rf_2018.tif`.
 
-Write down (in your notes or as comments) 2–3 bullet points:
+3.  Short Written output: (bullet points), describe the pipeline:
 
-* Input(s) needed for RF classification.
-* Output(s) produced.
-* Fixed assumptions (e.g. `class` field, training file path, CRS).
+    -   Input for the RF model (type of data, number of samples, predictor variables, class labels).
+    -   Output of the RF model (raster map, probability or hard classes).
+    -   Where and how accuracy is assessed (test data, confusion matrix, metrics).
 
----
 
-# Task 4 – Prepare multiple CDSE predictor stacks
 
-We treat the single-date classification as a **template**.
+## Task 5 – From single-date RF to a temporal classification stack (concept only)
 
-1. Decide on at least **3–4 time slices** (years or dates) for which you want RF classifications, for example:
+Assume you do not only have `pred_stack_2018.tif`, but equivalent CDSE predictor stacks for several years, for example:
 
-   * `pred_stack_2018.tif`
-   * `pred_stack_2019.tif`
-   * `pred_stack_2020.tif`
-   * `pred_stack_2021.tif`
+-   `pred_stack_2018.tif`
+-   `pred_stack_2019.tif`
+-   `pred_stack_2020.tif`
+-   …
 
-2. Ensure that all these files exist in your `data/` folder.
-   If necessary, adapt your CDSE pipeline so that it exports additional years/dates using the same structure as `pred_stack_2018.tif`.
+All stacks share the same predictor structure (same bands / indices / CDSE components, same CRS and resolution).
 
-3. Use the **same training polygons** (`train_areas_burgwald.gpkg`) for all dates.
+Write a short conceptual plan (max. 10–12 sentences; optionally formulated as commented R code) that explains how you would extend the single-date RF classification workflow to multiple years. Your plan should describe how the trained RF model can be applied to CDSE predictor stacks from several time points, how you would organise the resulting annual RF maps into a temporal classification stack, how you would ensure temporal consistency between years, and what the added value of such a temporal RF stack would be compared to a single-year classification.
 
----
 
-# Task 5 – Turn the RF classification into a function
 
-Create a new script, e.g. `04_classification_cdse_multi_date.R`, and:
+## Task 6 – Run BFAST-based kNDVI change detection on the cube
 
-1. Copy the relevant RF parts from `04_classification_cdse_one_date.R`:
+Now you move from single-date classification to time-series-based change detection using:
 
-   * loading of `pred_stack_file`
-   * loading of training polygons
-   * extraction of training data (`exactextractr`)
-   * RF training (`caret::train`)
-   * RF prediction (`terra::predict`)
-   * writing the RF classification raster
+``` text
+02-2-bfast-classification.R
+```
 
-2. Wrap the RF logic into a function, e.g.:
+This script:
 
-   ```r
-   classify_one_date_rf <- function(pred_stack_file,
-                                    train_poly_file,
-                                    class_field,
-                                    out_raster_file) {
-     # 1) load raster + training polygons
-     # 2) extract training data
-     # 3) fit RF model
-     # 4) predict RF map
-     # 5) write RF map to out_raster_file
-     # 6) optionally return model + confusion matrix
-   }
-   ```
+-   reads the monthly Sentinel-2 cube `data/burgwald_2018_2022_all.nc`,
+-   computes a kNDVI time series per pixel from bands `B08` and `B04`,
+-   runs `bfastmonitor()` for each pixel,
+-   returns two per-pixel outputs:
+    -   `change_date` (estimated time of structural change),
+    -   `change_magnitude` (magnitude of change at the breakpoint),
+-   writes both outputs to `data/burgwald_bfast_results.nc`,
+-   and visualises the results using `stars` and `tmap`.
 
-3. Test the function for **one** date first (e.g. 2018) and confirm that:
+1.  Open `02-2-bfast-classification.R` in RStudio.
 
-   * the RF output raster is created,
-   * a confusion matrix is computed,
-   * the model is stored if you need it.
+2.  Identify and note the following elements:
 
----
+    -   Input cube path:
+        -   `cube_file <- file.path(root_folder, "data", "burgwald_2018_2022_all.nc")`
+    -   Output NetCDF path:
+        -   `bfast_file <- file.path(root_folder, "data", "burgwald_bfast_results.nc")`
+    -   The `reduce_time(...)` call and the embedded `FUN = function(x) { ... }`.
 
-# Task 6 – Loop over multiple dates and build a classification stack
+3.  Written output: Inside the custom reducer function `FUN = function(x)`, describe (in your own words, bullet points):
 
-Extend `04_classification_cdse_multi_date.R`:
+    -   How kNDVI is computed from `B08` and `B04` (formula, scaling).
+    -   How the time series object `kndvi_ts` is constructed (start date, frequency).
+    -   How `bfastmonitor()` is configured (arguments `start`, `history`, `level`).
+    -   Which two values the function returns per pixel (breakpoint and magnitude).
 
-1. Define a vector of predictor stack paths, e.g.:
+4.  Run the script once so that `data/burgwald_bfast_results.nc` is created.
 
-   ```r
-   years <- 2018:2021
-   pred_files <- here::here("data", paste0("pred_stack_", years, ".tif"))
-   ```
+5.  Use the plotting section at the end of the script (or an equivalent snippet) to visualise:
 
-2. For each `pred_stack_file` in `pred_files`:
+    -   `change_date`
+    -   `change_magnitude`
 
-   * derive an output name such as `classification_rf_<year>.tif`,
-   * call your `classify_one_date_rf()` function.
+    Inspect the maps interactively (e.g. with `tmap_mode("view")`) and as static plots.
 
-3. After the loop, build a **multi-layer classification stack**:
+Short written interpretation:
 
-   ```r
-   rf_files <- here::here("data", paste0("classification_rf_", years, ".tif"))
-   rf_stack <- terra::rast(rf_files)
+-   What does an early vs. late `change_date` indicate in terms of disturbance timing?
+-   How do positive vs. negative `change_magnitude` values relate to vegetation loss or recovery?
+-   In which parts of the Burgwald do you see strong BFAST signals (large magnitude changes, clustered patterns)?
+-   How could these patterns be linked to known events (e.g. bark beetle outbreaks, storms, clearcuts)?
 
-   terra::writeRaster(
-     rf_stack,
-     here::here("data", "classification_rf_timeseries.tif"),
-     overwrite = TRUE
-   )
-   ```
 
-(If you prefer NetCDF, you can export the stack accordingly.)
 
-**Expected result:**
+## Take-home – Temporal stacks as a basis for stratification and similarity mapping
 
-* a raster stack where each layer = RF classification for one time slice.
+Write one short paragraph (max. 6–7 sentences) that summarises:
 
----
+-   Why it is useful to have **RF classification maps for multiple time points** in a common stack.
+-   How such a stack could be used to:
+    -   define temporal strata (e.g. “always stable forest”, “recent clearcuts”, “gradual change”),
+    -   detect areas with similar temporal class trajectories (similarity mapping).
+-   How the RF-based temporal stack and the BFAST-based change layers could complement each other for:
+    -   sampling design,
+    -   prioritising field visits,
+    -   and designing monitoring strategies.
 
-# Task 7 – Link to change detection (optional, short)
-
-Optional, for those who also want to align classification with BFAST results:
-
-1. Load the BFAST result file `burgwald_bfast_results.nc` as a `stars` or `terra` object.
-2. Co-register (if necessary) the RF classification stack and the BFAST layers.
-3. Inspect:
-
-   * regions with **strong change magnitude** (from BFAST),
-   * and their **temporal RF class behaviour** (from your classification stack).
-
-This step is exploratory only; formal stratification comes later.
-
----
-
-# Take-home: temporal stacks as basis for stratification
-
-Write **one short paragraph** (max. 6–7 sentences):
-
-* Why is it useful to have **RF classification maps for multiple time points** in a single stack?
-* How could such a stack be used to:
-
-  * define **temporal strata** (e.g. “always stable forest”, “recent clearcuts”, “gradual change”),
-  * find **areas of similar behaviour** (spatial clusters with similar class trajectories)?
-
-This will be the conceptual basis for the next step:
-**stratified sampling and similarity mapping based on temporal class trajectories.**
-
+This paragraph will serve as a conceptual bridge to the next exercise on stratified sampling and similarity mapping based on temporal class trajectories.

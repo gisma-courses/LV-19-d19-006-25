@@ -2,7 +2,6 @@
 _site/
 docs/              # CI pusht docs/ mit 'git add -f', lokal bleibt es ignoriert
 .quarto/
-
 # Envs/Caches
 .Rproj.user/
 .Rhistory
@@ -11,13 +10,11 @@ renv/
 venv/
 __pycache__/
 node_modules/
-
 # Scratch/Outputs
 outputs/
 cache/
 tmp/
 *.log
-
 # OS/Editor
 .DS_Store
 Thumbs.db
@@ -25,3 +22,5 @@ Thumbs.db
 .vscode/
 configure.log
 /.quarto/
+**/*.quarto_ipynb
+proj

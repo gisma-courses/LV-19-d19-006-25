@@ -4,7 +4,7 @@
     "href": "worksheets/ws-05.html",
     "title": "5 – Temporal Classification Stacks",
     "section": "",
-    "text": "Use the existing Burgwald data pipeline as a fixed base.\nRun and understand two scripts:\n\nbfast_kndvi_gdalcubes.R (BFAST kNDVI on NetCDF cube)\n04_classification_cdse_one_date.R (single-date CDSE classification)\n\nCreate and use training polygons for supervised classification.\nGeneralise the single-date RF classification to multiple time points.\nBuild a temporal classification stack (multi-date RF maps in one cube).\nPrepare the basis for later stratification and similarity mapping.",
+    "text": "Use the existing Burgwald data pipeline as a fixed base.\nRun and understand two key scripts:\n\n02-1-basic-classifications_cdse.R (single-date CDSE classification)\n02-2-bfast-classification.R (BFAST-based kNDVI change detection on a NetCDF cube)\n\nCreate and use training polygons for supervised classification.\nGeneralise the single-date RF classification to multiple time points.\nBuild the conceptual basis for a temporal classification stack (multi-date RF maps in one cube).\nPrepare the basis for later stratification and similarity mapping.\n\n\n\n\n\n\n\nTippWritten output…\n\n\n\nPlease export all written answers as a PDF and save it in the project directory docs/ using the filename convention &lt;Name1_NameN&gt;_ws-05.pdf. This helps you maintain a clean and consistent documentation of your work.\nYou are welcome to use ChatGPT for wording support, but the important part is that you genuinely understand the tasks and the underlying concepts — the AI is only meant to reduce typing effort, not replace your comprehension.\n\n\n\n\n\n\n\n\nWichtigHow to use ChatGPT for this assignment\n\n\n\nYou may use ChatGPT only to refine the wording of your own ideas.\nPlease follow this workflow:\n\nWrite your own bullet points first (even rough or incomplete).\nPaste your bullets into ChatGPT and ask for clarification, shortening, or better phrasing.\nChatGPT will only help with language and structure, not with content.\nIf you are unsure about something, write: “I’m not sure about X” — ChatGPT may then give hints or guiding questions, but no solutions.\nAnswers must remain ultra-short and clear (1–3 bullets or 1–2 sentences).\nDo not ask ChatGPT for full answers; the goal is that you understand the task, not that AI solves it.\n\nThis ensures that the work remains genuinely yours while reducing unnecessary typing.",
     "crumbs": [
       "FAQ",
       "Worksheets",
@@ -16,7 +16,7 @@
     "href": "worksheets/ws-05.html#goals",
     "title": "5 – Temporal Classification Stacks",
     "section": "",
-    "text": "Use the existing Burgwald data pipeline as a fixed base.\nRun and understand two scripts:\n\nbfast_kndvi_gdalcubes.R (BFAST kNDVI on NetCDF cube)\n04_classification_cdse_one_date.R (single-date CDSE classification)\n\nCreate and use training polygons for supervised classification.\nGeneralise the single-date RF classification to multiple time points.\nBuild a temporal classification stack (multi-date RF maps in one cube).\nPrepare the basis for later stratification and similarity mapping.",
+    "text": "Use the existing Burgwald data pipeline as a fixed base.\nRun and understand two key scripts:\n\n02-1-basic-classifications_cdse.R (single-date CDSE classification)\n02-2-bfast-classification.R (BFAST-based kNDVI change detection on a NetCDF cube)\n\nCreate and use training polygons for supervised classification.\nGeneralise the single-date RF classification to multiple time points.\nBuild the conceptual basis for a temporal classification stack (multi-date RF maps in one cube).\nPrepare the basis for later stratification and similarity mapping.\n\n\n\n\n\n\n\nTippWritten output…\n\n\n\nPlease export all written answers as a PDF and save it in the project directory docs/ using the filename convention &lt;Name1_NameN&gt;_ws-05.pdf. This helps you maintain a clean and consistent documentation of your work.\nYou are welcome to use ChatGPT for wording support, but the important part is that you genuinely understand the tasks and the underlying concepts — the AI is only meant to reduce typing effort, not replace your comprehension.\n\n\n\n\n\n\n\n\nWichtigHow to use ChatGPT for this assignment\n\n\n\nYou may use ChatGPT only to refine the wording of your own ideas.\nPlease follow this workflow:\n\nWrite your own bullet points first (even rough or incomplete).\nPaste your bullets into ChatGPT and ask for clarification, shortening, or better phrasing.\nChatGPT will only help with language and structure, not with content.\nIf you are unsure about something, write: “I’m not sure about X” — ChatGPT may then give hints or guiding questions, but no solutions.\nAnswers must remain ultra-short and clear (1–3 bullets or 1–2 sentences).\nDo not ask ChatGPT for full answers; the goal is that you understand the task, not that AI solves it.\n\nThis ensures that the work remains genuinely yours while reducing unnecessary typing.",
     "crumbs": [
       "FAQ",
       "Worksheets",
@@ -28,7 +28,91 @@
     "href": "worksheets/ws-05.html#prerequisites",
     "title": "5 – Temporal Classification Stacks",
     "section": "Prerequisites",
-    "text": "Prerequisites\nBefore starting this worksheet you must have completed:\n\nWorksheet 4 – Execute the Burgwald Data Pipeline\nA working project setup with:\n\nmonthly Sentinel-2 NetCDF cube (e.g. burgwald_2018_2022_all.nc)\nat least one CDSE-based predictor stack (e.g. pred_stack_2018.tif)\nAOI, DEM, CLC, DWD, OSM as in WS-04\n\n\nIf this is not the case: finish WS-04 first.",
+    "text": "Prerequisites\nBefore you start, make sure that:\n\nYou have cloned the course repository and opened the RStudio Project.\nYou have run 01_setup-burgwald.R once in this project:\n\nhere::here() points to the project root.\nThe object root_folder exists and points to the same location.\n\nThe following input data are available (paths relative to the project root):\n\nMonthly Sentinel-2 cube (gdalcubes NetCDF):\n\ndata/burgwald_2018_2022_all.nc\n\nCDSE-based predictor stack for one reference date (e.g. 2018):\n\ndata/pred_stack_2018.tif\n\nA training polygon layer with a class field:\n\ndata/processed/train_areas_burgwald.gpkg\n\n\nThe required R packages are installed:\n\nterra, sf, dplyr, exactextractr, caret, RStoolbox, randomForest, sp\ngdalcubes, stars, tmap, bfast\n\n\nIf any of these elements are missing, go back to the corresponding previous exercise or script.",
+    "crumbs": [
+      "FAQ",
+      "Worksheets",
+      "5 – Temporal Classification Stacks"
+    ]
+  },
+  {
+    "objectID": "worksheets/ws-05.html#task-1-digitise-training-polygons-for-classification-purpose",
+    "href": "worksheets/ws-05.html#task-1-digitise-training-polygons-for-classification-purpose",
+    "title": "5 – Temporal Classification Stacks",
+    "section": "Task 1 – Digitise training polygons for classification purpose",
+    "text": "Task 1 – Digitise training polygons for classification purpose\nThis task prepares the training data required by 02-1-basic-classifications_cdse.R.\n\nOpen QGIS (or another GIS) with the Burgwald base data (e.g. Sentinel-2 composite, CHM, existing reference layers).\nCreate a new polygon layer (or extend an existing one) for training areas, with at least:\n\ngeometry type: polygons\ncoordinate reference system: identical to the CDSE stack (pred_stack_2018.tif)\nattribute field: class (text or integer)\n\nDigitise polygons for the land-cover / disturbance classes you want to separate (e.g. “clearcut”, “forest”, “agriculture”, “other”).\nMake sure that:\n\neach polygon has a valid class value,\npolygons are sufficiently homogeneous (avoid mixing classes inside one polygon),\npolygons cover representative examples of each class.\n\nSave the polygon layer as:\n\ndata/processed/train_areas_burgwald.gpkg\nwith the attribute field exactly named class.\n\n\nShort written output (bullet points/table):\n\nWhich classes did you digitise?\nHow many polygons per class (approximately)?\nAny obvious sources of ambiguity (mixed pixels, shadows, edge effects)?",
+    "crumbs": [
+      "FAQ",
+      "Worksheets",
+      "5 – Temporal Classification Stacks"
+    ]
+  },
+  {
+    "objectID": "worksheets/ws-05.html#task-2-inspect-the-predictor-stack",
+    "href": "worksheets/ws-05.html#task-2-inspect-the-predictor-stack",
+    "title": "5 – Temporal Classification Stacks",
+    "section": "Task 2 – Inspect the predictor stack",
+    "text": "Task 2 – Inspect the predictor stack\nNow connect the training polygons with the CDSE stack.\n\nIn RStudio, load the predictor stack and training layer:\nlibrary(here)\nlibrary(terra)\nlibrary(sf)\n\npred_stack  &lt;- terra::rast(here::here(\"data\", \"pred_stack_2018.tif\"))\ntrain_areas &lt;- sf::st_read(here::here(\"data\", \"processed\", \"train_areas_burgwald.gpkg\"))\nShort written output (bullet points/table):\n\nHow many layers does pred_stack contain?\nWhich types of predictors do you see in the layer names (e.g. spectral bands, indices, texture, CDSE components)?\nDo the training polygons overlay the predictor raster correctly (no obvious misalignment)?\n\nCreate one quick visual check (include the figure in your written PDF output):\n\nEither a simple RGB plot of three layers;\nor a plot of a single layer with training polygons overlaid.\n\n\nWritten output: add brief comments on what you can clearly observe and detect (e.g., visible clearcuts vs. intact forest, obvious artefacts, unusual patterns, etc.), and also on what you obviously cannot identify from the imagery.",
+    "crumbs": [
+      "FAQ",
+      "Worksheets",
+      "5 – Temporal Classification Stacks"
+    ]
+  },
+  {
+    "objectID": "worksheets/ws-05.html#task-3-run-the-single-date-cdse-classification-script",
+    "href": "worksheets/ws-05.html#task-3-run-the-single-date-cdse-classification-script",
+    "title": "5 – Temporal Classification Stacks",
+    "section": "Task 3 – Run the single-date CDSE classification script",
+    "text": "Task 3 – Run the single-date CDSE classification script\nIn this step you use the script:\n02-1-basic-classifications_cdse.R\nThis script performs, for the single CDSE predictor stack pred_stack_2018.tif:\n\nunsupervised k-means clustering,\nsupervised Maximum Likelihood Classification (MLC) via RStoolbox::superClass(),\nsupervised Random Forest (RF) via caret + randomForest,\nand computes a confusion matrix for the RF model.\n\n\nOpen 02-1-basic-classifications_cdse.R in RStudio.\nCheck the input paths near the top of the script:\n\npred_stack_file &lt;- here::here(\"data\", \"pred_stack_2018.tif\")\ntrain_poly_file &lt;- here::here(\"data\", \"processed\", \"train_areas_burgwald.gpkg\")\nclass_field &lt;- \"class\" Adjust only if your filenames differ.\n\nRun the script stepwise from top to bottom.\nConfirm that the following outputs are written:\n\nk-means map:\n\ndata/classification_kmeans_2018.tif\n\nMLC map:\n\ndata/classification_mlc_2018.tif\n\nRF map:\n\ndata/classification_rf_2018.tif\n\nRF model:\n\ndata/rf_model_2018_cdse.rds\n\nRF confusion matrix:\n\ndata/rf_confusion_2018_cdse.rds\n\n\nLoad and plot the classification maps (e.g. for the RF results):\nrf_map &lt;- terra::rast(here::here(\"data\", \"classification_rf_2018.tif\"))\nplot(rf_map)\n\nShort written output:\n\nCompare the three classification results (k-means, MLC, RF) with respect to your chosen class scheme, especially the distinction between forest and non-forest.\nDescribe where each method appears to produce reliable results and where it does not.\nIdentify areas where misclassifications are likely (e.g., mixed land cover, shadows, edges, cloud artefacts).\nSummarise the qualitative differences between the three methods in terms of class separation, spatial coherence, and plausibility.",
+    "crumbs": [
+      "FAQ",
+      "Worksheets",
+      "5 – Temporal Classification Stacks"
+    ]
+  },
+  {
+    "objectID": "worksheets/ws-05.html#task-4-identify-the-rf-classification-core-in-the-script",
+    "href": "worksheets/ws-05.html#task-4-identify-the-rf-classification-core-in-the-script",
+    "title": "5 – Temporal Classification Stacks",
+    "section": "Task 4 – Identify the RF classification core in the script",
+    "text": "Task 4 – Identify the RF classification core in the script\nStill in 02-1-basic-classifications_cdse.R:\n\nLocate the block where Random Forest is trained:\n\nFind the caret::train(...) call that creates the RF model.\nNote:\n\nthe name of the RF model object,\nwhich columns are used as predictors (predictor_cols),\nwhich column is the response (class_field).\n\n\nLocate the block where RF is applied to the raster:\n\nFind the line where terra::predict(pred_stack, rf_model, ...) is called.\nFind the line where the resulting RF map is written to disk as classification_rf_2018.tif.\n\nShort Written output: (bullet points), describe the pipeline:\n\nInput for the RF model (type of data, number of samples, predictor variables, class labels).\nOutput of the RF model (raster map, probability or hard classes).\nWhere and how accuracy is assessed (test data, confusion matrix, metrics).",
+    "crumbs": [
+      "FAQ",
+      "Worksheets",
+      "5 – Temporal Classification Stacks"
+    ]
+  },
+  {
+    "objectID": "worksheets/ws-05.html#task-5-from-single-date-rf-to-a-temporal-classification-stack-concept-only",
+    "href": "worksheets/ws-05.html#task-5-from-single-date-rf-to-a-temporal-classification-stack-concept-only",
+    "title": "5 – Temporal Classification Stacks",
+    "section": "Task 5 – From single-date RF to a temporal classification stack (concept only)",
+    "text": "Task 5 – From single-date RF to a temporal classification stack (concept only)\nAssume you do not only have pred_stack_2018.tif, but equivalent CDSE predictor stacks for several years, for example:\n\npred_stack_2018.tif\npred_stack_2019.tif\npred_stack_2020.tif\n…\n\nAll stacks share the same predictor structure (same bands / indices / CDSE components, same CRS and resolution).\nWrite a short conceptual plan (max. 10–12 sentences; optionally formulated as commented R code) that explains how you would extend the single-date RF classification workflow to multiple years. Your plan should describe how the trained RF model can be applied to CDSE predictor stacks from several time points, how you would organise the resulting annual RF maps into a temporal classification stack, how you would ensure temporal consistency between years, and what the added value of such a temporal RF stack would be compared to a single-year classification.",
+    "crumbs": [
+      "FAQ",
+      "Worksheets",
+      "5 – Temporal Classification Stacks"
+    ]
+  },
+  {
+    "objectID": "worksheets/ws-05.html#task-6-run-bfast-based-kndvi-change-detection-on-the-cube",
+    "href": "worksheets/ws-05.html#task-6-run-bfast-based-kndvi-change-detection-on-the-cube",
+    "title": "5 – Temporal Classification Stacks",
+    "section": "Task 6 – Run BFAST-based kNDVI change detection on the cube",
+    "text": "Task 6 – Run BFAST-based kNDVI change detection on the cube\nNow you move from single-date classification to time-series-based change detection using:\n02-2-bfast-classification.R\nThis script:\n\nreads the monthly Sentinel-2 cube data/burgwald_2018_2022_all.nc,\ncomputes a kNDVI time series per pixel from bands B08 and B04,\nruns bfastmonitor() for each pixel,\nreturns two per-pixel outputs:\n\nchange_date (estimated time of structural change),\nchange_magnitude (magnitude of change at the breakpoint),\n\nwrites both outputs to data/burgwald_bfast_results.nc,\nand visualises the results using stars and tmap.\n\n\nOpen 02-2-bfast-classification.R in RStudio.\nIdentify and note the following elements:\n\nInput cube path:\n\ncube_file &lt;- file.path(root_folder, \"data\", \"burgwald_2018_2022_all.nc\")\n\nOutput NetCDF path:\n\nbfast_file &lt;- file.path(root_folder, \"data\", \"burgwald_bfast_results.nc\")\n\nThe reduce_time(...) call and the embedded FUN = function(x) { ... }.\n\nWritten output: Inside the custom reducer function FUN = function(x), describe (in your own words, bullet points):\n\nHow kNDVI is computed from B08 and B04 (formula, scaling).\nHow the time series object kndvi_ts is constructed (start date, frequency).\nHow bfastmonitor() is configured (arguments start, history, level).\nWhich two values the function returns per pixel (breakpoint and magnitude).\n\nRun the script once so that data/burgwald_bfast_results.nc is created.\nUse the plotting section at the end of the script (or an equivalent snippet) to visualise:\n\nchange_date\nchange_magnitude\n\nInspect the maps interactively (e.g. with tmap_mode(\"view\")) and as static plots.\n\nShort written interpretation:\n\nWhat does an early vs. late change_date indicate in terms of disturbance timing?\nHow do positive vs. negative change_magnitude values relate to vegetation loss or recovery?\nIn which parts of the Burgwald do you see strong BFAST signals (large magnitude changes, clustered patterns)?\nHow could these patterns be linked to known events (e.g. bark beetle outbreaks, storms, clearcuts)?",
+    "crumbs": [
+      "FAQ",
+      "Worksheets",
+      "5 – Temporal Classification Stacks"
+    ]
+  },
+  {
+    "objectID": "worksheets/ws-05.html#take-home-temporal-stacks-as-a-basis-for-stratification-and-similarity-mapping",
+    "href": "worksheets/ws-05.html#take-home-temporal-stacks-as-a-basis-for-stratification-and-similarity-mapping",
+    "title": "5 – Temporal Classification Stacks",
+    "section": "Take-home – Temporal stacks as a basis for stratification and similarity mapping",
+    "text": "Take-home – Temporal stacks as a basis for stratification and similarity mapping\nWrite one short paragraph (max. 6–7 sentences) that summarises:\n\nWhy it is useful to have RF classification maps for multiple time points in a common stack.\nHow such a stack could be used to:\n\ndefine temporal strata (e.g. “always stable forest”, “recent clearcuts”, “gradual change”),\ndetect areas with similar temporal class trajectories (similarity mapping).\n\nHow the RF-based temporal stack and the BFAST-based change layers could complement each other for:\n\nsampling design,\nprioritising field visits,\nand designing monitoring strategies.\n\n\nThis paragraph will serve as a conceptual bridge to the next exercise on stratified sampling and similarity mapping based on temporal class trajectories.",
     "crumbs": [
       "FAQ",
       "Worksheets",
@@ -1171,7 +1255,7 @@
     "href": "worksheets/ws-04.html",
     "title": "4 – Execute the Burgwald Data Pipeline",
     "section": "",
-    "text": "Clone the course repository and open the RStudio project.\nRun all core pipeline scripts unchanged on your own machine.\nVerify that raw data, processed data, and predictor stacks are created.\nDocument any problems that prevent full reproducibility.",
+    "text": "Clone the course repository and open the RStudio project.\nRun all core pipeline scripts unchanged on your own machine.\nVerify that raw data, processed data, and predictor stacks are created.\nDocument any problems that prevent full reproducibility.\n\n\n\n\n\n\n\nTippWritten output…\n\n\n\nPlease export all written answers as a PDF and save it in the project directory docs/ using the filename convention &lt;Name1_NameN&gt;_ws-04.pdf. This helps you maintain a clean and consistent documentation of your work.\nYou are welcome to use ChatGPT for wording support, but the important part is that you genuinely understand the tasks and the underlying concepts — the AI is only meant to reduce typing effort, not replace your comprehension.\n\n\n\n\n\n\n\n\nWichtigHow to use ChatGPT for this assignment\n\n\n\nYou may use ChatGPT only to refine the wording of your own ideas.\nPlease follow this workflow:\n\nWrite your own bullet points first (even rough or incomplete).\nPaste your bullets into ChatGPT and ask for clarification, shortening, or better phrasing.\nChatGPT will only help with language and structure, not with content.\nIf you are unsure about something, write: “I’m not sure about X” — ChatGPT may then give hints or guiding questions, but no solutions.\nAnswers must remain ultra-short and clear (1–3 bullets or 1–2 sentences).\nDo not ask ChatGPT for full answers; the goal is that you understand the task, not that AI solves it.\n\nThis ensures that the work remains genuinely yours while reducing unnecessary typing.",
     "crumbs": [
       "FAQ",
       "Worksheets",
@@ -1183,7 +1267,7 @@
     "href": "worksheets/ws-04.html#goals",
     "title": "4 – Execute the Burgwald Data Pipeline",
     "section": "",
-    "text": "Clone the course repository and open the RStudio project.\nRun all core pipeline scripts unchanged on your own machine.\nVerify that raw data, processed data, and predictor stacks are created.\nDocument any problems that prevent full reproducibility.",
+    "text": "Clone the course repository and open the RStudio project.\nRun all core pipeline scripts unchanged on your own machine.\nVerify that raw data, processed data, and predictor stacks are created.\nDocument any problems that prevent full reproducibility.\n\n\n\n\n\n\n\nTippWritten output…\n\n\n\nPlease export all written answers as a PDF and save it in the project directory docs/ using the filename convention &lt;Name1_NameN&gt;_ws-04.pdf. This helps you maintain a clean and consistent documentation of your work.\nYou are welcome to use ChatGPT for wording support, but the important part is that you genuinely understand the tasks and the underlying concepts — the AI is only meant to reduce typing effort, not replace your comprehension.\n\n\n\n\n\n\n\n\nWichtigHow to use ChatGPT for this assignment\n\n\n\nYou may use ChatGPT only to refine the wording of your own ideas.\nPlease follow this workflow:\n\nWrite your own bullet points first (even rough or incomplete).\nPaste your bullets into ChatGPT and ask for clarification, shortening, or better phrasing.\nChatGPT will only help with language and structure, not with content.\nIf you are unsure about something, write: “I’m not sure about X” — ChatGPT may then give hints or guiding questions, but no solutions.\nAnswers must remain ultra-short and clear (1–3 bullets or 1–2 sentences).\nDo not ask ChatGPT for full answers; the goal is that you understand the task, not that AI solves it.\n\nThis ensures that the work remains genuinely yours while reducing unnecessary typing.",
     "crumbs": [
       "FAQ",
       "Worksheets",
