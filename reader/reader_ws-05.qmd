@@ -7,6 +7,12 @@ title-block-banner-color: green
 editor: 
   markdown: 
     wrap: sentence
+format:
+  html:
+    toc: true
+    theme: flatly
+  pdf:
+    toc: true
 ---
 
 Remote sensing is the only measurement technology that enables continuous observation of the Earth’s surface across full spatial extents — from landscapes to entire countries and global regions.
@@ -108,7 +114,13 @@ The algorithm assigns each pixel to the nearest cluster centroid, iteratively ad
 
 The animation below illustrates this process:
 
-![https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/K-means_convergence.gif/512px-K-means_convergence.gif?20170530143526](https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/K-means_convergence.gif/512px-K-means_convergence.gif?20170530143526)
+::: {.content-visible when-format="html"}
+![](../images/K-means_convergence.gif){fig-cap="K-means: Konvergenz (animiert, nur HTML)"}
+:::
+
+::: {.content-visible when-format="pdf"}
+![](../images/K-means_convergence.png){fig-cap="K-means: Konvergenz (statischer Frame für PDF)"}
+:::
 Source: [https://commons.wikimedia.org/wiki/File:K-means_convergence.gif](https://commons.wikimedia.org/wiki/File:K-means_convergence.gif) (Chire, CC BY-SA 4.0)
 
 *Convergence of k-means clustering from an unfavorable starting position (two initial cluster centers are fairly close*

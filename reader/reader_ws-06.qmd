@@ -1,4 +1,3 @@
-
 ---
 title:  Comparison of Sentinel-2 Processing Approaches
 #author: Chris Reudenbach
@@ -7,6 +6,12 @@ bibliography: references.bib
 subtitle: 'A choice can be a burden'
 title-block-banner: images/hinterland-sp.jpg
 title-block-banner-color: green
+format:
+  html:
+    toc: true
+    theme: flatly
+  pdf:
+    toc: true
 editor: 
   markdown: 
     wrap: sentence
