@@ -114,13 +114,9 @@ The algorithm assigns each pixel to the nearest cluster centroid, iteratively ad
 
 The animation below illustrates this process:
 
-::: {.content-visible when-format="html"}
-![](../images/K-means_convergence.gif){fig-cap="K-means: Konvergenz (animiert, nur HTML)"}
-:::
 
-::: {.content-visible when-format="pdf"}
-![](../images/K-means_convergence.png){fig-cap="K-means: Konvergenz (statischer Frame für PDF)"}
-:::
+![](../images/K-means_convergence.png){fig-cap="K-means: Konvergenz (animiert, nur HTML)"}
+
 Source: [https://commons.wikimedia.org/wiki/File:K-means_convergence.gif](https://commons.wikimedia.org/wiki/File:K-means_convergence.gif) (Chire, CC BY-SA 4.0)
 
 *Convergence of k-means clustering from an unfavorable starting position (two initial cluster centers are fairly close*
