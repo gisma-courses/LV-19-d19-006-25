@@ -362,7 +362,10 @@ background-size: cover;
   <li><a href="#task-5-sentinel-2-via-gdalcubes" id="toc-task-5-sentinel-2-via-gdalcubes" class="nav-link" data-scroll-target="#task-5-sentinel-2-via-gdalcubes">Task 5 – Sentinel-2 via gdalcubes</a></li>
   <li><a href="#task-6-pipeline-check" id="toc-task-6-pipeline-check" class="nav-link" data-scroll-target="#task-6-pipeline-check">Task 6 – Pipeline check</a></li>
   <li><a href="#task-8-short-reproducibility-log" id="toc-task-8-short-reproducibility-log" class="nav-link" data-scroll-target="#task-8-short-reproducibility-log">Task 8 – Short reproducibility log</a></li>
-  <li><a href="#expected-final-structure" id="toc-expected-final-structure" class="nav-link" data-scroll-target="#expected-final-structure">Expected final structure</a></li>
+  <li><a href="#expected-final-structure" id="toc-expected-final-structure" class="nav-link" data-scroll-target="#expected-final-structure">Expected final structure</a>
+  <ul class="collapse">
+  <li><a href="#take-home-summary" id="toc-take-home-summary" class="nav-link" data-scroll-target="#take-home-summary">Take-home summary</a></li>
+  </ul></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Andere Formate</h2><ul><li><a href="ws-04.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
@@ -575,17 +578,19 @@ src/01-fun-data-retrieval.R  (loaded without error)</code></pre>
 └── docs
 └── metadata
 └── renv</code></pre>
-<p>Take-home summary</p>
+<section id="take-home-summary" class="level2">
+<h2 class="anchored" data-anchor-id="take-home-summary">Take-home summary</h2>
 <p>This pipeline forms the foundation for all later modelling tasks in the course.By running it successfully, you ensure that:</p>
 <ul>
-<li><p>all Burgwald base layers (DEM, OSM, CLC, DWD) are available,</p></li>
-<li><p>all Sentinel-2 sources (CDSE + gdalcubes) are standardised and reproducible,</p></li>
-<li><p>the project contains a clean, FAIR-aligned data structure, and</p></li>
-<li><p>downstream scripts (classification, predictors, modelling) can run without modification.</p></li>
+<li>all Burgwald base layers (DEM, OSM, CLC, DWD) are available,</li>
+<li>all Sentinel-2 sources (CDSE + gdalcubes) are standardised and reproducible,</li>
+<li>the project contains a clean, FAIR-aligned data structure, and</li>
+<li>downstream scripts (classification, predictors, modelling) can run without modification.</li>
 </ul>
 <p><strong>In short: if this pipeline runs, every later analysis in the course becomes plug-and-play.</strong></p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
