@@ -355,8 +355,8 @@ background-size: cover;
   <ul>
   <li><a href="#goals" id="toc-goals" class="nav-link active" data-scroll-target="#goals">Goals</a></li>
   <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
-  <li><a href="#task-1-digitise-training-polygons-for-classification-purpose" id="toc-task-1-digitise-training-polygons-for-classification-purpose" class="nav-link" data-scroll-target="#task-1-digitise-training-polygons-for-classification-purpose">Task 1 – Digitise training polygons for classification purpose</a></li>
-  <li><a href="#task-2-inspect-the-predictor-stack" id="toc-task-2-inspect-the-predictor-stack" class="nav-link" data-scroll-target="#task-2-inspect-the-predictor-stack">Task 2 – Inspect the predictor stack</a></li>
+  <li><a href="#task-1-digitise-training-polygons-for-cdse-classification" id="toc-task-1-digitise-training-polygons-for-cdse-classification" class="nav-link" data-scroll-target="#task-1-digitise-training-polygons-for-cdse-classification">Task 1 – Digitise training polygons for CDSE classification</a></li>
+  <li><a href="#task-2-inspect-the-cdse-predictor-stack" id="toc-task-2-inspect-the-cdse-predictor-stack" class="nav-link" data-scroll-target="#task-2-inspect-the-cdse-predictor-stack">Task 2 – Inspect the CDSE predictor stack</a></li>
   <li><a href="#task-3-run-the-single-date-cdse-classification-script" id="toc-task-3-run-the-single-date-cdse-classification-script" class="nav-link" data-scroll-target="#task-3-run-the-single-date-cdse-classification-script">Task 3 – Run the single-date CDSE classification script</a></li>
   <li><a href="#task-4-identify-the-rf-classification-core-in-the-script" id="toc-task-4-identify-the-rf-classification-core-in-the-script" class="nav-link" data-scroll-target="#task-4-identify-the-rf-classification-core-in-the-script">Task 4 – Identify the RF classification core in the script</a></li>
   <li><a href="#task-5-from-single-date-rf-to-a-temporal-classification-stack-concept-only" id="toc-task-5-from-single-date-rf-to-a-temporal-classification-stack-concept-only" class="nav-link" data-scroll-target="#task-5-from-single-date-rf-to-a-temporal-classification-stack-concept-only">Task 5 – From single-date RF to a temporal classification stack (concept only)</a></li>
@@ -386,41 +386,17 @@ background-size: cover;
 <li>Build the conceptual basis for a temporal classification stack (multi-date RF maps in one cube).</li>
 <li>Prepare the basis for later stratification and similarity mapping.</li>
 </ul>
-<div class="callout callout-style-simple callout-tip callout-titled" title="Written output...">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tipp</span>Written output…
+Hinweis
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Please export all written answers as a PDF and save it in the project directory <code>docs/</code> using the filename convention <code>&lt;Name1_NameN&gt;_ws-05.pdf</code>. This helps you maintain a clean and consistent documentation of your work.</p>
-<p>You are welcome to use ChatGPT for wording support, but the important part is that you genuinely understand the tasks and the underlying concepts — the AI is only meant to reduce typing effort, not replace your comprehension.</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled" title="How to use ChatGPT for this assignment">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Wichtig</span>How to use ChatGPT for this assignment
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>You may use ChatGPT <strong>only</strong> to refine the wording of your own ideas.<br>
-Please follow this workflow:</p>
-<ol type="1">
-<li><strong>Write your own bullet points first</strong> (even rough or incomplete).</li>
-<li>Paste your bullets into ChatGPT and ask for <strong>clarification, shortening, or better phrasing</strong>.</li>
-<li>ChatGPT will only help with <strong>language and structure</strong>, not with content.</li>
-<li>If you are unsure about something, write: <em>“I’m not sure about X”</em> — ChatGPT may then give <strong>hints or guiding questions</strong>, but <strong>no solutions</strong>.</li>
-<li>Answers must remain <strong>ultra-short and clear</strong> (1–3 bullets or 1–2 sentences).</li>
-<li>Do <strong>not</strong> ask ChatGPT for full answers; the goal is that <strong>you understand the task</strong>, not that AI solves it.</li>
-</ol>
-<p>This ensures that the work remains genuinely yours while reducing unnecessary typing.</p>
+<p><em>Note: All written answers (“write down”) must be exported as a PDF and saved in the project directory <code>docs/</code> using the filename convention <code>&lt;Name1_NameN&gt;_ws-05.pdf</code>.</em></p>
 </div>
 </div>
 </section>
@@ -457,8 +433,8 @@ Please follow this workflow:</p>
 </ol>
 <p>If any of these elements are missing, go back to the corresponding previous exercise or script.</p>
 </section>
-<section id="task-1-digitise-training-polygons-for-classification-purpose" class="level2">
-<h2 class="anchored" data-anchor-id="task-1-digitise-training-polygons-for-classification-purpose">Task 1 – Digitise training polygons for classification purpose</h2>
+<section id="task-1-digitise-training-polygons-for-cdse-classification" class="level2">
+<h2 class="anchored" data-anchor-id="task-1-digitise-training-polygons-for-cdse-classification">Task 1 – Digitise training polygons for CDSE classification</h2>
 <p>This task prepares the training data required by <code>02-1-basic-classifications_cdse.R</code>.</p>
 <ol type="1">
 <li>Open QGIS (or another GIS) with the Burgwald base data (e.g.&nbsp;Sentinel-2 composite, CHM, existing reference layers).</li>
@@ -481,15 +457,15 @@ Please follow this workflow:</p>
 <li>with the attribute field exactly named <code>class</code>.</li>
 </ul></li>
 </ol>
-<p>Short written output (bullet points/table):</p>
+<p>Short written output (bullet points, max. 6 lines):</p>
 <ul>
 <li>Which classes did you digitise?</li>
 <li>How many polygons per class (approximately)?</li>
 <li>Any obvious sources of ambiguity (mixed pixels, shadows, edge effects)?</li>
 </ul>
 </section>
-<section id="task-2-inspect-the-predictor-stack" class="level2">
-<h2 class="anchored" data-anchor-id="task-2-inspect-the-predictor-stack">Task 2 – Inspect the predictor stack</h2>
+<section id="task-2-inspect-the-cdse-predictor-stack" class="level2">
+<h2 class="anchored" data-anchor-id="task-2-inspect-the-cdse-predictor-stack">Task 2 – Inspect the CDSE predictor stack</h2>
 <p>Now connect the training polygons with the CDSE stack.</p>
 <ol type="1">
 <li><p>In RStudio, load the predictor stack and training layer:</p>
@@ -499,19 +475,19 @@ Please follow this workflow:</p>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pred_stack  <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"pred_stack_2018.tif"</span>))</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>train_areas <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"train_areas_burgwald.gpkg"</span>))</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>Short written output (bullet points/table):</p>
+<li><p>Answer briefly (bullet points):</p>
 <ul>
 <li>How many layers does <code>pred_stack</code> contain?</li>
 <li>Which types of predictors do you see in the layer names (e.g.&nbsp;spectral bands, indices, texture, CDSE components)?</li>
 <li>Do the training polygons overlay the predictor raster correctly (no obvious misalignment)?</li>
 </ul></li>
-<li><p>Create one quick visual check (include the figure in your written PDF output):</p>
+<li><p>Create one quick visual check:</p>
 <ul>
 <li>Either a simple RGB plot of three layers;</li>
 <li>or a plot of a single layer with training polygons overlaid.</li>
 </ul></li>
 </ol>
-<p>Written output: add brief comments on what you can clearly observe and detect (e.g., visible clearcuts vs.&nbsp;intact forest, obvious artefacts, unusual patterns, etc.), and also on what you obviously cannot identify from the imagery.</p>
+<p>Write down 3–5 short comments on what you observe (visible clearcuts vs.&nbsp;intact forest, obvious artefacts, etc.).</p>
 </section>
 <section id="task-3-run-the-single-date-cdse-classification-script" class="level2">
 <h2 class="anchored" data-anchor-id="task-3-run-the-single-date-cdse-classification-script">Task 3 – Run the single-date CDSE classification script</h2>
@@ -532,7 +508,7 @@ Please follow this workflow:</p>
 <li><code>train_poly_file &lt;- here::here("data", "processed", "train_areas_burgwald.gpkg")</code></li>
 <li><code>class_field &lt;- "class"</code> Adjust only if your filenames differ.</li>
 </ul></li>
-<li><p>Run the script stepwise from top to bottom.</p></li>
+<li><p>Run the script from top to bottom.</p></li>
 <li><p>Confirm that the following outputs are written:</p>
 <ul>
 <li><p>k-means map:</p>
@@ -556,16 +532,16 @@ Please follow this workflow:</p>
 <li><code>data/rf_confusion_2018_cdse.rds</code></li>
 </ul></li>
 </ul></li>
-<li><p>Load and plot the classification maps (e.g.&nbsp;for the RF results):</p>
+<li><p>Load and plot at least one of the classification maps, e.g.&nbsp;the RF result:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rf_map <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"classification_rf_2018.tif"</span>))</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(rf_map)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ol>
-<p>Short written output:</p>
+<p>Short written output (max. 8–10 sentences):</p>
 <ul>
-<li>Compare the three classification results (k-means, MLC, RF) with respect to your chosen class scheme, especially the distinction between <em>forest</em> and <em>non-forest</em>.</li>
-<li>Describe where each method appears to produce reliable results and where it does not.</li>
-<li>Identify areas where misclassifications are likely (e.g., mixed land cover, shadows, edges, cloud artefacts).</li>
-<li>Summarise the qualitative differences between the three methods in terms of class separation, spatial coherence, and plausibility.</li>
+<li>Which patterns do you see in the RF classification map?</li>
+<li>Where do you expect reliable results (clear separations between classes)?</li>
+<li>Where do you suspect misclassifications (mixed land cover, shadows, edges, cloud residuals)?</li>
+<li>How do the k-means and MLC maps compare qualitatively to the RF map?</li>
 </ul>
 </section>
 <section id="task-4-identify-the-rf-classification-core-in-the-script" class="level2">
@@ -587,7 +563,7 @@ Please follow this workflow:</p>
 <li>Find the line where <code>terra::predict(pred_stack, rf_model, ...)</code> is called.</li>
 <li>Find the line where the resulting RF map is written to disk as <code>classification_rf_2018.tif</code>.</li>
 </ul></li>
-<li><p>Short Written output: (bullet points), describe the pipeline:</p>
+<li><p>In your own words (bullet points, max. 8 lines), describe the pipeline:</p>
 <ul>
 <li>Input for the RF model (type of data, number of samples, predictor variables, class labels).</li>
 <li>Output of the RF model (raster map, probability or hard classes).</li>
@@ -605,7 +581,14 @@ Please follow this workflow:</p>
 <li>…</li>
 </ul>
 <p>All stacks share the same predictor structure (same bands / indices / CDSE components, same CRS and resolution).</p>
-<p>Write a short conceptual plan (max. 10–12 sentences; optionally formulated as commented R code) that explains how you would extend the single-date RF classification workflow to multiple years. Your plan should describe how the trained RF model can be applied to CDSE predictor stacks from several time points, how you would organise the resulting annual RF maps into a temporal classification stack, how you would ensure temporal consistency between years, and what the added value of such a temporal RF stack would be compared to a single-year classification.</p>
+<p>Write a short conceptual plan (max. 10–12 sentences) that answers:</p>
+<ol type="1">
+<li>How would you use the RF model from <code>02-1-basic-classifications_cdse.R</code> to produce RF classification maps for each available year?</li>
+<li>How would you organise these annual RF maps into a single temporal stack (e.g.&nbsp;multi-layer raster stack, NetCDF, or gdalcubes image collection)?</li>
+<li>Which quality checks would you apply to ensure temporal consistency (e.g.&nbsp;class stability in known reference areas)?</li>
+<li>What added value does such a temporal RF stack have compared to a single-year map (e.g.&nbsp;detection of gradual vs.&nbsp;abrupt changes, temporal trajectories of land-cover classes)?</li>
+</ol>
+<p>Write this as continuous text, structured in 2–3 short paragraphs.</p>
 </section>
 <section id="task-6-run-bfast-based-kndvi-change-detection-on-the-cube" class="level2">
 <h2 class="anchored" data-anchor-id="task-6-run-bfast-based-kndvi-change-detection-on-the-cube">Task 6 – Run BFAST-based kNDVI change detection on the cube</h2>
@@ -613,32 +596,32 @@ Please follow this workflow:</p>
 <pre class="text"><code>02-2-bfast-classification.R</code></pre>
 <p>This script:</p>
 <ul>
-<li>reads the monthly Sentinel-2 cube <code>data/burgwald_2018_2022_all.nc</code>,</li>
-<li>computes a kNDVI time series per pixel from bands <code>B08</code> and <code>B04</code>,</li>
-<li>runs <code>bfastmonitor()</code> for each pixel,</li>
-<li>returns two per-pixel outputs:
+<li><p>reads the monthly Sentinel-2 cube <code>data/burgwald_2018_2022_all.nc</code>,</p></li>
+<li><p>computes a kNDVI time series per pixel from bands <code>B08</code> and <code>B04</code>,</p></li>
+<li><p>runs <code>bfastmonitor()</code> for each pixel,</p></li>
+<li><p>returns two per-pixel outputs:</p>
 <ul>
 <li><code>change_date</code> (estimated time of structural change),</li>
 <li><code>change_magnitude</code> (magnitude of change at the breakpoint),</li>
 </ul></li>
-<li>writes both outputs to <code>data/burgwald_bfast_results.nc</code>,</li>
-<li>and visualises the results using <code>stars</code> and <code>tmap</code>.</li>
+<li><p>writes both outputs to <code>data/burgwald_bfast_results.nc</code>,</p></li>
+<li><p>and visualises the results using <code>stars</code> and <code>tmap</code>.</p></li>
 </ul>
 <ol type="1">
 <li><p>Open <code>02-2-bfast-classification.R</code> in RStudio.</p></li>
 <li><p>Identify and note the following elements:</p>
 <ul>
-<li>Input cube path:
+<li><p>Input cube path:</p>
 <ul>
 <li><code>cube_file &lt;- file.path(root_folder, "data", "burgwald_2018_2022_all.nc")</code></li>
 </ul></li>
-<li>Output NetCDF path:
+<li><p>Output NetCDF path:</p>
 <ul>
 <li><code>bfast_file &lt;- file.path(root_folder, "data", "burgwald_bfast_results.nc")</code></li>
 </ul></li>
-<li>The <code>reduce_time(...)</code> call and the embedded <code>FUN = function(x) { ... }</code>.</li>
+<li><p>The <code>reduce_time(...)</code> call and the embedded <code>FUN = function(x) { ... }</code>.</p></li>
 </ul></li>
-<li><p>Written output: Inside the custom reducer function <code>FUN = function(x)</code>, describe (in your own words, bullet points):</p>
+<li><p>Inside the custom reducer function <code>FUN = function(x)</code>, describe (in your own words, bullet points):</p>
 <ul>
 <li>How kNDVI is computed from <code>B08</code> and <code>B04</code> (formula, scaling).</li>
 <li>How the time series object <code>kndvi_ts</code> is constructed (start date, frequency).</li>
@@ -653,7 +636,7 @@ Please follow this workflow:</p>
 </ul>
 <p>Inspect the maps interactively (e.g.&nbsp;with <code>tmap_mode("view")</code>) and as static plots.</p></li>
 </ol>
-<p>Short written interpretation:</p>
+<p>Short written interpretation (max. 10–12 sentences):</p>
 <ul>
 <li>What does an early vs.&nbsp;late <code>change_date</code> indicate in terms of disturbance timing?</li>
 <li>How do positive vs.&nbsp;negative <code>change_magnitude</code> values relate to vegetation loss or recovery?</li>
@@ -665,13 +648,13 @@ Please follow this workflow:</p>
 <h2 class="anchored" data-anchor-id="take-home-temporal-stacks-as-a-basis-for-stratification-and-similarity-mapping">Take-home – Temporal stacks as a basis for stratification and similarity mapping</h2>
 <p>Write one short paragraph (max. 6–7 sentences) that summarises:</p>
 <ul>
-<li>Why it is useful to have <strong>RF classification maps for multiple time points</strong> in a common stack.</li>
-<li>How such a stack could be used to:
+<li><p>Why it is useful to have <strong>RF classification maps for multiple time points</strong> in a common stack.</p></li>
+<li><p>How such a stack could be used to:</p>
 <ul>
 <li>define temporal strata (e.g.&nbsp;“always stable forest”, “recent clearcuts”, “gradual change”),</li>
 <li>detect areas with similar temporal class trajectories (similarity mapping).</li>
 </ul></li>
-<li>How the RF-based temporal stack and the BFAST-based change layers could complement each other for:
+<li><p>How the RF-based temporal stack and the BFAST-based change layers could complement each other for:</p>
 <ul>
 <li>sampling design,</li>
 <li>prioritising field visits,</li>
