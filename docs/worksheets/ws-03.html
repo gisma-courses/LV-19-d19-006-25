@@ -352,7 +352,10 @@ background-size: cover;
     <h2 id="toc-title">Auf dieser Seite</h2>
    
   <ul>
-  <li><a href="#fair-principles-first" id="toc-fair-principles-first" class="nav-link active" data-scroll-target="#fair-principles-first">FAIR Principles First</a></li>
+  <li><a href="#fair-principles-first" id="toc-fair-principles-first" class="nav-link active" data-scroll-target="#fair-principles-first">FAIR Principles First</a>
+  <ul class="collapse">
+  <li><a href="#checklist-example" id="toc-checklist-example" class="nav-link" data-scroll-target="#checklist-example">Checklist Example</a></li>
+  </ul></li>
   <li><a href="#working-directory-best-practices" id="toc-working-directory-best-practices" class="nav-link" data-scroll-target="#working-directory-best-practices">Working Directory Best Practices</a>
   <ul class="collapse">
   <li><a href="#homework-after-session-1" id="toc-homework-after-session-1" class="nav-link" data-scroll-target="#homework-after-session-1">Homework after Session 1</a></li>
@@ -380,8 +383,45 @@ background-size: cover;
 <li><strong>Versioning</strong> with Git/GitHub to track changes and share openly</li>
 <li><strong>Optional use of <code>link2GI</code></strong> for GIS project structure bootstrapping and integration with GRASS, SAGA, and QGIS</li>
 </ul>
-<p><strong>Checklist Example:</strong> | Principle | Applied to… | Example Tool/Action | |—————|—————————|———————————–| | Findable | Source datasets | <code>metadata/project_info.yaml</code> | | Accessible | Public download scripts | <code>download.file()</code> / manual links | | Interoperable | CRS, format harmonization | <code>terra::project()</code>, GRASS/RSAGA | | Reusable | Clear scripts &amp; metadata | <code>scripts/*.R</code>, YAML, Git commits |</p>
-<hr>
+<section id="checklist-example" class="level3">
+<h3 class="anchored" data-anchor-id="checklist-example">Checklist Example</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 35%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Principle</th>
+<th>Applied to…</th>
+<th>Example Tool/Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Findable</td>
+<td>Source datasets</td>
+<td><code>metadata/project_info.yaml</code></td>
+</tr>
+<tr class="even">
+<td>Accessible</td>
+<td>Public download scripts</td>
+<td><code>download.file()</code> / manual links</td>
+</tr>
+<tr class="odd">
+<td>Interoperable</td>
+<td>CRS, format harmonization</td>
+<td><code>terra::project()</code>, GRASS/RSAGA</td>
+</tr>
+<tr class="even">
+<td>Reusable</td>
+<td>Clear scripts &amp; metadata</td>
+<td><code>scripts/*.R</code>, YAML, Git commits</td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 <section id="working-directory-best-practices" class="level2">
 <h2 class="anchored" data-anchor-id="working-directory-best-practices">Working Directory Best Practices</h2>

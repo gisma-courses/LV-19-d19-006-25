@@ -30,7 +30,8 @@ Ensuring FAIR (Findable, Accessible, Interoperable, Reusable) data and project w
 - **Versioning** with Git/GitHub to track changes and share openly
 - **Optional use of `link2GI`** for GIS project structure bootstrapping and integration with GRASS, SAGA, and QGIS
 
-**Checklist Example:**
+### Checklist Example
+
 | Principle     | Applied to...             | Example Tool/Action               |
 |---------------|---------------------------|-----------------------------------|
 | Findable      | Source datasets           | `metadata/project_info.yaml`     |
@@ -38,7 +39,7 @@ Ensuring FAIR (Findable, Accessible, Interoperable, Reusable) data and project w
 | Interoperable | CRS, format harmonization | `terra::project()`, GRASS/RSAGA   |
 | Reusable      | Clear scripts & metadata  | `scripts/*.R`, YAML, Git commits  |
 
----
+
 
 ## Working Directory Best Practices
 

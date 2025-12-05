@@ -136,7 +136,7 @@
     "href": "worksheets/ws-03.html#fair-principles-first",
     "title": "3. Core Module 1: Project Organization & Reproducible Setup",
     "section": "FAIR Principles First",
-    "text": "FAIR Principles First\nEnsuring FAIR (Findable, Accessible, Interoperable, Reusable) data and project workflows is a priority. This is achieved through:\n\nProject structure with consistent folder and script conventions\nDynamic data acquisition using download.file() or APIs\nScripted preprocessing pipelines (targets, renv) for reproducibility\nMetadata recording via YAML, README files, and code headers\nVersioning with Git/GitHub to track changes and share openly\nOptional use of link2GI for GIS project structure bootstrapping and integration with GRASS, SAGA, and QGIS\n\nChecklist Example: | Principle | Applied to… | Example Tool/Action | |—————|—————————|———————————–| | Findable | Source datasets | metadata/project_info.yaml | | Accessible | Public download scripts | download.file() / manual links | | Interoperable | CRS, format harmonization | terra::project(), GRASS/RSAGA | | Reusable | Clear scripts & metadata | scripts/*.R, YAML, Git commits |",
+    "text": "FAIR Principles First\nEnsuring FAIR (Findable, Accessible, Interoperable, Reusable) data and project workflows is a priority. This is achieved through:\n\nProject structure with consistent folder and script conventions\nDynamic data acquisition using download.file() or APIs\nScripted preprocessing pipelines (targets, renv) for reproducibility\nMetadata recording via YAML, README files, and code headers\nVersioning with Git/GitHub to track changes and share openly\nOptional use of link2GI for GIS project structure bootstrapping and integration with GRASS, SAGA, and QGIS\n\n\nChecklist Example\n\n\n\n\n\n\n\n\nPrinciple\nApplied to…\nExample Tool/Action\n\n\n\n\nFindable\nSource datasets\nmetadata/project_info.yaml\n\n\nAccessible\nPublic download scripts\ndownload.file() / manual links\n\n\nInteroperable\nCRS, format harmonization\nterra::project(), GRASS/RSAGA\n\n\nReusable\nClear scripts & metadata\nscripts/*.R, YAML, Git commits",
     "crumbs": [
       "FAQ",
       "Worksheets",
@@ -1268,6 +1268,42 @@
     "title": "4 – Execute the Burgwald Data Pipeline",
     "section": "",
     "text": "Clone the course repository and open the RStudio project.\nRun all core pipeline scripts unchanged on your own machine.\nVerify that raw data, processed data, and predictor stacks are created.\nDocument any problems that prevent full reproducibility.\n\n\n\n\n\n\n\nTippWritten output…\n\n\n\nPlease export all written answers as a PDF and save it in the project directory docs/ using the filename convention &lt;Name1_NameN&gt;_ws-04.pdf. This helps you maintain a clean and consistent documentation of your work.\nYou are welcome to use ChatGPT for wording support, but the important part is that you genuinely understand the tasks and the underlying concepts — the AI is only meant to reduce typing effort, not replace your comprehension.\n\n\n\n\n\n\n\n\nWichtigHow to use ChatGPT for this assignment\n\n\n\nYou may use ChatGPT only to refine the wording of your own ideas.\nPlease follow this workflow:\n\nWrite your own bullet points first (even rough or incomplete).\nPaste your bullets into ChatGPT and ask for clarification, shortening, or better phrasing.\nChatGPT will only help with language and structure, not with content.\nIf you are unsure about something, write: “I’m not sure about X” — ChatGPT may then give hints or guiding questions, but no solutions.\nAnswers must remain ultra-short and clear (1–3 bullets or 1–2 sentences).\nDo not ask ChatGPT for full answers; the goal is that you understand the task, not that AI solves it.\n\nThis ensures that the work remains genuinely yours while reducing unnecessary typing.",
+    "crumbs": [
+      "FAQ",
+      "Worksheets",
+      "4 – Execute the Burgwald Data Pipeline"
+    ]
+  },
+  {
+    "objectID": "worksheets/ws-05.html#task-1-digitise-training-polygons-for-cdse-classification",
+    "href": "worksheets/ws-05.html#task-1-digitise-training-polygons-for-cdse-classification",
+    "title": "5 – Temporal Classification Stacks",
+    "section": "Task 1 – Digitise training polygons for CDSE classification",
+    "text": "Task 1 – Digitise training polygons for CDSE classification\nThis task prepares the training data required by 02-1-basic-classifications_cdse.R.\n\nOpen QGIS (or another GIS) with the Burgwald base data (e.g. Sentinel-2 composite, CHM, existing reference layers).\nCreate a new polygon layer (or extend an existing one) for training areas, with at least:\n\ngeometry type: polygons\ncoordinate reference system: identical to the CDSE stack (pred_stack_2018.tif)\nattribute field: class (text or integer)\n\nDigitise polygons for the land-cover / disturbance classes you want to separate (e.g. “clearcut”, “forest”, “agriculture”, “other”).\nMake sure that:\n\neach polygon has a valid class value,\npolygons are sufficiently homogeneous (avoid mixing classes inside one polygon),\npolygons cover representative examples of each class.\n\nSave the polygon layer as:\n\ndata/processed/train_areas_burgwald.gpkg\nwith the attribute field exactly named class.\n\n\nShort written output (bullet points, max. 6 lines):\n\nWhich classes did you digitise?\nHow many polygons per class (approximately)?\nAny obvious sources of ambiguity (mixed pixels, shadows, edge effects)?",
+    "crumbs": [
+      "FAQ",
+      "Worksheets",
+      "5 – Temporal Classification Stacks"
+    ]
+  },
+  {
+    "objectID": "worksheets/ws-05.html#task-2-inspect-the-cdse-predictor-stack",
+    "href": "worksheets/ws-05.html#task-2-inspect-the-cdse-predictor-stack",
+    "title": "5 – Temporal Classification Stacks",
+    "section": "Task 2 – Inspect the CDSE predictor stack",
+    "text": "Task 2 – Inspect the CDSE predictor stack\nNow connect the training polygons with the CDSE stack.\n\nIn RStudio, load the predictor stack and training layer:\nlibrary(here)\nlibrary(terra)\nlibrary(sf)\n\npred_stack  &lt;- terra::rast(here::here(\"data\", \"pred_stack_2018.tif\"))\ntrain_areas &lt;- sf::st_read(here::here(\"data\", \"processed\", \"train_areas_burgwald.gpkg\"))\nAnswer briefly (bullet points):\n\nHow many layers does pred_stack contain?\nWhich types of predictors do you see in the layer names (e.g. spectral bands, indices, texture, CDSE components)?\nDo the training polygons overlay the predictor raster correctly (no obvious misalignment)?\n\nCreate one quick visual check:\n\nEither a simple RGB plot of three layers;\nor a plot of a single layer with training polygons overlaid.\n\n\nWrite down 3–5 short comments on what you observe (visible clearcuts vs. intact forest, obvious artefacts, etc.).",
+    "crumbs": [
+      "FAQ",
+      "Worksheets",
+      "5 – Temporal Classification Stacks"
+    ]
+  },
+  {
+    "objectID": "worksheets/ws-04.html#take-home-summary",
+    "href": "worksheets/ws-04.html#take-home-summary",
+    "title": "4 – Execute the Burgwald Data Pipeline",
+    "section": "Take-home summary",
+    "text": "Take-home summary\nThis pipeline forms the foundation for all later modelling tasks in the course.By running it successfully, you ensure that:\n\nall Burgwald base layers (DEM, OSM, CLC, DWD) are available,\nall Sentinel-2 sources (CDSE + gdalcubes) are standardised and reproducible,\nthe project contains a clean, FAIR-aligned data structure, and\ndownstream scripts (classification, predictors, modelling) can run without modification.\n\nIn short: if this pipeline runs, every later analysis in the course becomes plug-and-play.",
     "crumbs": [
       "FAQ",
       "Worksheets",
