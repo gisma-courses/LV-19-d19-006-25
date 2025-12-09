@@ -1,7 +1,8 @@
 ---
 title:  Comparison of Sentinel-2 Processing Approaches
-#author: Chris Reudenbach
-#date: '2025-12-04'
+author: Chris Reudenbach
+
+date: '2025-12-04'
 bibliography: references.bib
 subtitle: 'A choice can be a burden'
 title-block-banner: "../images/gw-sp.png"
