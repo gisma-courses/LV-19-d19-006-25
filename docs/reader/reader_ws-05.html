@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -77,12 +97,12 @@ ul.task-list li input[type="checkbox"] {
       .quarto-title-block .quarto-title-banner h5,
       .quarto-title-block .quarto-title-banner h6
       {
-        color: green;
+        color: white;
       }
 
       .quarto-title-block .quarto-title-banner {
-        color: green;
-background-image: url(images/hinterland-sp.jpg);
+        color: white;
+background-image: url(../images/gw-sp.png);
 background-size: cover;
       }
 </style>
@@ -313,9 +333,12 @@ background-size: cover;
     <h2 id="toc-title">Auf dieser Seite</h2>
    
   <ul>
-  <li><a href="#change-overview" id="toc-change-overview" class="nav-link active" data-scroll-target="#change-overview">Change Detection and Spatial–Temporal Analysis</a></li>
-  <li><a href="#spectral-indices" id="toc-spectral-indices" class="nav-link" data-scroll-target="#spectral-indices">Spectral Indices: Extracting Biophysical Signals</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#change-overview" id="toc-change-overview" class="nav-link" data-scroll-target="#change-overview">Change Detection and Spatial–Temporal Analysis</a>
   <ul class="collapse">
+  <li><a href="#vegetation-indices" id="toc-vegetation-indices" class="nav-link" data-scroll-target="#vegetation-indices">Vegetation indices</a></li>
+  <li><a href="#structural-and-textural-descriptors" id="toc-structural-and-textural-descriptors" class="nav-link" data-scroll-target="#structural-and-textural-descriptors">Structural and textural descriptors</a></li>
+  <li><a href="#classification-logic" id="toc-classification-logic" class="nav-link" data-scroll-target="#classification-logic">Classification logic: MLC, k-means, Random Forest</a></li>
   <li><a href="#ndvi" id="toc-ndvi" class="nav-link" data-scroll-target="#ndvi">NDVI</a></li>
   <li><a href="#msavi2" id="toc-msavi2" class="nav-link" data-scroll-target="#msavi2">MSAVI2</a></li>
   <li><a href="#msi" id="toc-msi" class="nav-link" data-scroll-target="#msi">MSI</a></li>
@@ -330,8 +353,12 @@ background-size: cover;
   </ul></li>
   <li><a href="#validation" id="toc-validation" class="nav-link" data-scroll-target="#validation">Assessing Classification Quality</a></li>
   <li><a href="#training-data" id="toc-training-data" class="nav-link" data-scroll-target="#training-data">Digitising Training Data</a></li>
-  <li><a href="#references-reading" id="toc-references-reading" class="nav-link" data-scroll-target="#references-reading">Further Reading</a></li>
+  <li><a href="#references-reading" id="toc-references-reading" class="nav-link" data-scroll-target="#references-reading">Further Reading</a>
+  <ul class="collapse">
+  <li><a href="#technical-tutorials-blogs" id="toc-technical-tutorials-blogs" class="nav-link" data-scroll-target="#technical-tutorials-blogs">Technical tutorials &amp; blogs</a></li>
+  </ul></li>
   <li><a href="#final" id="toc-final" class="nav-link" data-scroll-target="#final">Final Remarks</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Andere Formate</h2><ul><li><a href="reader_ws-05.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
@@ -342,57 +369,83 @@ background-size: cover;
 
 
 
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
 <p>Remote sensing is the only measurement technology that enables continuous observation of the Earth’s surface across full spatial extents — from landscapes to entire countries and global regions. To use remote sensing effectively, it is essential not only to apply established analytical methods but also to adapt and extend them as new environmental questions and large datasets emerge.</p>
-<p>Change detection and time-series analysis are central in environmental informatics because most Earth-surface processes — drought-induced forest dieback, land-use conversion, vegetation dynamics, bark-beetle outbreaks, flooding, and climate impacts — unfold simultaneously across space and time. A robust spatial-temporal workflow therefore requires:</p>
+<p>Sentinel-2 is currently the most important platform for Earth observation in all areas, but especially for climate change, land use and ecological issues at all levels, from the upper micro to the global scale.</p>
+<p>There are two operational Sentinel-2 satellites: Sentinel-2A and Sentinel-2B, both in sun-synchronous polar orbits and 180 degrees out of phase. This arrangement allows them to cover the mid-latitudes with an orbital period of about 5 days.</p>
+<p>The Sentinel-2 data are therefore predestined to record spatial and temporal changes on the Earth’s surface (the forest was green in early summer, it has disappeared by late summer). They are ideal for timely studies before and after natural disasters, or for biomass balancing, although complementary systems such as Landsat-8/9 (long-term continuity), PlanetScope (daily repeat), or Sentinel-1 SAR (cloud-penetrating structural information) are also operationally important; nevertheless, Sentinel-2 remains the most widely used because it uniquely combines global free access, high radiometric quality, a consistent 10–20 m multispectral design, and a reliably maintained 5-day revisit cycle.</p>
+<p>Change detection and time-series analysis are central in environmental informatics because most Earth-surface processes — drought-induced forest dieback, land-use conversion, vegetation dynamics, bark-beetle outbreaks, flooding, and climate impacts — unfold simultaneously across space and time.</p>
+<p>A robust spatial-temporal workflow therefore requires:</p>
 <ol type="1">
 <li>Acquiring Sentinel satellite data,</li>
 <li>Extracting spectral and structural information, and</li>
 <li>Applying classification and temporal analysis methods to quantify and interpret changes.</li>
 </ol>
-<p>The following sections outline the conceptual foundations of image-based change detection and demonstrate how classification, spectral indices and Sentinel-2 data together reveal spatial-temporal patterns. The Burgwald and Northwest Harz serve as examples of dramatic vegetation change between 2018 and 2023.</p>
+<p>The following sections outline the conceptual foundations of image-based change detection and demonstrate how classification, spectral indices and Sentinel-2 data together reveal spatial-temporal patterns. The Burgwald and Northwest Harz serve as examples of dramatic vegetation change between 2018 and 2023. For a broader conceptual framework of GIScience and remote sensing as components of system-based spatial information science, see <span class="citation" data-cites="tolpekin2012">Tolpekin und Stein (<a href="#ref-tolpekin2012" role="doc-biblioref">2012</a>)</span>.</p>
 <hr>
+</section>
 <section id="change-overview" class="level1">
 <h1>Change Detection and Spatial–Temporal Analysis</h1>
 <p>Unprocessed Sentinel-2 imagery is rich in information, but not immediately meaningful. While humans can interpret true-color scenes intuitively, scientific interpretation requires quantitative methods. The strength of remote-sensing analysis lies in deriving information that is invisible to the naked eye: vegetation health, stress, canopy density, moisture content, structural changes, and land-cover transitions.</p>
-<p>Change detection relies on identifying spectral signatures that evolve over time. These signatures become interpretable only when spectral time series are classified, differenced, or modelled, and when these results are placed within their biophysical context.</p>
-<p>Most workflows therefore combine:</p>
+<section id="vegetation-indices" class="level3">
+<h3 class="anchored" data-anchor-id="vegetation-indices">Vegetation indices</h3>
+<p>Spectral vegetation indices are dimensionless, mathematically defined combinations of Sentinel-2 bands that compress multi-band reflectance into a few variables targeted at specific biophysical properties of the land surface. By using ratios, differences or more complex transforms of visible, red-edge, NIR and SWIR bands, they enhance signals related to chlorophyll content, canopy density and structure, leaf water status, or exposed soil background while suppressing illumination and atmospheric effects. Because no single raw band can reliably isolate these processes, spectral indices are a crucial intermediate layer between radiance/reflectance data and higher-level products such as land-cover classes, crop types, or degradation maps. In practice, remote-sensing workflows therefore rely heavily on vegetation and moisture indices (e.g.&nbsp;NDVI, EVI, SAVI, red-edge-based indices, NDWI/NDMI) as input features for time-series analysis, change detection and machine-learning classification, particularly when exploiting the rich spectral sampling of Sentinel-2’s red-edge and SWIR bands <span class="citation" data-cites="bannari1995 xue2017 huang2020 montero2023">(<a href="#ref-bannari1995" role="doc-biblioref">Bannari u.&nbsp;a. 1995</a>; <a href="#ref-xue2017" role="doc-biblioref">Xue und Su 2017</a>; <a href="#ref-huang2020" role="doc-biblioref">Huang u.&nbsp;a. 2020</a>; <a href="#ref-montero2023" role="doc-biblioref">Montero u.&nbsp;a. 2023</a>)</span>.</p>
+</section>
+<section id="structural-and-textural-descriptors" class="level3">
+<h3 class="anchored" data-anchor-id="structural-and-textural-descriptors">Structural and textural descriptors</h3>
+<p>Structural and textural descriptors capture how reflectance values are arranged in space, rather than their absolute value in a single pixel. In remote sensing, they typically quantify local neighbourhood patterns (for example via grey-level co-occurrence matrices, local binary patterns, Gabor filters or wavelets) or higher-level structure such as object shape, size, orientation and canopy architecture <span class="citation" data-cites="fekriershad2018">(<a href="#ref-fekriershad2018" role="doc-biblioref">Fekri-Ershad 2018</a>)</span>. These descriptors become particularly important in high-resolution imagery and heterogeneous landscapes, where many land-cover types may be spectrally similar but differ in spatial pattern — for example forest vs.&nbsp;shrubland, tiled roofs vs.&nbsp;asphalt, or dense vs.&nbsp;sparse crowns. Modern classification workflows therefore often combine spectral indices with structural/textural features to form joint spatial–spectral feature sets, which have been shown to improve land-cover mapping, change detection and fine-grained object recognition in multispectral and hyperspectral data <span class="citation" data-cites="datta2022 mehmood2022 li2024 wang2025">(<a href="#ref-datta2022" role="doc-biblioref">Datta u.&nbsp;a. 2022</a>; <a href="#ref-mehmood2022" role="doc-biblioref">Mehmood u.&nbsp;a. 2022</a>; <a href="#ref-li2024" role="doc-biblioref">Li u.&nbsp;a. 2024</a>; <a href="#ref-wang2025" role="doc-biblioref">Wang, Yan, und Liu 2025</a>)</span>.</p>
+<p>In practice, many workflows <strong>combine</strong> three types of information:</p>
 <ul>
 <li>Spectral indices (NDVI, MSAVI2, MSI, SAVI, EVI, kNDVI),</li>
 <li>Structural or textural descriptors, and</li>
-<li>Classification (unsupervised or supervised).</li>
+<li>Classification models (unsupervised and supervised).</li>
 </ul>
-<p>This combination is necessary because classification alone cannot describe continuous vegetation processes, and spectral indices alone cannot distinguish discrete land-cover classes.</p>
-<p>Additionally, long-term studies increasingly rely on cloud-native geospatial techniques, such as STAC catalogues, COGs, and distributed computing via gdalcubes, rstac, or openeo. These approaches are essential when analyses scale to hundreds of scenes or multiple years.</p>
+<p>However, this is a <em>design choice</em>, not a universal requirement. Brute-force experiments and feature-selection studies show that classification performance depends strongly on the <strong>correlation structure and composition of the predictor set</strong> rather than on simply “using everything” <span class="citation" data-cites="lu2007 mehmood2022">(<a href="#ref-lu2007" role="doc-biblioref">Lu und Weng 2007</a>; <a href="#ref-mehmood2022" role="doc-biblioref">Mehmood u.&nbsp;a. 2022</a>)</span>. Highly collinear indices can dilute model signal, and some feature types become redundant once others are included.</p>
+<p>A common strategy is therefore to derive structural or textural descriptors not on every individual band, but on a <strong>reduced spectral subspace</strong>, for example on the first principal component of an energy-rich band stack (e.g.&nbsp;red–NIR–SWIR). This preserves most spatial structure while limiting dimensionality and redundancy. In many Random Forest applications, the most important splits still come from raw spectral bands or a few key indices, with texture contributing mainly in cases where <strong>spatial pattern</strong> (patchiness, edge density, canopy roughness) matters more than pure reflectance <span class="citation" data-cites="belgiu2016 datta2022">(<a href="#ref-belgiu2016" role="doc-biblioref">Belgiu und Drăguţ 2016</a>; <a href="#ref-datta2022" role="doc-biblioref">Datta u.&nbsp;a. 2022</a>)</span>. For RGB-only data, by contrast, spatial/structural features and RGB-based indices often carry a larger fraction of the discriminative information.</p>
+<p>Equally important is that model training and feature selection are <strong>spatially explicit</strong>. Spatial autocorrelation and clustered sampling can cause over-optimistic accuracies and misleading variable importance. Target-oriented spatial cross-validation and forward feature selection, as implemented for example in the CAST framework, explicitly account for prediction geometry and help to remove predictors that only exploit spatial structure instead of genuine environmental relationships <span class="citation" data-cites="meyer2018 meyer2019 meyer_pebesma2021 meyer_pebesma2022 cast">(<a href="#ref-meyer2018" role="doc-biblioref">Meyer u.&nbsp;a. 2018</a>, <a href="#ref-meyer2019" role="doc-biblioref">2019</a>, <a href="#ref-cast" role="doc-biblioref">2024</a>; <a href="#ref-meyer_pebesma2021" role="doc-biblioref">Meyer und Pebesma 2021</a>, <a href="#ref-meyer_pebesma2022" role="doc-biblioref">2022</a>)</span>. In other words, the “best” combination of spectral, structural and ancillary predictors is <strong>task- and data-specific</strong> and must be derived under an appropriate spatial validation scheme.</p>
+<p>Additionally, long-term studies increasingly rely on cloud-native geospatial techniques, such as STAC catalogues, COGs, and distributed computing via gdalcubes <span class="citation" data-cites="gdalcubes">(<a href="#ref-gdalcubes" role="doc-biblioref">Appel und Pebesma 2019</a>)</span>, rstac <span class="citation" data-cites="rstac">(<a href="#ref-rstac" role="doc-biblioref">Brazil Data Cube Team 2021</a>)</span>, or openeo <span class="citation" data-cites="openeo">(<a href="#ref-openeo" role="doc-biblioref">Lahn 2024</a>)</span>. These approaches are essential when analyses scale to hundreds of scenes or multiple years.</p>
+</section>
+<section id="classification-logic" class="level3">
+<h3 class="anchored" data-anchor-id="classification-logic">Classification logic: MLC, k-means, Random Forest</h3>
+<p>From a methodological perspective, three families of classifiers illustrate the logic from classical statistics through unsupervised clustering to modern ensemble learning: Maximum Likelihood Classification (MLC), k-means clustering, and Random Forest (RF).</p>
+<ul>
+<li><p><strong>Maximum Likelihood Classification (MLC)</strong> is a <em>parametric supervised</em> classifier that assumes each class follows a multivariate normal distribution in feature space. It assigns each pixel to the class with the highest posterior probability given class means, covariance matrices and, optionally, class priors. MLC works well when classes are spectrally compact and approximately Gaussian, but degrades for heterogeneous or non-Gaussian classes <span class="citation" data-cites="hogland2013">(<a href="#ref-hogland2013" role="doc-biblioref">Hogland, Billor, und Anderson 2013</a>)</span>.</p></li>
+<li><p><strong>K-means</strong> is an <em>unsupervised</em> clustering algorithm that partitions pixels into <em>k</em> clusters by iteratively minimising within-cluster variance. It is simple, fast and requires no labelled training data, but has no notion of semantic classes, is sensitive to initialisation and scale, and ignores spatial context. In land-cover workflows, it is therefore mainly used for exploratory grouping or as a pre-step before manual labelling rather than as a final map <span class="citation" data-cites="paradis2022">(<a href="#ref-paradis2022" role="doc-biblioref">Paradis u.&nbsp;a. 2022</a>)</span>.</p></li>
+<li><p><strong>Random Forest (RF)</strong> is a <em>non-parametric supervised</em> ensemble approach. Many decision trees are trained on bootstrapped samples and random subsets of features, and predictions are aggregated by majority vote (classification) or averaging (regression). RF can model complex, non-linear class boundaries, handles mixed feature sets (spectral indices, structural/textural descriptors, ancillary GIS layers), and is relatively robust to noise and unbalanced data <span class="citation" data-cites="belgiu2016">(<a href="#ref-belgiu2016" role="doc-biblioref">Belgiu und Drăguţ 2016</a>)</span>. This has made RF a de-facto baseline for land-cover mapping and change detection in multispectral and hyperspectral data <span class="citation" data-cites="lu2007">(<a href="#ref-lu2007" role="doc-biblioref">Lu und Weng 2007</a>)</span>.</p></li>
+</ul>
+<p>Together, these three methods illustrate the progression from distribution-based decision rules (MLC), via geometry-based partitioning (k-means), to data-driven ensemble learning (RF) that is now standard in remote-sensing workflows and frequently used as a benchmark in comparative studies <span class="citation" data-cites="lu2007 hogland2013 paradis2022 belgiu2016">(<a href="#ref-lu2007" role="doc-biblioref">Lu und Weng 2007</a>; <a href="#ref-hogland2013" role="doc-biblioref">Hogland, Billor, und Anderson 2013</a>; <a href="#ref-paradis2022" role="doc-biblioref">Paradis u.&nbsp;a. 2022</a>; <a href="#ref-belgiu2016" role="doc-biblioref">Belgiu und Drăguţ 2016</a>)</span>.</p>
 <hr>
 </section>
-<section id="spectral-indices" class="level1">
-<h1>Spectral Indices: Extracting Biophysical Signals</h1>
-<p>Spectral vegetation indices are mathematical combinations of Sentinel-2 bands designed to isolate specific plant or soil properties. They are essential precursors to classification because they reveal biophysical processes that no single raw band can capture.</p>
-<p>Remote-sensing analysis frequently relies on the following vegetation and moisture indices:</p>
 <section id="ndvi" class="level2">
 <h2 class="anchored" data-anchor-id="ndvi">NDVI</h2>
-<p>Normalized Difference Vegetation Index (NDVI) <a href="https://www.indexdatabase.de/db/i-single.php?id=58">https://www.indexdatabase.de/db/i-single.php?id=58</a></p>
-<p>Measures chlorophyll absorption in red vs.&nbsp;near-infrared reflectance. A fundamental indicator of greenness, photosynthetic activity, and canopy density.</p>
+<p>Normalized Difference Vegetation Index (NDVI)<br>
+<a href="https://www.indexdatabase.de/db/i-single.php?id=58" class="uri">https://www.indexdatabase.de/db/i-single.php?id=58</a></p>
+<p>Measures chlorophyll absorption in red vs.&nbsp;near-infrared reflectance. A fundamental indicator of greenness, photosynthetic activity, and canopy density. NDVI is the most widely used vegetation index, but also frequently misinterpreted or over-generalised <span class="citation" data-cites="huang2020">(<a href="#ref-huang2020" role="doc-biblioref">Huang u.&nbsp;a. 2020</a>)</span>.</p>
 </section>
 <section id="msavi2" class="level2">
 <h2 class="anchored" data-anchor-id="msavi2">MSAVI2</h2>
-<p>Modified Soil Adjusted Vegetation Index (MSAVI2) <a href="https://www.indexdatabase.de/db/i-single.php?id=44">https://www.indexdatabase.de/db/i-single.php?id=44</a></p>
-<p>Reduces soil-brightness influence in sparse or partially damaged canopies. Useful in drought-affected stands and early dieback.</p>
+<p>Modified Soil Adjusted Vegetation Index (MSAVI2)<br>
+<a href="https://www.indexdatabase.de/db/i-single.php?id=44" class="uri">https://www.indexdatabase.de/db/i-single.php?id=44</a></p>
+<p>Reduces soil-brightness influence in sparse or partially damaged canopies. Useful in drought-affected stands and early dieback, especially where soil background is exposed.</p>
 </section>
 <section id="msi" class="level2">
 <h2 class="anchored" data-anchor-id="msi">MSI</h2>
-<p>Moisture Stress Index (MSI) <a href="https://www.indexdatabase.de/db/i-single.php?id=48">https://www.indexdatabase.de/db/i-single.php?id=48</a></p>
-<p>Derived from SWIR/NIR ratio. Sensitive to water loss and canopy desiccation — often an early-warning indicator before visual decline.</p>
+<p>Moisture Stress Index (MSI)<br>
+<a href="https://www.indexdatabase.de/db/i-single.php?id=48" class="uri">https://www.indexdatabase.de/db/i-single.php?id=48</a></p>
+<p>Derived from SWIR/NIR ratio. Sensitive to water loss and canopy desiccation — often an early-warning indicator before visual decline or NDVI reductions.</p>
 </section>
 <section id="savi" class="level2">
 <h2 class="anchored" data-anchor-id="savi">SAVI</h2>
-<p>Soil Adjusted Vegetation Index (SAVI) <a href="https://www.indexdatabase.de/db/i-single.php?id=87">https://www.indexdatabase.de/db/i-single.php?id=87</a></p>
+<p>Soil Adjusted Vegetation Index (SAVI)<br>
+<a href="https://www.indexdatabase.de/db/i-single.php?id=87" class="uri">https://www.indexdatabase.de/db/i-single.php?id=87</a></p>
 <p>Explicitly accounts for soil reflectance in mixed pixels. Highly effective in clearcuts, forest edges, young regrowth, and partially disturbed sites.</p>
 </section>
 <section id="evi" class="level2">
 <h2 class="anchored" data-anchor-id="evi">EVI</h2>
-<p>Enhanced Vegetation Index (EVI) <a href="https://www.indexdatabase.de/db/i-single.php?id=16">https://www.indexdatabase.de/db/i-single.php?id=16</a></p>
-<p>Reduces atmospheric scattering effects. Avoids NDVI saturation in dense conifer forests (important for spruce dieback monitoring).</p>
+<p>Enhanced Vegetation Index (EVI)<br>
+<a href="https://www.indexdatabase.de/db/i-single.php?id=16" class="uri">https://www.indexdatabase.de/db/i-single.php?id=16</a></p>
+<p>Reduces atmospheric scattering effects and mitigates NDVI saturation in dense canopies. Particularly important in dense conifer forests and for monitoring spruce dieback with Sentinel-2 <span class="citation" data-cites="bannari1995 xue2017">(<a href="#ref-bannari1995" role="doc-biblioref">Bannari u.&nbsp;a. 1995</a>; <a href="#ref-xue2017" role="doc-biblioref">Xue und Su 2017</a>)</span>.</p>
 <p>These indices serve as continuous measures of canopy condition, moisture content, and structural state. When combined with classification, they provide the physical basis required to interpret spatial-temporal change patterns.</p>
 <hr>
 </section>
@@ -402,18 +455,18 @@ background-size: cover;
 <p>K-means is often considered the most accessible unsupervised classification algorithm. It groups pixels solely by spectral similarity, without requiring training data, making it ideal for exploratory analysis.</p>
 <p>Each pixel is an observation in multidimensional feature space. The algorithm assigns each pixel to the nearest cluster centroid, iteratively adjusting centroid positions until convergence.</p>
 <p>The animation below illustrates this process:</p>
-<p><img src="../images/K-means_convergence.png" class="img-fluid" data-fig-cap="K-means: Konvergenz (animiert, nur HTML)"></p>
-<p>Source: <a href="https://commons.wikimedia.org/wiki/File:K-means_convergence.gif">https://commons.wikimedia.org/wiki/File:K-means_convergence.gif</a> (Chire, CC BY-SA 4.0)</p>
-<p><em>Convergence of k-means clustering from an unfavorable starting position (two initial cluster centers are fairly close</em></p>
+<p><img src="../images/K-means_convergence.png" class="img-fluid" data-fig-cap="K-means convergence (animated, HTML only)"></p>
+<p>Source: <a href="https://commons.wikimedia.org/wiki/File:K-means_convergence.gif" class="uri">https://commons.wikimedia.org/wiki/File:K-means_convergence.gif</a> (Chire, CC BY-SA 4.0)</p>
+<p><em>Convergence of k-means clustering from an unfavourable starting position (two initial cluster centres are fairly close).</em></p>
 <p>In vegetation-change studies, k-means is used to check whether classes like forest, dead wood, and clearcuts are spectrally distinct — an essential requirement for stable supervised classification.</p>
 <hr>
 </section>
 <section id="supervised" class="level1">
 <h1>Supervised Classification</h1>
-<p>Classifiers (e.g.&nbsp;the maximum likelihood classifier) or machine learning algorithms (such as Random Forest) use the training data to determine descriptive models that represent statistical signatures, classification trees or other functions. Within the limits of the quality of the training data, such models are suitable and representative for making predictions for areas if the predictors from the model are available for the entire area.</p>
-<p>We now want to predict the spatial characteristics of clear-felling/no forest using a maximum likelihood classification and random forest, and apply standard methods of random validation and model quality assessment.</p>
+<p>Classifiers (for example, the maximum likelihood classifier) or machine-learning algorithms (such as Random Forest) use training data to determine descriptive models that represent statistical signatures, classification trees or other decision functions. Within the limits of the quality and representativeness of the training data, such models can be applied to all pixels for which the predictor variables are available <span class="citation" data-cites="lu2007 belgiu2016">(<a href="#ref-lu2007" role="doc-biblioref">Lu und Weng 2007</a>; <a href="#ref-belgiu2016" role="doc-biblioref">Belgiu und Drăguţ 2016</a>)</span>.</p>
+<p>Here, we focus on predicting the spatial distribution of clear-felling/no forest using a maximum likelihood classification and random forest, and apply standard methods of random validation and model quality assessment.</p>
 <p><img src="images/supervised_classification.jpg" class="img-fluid"></p>
-<p>Two methods dominate environmental remote sensing:</p>
+<p>Two methods dominate environmental remote sensing in the context of this tutorial:</p>
 <ul>
 <li>Maximum Likelihood Classification (MLC)</li>
 <li>Random Forest Classification (RF)</li>
@@ -421,9 +474,9 @@ background-size: cover;
 <p>Both are used extensively in forestry, agriculture, urban studies, ecosystem monitoring, and climate-change research.</p>
 <section id="maximum-likelihood-classification-mlc" class="level2">
 <h2 class="anchored" data-anchor-id="maximum-likelihood-classification-mlc">Maximum Likelihood Classification (MLC)</h2>
-<p>MLC assumes that each class follows a multivariate normal distribution in spectral space. It computes the probability that a pixel belongs to each class and assigns it to the most likely one.</p>
+<p>MLC assumes that each class follows a multivariate normal distribution in spectral (or feature) space. It computes the probability that a pixel belongs to each class and assigns it to the most likely one. Performance is strongly influenced by the covariance structure of the classes and by how well the training data represent within-class variability <span class="citation" data-cites="hogland2013">(<a href="#ref-hogland2013" role="doc-biblioref">Hogland, Billor, und Anderson 2013</a>)</span>.</p>
 <p><img src="images/max.png" class="img-fluid"></p>
-<p>MLC performs well when spectral differences between classes (for example, forest vs.&nbsp;clearcut) are large.</p>
+<p>MLC performs well when spectral differences between classes (for example, forest vs.&nbsp;clearcut) are large and the Gaussian assumption is approximately valid.</p>
 </section>
 <section id="random-forest-classification-rf" class="level2">
 <h2 class="anchored" data-anchor-id="random-forest-classification-rf">Random Forest Classification (RF)</h2>
@@ -431,65 +484,177 @@ background-size: cover;
 <p><img src="images/Random_forest_diagram_complete.png" class="img-fluid"></p>
 <p>RF excels in complex, heterogeneous landscapes because it handles:</p>
 <ul>
-<li>Nonlinear relationships</li>
-<li>High-dimensional predictors (bands plus indices)</li>
-<li>Correlated variables</li>
-<li>Spectral noise and outliers</li>
+<li>Nonlinear relationships,</li>
+<li>High-dimensional predictors (bands plus indices plus structural/textural descriptors),</li>
+<li>Correlated variables, and</li>
+<li>Spectral noise and outliers.</li>
 </ul>
-<p>Random Forest is now considered a baseline method in environmental machine learning, alongside Gradient Boosting and Support Vector Machines.</p>
+<p>Random Forest is now considered a baseline method in environmental machine learning, alongside Gradient Boosting and Support Vector Machines, particularly for land-cover mapping and change detection <span class="citation" data-cites="belgiu2016 mehmood2022">(<a href="#ref-belgiu2016" role="doc-biblioref">Belgiu und Drăguţ 2016</a>; <a href="#ref-mehmood2022" role="doc-biblioref">Mehmood u.&nbsp;a. 2022</a>)</span>.</p>
+<hr>
 </section>
 </section>
 <section id="validation" class="level1">
 <h1>Assessing Classification Quality</h1>
-<p>Supervised classification requires validation, usually by splitting data into training and test subsets. Performance metrics include:</p>
+<p>Supervised classification requires validation, usually by splitting data into training and test subsets or by using independent reference data. Performance metrics include:</p>
 <ul>
-<li>Sensitivity (true positive rate for clearcuts)</li>
-<li>Specificity (true negative rate for non-clearcuts)</li>
-<li>Predictive values, adjusting for actual class frequencies</li>
+<li>Sensitivity (true positive rate for clearcuts),</li>
+<li>Specificity (true negative rate for non-clearcuts),</li>
+<li>Predictive values, adjusting for actual class frequencies, and</li>
+<li>Global measures such as overall accuracy and Cohen’s kappa.</li>
 </ul>
-<p>Even high accuracy may mask structural misclassification in subtle transitions, such as thinning canopies.</p>
-<p>Continuous spectral indices such as kNDVI — derived using the gdalcubes framework — help diagnose such errors.</p>
-<p>Advanced time-series methods like BFAST identify breakpoints in vegetation dynamics, including timing and magnitude of structural change.</p>
-<p>BFAST is particularly valuable in drought–forest interactions and post-disturbance recovery monitoring.</p>
+<p>Even high accuracy may mask structural misclassification in subtle transitions, such as thinning canopies or partially damaged stands.</p>
+<p>Continuous spectral indices such as kNDVI — derived using the gdalcubes framework — help diagnose such errors by revealing sub-pixel gradients that discrete classes cannot capture.</p>
+<p>Advanced time-series methods like BFAST <span class="citation" data-cites="bfast bfast_rs2020">(<a href="#ref-bfast" role="doc-biblioref">Verbesselt, Zeileis, und Herold 2012</a>; <a href="#ref-bfast_rs2020" role="doc-biblioref">Wu u.&nbsp;a. 2020</a>)</span> breakpoints in vegetation dynamics, including timing and magnitude of structural change. BFAST is particularly valuable in drought–forest interactions and post-disturbance recovery monitoring.</p>
 <hr>
 </section>
 <section id="training-data" class="level1">
 <h1>Digitising Training Data</h1>
-<p>Training data must represent all land-cover types to be classified. Digitization can be done interactively in R (for example with mapedit) or externally in QGIS.</p>
-<p><a href="https://docs.qgis.org/3.34/en/docs/training_manual/create_vector_data/create_new_vector.html#basic-ty-digitizing-polygons">https://docs.qgis.org/3.34/en/docs/training_manual/create_vector_data/create_new_vector.html#basic-ty-digitizing-polygons</a></p>
-<p>After digitization, raster values for all predictors (bands and indices) are extracted for each polygon and used to train the classifier.</p>
+<p>Training data must represent all land-cover types to be classified. Digitisation can be done interactively in R (for example with <strong>mapedit</strong>) or externally in QGIS:</p>
+<p><a href="https://docs.qgis.org/3.34/en/docs/training_manual/create_vector_data/create_new_vector.html#basic-ty-digitizing-polygons" class="uri">https://docs.qgis.org/3.34/en/docs/training_manual/create_vector_data/create_new_vector.html#basic-ty-digitizing-polygons</a></p>
+<p>After digitisation, raster values for all predictors (bands, indices, structural descriptors) are extracted for each polygon and used to train the classifier.</p>
 <p>Best practices include:</p>
 <ul>
-<li>Ensuring balanced class representation</li>
-<li>Avoiding polygons that span multiple land-cover types</li>
-<li>Using high-resolution aerial imagery to refine training locations</li>
+<li>Ensuring balanced class representation,</li>
+<li>Avoiding polygons that span multiple land-cover types, and</li>
+<li>Using high-resolution aerial imagery to refine training locations.</li>
 </ul>
 <hr>
 </section>
 <section id="references-reading" class="level1">
 <h1>Further Reading</h1>
-<p>The Core of GIScience (Tolpekin and Stein 2012) <a href="http://www.charim.net/sites/default/files/handbook/datamanagement/3/3.3/The%20core%20of%20GIScience%2C%20a%20system%20-based%20approach.pdf">http://www.charim.net/sites/default/files/handbook/datamanagement/3/3.3/The%20core%20of%20GIScience%2C%20a%20system%20-based%20approach.pdf</a></p>
-<p>FTP mirror: ftp://ftp.itc.nl/pub/ders/CoreBook2014_metadata.pdf</p>
-<p>Robert J. Hijmans – Supervised Classification <a href="https://rspatial.org/raster/rs/5-supclassification.html">https://rspatial.org/raster/rs/5-supclassification.html</a></p>
-<p>Ivan Lizarazo – Landcover Tutorial <a href="https://rpubs.com/ials2un/rf_landcover">https://rpubs.com/ials2un/rf_landcover</a></p>
-<p>Sydney Goldstein – Urban Spatial Blog <a href="https://urbanspatial.github.io/classifying_satellite_imagery_in_R/">https://urbanspatial.github.io/classifying_satellite_imagery_in_R/</a></p>
-<p>João Gonçalves – Supervised Classification <a href="https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/">https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/</a></p>
-<p>Valentin Stefan – Pixel-based Classification <a href="https://valentinitnelav.github.io/satellite-image-classification-r/">https://valentinitnelav.github.io/satellite-image-classification-r/</a></p>
-<p>Quoted remark:</p>
-<p>“Consider this content a blog post and nothing more. It does not claim to be an exhaustive exercise or a substitute for your critical thinking.”</p>
+<section id="technical-tutorials-blogs" class="level2">
+<h2 class="anchored" data-anchor-id="technical-tutorials-blogs">Technical tutorials &amp; blogs</h2>
+<p>These resources are <strong>practical, implementation-focused</strong> guides. They are useful to understand concrete R workflows, but they do <strong>not</strong> replace primary literature or your own methodological reasoning.</p>
+<ul>
+<li><p><strong>Goldstein, S. (2019).</strong> Classifying satellite imagery in R. <em>Urban Spatial Blog</em>. <a href="https://urbanspatial.github.io/classifying_satellite_imagery_in_R/" class="uri">https://urbanspatial.github.io/classifying_satellite_imagery_in_R/</a> <span class="citation" data-cites="goldstein2019">(<a href="#ref-goldstein2019" role="doc-biblioref">Goldstein 2019</a>)</span></p></li>
+<li><p><strong>Hijmans, R. J. (2023).</strong> Supervised classification. rspatial.org. <a href="https://rspatial.org/raster/rs/5-supclassification.html" class="uri">https://rspatial.org/raster/rs/5-supclassification.html</a> <span class="citation" data-cites="hijmans2023">(<a href="#ref-hijmans2023" role="doc-biblioref">Hijmans 2023</a>)</span></p></li>
+<li><p><strong>Lizarazo, I. (2021).</strong> A tutorial on pixel-based land cover classification using random forests in R. RPubs. <a href="https://rpubs.com/ials2un/rf_landcover" class="uri">https://rpubs.com/ials2un/rf_landcover</a> <span class="citation" data-cites="lizarazo2021">(<a href="#ref-lizarazo2021" role="doc-biblioref">Lizarazo 2021</a>)</span></p></li>
+<li><p><strong>Gonçalves, J. (2018).</strong> Advanced techniques with raster data: Supervised classification. R-exercises. <a href="https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/" class="uri">https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/</a> <span class="citation" data-cites="goncalves2018">(<a href="#ref-goncalves2018" role="doc-biblioref">Gonçalves 2018</a>)</span></p></li>
+<li><p><strong>Stefan, V. (2020).</strong> Satellite image classification in R. <a href="https://valentinitnelav.github.io/satellite-image-classification-r/" class="uri">https://valentinitnelav.github.io/satellite-image-classification-r/</a> <span class="citation" data-cites="stefan2020">(<a href="#ref-stefan2020" role="doc-biblioref">Stefan 2020</a>)</span></p></li>
+</ul>
+<div class="callout callout-style-simple callout-tip callout-titled" title="About blog posts and tutorials...">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tipp</span>About blog posts and tutorials…
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use tutorials and blog posts as practical support only. They are extremely helpful for code and workflow patterns, but they cannot replace independent thinking, methodological scrutiny, or engagement with peer-reviewed research.</p>
+</div>
+</div>
 <hr>
+</section>
 </section>
 <section id="final" class="level1">
 <h1>Final Remarks</h1>
 <p>This tutorial integrates both conventional and cloud-based processing paradigms. Traditional workflows download individual Sentinel scenes and process them locally. Cloud-native methods use STAC catalogues, COGs, and distributed computation (for example gdalcubes, rstac, openeo) to build scalable workflows for long time series and large spatial extents.</p>
 <p>For cloud-native methods see:</p>
-<p><a href="https://gdalcubes.github.io/source/tutorials/">https://gdalcubes.github.io/source/tutorials/</a> <a href="https://openeo.org/">https://openeo.org/</a> <a href="https://open-eo.github.io/openeo-r-client/">https://open-eo.github.io/openeo-r-client/</a></p>
+<ul>
+<li><a href="https://gdalcubes.github.io/source/tutorials/" class="uri">https://gdalcubes.github.io/source/tutorials/</a></li>
+<li><a href="https://openeo.org/" class="uri">https://openeo.org/</a></li>
+<li><a href="https://open-eo.github.io/openeo-r-client/" class="uri">https://open-eo.github.io/openeo-r-client/</a></li>
+</ul>
 <p>Both paradigms remain relevant. Local processing supports transparency, teaching, and technical fundamentals. Cloud-native processing is essential for scaling to continental or multi-year analyses.</p>
+</section>
+<section id="references" class="level1">
+
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-gdalcubes" class="csl-entry" role="listitem">
+Appel, Marius, und Edzer Pebesma. 2019. <span>„On-Demand Processing of Data Cubes from Satellite Image Collections with the gdalcubes Library“</span>. <em>Data</em> 4 (3). <a href="https://www.mdpi.com/2306-5729/4/3/92">https://www.mdpi.com/2306-5729/4/3/92</a>.
+</div>
+<div id="ref-bannari1995" class="csl-entry" role="listitem">
+Bannari, A., D. Morin, F. Bonn, und A. R. Huete. 1995. <span>„A Review of Vegetation Indices“</span>. <em>Remote Sensing Reviews</em> 13 (1-2): 95–120. <a href="https://doi.org/10.1080/02757259509532298">https://doi.org/10.1080/02757259509532298</a>.
+</div>
+<div id="ref-belgiu2016" class="csl-entry" role="listitem">
+Belgiu, M., und L. Drăguţ. 2016. <span>„Random Forest in Remote Sensing: A Review of Applications and Future Directions“</span>. <em>ISPRS Journal of Photogrammetry and Remote Sensing</em> 114: 24–31. <a href="https://doi.org/10.1016/j.isprsjprs.2016.01.011">https://doi.org/10.1016/j.isprsjprs.2016.01.011</a>.
+</div>
+<div id="ref-rstac" class="csl-entry" role="listitem">
+Brazil Data Cube Team. 2021. <em>rstac: Client Library for SpatioTemporal Asset Catalog</em>. <a href="https://github.com/brazil-data-cube/rstac">https://github.com/brazil-data-cube/rstac</a>.
+</div>
+<div id="ref-datta2022" class="csl-entry" role="listitem">
+Datta, D., P. K. Mallick, A. K. Bhoi, M. F. Ijaz, J. Shafi, und J. Choi. 2022. <span>„Hyperspectral Image Classification: Potentials, Challenges, and Future Directions“</span>. <em>Computational Intelligence and Neuroscience</em> 2022: 3854635. <a href="https://doi.org/10.1155/2022/3854635">https://doi.org/10.1155/2022/3854635</a>.
+</div>
+<div id="ref-fekriershad2018" class="csl-entry" role="listitem">
+Fekri-Ershad, S. 2018. <span>„A Review on Image Texture Analysis Methods“</span>. <em>International Online Journal of Image Processing and Pattern Recognition</em> 1 (1): 1–63. <a href="https://doi.org/10.48550/arXiv.1804.00494">https://doi.org/10.48550/arXiv.1804.00494</a>.
+</div>
+<div id="ref-goldstein2019" class="csl-entry" role="listitem">
+Goldstein, Sydney. 2019. <span>„Classifying Satellite Imagery in R“</span>. <a href="https://urbanspatial.github.io/classifying_satellite_imagery_in_R/" class="uri">https://urbanspatial.github.io/classifying_satellite_imagery_in_R/</a>.
+</div>
+<div id="ref-goncalves2018" class="csl-entry" role="listitem">
+Gonçalves, João. 2018. <span>„Advanced Techniques with Raster Data: Supervised Classification“</span>. <a href="https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/" class="uri">https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/</a>.
+</div>
+<div id="ref-hijmans2023" class="csl-entry" role="listitem">
+Hijmans, Robert J. 2023. <span>„Supervised Classification“</span>. <a href="https://rspatial.org/raster/rs/5-supclassification.html" class="uri">https://rspatial.org/raster/rs/5-supclassification.html</a>.
+</div>
+<div id="ref-hogland2013" class="csl-entry" role="listitem">
+Hogland, J., N. Billor, und N. Anderson. 2013. <span>„Comparison of Standard Maximum Likelihood Classification and Polytomous Logistic Regression Used in Remote Sensing“</span>. <em>European Journal of Remote Sensing</em> 46: 623–40.
+</div>
+<div id="ref-huang2020" class="csl-entry" role="listitem">
+Huang, S., L. Tang, J. P. Hupy, Y. Wang, und G. Shao. 2020. <span>„A Commentary Review on the Use of Normalized Difference Vegetation Index (NDVI) in the Era of Popular Remote Sensing“</span>. <em>Journal of Forestry Research</em> 32 (1): 1–6. <a href="https://doi.org/10.1007/s11676-020-01155-1">https://doi.org/10.1007/s11676-020-01155-1</a>.
+</div>
+<div id="ref-openeo" class="csl-entry" role="listitem">
+Lahn, Florian. 2024. <em>openeo: Client Interface for ’openEO’ Servers</em>. <a href="https://CRAN.R-project.org/package=openeo">https://CRAN.R-project.org/package=openeo</a>.
+</div>
+<div id="ref-li2024" class="csl-entry" role="listitem">
+Li, J. u.&nbsp;a. 2024. <span>„A Review of Remote Sensing Image Segmentation by Deep Learning Methods“</span>. <em>International Journal of Digital Earth</em> 17 (1). <a href="https://doi.org/10.1080/17538947.2024.2328827">https://doi.org/10.1080/17538947.2024.2328827</a>.
+</div>
+<div id="ref-lizarazo2021" class="csl-entry" role="listitem">
+Lizarazo, Ivan. 2021. <span>„A tutorial on pixel-based land cover classification using random forests in R“</span>. <a href="https://rpubs.com/ials2un/rf_landcover" class="uri">https://rpubs.com/ials2un/rf_landcover</a>.
+</div>
+<div id="ref-lu2007" class="csl-entry" role="listitem">
+Lu, D., und Q. Weng. 2007. <span>„A Survey of Image Classification Methods and Techniques for Improving Classification Performance“</span>. <em>International Journal of Remote Sensing</em> 28 (5): 823–70. <a href="https://doi.org/10.1080/01431160600746456">https://doi.org/10.1080/01431160600746456</a>.
+</div>
+<div id="ref-mehmood2022" class="csl-entry" role="listitem">
+Mehmood, M., A. Shahzad, B. Zafar, A. Shabbir, und N. Ali. 2022. <span>„Remote Sensing Image Classification: A Comprehensive Review and Applications“</span>. <em>Mathematical Problems in Engineering</em> 2022: 5880959. <a href="https://doi.org/10.1155/2022/5880959">https://doi.org/10.1155/2022/5880959</a>.
+</div>
+<div id="ref-cast" class="csl-entry" role="listitem">
+Meyer, Hanna, Carles Milà, Marvin Ludwig, Jan Linnenbrink, und Fabian Schumacher. 2024. <em>CAST: ’caret’ Applications for Spatial-Temporal Models</em>. <a href="https://github.com/HannaMeyer/CAST">https://github.com/HannaMeyer/CAST</a>.
+</div>
+<div id="ref-meyer_pebesma2021" class="csl-entry" role="listitem">
+Meyer, Hanna, und Edzer Pebesma. 2021. <span>„Predicting into unknown space? Estimating the area of applicability of spatial prediction models“</span>. <em>Methods in Ecology and Evolution</em> 12 (9): 1620–33. <a href="https://doi.org/10.1111/2041-210X.13650">https://doi.org/10.1111/2041-210X.13650</a>.
+</div>
+<div id="ref-meyer_pebesma2022" class="csl-entry" role="listitem">
+———. 2022. <span>„Machine learning-based global maps of ecological variables and the challenge of assessing them“</span>. <em>Nature Communications</em> 13 (1): 2208. <a href="https://doi.org/10.1038/s41467-022-29838-9">https://doi.org/10.1038/s41467-022-29838-9</a>.
+</div>
+<div id="ref-meyer2018" class="csl-entry" role="listitem">
+Meyer, Hanna, Christoph Reudenbach, Tomislav Hengl, Marwan Katurji, und Thomas Nauss. 2018. <span>„Improving performance of spatio-temporal machine learning models using forward feature selection and target-oriented validation“</span>. <em>Environmental Modelling and Software</em> 101: 1–9. <a href="https://doi.org/10.1016/j.envsoft.2017.12.001">https://doi.org/10.1016/j.envsoft.2017.12.001</a>.
+</div>
+<div id="ref-meyer2019" class="csl-entry" role="listitem">
+Meyer, Hanna, Christoph Reudenbach, Stephan Wöllauer, und Thomas Nauss. 2019. <span>„Importance of spatial predictor variable selection in machine learning applications – Moving from data reproduction to spatial prediction“</span>. <em>Ecological Modelling</em> 411: 108815. <a href="https://doi.org/10.1016/j.ecolmodel.2019.108815">https://doi.org/10.1016/j.ecolmodel.2019.108815</a>.
+</div>
+<div id="ref-montero2023" class="csl-entry" role="listitem">
+Montero, D., C. Aybar, M. D. Mahecha, F. Martinuzzi, M. Söchting, und S. Wieneke. 2023. <span>„A Standardized Catalogue of Spectral Indices to Advance the Use of Remote Sensing in Earth System Research“</span>. <em>Scientific Data</em> 10 (1): 197. <a href="https://doi.org/10.1038/s41597-023-02096-0">https://doi.org/10.1038/s41597-023-02096-0</a>.
+</div>
+<div id="ref-paradis2022" class="csl-entry" role="listitem">
+Paradis, E. u.&nbsp;a. 2022. <span>„Probabilistic Unsupervised Classification for Large-scale Analysis of Spectral Imaging Data“</span>. <em>Computers &amp; Geosciences</em> 159: 104967.
+</div>
+<div id="ref-stefan2020" class="csl-entry" role="listitem">
+Stefan, Valentin. 2020. <span>„Satellite Image Classification in R“</span>. <a href="https://valentinitnelav.github.io/satellite-image-classification-r/" class="uri">https://valentinitnelav.github.io/satellite-image-classification-r/</a>.
+</div>
+<div id="ref-tolpekin2012" class="csl-entry" role="listitem">
+Tolpekin, V., und A. Stein. 2012. <em>The Core of GIScience: A System-based Approach</em>. ITC, University of Twente. <a href="http://www.charim.net/sites/default/files/handbook/datamanagement/3/3.3/The%20core%20of%20GIScience%2C%20a%20system%20-based%20approach.pdf">http://www.charim.net/sites/default/files/handbook/datamanagement/3/3.3/The%20core%20of%20GIScience%2C%20a%20system%20-based%20approach.pdf</a>.
+</div>
+<div id="ref-bfast" class="csl-entry" role="listitem">
+Verbesselt, Jan, Achim Zeileis, und Martin Herold. 2012. <span>„Near real-time disturbance detection using satellite image time series“</span>. <em>Remote Sensing of Environment</em> 123: 98–108. <a href="https://doi.org/10.1016/j.rse.2012.02.022">https://doi.org/10.1016/j.rse.2012.02.022</a>.
+</div>
+<div id="ref-wang2025" class="csl-entry" role="listitem">
+Wang, D., Z. Yan, und P. Liu. 2025. <span>„Fine-Grained Interpretation of Remote Sensing Image: A Review“</span>. <em>Remote Sensing</em> 17 (23): 3887. <a href="https://doi.org/10.3390/rs17233887">https://doi.org/10.3390/rs17233887</a>.
+</div>
+<div id="ref-bfast_rs2020" class="csl-entry" role="listitem">
+Wu, Ling, Zhaoliang Li, Xiangnan Liu, Lihong Zhu, Yibo Tang, Biyao Zhang, Boliang Xu, Meiling Liu, Yuanyuan Meng, und Boyuan Liu. 2020. <span>„Multi-Type Forest Change Detection Using BFAST and Monthly Landsat Time Series for Monitoring Spatiotemporal Dynamics of Forests in Subtropical Wetland“</span>. <em>Remote Sensing</em> 12 (2). <a href="https://doi.org/10.3390/rs12020341">https://doi.org/10.3390/rs12020341</a>.
+</div>
+<div id="ref-xue2017" class="csl-entry" role="listitem">
+Xue, J., und B. Su. 2017. <span>„Significant Remote Sensing Vegetation Indices: A Review of Developments and Applications“</span>. <em>Journal of Sensors</em> 2017: 1353691. <a href="https://doi.org/10.1155/2017/1353691">https://doi.org/10.1155/2017/1353691</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   // Jahr einsetzen

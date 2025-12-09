@@ -4,8 +4,8 @@ title:  Comparison of Sentinel-2 Processing Approaches
 #date: '2025-12-04'
 bibliography: references.bib
 subtitle: 'A choice can be a burden'
-title-block-banner: images/hinterland-sp.jpg
-title-block-banner-color: green
+title-block-banner: "../images/gw-sp.png"
+title-block-banner-color: "white"
 format:
   html:
     toc: true
@@ -18,12 +18,6 @@ editor:
 ---
 
 ## Overview
-
-Sentinel-2 is currently the most important platform for Earth observation in all areas, but especially for climate change, land use and ecological issues at all levels, from the upper micro to the global scale.
-
-There are two operational Sentinel-2 satellites: Sentinel-2A and Sentinel-2B, both in sun-synchronous polar orbits and 180 degrees out of phase. This arrangement allows them to cover the mid-latitudes with an orbital period of about 5 days.
-
-The Sentinel-2 data are therefore predestined to record spatial and temporal changes on the Earth's surface (the forest was green in early summer, it has disappeared by late summer). They are ideal for timely studies before and after natural disasters, or for biomass balancing,
 
 This page compares three fundamentally different workflows for obtaining and processing Sentinel-2 time series for mesoscale forest applications (Burgwald AOI, 2018–2022). The goal is to show where each method excels, where the limits are, and why there is no single “best” approach.
 

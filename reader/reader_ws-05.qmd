@@ -2,8 +2,8 @@
 title: "Remote Sensing Change Detection – Reader WS-05"
 subtitle: "Spectral Indices, Classification, and Spatio-Temporal Analysis with Sentinel-2"
 bibliography: references.bib
-title-block-banner: images/hinterland-sp.jpg
-title-block-banner-color: green
+title-block-banner: "../images/gw-sp.png"
+title-block-banner-color: "white"
 editor: 
   markdown: 
     wrap: sentence
@@ -15,10 +15,19 @@ format:
     toc: true
 ---
 
+# Introduction
+
 Remote sensing is the only measurement technology that enables continuous observation of the Earth’s surface across full spatial extents — from landscapes to entire countries and global regions.
 To use remote sensing effectively, it is essential not only to apply established analytical methods but also to adapt and extend them as new environmental questions and large datasets emerge.
 
+Sentinel-2 is currently the most important platform for Earth observation in all areas, but especially for climate change, land use and ecological issues at all levels, from the upper micro to the global scale.
+
+There are two operational Sentinel-2 satellites: Sentinel-2A and Sentinel-2B, both in sun-synchronous polar orbits and 180 degrees out of phase. This arrangement allows them to cover the mid-latitudes with an orbital period of about 5 days.
+
+The Sentinel-2 data are therefore predestined to record spatial and temporal changes on the Earth's surface (the forest was green in early summer, it has disappeared by late summer). They are ideal for timely studies before and after natural disasters, or for biomass balancing, although complementary systems such as Landsat-8/9 (long-term continuity), PlanetScope (daily repeat), or Sentinel-1 SAR (cloud-penetrating structural information) are also operationally important; nevertheless, Sentinel-2 remains the most widely used because it uniquely combines global free access, high radiometric quality, a consistent 10–20 m multispectral design, and a reliably maintained 5-day revisit cycle.
+
 Change detection and time-series analysis are central in environmental informatics because most Earth-surface processes — drought-induced forest dieback, land-use conversion, vegetation dynamics, bark-beetle outbreaks, flooding, and climate impacts — unfold simultaneously across space and time.
+
 A robust spatial-temporal workflow therefore requires:
 
 1. Acquiring Sentinel satellite data,
@@ -27,6 +36,7 @@ A robust spatial-temporal workflow therefore requires:
 
 The following sections outline the conceptual foundations of image-based change detection and demonstrate how classification, spectral indices and Sentinel-2 data together reveal spatial-temporal patterns.
 The Burgwald and Northwest Harz serve as examples of dramatic vegetation change between 2018 and 2023.
+For a broader conceptual framework of GIScience and remote sensing as components of system-based spatial information science, see @tolpekin2012.
 
 ---
 
@@ -36,68 +46,97 @@ Unprocessed Sentinel-2 imagery is rich in information, but not immediately meani
 While humans can interpret true-color scenes intuitively, scientific interpretation requires quantitative methods.
 The strength of remote-sensing analysis lies in deriving information that is invisible to the naked eye: vegetation health, stress, canopy density, moisture content, structural changes, and land-cover transitions.
 
-Change detection relies on identifying spectral signatures that evolve over time.
-These signatures become interpretable only when spectral time series are classified, differenced, or modelled, and when these results are placed within their biophysical context.
+### Vegetation indices
 
-Most workflows therefore combine:
+Spectral vegetation indices are dimensionless, mathematically defined combinations of Sentinel-2 bands that compress multi-band reflectance into a few variables targeted at specific biophysical properties of the land surface.
+By using ratios, differences or more complex transforms of visible, red-edge, NIR and SWIR bands, they enhance signals related to chlorophyll content, canopy density and structure, leaf water status, or exposed soil background while suppressing illumination and atmospheric effects.
+Because no single raw band can reliably isolate these processes, spectral indices are a crucial intermediate layer between radiance/reflectance data and higher-level products such as land-cover classes, crop types, or degradation maps.
+In practice, remote-sensing workflows therefore rely heavily on vegetation and moisture indices (e.g. NDVI, EVI, SAVI, red-edge-based indices, NDWI/NDMI) as input features for time-series analysis, change detection and machine-learning classification, particularly when exploiting the rich spectral sampling of Sentinel-2’s red-edge and SWIR bands [@bannari1995; @xue2017; @huang2020; @montero2023].
 
-* Spectral indices (NDVI, MSAVI2, MSI, SAVI, EVI, kNDVI),
-* Structural or textural descriptors, and
-* Classification (unsupervised or supervised).
+### Structural and textural descriptors
 
-This combination is necessary because classification alone cannot describe continuous vegetation processes, and spectral indices alone cannot distinguish discrete land-cover classes.
+Structural and textural descriptors capture how reflectance values are arranged in space, rather than their absolute value in a single pixel.
+In remote sensing, they typically quantify local neighbourhood patterns (for example via grey-level co-occurrence matrices, local binary patterns, Gabor filters or wavelets) or higher-level structure such as object shape, size, orientation and canopy architecture [@fekriershad2018].
+These descriptors become particularly important in high-resolution imagery and heterogeneous landscapes, where many land-cover types may be spectrally similar but differ in spatial pattern — for example forest vs. shrubland, tiled roofs vs. asphalt, or dense vs. sparse crowns.
+Modern classification workflows therefore often combine spectral indices with structural/textural features to form joint spatial–spectral feature sets, which have been shown to improve land-cover mapping, change detection and fine-grained object recognition in multispectral and hyperspectral data [@datta2022; @mehmood2022; @li2024; @wang2025].
 
-Additionally, long-term studies increasingly rely on cloud-native geospatial techniques, such as STAC catalogues, COGs, and distributed computing via gdalcubes, rstac, or openeo.
+In practice, many workflows **combine** three types of information:
+
+- Spectral indices (NDVI, MSAVI2, MSI, SAVI, EVI, kNDVI),
+- Structural or textural descriptors, and
+- Classification models (unsupervised and supervised).
+
+However, this is a *design choice*, not a universal requirement. Brute-force experiments and feature-selection studies show that classification performance depends strongly on the **correlation structure and composition of the predictor set** rather than on simply “using everything” [@lu2007; @mehmood2022]. Highly collinear indices can dilute model signal, and some feature types become redundant once others are included.
+
+A common strategy is therefore to derive structural or textural descriptors not on every individual band, but on a **reduced spectral subspace**, for example on the first principal component of an energy-rich band stack (e.g. red–NIR–SWIR). This preserves most spatial structure while limiting dimensionality and redundancy. In many Random Forest applications, the most important splits still come from raw spectral bands or a few key indices, with texture contributing mainly in cases where **spatial pattern** (patchiness, edge density, canopy roughness) matters more than pure reflectance [@belgiu2016; @datta2022]. For RGB-only data, by contrast, spatial/structural features and RGB-based indices often carry a larger fraction of the discriminative information.
+
+Equally important is that model training and feature selection are **spatially explicit**. Spatial autocorrelation and clustered sampling can cause over-optimistic accuracies and misleading variable importance. Target-oriented spatial cross-validation and forward feature selection, as implemented for example in the CAST framework, explicitly account for prediction geometry and help to remove predictors that only exploit spatial structure instead of genuine environmental relationships [@meyer2018; @meyer2019; @meyer_pebesma2021; @meyer_pebesma2022; @cast]. In other words, the “best” combination of spectral, structural and ancillary predictors is **task- and data-specific** and must be derived under an appropriate spatial validation scheme.
+
+
+Additionally, long-term studies increasingly rely on cloud-native geospatial techniques, such as STAC catalogues, COGs, and distributed computing via gdalcubes [@gdalcubes], rstac [@rstac], or openeo [@openeo].
 These approaches are essential when analyses scale to hundreds of scenes or multiple years.
+
+### Classification logic: MLC, k-means, Random Forest {#classification-logic}
+
+From a methodological perspective, three families of classifiers illustrate the logic from classical statistics through unsupervised clustering to modern ensemble learning: Maximum Likelihood Classification (MLC), k-means clustering, and Random Forest (RF).
+
+- **Maximum Likelihood Classification (MLC)** is a *parametric supervised* classifier that assumes each class follows a multivariate normal distribution in feature space.
+  It assigns each pixel to the class with the highest posterior probability given class means, covariance matrices and, optionally, class priors.
+  MLC works well when classes are spectrally compact and approximately Gaussian, but degrades for heterogeneous or non-Gaussian classes [@hogland2013].
+
+- **K-means** is an *unsupervised* clustering algorithm that partitions pixels into *k* clusters by iteratively minimising within-cluster variance.
+  It is simple, fast and requires no labelled training data, but has no notion of semantic classes, is sensitive to initialisation and scale, and ignores spatial context.
+  In land-cover workflows, it is therefore mainly used for exploratory grouping or as a pre-step before manual labelling rather than as a final map [@paradis2022].
+
+- **Random Forest (RF)** is a *non-parametric supervised* ensemble approach.
+  Many decision trees are trained on bootstrapped samples and random subsets of features, and predictions are aggregated by majority vote (classification) or averaging (regression).
+  RF can model complex, non-linear class boundaries, handles mixed feature sets (spectral indices, structural/textural descriptors, ancillary GIS layers), and is relatively robust to noise and unbalanced data [@belgiu2016].
+  This has made RF a de-facto baseline for land-cover mapping and change detection in multispectral and hyperspectral data [@lu2007].
+
+Together, these three methods illustrate the progression from distribution-based decision rules (MLC), via geometry-based partitioning (k-means), to data-driven ensemble learning (RF) that is now standard in remote-sensing workflows and frequently used as a benchmark in comparative studies [@lu2007; @hogland2013; @paradis2022; @belgiu2016].
 
 ---
 
-# Spectral Indices: Extracting Biophysical Signals {#spectral-indices}
-
-Spectral vegetation indices are mathematical combinations of Sentinel-2 bands designed to isolate specific plant or soil properties.
-They are essential precursors to classification because they reveal biophysical processes that no single raw band can capture.
-
-Remote-sensing analysis frequently relies on the following vegetation and moisture indices:
-
 ## NDVI
 
-Normalized Difference Vegetation Index (NDVI)
-[https://www.indexdatabase.de/db/i-single.php?id=58](https://www.indexdatabase.de/db/i-single.php?id=58)
+Normalized Difference Vegetation Index (NDVI)  
+<https://www.indexdatabase.de/db/i-single.php?id=58>
 
 Measures chlorophyll absorption in red vs. near-infrared reflectance.
 A fundamental indicator of greenness, photosynthetic activity, and canopy density.
+NDVI is the most widely used vegetation index, but also frequently misinterpreted or over-generalised [@huang2020].
 
 ## MSAVI2
 
-Modified Soil Adjusted Vegetation Index (MSAVI2)
-[https://www.indexdatabase.de/db/i-single.php?id=44](https://www.indexdatabase.de/db/i-single.php?id=44)
+Modified Soil Adjusted Vegetation Index (MSAVI2)  
+<https://www.indexdatabase.de/db/i-single.php?id=44>
 
 Reduces soil-brightness influence in sparse or partially damaged canopies.
-Useful in drought-affected stands and early dieback.
+Useful in drought-affected stands and early dieback, especially where soil background is exposed.
 
 ## MSI
 
-Moisture Stress Index (MSI)
-[https://www.indexdatabase.de/db/i-single.php?id=48](https://www.indexdatabase.de/db/i-single.php?id=48)
+Moisture Stress Index (MSI)  
+<https://www.indexdatabase.de/db/i-single.php?id=48>
 
 Derived from SWIR/NIR ratio.
-Sensitive to water loss and canopy desiccation — often an early-warning indicator before visual decline.
+Sensitive to water loss and canopy desiccation — often an early-warning indicator before visual decline or NDVI reductions.
 
 ## SAVI
 
-Soil Adjusted Vegetation Index (SAVI)
-[https://www.indexdatabase.de/db/i-single.php?id=87](https://www.indexdatabase.de/db/i-single.php?id=87)
+Soil Adjusted Vegetation Index (SAVI)  
+<https://www.indexdatabase.de/db/i-single.php?id=87>
 
 Explicitly accounts for soil reflectance in mixed pixels.
 Highly effective in clearcuts, forest edges, young regrowth, and partially disturbed sites.
 
 ## EVI
 
-Enhanced Vegetation Index (EVI)
-[https://www.indexdatabase.de/db/i-single.php?id=16](https://www.indexdatabase.de/db/i-single.php?id=16)
+Enhanced Vegetation Index (EVI)  
+<https://www.indexdatabase.de/db/i-single.php?id=16>
 
-Reduces atmospheric scattering effects.
-Avoids NDVI saturation in dense conifer forests (important for spruce dieback monitoring).
+Reduces atmospheric scattering effects and mitigates NDVI saturation in dense canopies.
+Particularly important in dense conifer forests and for monitoring spruce dieback with Sentinel-2 [@bannari1995; @xue2017].
 
 These indices serve as continuous measures of canopy condition, moisture content, and structural state.
 When combined with classification, they provide the physical basis required to interpret spatial-temporal change patterns.
@@ -114,12 +153,11 @@ The algorithm assigns each pixel to the nearest cluster centroid, iteratively ad
 
 The animation below illustrates this process:
 
+![](../images/K-means_convergence.png){fig-cap="K-means convergence (animated, HTML only)"}
 
-![](../images/K-means_convergence.png){fig-cap="K-means: Konvergenz (animiert, nur HTML)"}
+Source: <https://commons.wikimedia.org/wiki/File:K-means_convergence.gif> (Chire, CC BY-SA 4.0)
 
-Source: [https://commons.wikimedia.org/wiki/File:K-means_convergence.gif](https://commons.wikimedia.org/wiki/File:K-means_convergence.gif) (Chire, CC BY-SA 4.0)
-
-*Convergence of k-means clustering from an unfavorable starting position (two initial cluster centers are fairly close*
+*Convergence of k-means clustering from an unfavourable starting position (two initial cluster centres are fairly close).*
 
 In vegetation-change studies, k-means is used to check whether classes like forest, dead wood, and clearcuts are spectrally distinct — an essential requirement for stable supervised classification.
 
@@ -127,28 +165,29 @@ In vegetation-change studies, k-means is used to check whether classes like fore
 
 # Supervised Classification {#supervised}
 
-Classifiers (e.g. the maximum likelihood classifier) or machine learning algorithms (such as Random Forest) use the training data to determine descriptive models that represent statistical signatures, classification trees or other functions. Within the limits of the quality of the training data, such models are suitable and representative for making predictions for areas if the predictors from the model are available for the entire area.
+Classifiers (for example, the maximum likelihood classifier) or machine-learning algorithms (such as Random Forest) use training data to determine descriptive models that represent statistical signatures, classification trees or other decision functions.
+Within the limits of the quality and representativeness of the training data, such models can be applied to all pixels for which the predictor variables are available [@lu2007; @belgiu2016].
 
-We now want to predict the spatial characteristics of clear-felling/no forest using a maximum likelihood classification and random forest, and apply standard methods of random validation and model quality assessment.
-
+Here, we focus on predicting the spatial distribution of clear-felling/no forest using a maximum likelihood classification and random forest, and apply standard methods of random validation and model quality assessment.
 
 ![](images/supervised_classification.jpg)
 
-Two methods dominate environmental remote sensing:
+Two methods dominate environmental remote sensing in the context of this tutorial:
 
-* Maximum Likelihood Classification (MLC)
-* Random Forest Classification (RF)
+- Maximum Likelihood Classification (MLC)
+- Random Forest Classification (RF)
 
 Both are used extensively in forestry, agriculture, urban studies, ecosystem monitoring, and climate-change research.
 
 ## Maximum Likelihood Classification (MLC)
 
-MLC assumes that each class follows a multivariate normal distribution in spectral space.
+MLC assumes that each class follows a multivariate normal distribution in spectral (or feature) space.
 It computes the probability that a pixel belongs to each class and assigns it to the most likely one.
+Performance is strongly influenced by the covariance structure of the classes and by how well the training data represent within-class variability [@hogland2013].
 
 ![](images/max.png)
 
-MLC performs well when spectral differences between classes (for example, forest vs. clearcut) are large.
+MLC performs well when spectral differences between classes (for example, forest vs. clearcut) are large and the Gaussian assumption is approximately valid.
 
 ## Random Forest Classification (RF)
 
@@ -159,30 +198,30 @@ A pixel is classified via majority vote across all trees.
 
 RF excels in complex, heterogeneous landscapes because it handles:
 
-* Nonlinear relationships
-* High-dimensional predictors (bands plus indices)
-* Correlated variables
-* Spectral noise and outliers
+- Nonlinear relationships,
+- High-dimensional predictors (bands plus indices plus structural/textural descriptors),
+- Correlated variables, and
+- Spectral noise and outliers.
 
-Random Forest is now considered a baseline method in environmental machine learning, alongside Gradient Boosting and Support Vector Machines.
+Random Forest is now considered a baseline method in environmental machine learning, alongside Gradient Boosting and Support Vector Machines, particularly for land-cover mapping and change detection [@belgiu2016; @mehmood2022].
 
-
+---
 
 # Assessing Classification Quality {#validation}
 
-Supervised classification requires validation, usually by splitting data into training and test subsets.
+Supervised classification requires validation, usually by splitting data into training and test subsets or by using independent reference data.
 Performance metrics include:
 
-* Sensitivity (true positive rate for clearcuts)
-* Specificity (true negative rate for non-clearcuts)
-* Predictive values, adjusting for actual class frequencies
+- Sensitivity (true positive rate for clearcuts),
+- Specificity (true negative rate for non-clearcuts),
+- Predictive values, adjusting for actual class frequencies, and
+- Global measures such as overall accuracy and Cohen’s kappa.
 
-Even high accuracy may mask structural misclassification in subtle transitions, such as thinning canopies.
+Even high accuracy may mask structural misclassification in subtle transitions, such as thinning canopies or partially damaged stands.
 
-Continuous spectral indices such as kNDVI — derived using the gdalcubes framework — help diagnose such errors.
+Continuous spectral indices such as kNDVI — derived using the gdalcubes framework — help diagnose such errors by revealing sub-pixel gradients that discrete classes cannot capture.
 
-Advanced time-series methods like BFAST identify breakpoints in vegetation dynamics, including timing and magnitude of structural change.
-
+Advanced time-series methods like BFAST [@bfast; @bfast_rs2020] breakpoints in vegetation dynamics, including timing and magnitude of structural change.
 BFAST is particularly valuable in drought–forest interactions and post-disturbance recovery monitoring.
 
 ---
@@ -190,46 +229,43 @@ BFAST is particularly valuable in drought–forest interactions and post-disturb
 # Digitising Training Data {#training-data}
 
 Training data must represent all land-cover types to be classified.
-Digitization can be done interactively in R (for example with mapedit) or externally in QGIS.
+Digitisation can be done interactively in R (for example with **mapedit**) or externally in QGIS:
 
-[https://docs.qgis.org/3.34/en/docs/training_manual/create_vector_data/create_new_vector.html#basic-ty-digitizing-polygons](https://docs.qgis.org/3.34/en/docs/training_manual/create_vector_data/create_new_vector.html#basic-ty-digitizing-polygons)
+<https://docs.qgis.org/3.34/en/docs/training_manual/create_vector_data/create_new_vector.html#basic-ty-digitizing-polygons>
 
-After digitization, raster values for all predictors (bands and indices) are extracted for each polygon and used to train the classifier.
+After digitisation, raster values for all predictors (bands, indices, structural descriptors) are extracted for each polygon and used to train the classifier.
 
 Best practices include:
 
-* Ensuring balanced class representation
-* Avoiding polygons that span multiple land-cover types
-* Using high-resolution aerial imagery to refine training locations
+- Ensuring balanced class representation,
+- Avoiding polygons that span multiple land-cover types, and
+- Using high-resolution aerial imagery to refine training locations.
 
 ---
 
 # Further Reading {#references-reading}
 
-The Core of GIScience (Tolpekin and Stein 2012)
-[http://www.charim.net/sites/default/files/handbook/datamanagement/3/3.3/The%20core%20of%20GIScience%2C%20a%20system%20-based%20approach.pdf](http://www.charim.net/sites/default/files/handbook/datamanagement/3/3.3/The%20core%20of%20GIScience%2C%20a%20system%20-based%20approach.pdf)
 
-FTP mirror: ftp://ftp.itc.nl/pub/ders/CoreBook2014_metadata.pdf
+## Technical tutorials & blogs
 
-Robert J. Hijmans – Supervised Classification
-[https://rspatial.org/raster/rs/5-supclassification.html](https://rspatial.org/raster/rs/5-supclassification.html)
+These resources are **practical, implementation-focused** guides.
+They are useful to understand concrete R workflows, but they do **not** replace primary literature or your own methodological reasoning.
 
-Ivan Lizarazo – Landcover Tutorial
-[https://rpubs.com/ials2un/rf_landcover](https://rpubs.com/ials2un/rf_landcover)
+- **Goldstein, S. (2019).** Classifying satellite imagery in R. *Urban Spatial Blog*. <https://urbanspatial.github.io/classifying_satellite_imagery_in_R/> [@goldstein2019]
 
-Sydney Goldstein – Urban Spatial Blog
-[https://urbanspatial.github.io/classifying_satellite_imagery_in_R/](https://urbanspatial.github.io/classifying_satellite_imagery_in_R/)
+- **Hijmans, R. J. (2023).** Supervised classification. rspatial.org. <https://rspatial.org/raster/rs/5-supclassification.html> [@hijmans2023]
 
-João Gonçalves – Supervised Classification
-[https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/](https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/)
+- **Lizarazo, I. (2021).** A tutorial on pixel-based land cover classification using random forests in R. RPubs. <https://rpubs.com/ials2un/rf_landcover> [@lizarazo2021]
 
-Valentin Stefan – Pixel-based Classification
-[https://valentinitnelav.github.io/satellite-image-classification-r/](https://valentinitnelav.github.io/satellite-image-classification-r/)
+- **Gonçalves, J. (2018).** Advanced techniques with raster data: Supervised classification. R-exercises. <https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/> [@goncalves2018]
 
-Quoted remark:
+- **Stefan, V. (2020).** Satellite image classification in R. <https://valentinitnelav.github.io/satellite-image-classification-r/> [@stefan2020]
 
-“Consider this content a blog post and nothing more.
-It does not claim to be an exhaustive exercise or a substitute for your critical thinking.”
+::: {.callout-tip title="About blog posts and tutorials..." appearance="simple"}
+Use tutorials and blog posts as practical support only.
+They are extremely helpful for code and workflow patterns, but they cannot replace independent thinking, methodological scrutiny, or engagement with peer-reviewed research.
+:::
+
 
 ---
 
@@ -241,10 +277,12 @@ Cloud-native methods use STAC catalogues, COGs, and distributed computation (for
 
 For cloud-native methods see:
 
-[https://gdalcubes.github.io/source/tutorials/](https://gdalcubes.github.io/source/tutorials/)
-[https://openeo.org/](https://openeo.org/)
-[https://open-eo.github.io/openeo-r-client/](https://open-eo.github.io/openeo-r-client/)
+- <https://gdalcubes.github.io/source/tutorials/>
+- <https://openeo.org/>
+- <https://open-eo.github.io/openeo-r-client/>
 
 Both paradigms remain relevant.
 Local processing supports transparency, teaching, and technical fundamentals.
 Cloud-native processing is essential for scaling to continental or multi-year analyses.
+
+# References
