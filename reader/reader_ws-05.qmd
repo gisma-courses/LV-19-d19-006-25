@@ -35,7 +35,7 @@ A robust spatial-temporal workflow therefore requires:
 3. Applying classification and temporal analysis methods to quantify and interpret changes.
 
 The following sections outline the conceptual foundations of image-based change detection and demonstrate how classification, spectral indices and Sentinel-2 data together reveal spatial-temporal patterns.
-The Burgwald and Northwest Harz serve as examples of dramatic vegetation change between 2018 and 2023.
+The Burgwald serve as examples of vegetation change between 2018 and 2023.
 For a broader conceptual framework of GIScience and remote sensing as components of system-based spatial information science, see @tolpekin2012.
 
 ---
@@ -48,10 +48,12 @@ The strength of remote-sensing analysis lies in deriving information that is inv
 
 ### Vegetation indices
 
-Spectral vegetation indices are dimensionless, mathematically defined combinations of Sentinel-2 bands that compress multi-band reflectance into a few variables targeted at specific biophysical properties of the land surface.
-By using ratios, differences or more complex transforms of visible, red-edge, NIR and SWIR bands, they enhance signals related to chlorophyll content, canopy density and structure, leaf water status, or exposed soil background while suppressing illumination and atmospheric effects.
-Because no single raw band can reliably isolate these processes, spectral indices are a crucial intermediate layer between radiance/reflectance data and higher-level products such as land-cover classes, crop types, or degradation maps.
-In practice, remote-sensing workflows therefore rely heavily on vegetation and moisture indices (e.g. NDVI, EVI, SAVI, red-edge-based indices, NDWI/NDMI) as input features for time-series analysis, change detection and machine-learning classification, particularly when exploiting the rich spectral sampling of Sentinel-2’s red-edge and SWIR bands [@bannari1995; @xue2017; @huang2020; @montero2023].
+Spectral vegetation indices are dimensionless, mathematically defined combinations of Sentinel-2 bands that compress multi-band reflectance into a few variables targeted at specific biophysical properties of the land surface. By using ratios, differences or more complex transforms of visible, red-edge, NIR and SWIR bands, they enhance signals related to chlorophyll content, canopy density and structure, leaf water status, or exposed soil background while suppressing illumination and atmospheric effects. Because no single raw band can reliably isolate these processes, spectral indices are a crucial intermediate layer between radiance/reflectance data and higher-level products such as land-cover classes, crop types, or degradation maps. In practice, remote-sensing workflows therefore rely heavily on vegetation and moisture indices (e.g. NDVI, EVI, SAVI, red-edge-based indices, NDWI/NDMI) as input features for time-series analysis, change detection and machine-learning classification, particularly when exploiting the rich spectral sampling of Sentinel-2’s red-edge and SWIR bands [@bannari1995; @xue2017; @huang2020; @montero2023].
+
+The Normalized Difference Vegetation Index (NDVI) measures chlorophyll absorption in red vs. near-infrared reflectance and is a fundamental indicator of greenness, photosynthetic activity, and canopy density. NDVI is the most widely used vegetation index, but also frequently misinterpreted or over-generalised [@huang2020]. The Modified Soil Adjusted Vegetation Index (MSAVI2) reduces soil-brightness influence in sparse or partially damaged canopies, making it useful in drought-affected stands and early dieback where soil background is exposed. The Moisture Stress Index (MSI), derived from the SWIR/NIR ratio, is sensitive to water loss and canopy desiccation and often serves as an early-warning indicator before visual decline or NDVI reductions become apparent. The Soil Adjusted Vegetation Index (SAVI) explicitly accounts for soil reflectance in mixed pixels and is highly effective in clearcuts, forest edges, young regrowth and partially disturbed sites. The Enhanced Vegetation Index (EVI) reduces atmospheric scattering effects and mitigates NDVI saturation in dense canopies, which is particularly important in dense conifer forests and for monitoring spruce dieback with Sentinel-2 [@bannari1995; @xue2017].
+
+These indices serve as continuous measures of canopy condition, moisture content, and structural state. When combined with classification, they provide the physical basis required to interpret spatial-temporal change patterns.
+
 
 ### Structural and textural descriptors
 
@@ -59,6 +61,56 @@ Structural and textural descriptors capture how reflectance values are arranged 
 In remote sensing, they typically quantify local neighbourhood patterns (for example via grey-level co-occurrence matrices, local binary patterns, Gabor filters or wavelets) or higher-level structure such as object shape, size, orientation and canopy architecture [@fekriershad2018].
 These descriptors become particularly important in high-resolution imagery and heterogeneous landscapes, where many land-cover types may be spectrally similar but differ in spatial pattern — for example forest vs. shrubland, tiled roofs vs. asphalt, or dense vs. sparse crowns.
 Modern classification workflows therefore often combine spectral indices with structural/textural features to form joint spatial–spectral feature sets, which have been shown to improve land-cover mapping, change detection and fine-grained object recognition in multispectral and hyperspectral data [@datta2022; @mehmood2022; @li2024; @wang2025].
+
+
+### Classification logic: MLC, k-means, Random Forest {#classification-logic}
+
+From a methodological perspective, three families of classifiers illustrate the logic from classical statistics through unsupervised clustering to modern ensemble learning: Maximum Likelihood Classification (MLC), k-means clustering, and Random Forest (RF). Together, these three methods illustrate the progression from distribution-based decision rules (MLC), via geometry-based partitioning (k-means), to data-driven ensemble learning (RF) that is now standard in remote-sensing workflows and frequently used as a benchmark in comparative studies [@lu2007; @hogland2013; @paradis2022; @belgiu2016].
+
+---
+
+#### 1. K-means (Unsupervised Clustering) {#kmeans}
+
+K-means is an unsupervised clustering algorithm that partitions pixels into k clusters by iteratively minimising within-cluster variance. It is simple, fast and requires no labelled training data, but has no notion of semantic classes, is sensitive to initialisation and scale, and ignores spatial context. In land-cover workflows, it is therefore mainly used for exploratory grouping or as a pre-step before manual labelling rather than as a final map [@paradis2022].
+
+K-means is often considered the most accessible unsupervised classification algorithm. It groups pixels solely by spectral similarity, without requiring training data, making it ideal for exploratory analysis. Each pixel is an observation in multidimensional feature space. The algorithm assigns each pixel to the nearest cluster centroid, iteratively adjusting centroid positions until convergence.
+
+![](../images/K-means_convergence.png){fig-cap="K-means convergence (animated, HTML only)"}
+
+*Convergence of k-means clustering from an unfavourable starting position (two initial cluster centres are fairly close).*
+
+In vegetation-change studies, k-means is used to check whether classes like forest, dead wood, and clearcuts are spectrally distinct — an essential requirement for stable supervised classification.
+
+---
+
+#### 2. Maximum Likelihood Classification (MLC) {#mlc}
+
+Maximum Likelihood Classification (MLC) is a parametric supervised classifier that assumes each class follows a multivariate normal distribution in feature space. It assigns each pixel to the class with the highest posterior probability given class means, covariance matrices and, optionally, class priors. MLC works well when classes are spectrally compact and approximately Gaussian, but degrades for heterogeneous or non-Gaussian classes [@hogland2013].
+
+MLC assumes that each class follows a multivariate normal distribution in spectral (or feature) space. It computes the probability that a pixel belongs to each class and assigns it to the most likely one. Performance is strongly influenced by the covariance structure of the classes and by how well the training data represent within-class variability [@hogland2013].
+
+MLC performs well when spectral differences between classes (for example, forest vs. clearcut) are large and the Gaussian assumption is approximately valid.
+
+![](images/max.png)
+
+Classifiers such as MLC use training data to determine descriptive models representing statistical signatures. Within the limits of the quality and representativeness of the training data, such models can be applied to all pixels for which the predictor variables are available [@lu2007; @belgiu2016].
+
+---
+
+#### 3. Random Forest Classification (RF) {#rf}
+
+Random Forest (RF) is a non-parametric supervised ensemble approach. Many decision trees are trained on bootstrapped samples and random subsets of features, and predictions are aggregated by majority vote (classification) or averaging (regression). RF can model complex, non-linear class boundaries, handles mixed feature sets (spectral indices, structural/textural descriptors, ancillary GIS layers), and is relatively robust to noise and unbalanced data [@belgiu2016].
+
+Random Forest builds an ensemble of decision trees, each learning different feature partitions. A pixel is classified via majority vote across all trees. RF excels in complex, heterogeneous landscapes because it handles nonlinear relationships, high-dimensional predictors (bands plus indices plus structural/textural descriptors), correlated variables, and spectral noise and outliers.
+
+![](images/Random_forest_diagram_complete.png)
+
+Random Forest is now considered a baseline method in environmental machine learning, alongside Gradient Boosting and Support Vector Machines, particularly for land-cover mapping and change detection [@belgiu2016; @mehmood2022].
+
+In this tutorial, Random Forest is used to predict the spatial distribution of clear-felling/no forest alongside MLC, combined with standard methods of random validation and model quality assessment. Both methods are widely used in forestry, agriculture, urban studies, ecosystem monitoring, and climate-change research.
+
+
+## Combining Spectral, Structural, and Classification Features
 
 In practice, many workflows **combine** three types of information:
 
@@ -76,138 +128,9 @@ Equally important is that model training and feature selection are **spatially e
 Additionally, long-term studies increasingly rely on cloud-native geospatial techniques, such as STAC catalogues, COGs, and distributed computing via gdalcubes [@gdalcubes], rstac [@rstac], or openeo [@openeo].
 These approaches are essential when analyses scale to hundreds of scenes or multiple years.
 
-### Classification logic: MLC, k-means, Random Forest {#classification-logic}
 
-From a methodological perspective, three families of classifiers illustrate the logic from classical statistics through unsupervised clustering to modern ensemble learning: Maximum Likelihood Classification (MLC), k-means clustering, and Random Forest (RF).
 
-- **Maximum Likelihood Classification (MLC)** is a *parametric supervised* classifier that assumes each class follows a multivariate normal distribution in feature space.
-  It assigns each pixel to the class with the highest posterior probability given class means, covariance matrices and, optionally, class priors.
-  MLC works well when classes are spectrally compact and approximately Gaussian, but degrades for heterogeneous or non-Gaussian classes [@hogland2013].
-
-- **K-means** is an *unsupervised* clustering algorithm that partitions pixels into *k* clusters by iteratively minimising within-cluster variance.
-  It is simple, fast and requires no labelled training data, but has no notion of semantic classes, is sensitive to initialisation and scale, and ignores spatial context.
-  In land-cover workflows, it is therefore mainly used for exploratory grouping or as a pre-step before manual labelling rather than as a final map [@paradis2022].
-
-- **Random Forest (RF)** is a *non-parametric supervised* ensemble approach.
-  Many decision trees are trained on bootstrapped samples and random subsets of features, and predictions are aggregated by majority vote (classification) or averaging (regression).
-  RF can model complex, non-linear class boundaries, handles mixed feature sets (spectral indices, structural/textural descriptors, ancillary GIS layers), and is relatively robust to noise and unbalanced data [@belgiu2016].
-  This has made RF a de-facto baseline for land-cover mapping and change detection in multispectral and hyperspectral data [@lu2007].
-
-Together, these three methods illustrate the progression from distribution-based decision rules (MLC), via geometry-based partitioning (k-means), to data-driven ensemble learning (RF) that is now standard in remote-sensing workflows and frequently used as a benchmark in comparative studies [@lu2007; @hogland2013; @paradis2022; @belgiu2016].
-
----
-
-## NDVI
-
-Normalized Difference Vegetation Index (NDVI)  
-<https://www.indexdatabase.de/db/i-single.php?id=58>
-
-Measures chlorophyll absorption in red vs. near-infrared reflectance.
-A fundamental indicator of greenness, photosynthetic activity, and canopy density.
-NDVI is the most widely used vegetation index, but also frequently misinterpreted or over-generalised [@huang2020].
-
-## MSAVI2
-
-Modified Soil Adjusted Vegetation Index (MSAVI2)  
-<https://www.indexdatabase.de/db/i-single.php?id=44>
-
-Reduces soil-brightness influence in sparse or partially damaged canopies.
-Useful in drought-affected stands and early dieback, especially where soil background is exposed.
-
-## MSI
-
-Moisture Stress Index (MSI)  
-<https://www.indexdatabase.de/db/i-single.php?id=48>
-
-Derived from SWIR/NIR ratio.
-Sensitive to water loss and canopy desiccation — often an early-warning indicator before visual decline or NDVI reductions.
-
-## SAVI
-
-Soil Adjusted Vegetation Index (SAVI)  
-<https://www.indexdatabase.de/db/i-single.php?id=87>
-
-Explicitly accounts for soil reflectance in mixed pixels.
-Highly effective in clearcuts, forest edges, young regrowth, and partially disturbed sites.
-
-## EVI
-
-Enhanced Vegetation Index (EVI)  
-<https://www.indexdatabase.de/db/i-single.php?id=16>
-
-Reduces atmospheric scattering effects and mitigates NDVI saturation in dense canopies.
-Particularly important in dense conifer forests and for monitoring spruce dieback with Sentinel-2 [@bannari1995; @xue2017].
-
-These indices serve as continuous measures of canopy condition, moisture content, and structural state.
-When combined with classification, they provide the physical basis required to interpret spatial-temporal change patterns.
-
----
-
-# Unsupervised Classification (K-means Clustering) {#kmeans}
-
-K-means is often considered the most accessible unsupervised classification algorithm.
-It groups pixels solely by spectral similarity, without requiring training data, making it ideal for exploratory analysis.
-
-Each pixel is an observation in multidimensional feature space.
-The algorithm assigns each pixel to the nearest cluster centroid, iteratively adjusting centroid positions until convergence.
-
-The animation below illustrates this process:
-
-![](../images/K-means_convergence.png){fig-cap="K-means convergence (animated, HTML only)"}
-
-Source: <https://commons.wikimedia.org/wiki/File:K-means_convergence.gif> (Chire, CC BY-SA 4.0)
-
-*Convergence of k-means clustering from an unfavourable starting position (two initial cluster centres are fairly close).*
-
-In vegetation-change studies, k-means is used to check whether classes like forest, dead wood, and clearcuts are spectrally distinct — an essential requirement for stable supervised classification.
-
----
-
-# Supervised Classification {#supervised}
-
-Classifiers (for example, the maximum likelihood classifier) or machine-learning algorithms (such as Random Forest) use training data to determine descriptive models that represent statistical signatures, classification trees or other decision functions.
-Within the limits of the quality and representativeness of the training data, such models can be applied to all pixels for which the predictor variables are available [@lu2007; @belgiu2016].
-
-Here, we focus on predicting the spatial distribution of clear-felling/no forest using a maximum likelihood classification and random forest, and apply standard methods of random validation and model quality assessment.
-
-![](images/supervised_classification.jpg)
-
-Two methods dominate environmental remote sensing in the context of this tutorial:
-
-- Maximum Likelihood Classification (MLC)
-- Random Forest Classification (RF)
-
-Both are used extensively in forestry, agriculture, urban studies, ecosystem monitoring, and climate-change research.
-
-## Maximum Likelihood Classification (MLC)
-
-MLC assumes that each class follows a multivariate normal distribution in spectral (or feature) space.
-It computes the probability that a pixel belongs to each class and assigns it to the most likely one.
-Performance is strongly influenced by the covariance structure of the classes and by how well the training data represent within-class variability [@hogland2013].
-
-![](images/max.png)
-
-MLC performs well when spectral differences between classes (for example, forest vs. clearcut) are large and the Gaussian assumption is approximately valid.
-
-## Random Forest Classification (RF)
-
-Random Forest builds an ensemble of decision trees, each learning different feature partitions.
-A pixel is classified via majority vote across all trees.
-
-![](images/Random_forest_diagram_complete.png)
-
-RF excels in complex, heterogeneous landscapes because it handles:
-
-- Nonlinear relationships,
-- High-dimensional predictors (bands plus indices plus structural/textural descriptors),
-- Correlated variables, and
-- Spectral noise and outliers.
-
-Random Forest is now considered a baseline method in environmental machine learning, alongside Gradient Boosting and Support Vector Machines, particularly for land-cover mapping and change detection [@belgiu2016; @mehmood2022].
-
----
-
-# Assessing Classification Quality {#validation}
+## Assessing Classification Quality {#validation}
 
 Supervised classification requires validation, usually by splitting data into training and test subsets or by using independent reference data.
 Performance metrics include:
@@ -226,7 +149,7 @@ BFAST is particularly valuable in drought–forest interactions and post-disturb
 
 ---
 
-# Digitising Training Data {#training-data}
+## Digitising Training Data {#training-data}
 
 Training data must represent all land-cover types to be classified.
 Digitisation can be done interactively in R (for example with **mapedit**) or externally in QGIS:
@@ -243,10 +166,10 @@ Best practices include:
 
 ---
 
-# Further Reading {#references-reading}
+## Further Reading {#references-reading}
 
 
-## Technical tutorials & blogs
+### Technical tutorials & blogs
 
 These resources are **practical, implementation-focused** guides.
 They are useful to understand concrete R workflows, but they do **not** replace primary literature or your own methodological reasoning.
@@ -269,7 +192,7 @@ They are extremely helpful for code and workflow patterns, but they cannot repla
 
 ---
 
-# Final Remarks {#final}
+## Final Remarks {#final}
 
 This tutorial integrates both conventional and cloud-based processing paradigms.
 Traditional workflows download individual Sentinel scenes and process them locally.

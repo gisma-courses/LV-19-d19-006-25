@@ -741,7 +741,7 @@
     "href": "reader/reader_ws-05.html",
     "title": "Remote Sensing - Sentinel 2",
     "section": "",
-    "text": "Remote sensing is the only measurement technology that enables continuous observation of the Earth’s surface across full spatial extents — from landscapes to entire countries and global regions. To use remote sensing effectively, it is essential not only to apply established analytical methods but also to adapt and extend them as new environmental questions and large datasets emerge.\nSentinel-2 is currently the most important platform for Earth observation in all areas, but especially for climate change, land use and ecological issues at all levels, from the upper micro to the global scale.\nThere are two operational Sentinel-2 satellites: Sentinel-2A and Sentinel-2B, both in sun-synchronous polar orbits and 180 degrees out of phase. This arrangement allows them to cover the mid-latitudes with an orbital period of about 5 days.\nThe Sentinel-2 data are therefore predestined to record spatial and temporal changes on the Earth’s surface (the forest was green in early summer, it has disappeared by late summer). They are ideal for timely studies before and after natural disasters, or for biomass balancing, although complementary systems such as Landsat-8/9 (long-term continuity), PlanetScope (daily repeat), or Sentinel-1 SAR (cloud-penetrating structural information) are also operationally important; nevertheless, Sentinel-2 remains the most widely used because it uniquely combines global free access, high radiometric quality, a consistent 10–20 m multispectral design, and a reliably maintained 5-day revisit cycle.\nChange detection and time-series analysis are central in environmental informatics because most Earth-surface processes — drought-induced forest dieback, land-use conversion, vegetation dynamics, bark-beetle outbreaks, flooding, and climate impacts — unfold simultaneously across space and time.\nA robust spatial-temporal workflow therefore requires:\n\nAcquiring Sentinel satellite data,\nExtracting spectral and structural information, and\nApplying classification and temporal analysis methods to quantify and interpret changes.\n\nThe following sections outline the conceptual foundations of image-based change detection and demonstrate how classification, spectral indices and Sentinel-2 data together reveal spatial-temporal patterns. The Burgwald and Northwest Harz serve as examples of dramatic vegetation change between 2018 and 2023. For a broader conceptual framework of GIScience and remote sensing as components of system-based spatial information science, see Tolpekin und Stein (2012).",
+    "text": "Remote sensing is the only measurement technology that enables continuous observation of the Earth’s surface across full spatial extents — from landscapes to entire countries and global regions. To use remote sensing effectively, it is essential not only to apply established analytical methods but also to adapt and extend them as new environmental questions and large datasets emerge.\nSentinel-2 is currently the most important platform for Earth observation in all areas, but especially for climate change, land use and ecological issues at all levels, from the upper micro to the global scale.\nThere are two operational Sentinel-2 satellites: Sentinel-2A and Sentinel-2B, both in sun-synchronous polar orbits and 180 degrees out of phase. This arrangement allows them to cover the mid-latitudes with an orbital period of about 5 days.\nThe Sentinel-2 data are therefore predestined to record spatial and temporal changes on the Earth’s surface (the forest was green in early summer, it has disappeared by late summer). They are ideal for timely studies before and after natural disasters, or for biomass balancing, although complementary systems such as Landsat-8/9 (long-term continuity), PlanetScope (daily repeat), or Sentinel-1 SAR (cloud-penetrating structural information) are also operationally important; nevertheless, Sentinel-2 remains the most widely used because it uniquely combines global free access, high radiometric quality, a consistent 10–20 m multispectral design, and a reliably maintained 5-day revisit cycle.\nChange detection and time-series analysis are central in environmental informatics because most Earth-surface processes — drought-induced forest dieback, land-use conversion, vegetation dynamics, bark-beetle outbreaks, flooding, and climate impacts — unfold simultaneously across space and time.\nA robust spatial-temporal workflow therefore requires:\n\nAcquiring Sentinel satellite data,\nExtracting spectral and structural information, and\nApplying classification and temporal analysis methods to quantify and interpret changes.\n\nThe following sections outline the conceptual foundations of image-based change detection and demonstrate how classification, spectral indices and Sentinel-2 data together reveal spatial-temporal patterns. The Burgwald serve as examples of vegetation change between 2018 and 2023. For a broader conceptual framework of GIScience and remote sensing as components of system-based spatial information science, see Tolpekin und Stein (2012).",
     "crumbs": [
       "FAQ",
       "Lectures",
@@ -1296,6 +1296,66 @@
       "FAQ",
       "Worksheets",
       "4 – Execute the Burgwald Data Pipeline"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-05.html#combining-spectral-structural-and-classification-features",
+    "href": "reader/reader_ws-05.html#combining-spectral-structural-and-classification-features",
+    "title": "Remote Sensing - Sentinel 2",
+    "section": "Combining Spectral, Structural, and Classification Features",
+    "text": "Combining Spectral, Structural, and Classification Features\nIn practice, many workflows combine three types of information:\n\nSpectral indices (NDVI, MSAVI2, MSI, SAVI, EVI, kNDVI),\nStructural or textural descriptors, and\nClassification models (unsupervised and supervised).\n\nHowever, this is a design choice, not a universal requirement. Brute-force experiments and feature-selection studies show that classification performance depends strongly on the correlation structure and composition of the predictor set rather than on simply “using everything” (Lu und Weng 2007; Mehmood u. a. 2022). Highly collinear indices can dilute model signal, and some feature types become redundant once others are included.\nA common strategy is therefore to derive structural or textural descriptors not on every individual band, but on a reduced spectral subspace, for example on the first principal component of an energy-rich band stack (e.g. red–NIR–SWIR). This preserves most spatial structure while limiting dimensionality and redundancy. In many Random Forest applications, the most important splits still come from raw spectral bands or a few key indices, with texture contributing mainly in cases where spatial pattern (patchiness, edge density, canopy roughness) matters more than pure reflectance (Belgiu und Drăguţ 2016; Datta u. a. 2022). For RGB-only data, by contrast, spatial/structural features and RGB-based indices often carry a larger fraction of the discriminative information.\nEqually important is that model training and feature selection are spatially explicit. Spatial autocorrelation and clustered sampling can cause over-optimistic accuracies and misleading variable importance. Target-oriented spatial cross-validation and forward feature selection, as implemented for example in the CAST framework, explicitly account for prediction geometry and help to remove predictors that only exploit spatial structure instead of genuine environmental relationships (Meyer u. a. 2018, 2019, 2024; Meyer und Pebesma 2021, 2022). In other words, the “best” combination of spectral, structural and ancillary predictors is task- and data-specific and must be derived under an appropriate spatial validation scheme.\nAdditionally, long-term studies increasingly rely on cloud-native geospatial techniques, such as STAC catalogues, COGs, and distributed computing via gdalcubes (Appel und Pebesma 2019), rstac (Brazil Data Cube Team 2021), or openeo (Lahn 2024). These approaches are essential when analyses scale to hundreds of scenes or multiple years.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Remote Sensing - Sentinel 2"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-05.html#validation",
+    "href": "reader/reader_ws-05.html#validation",
+    "title": "Remote Sensing - Sentinel 2",
+    "section": "Assessing Classification Quality",
+    "text": "Assessing Classification Quality\nSupervised classification requires validation, usually by splitting data into training and test subsets or by using independent reference data. Performance metrics include:\n\nSensitivity (true positive rate for clearcuts),\nSpecificity (true negative rate for non-clearcuts),\nPredictive values, adjusting for actual class frequencies, and\nGlobal measures such as overall accuracy and Cohen’s kappa.\n\nEven high accuracy may mask structural misclassification in subtle transitions, such as thinning canopies or partially damaged stands.\nContinuous spectral indices such as kNDVI — derived using the gdalcubes framework — help diagnose such errors by revealing sub-pixel gradients that discrete classes cannot capture.\nAdvanced time-series methods like BFAST (Verbesselt, Zeileis, und Herold 2012; Wu u. a. 2020) breakpoints in vegetation dynamics, including timing and magnitude of structural change. BFAST is particularly valuable in drought–forest interactions and post-disturbance recovery monitoring.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Remote Sensing - Sentinel 2"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-05.html#training-data",
+    "href": "reader/reader_ws-05.html#training-data",
+    "title": "Remote Sensing - Sentinel 2",
+    "section": "Digitising Training Data",
+    "text": "Digitising Training Data\nTraining data must represent all land-cover types to be classified. Digitisation can be done interactively in R (for example with mapedit) or externally in QGIS:\nhttps://docs.qgis.org/3.34/en/docs/training_manual/create_vector_data/create_new_vector.html#basic-ty-digitizing-polygons\nAfter digitisation, raster values for all predictors (bands, indices, structural descriptors) are extracted for each polygon and used to train the classifier.\nBest practices include:\n\nEnsuring balanced class representation,\nAvoiding polygons that span multiple land-cover types, and\nUsing high-resolution aerial imagery to refine training locations.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Remote Sensing - Sentinel 2"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-05.html#references-reading",
+    "href": "reader/reader_ws-05.html#references-reading",
+    "title": "Remote Sensing - Sentinel 2",
+    "section": "Further Reading",
+    "text": "Further Reading\n\nTechnical tutorials & blogs\nThese resources are practical, implementation-focused guides. They are useful to understand concrete R workflows, but they do not replace primary literature or your own methodological reasoning.\n\nGoldstein, S. (2019). Classifying satellite imagery in R. Urban Spatial Blog. https://urbanspatial.github.io/classifying_satellite_imagery_in_R/ (Goldstein 2019)\nHijmans, R. J. (2023). Supervised classification. rspatial.org. https://rspatial.org/raster/rs/5-supclassification.html (Hijmans 2023)\nLizarazo, I. (2021). A tutorial on pixel-based land cover classification using random forests in R. RPubs. https://rpubs.com/ials2un/rf_landcover (Lizarazo 2021)\nGonçalves, J. (2018). Advanced techniques with raster data: Supervised classification. R-exercises. https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/ (Gonçalves 2018)\nStefan, V. (2020). Satellite image classification in R. https://valentinitnelav.github.io/satellite-image-classification-r/ (Stefan 2020)\n\n\n\n\n\n\n\nTippAbout blog posts and tutorials…\n\n\n\nUse tutorials and blog posts as practical support only. They are extremely helpful for code and workflow patterns, but they cannot replace independent thinking, methodological scrutiny, or engagement with peer-reviewed research.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Remote Sensing - Sentinel 2"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-05.html#final",
+    "href": "reader/reader_ws-05.html#final",
+    "title": "Remote Sensing - Sentinel 2",
+    "section": "Final Remarks",
+    "text": "Final Remarks\nThis tutorial integrates both conventional and cloud-based processing paradigms. Traditional workflows download individual Sentinel scenes and process them locally. Cloud-native methods use STAC catalogues, COGs, and distributed computation (for example gdalcubes, rstac, openeo) to build scalable workflows for long time series and large spatial extents.\nFor cloud-native methods see:\n\nhttps://gdalcubes.github.io/source/tutorials/\nhttps://openeo.org/\nhttps://open-eo.github.io/openeo-r-client/\n\nBoth paradigms remain relevant. Local processing supports transparency, teaching, and technical fundamentals. Cloud-native processing is essential for scaling to continental or multi-year analyses.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Remote Sensing - Sentinel 2"
     ]
   }
 ]
