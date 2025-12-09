@@ -1,6 +1,6 @@
 ---
-title: "Remote Sensing Change Detection – Reader WS-05"
-subtitle: "Spectral Indices, Classification, and Spatio-Temporal Analysis with Sentinel-2"
+title: "Remote Sensing - Sentinel 2 "
+subtitle: "Spectral Indices, Classification, and Spatio-Temporal Analysis"
 bibliography: references.bib
 title-block-banner: "../images/gw-sp.png"
 title-block-banner-color: "white"

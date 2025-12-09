@@ -739,109 +739,109 @@
   {
     "objectID": "reader/reader_ws-05.html",
     "href": "reader/reader_ws-05.html",
-    "title": "Remote Sensing Change Detection – Reader WS-05",
+    "title": "Remote Sensing - Sentinel 2",
     "section": "",
     "text": "Remote sensing is the only measurement technology that enables continuous observation of the Earth’s surface across full spatial extents — from landscapes to entire countries and global regions. To use remote sensing effectively, it is essential not only to apply established analytical methods but also to adapt and extend them as new environmental questions and large datasets emerge.\nSentinel-2 is currently the most important platform for Earth observation in all areas, but especially for climate change, land use and ecological issues at all levels, from the upper micro to the global scale.\nThere are two operational Sentinel-2 satellites: Sentinel-2A and Sentinel-2B, both in sun-synchronous polar orbits and 180 degrees out of phase. This arrangement allows them to cover the mid-latitudes with an orbital period of about 5 days.\nThe Sentinel-2 data are therefore predestined to record spatial and temporal changes on the Earth’s surface (the forest was green in early summer, it has disappeared by late summer). They are ideal for timely studies before and after natural disasters, or for biomass balancing, although complementary systems such as Landsat-8/9 (long-term continuity), PlanetScope (daily repeat), or Sentinel-1 SAR (cloud-penetrating structural information) are also operationally important; nevertheless, Sentinel-2 remains the most widely used because it uniquely combines global free access, high radiometric quality, a consistent 10–20 m multispectral design, and a reliably maintained 5-day revisit cycle.\nChange detection and time-series analysis are central in environmental informatics because most Earth-surface processes — drought-induced forest dieback, land-use conversion, vegetation dynamics, bark-beetle outbreaks, flooding, and climate impacts — unfold simultaneously across space and time.\nA robust spatial-temporal workflow therefore requires:\n\nAcquiring Sentinel satellite data,\nExtracting spectral and structural information, and\nApplying classification and temporal analysis methods to quantify and interpret changes.\n\nThe following sections outline the conceptual foundations of image-based change detection and demonstrate how classification, spectral indices and Sentinel-2 data together reveal spatial-temporal patterns. The Burgwald and Northwest Harz serve as examples of dramatic vegetation change between 2018 and 2023. For a broader conceptual framework of GIScience and remote sensing as components of system-based spatial information science, see Tolpekin und Stein (2012).",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Remote Sensing Change Detection – Reader WS-05"
+      "Remote Sensing - Sentinel 2"
     ]
   },
   {
     "objectID": "reader/reader_ws-05.html#ndvi",
     "href": "reader/reader_ws-05.html#ndvi",
-    "title": "Remote Sensing Change Detection – Reader WS-05",
+    "title": "Remote Sensing - Sentinel 2",
     "section": "NDVI",
     "text": "NDVI\nNormalized Difference Vegetation Index (NDVI)\nhttps://www.indexdatabase.de/db/i-single.php?id=58\nMeasures chlorophyll absorption in red vs. near-infrared reflectance. A fundamental indicator of greenness, photosynthetic activity, and canopy density. NDVI is the most widely used vegetation index, but also frequently misinterpreted or over-generalised (Huang u. a. 2020).",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Remote Sensing Change Detection – Reader WS-05"
+      "Remote Sensing - Sentinel 2"
     ]
   },
   {
     "objectID": "reader/reader_ws-05.html#msavi2",
     "href": "reader/reader_ws-05.html#msavi2",
-    "title": "Remote Sensing Change Detection – Reader WS-05",
+    "title": "Remote Sensing - Sentinel 2",
     "section": "MSAVI2",
     "text": "MSAVI2\nModified Soil Adjusted Vegetation Index (MSAVI2)\nhttps://www.indexdatabase.de/db/i-single.php?id=44\nReduces soil-brightness influence in sparse or partially damaged canopies. Useful in drought-affected stands and early dieback, especially where soil background is exposed.",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Remote Sensing Change Detection – Reader WS-05"
+      "Remote Sensing - Sentinel 2"
     ]
   },
   {
     "objectID": "reader/reader_ws-05.html#msi",
     "href": "reader/reader_ws-05.html#msi",
-    "title": "Remote Sensing Change Detection – Reader WS-05",
+    "title": "Remote Sensing - Sentinel 2",
     "section": "MSI",
     "text": "MSI\nMoisture Stress Index (MSI)\nhttps://www.indexdatabase.de/db/i-single.php?id=48\nDerived from SWIR/NIR ratio. Sensitive to water loss and canopy desiccation — often an early-warning indicator before visual decline or NDVI reductions.",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Remote Sensing Change Detection – Reader WS-05"
+      "Remote Sensing - Sentinel 2"
     ]
   },
   {
     "objectID": "reader/reader_ws-05.html#savi",
     "href": "reader/reader_ws-05.html#savi",
-    "title": "Remote Sensing Change Detection – Reader WS-05",
+    "title": "Remote Sensing - Sentinel 2",
     "section": "SAVI",
     "text": "SAVI\nSoil Adjusted Vegetation Index (SAVI)\nhttps://www.indexdatabase.de/db/i-single.php?id=87\nExplicitly accounts for soil reflectance in mixed pixels. Highly effective in clearcuts, forest edges, young regrowth, and partially disturbed sites.",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Remote Sensing Change Detection – Reader WS-05"
+      "Remote Sensing - Sentinel 2"
     ]
   },
   {
     "objectID": "reader/reader_ws-05.html#evi",
     "href": "reader/reader_ws-05.html#evi",
-    "title": "Remote Sensing Change Detection – Reader WS-05",
+    "title": "Remote Sensing - Sentinel 2",
     "section": "EVI",
     "text": "EVI\nEnhanced Vegetation Index (EVI)\nhttps://www.indexdatabase.de/db/i-single.php?id=16\nReduces atmospheric scattering effects and mitigates NDVI saturation in dense canopies. Particularly important in dense conifer forests and for monitoring spruce dieback with Sentinel-2 (Bannari u. a. 1995; Xue und Su 2017).\nThese indices serve as continuous measures of canopy condition, moisture content, and structural state. When combined with classification, they provide the physical basis required to interpret spatial-temporal change patterns.",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Remote Sensing Change Detection – Reader WS-05"
+      "Remote Sensing - Sentinel 2"
     ]
   },
   {
     "objectID": "reader/reader_ws-05.html#maximum-likelihood-classification-mlc",
     "href": "reader/reader_ws-05.html#maximum-likelihood-classification-mlc",
-    "title": "Remote Sensing Change Detection – Reader WS-05",
+    "title": "Remote Sensing - Sentinel 2",
     "section": "Maximum Likelihood Classification (MLC)",
     "text": "Maximum Likelihood Classification (MLC)\nMLC assumes that each class follows a multivariate normal distribution in spectral (or feature) space. It computes the probability that a pixel belongs to each class and assigns it to the most likely one. Performance is strongly influenced by the covariance structure of the classes and by how well the training data represent within-class variability (Hogland, Billor, und Anderson 2013).\n\nMLC performs well when spectral differences between classes (for example, forest vs. clearcut) are large and the Gaussian assumption is approximately valid.",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Remote Sensing Change Detection – Reader WS-05"
+      "Remote Sensing - Sentinel 2"
     ]
   },
   {
     "objectID": "reader/reader_ws-05.html#random-forest-classification-rf",
     "href": "reader/reader_ws-05.html#random-forest-classification-rf",
-    "title": "Remote Sensing Change Detection – Reader WS-05",
+    "title": "Remote Sensing - Sentinel 2",
     "section": "Random Forest Classification (RF)",
     "text": "Random Forest Classification (RF)\nRandom Forest builds an ensemble of decision trees, each learning different feature partitions. A pixel is classified via majority vote across all trees.\n\nRF excels in complex, heterogeneous landscapes because it handles:\n\nNonlinear relationships,\nHigh-dimensional predictors (bands plus indices plus structural/textural descriptors),\nCorrelated variables, and\nSpectral noise and outliers.\n\nRandom Forest is now considered a baseline method in environmental machine learning, alongside Gradient Boosting and Support Vector Machines, particularly for land-cover mapping and change detection (Belgiu und Drăguţ 2016; Mehmood u. a. 2022).",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Remote Sensing Change Detection – Reader WS-05"
+      "Remote Sensing - Sentinel 2"
     ]
   },
   {
     "objectID": "reader/reader_ws-05.html#technical-tutorials-blogs",
     "href": "reader/reader_ws-05.html#technical-tutorials-blogs",
-    "title": "Remote Sensing Change Detection – Reader WS-05",
+    "title": "Remote Sensing - Sentinel 2",
     "section": "Technical tutorials & blogs",
     "text": "Technical tutorials & blogs\nThese resources are practical, implementation-focused guides. They are useful to understand concrete R workflows, but they do not replace primary literature or your own methodological reasoning.\n\nGoldstein, S. (2019). Classifying satellite imagery in R. Urban Spatial Blog. https://urbanspatial.github.io/classifying_satellite_imagery_in_R/ (Goldstein 2019)\nHijmans, R. J. (2023). Supervised classification. rspatial.org. https://rspatial.org/raster/rs/5-supclassification.html (Hijmans 2023)\nLizarazo, I. (2021). A tutorial on pixel-based land cover classification using random forests in R. RPubs. https://rpubs.com/ials2un/rf_landcover (Lizarazo 2021)\nGonçalves, J. (2018). Advanced techniques with raster data: Supervised classification. R-exercises. https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/ (Gonçalves 2018)\nStefan, V. (2020). Satellite image classification in R. https://valentinitnelav.github.io/satellite-image-classification-r/ (Stefan 2020)\n\n\n\n\n\n\n\nTippAbout blog posts and tutorials…\n\n\n\nUse tutorials and blog posts as practical support only. They are extremely helpful for code and workflow patterns, but they cannot replace independent thinking, methodological scrutiny, or engagement with peer-reviewed research.",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Remote Sensing Change Detection – Reader WS-05"
+      "Remote Sensing - Sentinel 2"
     ]
   },
   {
