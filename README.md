@@ -1,6 +1,6 @@
 
 
-![Course Header](https://gisma-courses.github.io/LV-19-d19-010-envi/blob/main/images/remsens.png "Image source: C.Reudenbach")
+![Course Header](https://gisma-courses.github.io/LV-19-d19-006-25/blob/main/images/gis_title1.jpg "Image source: C.Reudenbach")
 
 
 
