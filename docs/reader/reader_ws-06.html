@@ -8,7 +8,7 @@
 
 <meta name="author" content="Chris Reudenbach">
 
-<title>Comparison of Sentinel-2 Processing Approaches – Advanced GIS &amp; RS</title>
+<title>Abstraction Layers in Modern Geospatial Workflows – Advanced GIS &amp; RS</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -124,7 +124,7 @@ background-size: cover;
 
 
 <link rel="stylesheet" href="../css/styles.css">
-<meta property="og:title" content="Comparison of Sentinel-2 Processing Approaches – Advanced GIS &amp; RS">
+<meta property="og:title" content="Abstraction Layers in Modern Geospatial Workflows – Advanced GIS &amp; RS">
 <meta property="og:description" content="A choice can be a burden">
 <meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/reader/images/grubenwiese2-sp.jpg">
 <meta property="og:site_name" content="Advanced GIS &amp; RS">
@@ -171,7 +171,7 @@ background-size: cover;
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-          <h1 class="quarto-secondary-nav-title">Comparison of Sentinel-2 Processing Approaches</h1>
+          <h1 class="quarto-secondary-nav-title">Abstraction Layers in Modern Geospatial Workflows</h1>
         </a>     
     </div>
   </nav>
@@ -180,7 +180,7 @@ background-size: cover;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">Comparison of Sentinel-2 Processing Approaches</h1>
+      <h1 class="title d-none d-lg-block">Abstraction Layers in Modern Geospatial Workflows</h1>
             <p class="subtitle lead">A choice can be a burden</p>
                       </div>
   </div>
@@ -295,7 +295,7 @@ background-size: cover;
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reader/reader_ws-06.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Comparison of Sentinel-2 Processing Approaches</span></a>
+ <span class="menu-text">Abstraction Layers in Modern Geospatial Workflows</span></a>
   </div>
 </li>
       </ul>
@@ -358,23 +358,26 @@ background-size: cover;
     <h2 id="toc-title">Auf dieser Seite</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#conceptual-summary" id="toc-conceptual-summary" class="nav-link" data-scroll-target="#conceptual-summary">Conceptual Summary</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#the-role-of-convenience-layers" id="toc-the-role-of-convenience-layers" class="nav-link" data-scroll-target="#the-role-of-convenience-layers">The Role of Convenience Layers</a></li>
+  <li><a href="#sentinel2-three-processing-paradigms" id="toc-sentinel2-three-processing-paradigms" class="nav-link" data-scroll-target="#sentinel2-three-processing-paradigms">Sentinel‑2: Three Processing Paradigms</a>
   <ul class="collapse">
-  <li><a href="#a-gdalcubes" id="toc-a-gdalcubes" class="nav-link" data-scroll-target="#a-gdalcubes">A) gdalcubes</a></li>
-  <li><a href="#b-cdse-getimage-server-side-js-scripts" id="toc-b-cdse-getimage-server-side-js-scripts" class="nav-link" data-scroll-target="#b-cdse-getimage-server-side-js-scripts">B) CDSE + GetImage (server-side JS scripts)</a></li>
-  <li><a href="#c-manual-terraraster-workflow" id="toc-c-manual-terraraster-workflow" class="nav-link" data-scroll-target="#c-manual-terraraster-workflow">C) Manual terra/raster workflow</a></li>
+  <li><a href="#comparative-overview-with-performancefidelitytransparency-ratings" id="toc-comparative-overview-with-performancefidelitytransparency-ratings" class="nav-link" data-scroll-target="#comparative-overview-with-performancefidelitytransparency-ratings">Comparative Overview (with Performance–Fidelity–Transparency Ratings)</a></li>
   </ul></li>
-  <li><a href="#comparison-matrix-1-poor-3-good" id="toc-comparison-matrix-1-poor-3-good" class="nav-link" data-scroll-target="#comparison-matrix-1-poor-3-good">Comparison Matrix (1 = poor, 3 = good)</a></li>
-  <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation">Interpretation</a></li>
-  <li><a href="#why-stac-cannot-be-unified" id="toc-why-stac-cannot-be-unified" class="nav-link" data-scroll-target="#why-stac-cannot-be-unified">Why STAC cannot be unified</a></li>
-  <li><a href="#when-to-choose-which-method" id="toc-when-to-choose-which-method" class="nav-link" data-scroll-target="#when-to-choose-which-method">When to choose which method?</a>
+  <li><a href="#applying-the-same-logic-the-saga-example" id="toc-applying-the-same-logic-the-saga-example" class="nav-link" data-scroll-target="#applying-the-same-logic-the-saga-example">Applying the Same Logic: The SAGA Example</a></li>
+  <li><a href="#why-we-return-to-stac-here" id="toc-why-we-return-to-stac-here" class="nav-link" data-scroll-target="#why-we-return-to-stac-here">Why We Return to STAC Here</a></li>
+  <li><a href="#the-cascade-of-convenience-wrappers" id="toc-the-cascade-of-convenience-wrappers" class="nav-link" data-scroll-target="#the-cascade-of-convenience-wrappers">The Cascade of Convenience Wrappers</a>
   <ul class="collapse">
-  <li><a href="#choose-gdalcubes-if" id="toc-choose-gdalcubes-if" class="nav-link" data-scroll-target="#choose-gdalcubes-if">Choose <strong>gdalcubes</strong> if:</a></li>
-  <li><a href="#choose-cdse-getimage-if" id="toc-choose-cdse-getimage-if" class="nav-link" data-scroll-target="#choose-cdse-getimage-if">Choose <strong>CDSE + GetImage</strong> if:</a></li>
-  <li><a href="#choose-terraraster-if" id="toc-choose-terraraster-if" class="nav-link" data-scroll-target="#choose-terraraster-if">Choose <strong>terra/raster</strong> if:</a></li>
+  <li><a href="#why-this-matters-for-the-sentinel-2-comparison-above" id="toc-why-this-matters-for-the-sentinel-2-comparison-above" class="nav-link" data-scroll-target="#why-this-matters-for-the-sentinel-2-comparison-above">Why This Matters for the Sentinel-2 Comparison Above</a></li>
   </ul></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#choosing-the-right-abstraction" id="toc-choosing-the-right-abstraction" class="nav-link" data-scroll-target="#choosing-the-right-abstraction">Choosing the Right Abstraction</a>
+  <ul class="collapse">
+  <li><a href="#use-gdalcubes-when" id="toc-use-gdalcubes-when" class="nav-link" data-scroll-target="#use-gdalcubes-when">Use <strong>gdalcubes</strong> when:</a></li>
+  <li><a href="#use-cdse-when" id="toc-use-cdse-when" class="nav-link" data-scroll-target="#use-cdse-when">Use <strong>CDSE</strong> when:</a></li>
+  <li><a href="#use-pure-terra-when" id="toc-use-pure-terra-when" class="nav-link" data-scroll-target="#use-pure-terra-when">Use <strong>pure terra</strong> when:</a></li>
+  <li><a href="#use-generic-gis-wrappers-like-rsagacmd-qgisprocess-rgrass7-when" id="toc-use-generic-gis-wrappers-like-rsagacmd-qgisprocess-rgrass7-when" class="nav-link" data-scroll-target="#use-generic-gis-wrappers-like-rsagacmd-qgisprocess-rgrass7-when">Use generic GIS wrappers like <code>Rsagacmd</code>, <code>qgisprocess</code>, <code>rgrass7</code> when:</a></li>
+  </ul></li>
+  <li><a href="#core-insight" id="toc-core-insight" class="nav-link" data-scroll-target="#core-insight">Core Insight</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Andere Formate</h2><ul><li><a href="reader_ws-06.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
@@ -385,197 +388,243 @@ background-size: cover;
 
 
 
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>This page compares three fundamentally different workflows for obtaining and processing Sentinel-2 time series for mesoscale forest applications (Burgwald AOI, 2018–2022). The goal is to show where each method excels, where the limits are, and why there is no single “best” approach.</p>
-<p>The three approaches:</p>
-<ol type="1">
-<li><strong>gdalcubes</strong> — high-performance spatiotemporal cube abstraction<br>
-</li>
-<li><strong>CDSE + GetImage</strong> — server-side processing via Copernicus Data Space Ecosystem<br>
-</li>
-<li><strong>Manual terra/raster workflow</strong> — full local control, no abstraction</li>
-</ol>
-<p>A key point: <strong>STAC endpoints are not unified</strong>.<br>
-Different providers (AWS EarthSearch, CDSE, SentinelHub, Element84) use compatible STAC schemas but <em>different URL structures, asset names, and filtering logic</em>. A cross-provider “generic STAC script” is therefore not feasible without provider-specific adapters.</p>
-<hr>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Modern geospatial workflows increasingly differ not in <em>scientific method</em> but in the <strong>amount of operational complexity they hide</strong>. Whether processing Sentinel‑2 imagery or computing terrain derivatives, the core algorithms have not changed. What has changed is how much low‑level infrastructure (downloading, tiling, reprojection, cloud masking, indexing, mosaicking, temporary file management) is exposed to the user.</p>
+<p>This text explains why <strong>convenience layers</strong> such as <code>gdalcubes</code>, CDSE’s <code>GetImage()</code>, or <code>Rsagacmd</code> play a structural role in contemporary geospatial analysis. We compare these abstractions to “pure” R workflows using <code>terra</code>, and illustrate the practical impact using two domains:</p>
+<ul>
+<li><strong>Sentinel‑2 processing</strong> (time series, indices, mosaics)</li>
+<li><strong>SAGA terrain derivatives</strong> (slope, curvature, TPI)</li>
+</ul>
+<p>The goal is not to prefer one system over another, but to clarify <strong>what each layer hides, why that matters, and what the trade‑offs are</strong>.</p>
 </section>
-<section id="conceptual-summary" class="level2">
-<h2 class="anchored" data-anchor-id="conceptual-summary">Conceptual Summary</h2>
-<section id="a-gdalcubes" class="level3">
-<h3 class="anchored" data-anchor-id="a-gdalcubes">A) gdalcubes</h3>
-<p><code>gdalcubes</code> provides fast, memory-safe spatiotemporal mosaicking and resampling on-the-fly. It converts a list of STAC items into a 4D cube (x, y, t, band) and applies functions lazily during execution. Performance is excellent and most operations (aggregation, masking, indices) scale linearly with threads.</p>
-<p><strong>Trade-off:</strong><br>
-Cube creation always implies <em>aggregation</em> (dt = monthly, weekly, or a custom interval) and <em>resampling</em> to a uniform grid. The result is efficient but no longer identical to original Sentinel-2 granules.</p>
+<section id="the-role-of-convenience-layers" class="level1">
+<h1>The Role of Convenience Layers</h1>
+<p>A convenience layer is a thin abstraction that removes repetitive, non‑scientific tasks. Instead of changing algorithms, it removes the plumbing around them.</p>
+<p>Examples of what convenience layers eliminate:</p>
+<ul>
+<li>discovering and filtering STAC assets</li>
+<li>reconstructing tile mosaics and footprints</li>
+<li>handling CRS negotiations</li>
+<li>creating temporary VRTs and memory‑safe processing chains</li>
+<li>assembling multi‑band stacks</li>
+<li>passing parameters to command‑line tools</li>
+</ul>
+<p>This is why workflows with abstraction tend to be extremely short (5–15 lines), while <strong>the same scientific operation in pure R often requires 200–400 lines</strong> of bookkeeping.</p>
+<p>Convenience layers do <em>not</em> alter the scientific logic. They simply prevent infrastructure from overwhelming analysis.</p>
 </section>
-<section id="b-cdse-getimage-server-side-js-scripts" class="level3">
-<h3 class="anchored" data-anchor-id="b-cdse-getimage-server-side-js-scripts">B) CDSE + GetImage (server-side JS scripts)</h3>
-<p>CDSE executes Javascript processing scripts (NDVI, RawBands, kNDVI, SAVI, EVI…) directly on ESA servers. The user receives minimally-preprocessed imagery at original 10–20 m resolution. Cloud masking, index computation, or mosaicking happen before download.</p>
-<p><strong>Trade-off:</strong><br>
-High flexibility and high fidelity but always dependent on the availability and correctness of server-side scripts and OAuth token authentication. Performance drops for long time series (each request is a full server job).</p>
-</section>
-<section id="c-manual-terraraster-workflow" class="level3">
-<h3 class="anchored" data-anchor-id="c-manual-terraraster-workflow">C) Manual terra/raster workflow</h3>
-<p>The manual approach reads each asset (B02, B03, B04, B08, B11, etc.) as a local GeoTIFF and computes indices by hand. It offers complete control over cloud masking, compositing logic, smoothing, and QA.</p>
-<p><strong>Trade-off:</strong><br>
-Highest transparency, highest reproducibility, but slowest. Large multi-year AOIs lead to long runtimes and high disk load.</p>
-<hr>
-</section>
-</section>
-<section id="comparison-matrix-1-poor-3-good" class="level2">
-<h2 class="anchored" data-anchor-id="comparison-matrix-1-poor-3-good">Comparison Matrix (1 = poor, 3 = good)</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Criterion =</span> <span class="fu">c</span>(</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Performance (multi-year AOI)"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Fidelity to original scenes"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Transparency of processing steps"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Control over low-level details"</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Simplicity of code"</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Didactic value"</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Time-series / cube analytics"</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">"One-off high-quality scenes"</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">gdalcubes =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="fl">1.5</span>,<span class="dv">3</span>,<span class="dv">2</span>),</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">CDSE_GetImage =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="fl">2.5</span>,<span class="fl">2.5</span>,<span class="dv">2</span>,<span class="fl">2.5</span>,<span class="dv">2</span>,<span class="dv">3</span>),</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">terra_manual =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="fl">1.5</span>,<span class="fl">2.5</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Comparison of Sentinel-2 processing pipelines (1=poor, 3=good)."</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<caption>Comparison of Sentinel-2 processing pipelines (1=poor, 3=good).</caption>
+<section id="sentinel2-three-processing-paradigms" class="level1">
+<h1>Sentinel‑2: Three Processing Paradigms</h1>
+<p>Sentinel‑2 can be processed efficiently in three conceptually distinct ways. The scientific goal—building valid reflectance‑based predictors—remains identical; the difference lies in <strong>where the work is performed</strong>.</p>
+<section id="comparative-overview-with-performancefidelitytransparency-ratings" class="level2">
+<h2 class="anchored" data-anchor-id="comparative-overview-with-performancefidelitytransparency-ratings">Comparative Overview (with Performance–Fidelity–Transparency Ratings)</h2>
+<table class="caption-top table">
 <colgroup>
-<col style="width: 47%">
-<col style="width: 14%">
-<col style="width: 20%">
-<col style="width: 18%">
+<col style="width: 9%">
+<col style="width: 24%">
+<col style="width: 24%">
+<col style="width: 19%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">Criterion</th>
-<th style="text-align: right;">gdalcubes</th>
-<th style="text-align: right;">CDSE_GetImage</th>
-<th style="text-align: right;">terra_manual</th>
+<th>Method</th>
+<th>Summary</th>
+<th><strong>Pros</strong> ✅</th>
+<th><strong>Cons</strong> ❌</th>
+<th>Perf.</th>
+<th>Fid.</th>
+<th>Transp.</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Performance (multi-year AOI)</td>
-<td style="text-align: right;">3.0</td>
-<td style="text-align: right;">2.0</td>
-<td style="text-align: right;">1.0</td>
+<td><strong>gdalcubes</strong></td>
+<td>Builds a 4D cube (x–y–t–band) and performs lazy mosaicking, reprojection, and temporal aggregation. Excellent for long time series; less suitable for per-date, high-fidelity scenes.</td>
+<td>• Extremely fast for multi-year time series<br>• Clean temporal reducers<br>• Memory-safe, minimal code<br>• Automatic mosaics/resampling</td>
+<td>• Enforces uniform grid<br>• Loses granule-level detail<br>• Limited cloud-mask control</td>
+<td>⭐⭐⭐</td>
+<td>⭐⭐</td>
+<td>⭐⭐</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Fidelity to original scenes</td>
-<td style="text-align: right;">2.0</td>
-<td style="text-align: right;">3.0</td>
-<td style="text-align: right;">3.0</td>
+<td><strong>CDSE + GetImage</strong></td>
+<td>Executes JS processing scripts on ESA servers (cloud masks, bands, indices). Returns near-native mosaics with ESA QA. Great for high-quality scenes; slower for long time series.</td>
+<td>• Near-native 10–20 m resolution<br>• Authentic ESA processing chain<br>• Low disk footprint<br>• High-quality server mosaics</td>
+<td>• OAuth required<br>• Slow for long periods<br>• Provider-specific STAC assets<br>• JS scripts must be maintained</td>
+<td>⭐⭐</td>
+<td>⭐⭐⭐</td>
+<td>⭐⭐</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Transparency of processing steps</td>
-<td style="text-align: right;">2.0</td>
-<td style="text-align: right;">2.5</td>
-<td style="text-align: right;">3.0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Control over low-level details</td>
-<td style="text-align: right;">2.0</td>
-<td style="text-align: right;">2.5</td>
-<td style="text-align: right;">3.0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Simplicity of code</td>
-<td style="text-align: right;">3.0</td>
-<td style="text-align: right;">2.0</td>
-<td style="text-align: right;">1.0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Didactic value</td>
-<td style="text-align: right;">1.5</td>
-<td style="text-align: right;">2.5</td>
-<td style="text-align: right;">3.0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Time-series / cube analytics</td>
-<td style="text-align: right;">3.0</td>
-<td style="text-align: right;">2.0</td>
-<td style="text-align: right;">1.5</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">One-off high-quality scenes</td>
-<td style="text-align: right;">2.0</td>
-<td style="text-align: right;">3.0</td>
-<td style="text-align: right;">2.5</td>
+<td><strong>Pure terra workflow</strong></td>
+<td>Fully manual local workflow: downloading assets, mosaicking, masking, computing indices. Maximum scientific control; highest code volume; slowest runtime.</td>
+<td>• Full scientific control<br>• Transparent and inspectable<br>• Didactically excellent<br>• Reproducible at every detail</td>
+<td>• Heavy code volume<br>• Fragile to provider changes<br>• Slow for multi-year AOIs<br>• High maintenance load</td>
+<td>⭐</td>
+<td>⭐⭐⭐</td>
+<td>⭐⭐⭐</td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<hr>
-</section>
-<section id="interpretation" class="level2">
-<h2 class="anchored" data-anchor-id="interpretation">Interpretation</h2>
+<p>Across the three approaches there is an implicit Pareto balance:</p>
 <ul>
-<li><p><strong>Best for time series:</strong> <code>gdalcubes</code> (performance, cube logic, parallel execution). Suited for large-area monitoring, phenology, anomaly detection, and aggregated indicators.</p></li>
-<li><p><strong>Best for high-fidelity scenes and indices:</strong> <strong>CDSE + GetImage</strong>. Uses ESA’s own processing chain, preserves ~native resolution, and provides server-processed cloud masks and indices.</p></li>
-<li><p><strong>Best for teaching, transparency, and supervision of every step:</strong> <strong>Manual terra/raster</strong>. Ideal for methodological demonstrations, QA, and thesis contexts where exact control matters more than performance.</p></li>
+<li><strong>gdalcubes</strong> sits near the <em>performance</em> corner: very fast and scalable, but with less per-scene fidelity and less step-by-step transparency.</li>
+<li><strong>CDSE + GetImage</strong> occupies the <em>fidelity</em> corner: close to native Sentinel-2 scenes and ESA’s own processing, but slower and backend-dependent.</li>
+<li><strong>pure terra</strong> is closest to the <em>transparency</em> corner: every operation is explicit and inspectable, but at the cost of runtime and maintenance effort.</li>
 </ul>
-<hr>
+<p>None of them dominates the others across all three axes.<br>
+Each method is optimal only <strong>conditional on what you prioritise</strong> (speed, scene fidelity, or methodological transparency).</p>
 </section>
-<section id="why-stac-cannot-be-unified" class="level2">
-<h2 class="anchored" data-anchor-id="why-stac-cannot-be-unified">Why STAC cannot be unified</h2>
-<p>Even though STAC is a common standard, <strong>each provider exposes different API patterns</strong>:</p>
+</section>
+<section id="applying-the-same-logic-the-saga-example" class="level1">
+<h1>Applying the Same Logic: The SAGA Example</h1>
+<p>What happens with Sentinel‑2 also did happen with terrain analysis. Computing slope, curvature, TPI, or HAND (Height Above Nearest Drainage) purely in R means you must do everything yourself: fetch DEM tiles, harmonise EPSG codes, mosaic them, crop them, build masks, run low-level operators, and debug all intermediate steps. Almost none of these tasks are geomorphological—they are <strong>administrative overhead</strong>.</p>
+<p><code>Rsagacmd</code> eliminates this by wrapping SAGA algorithms in R:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>saga<span class="sc">$</span>ta_morphometry<span class="sc">$</span><span class="fu">slope_aspect_curvature</span>(...)</span></code></pre></div><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The science is identical; the workflow is not. The convenience layer abstracts <em>every</em> non‑scientific step.</p>
+<p>This parallel to Sentinel‑2 shows: convenience layers are not shortcuts—they allow researchers to work at the conceptual level rather than the infrastructural one.</p>
+</section>
+<section id="why-we-return-to-stac-here" class="level1">
+<h1>Why We Return to STAC Here</h1>
+<p>All three workflows discussed on this page—<strong>gdalcubes</strong>, <strong>CDSE GetImage</strong>, and <strong>manual terra workflows</strong>—begin with the same fundamental step:<br>
+<strong>discover Sentinel-2 scenes for the Burgwald AOI</strong>.</p>
+<p>At first glance this should be straightforward, because all modern EO backends expose Sentinel-2 through <strong>STAC endpoints</strong>.<br>
+However, the workflows diverge sharply in behaviour, reproducibility and data structures. Although STAC defines a common schema, it functions much like a library card catalogue: it tells you what exists, but not how the underlying items are stored, formatted, accessed, or processed. STAC standardises the metadata, not the data structures, access mechanisms, or processing behaviour of different providers.</p>
+<blockquote class="blockquote">
+<p><strong>STAC = the card index.<br>
+Providers = different libraries.<br>
+rstac / gdalcubes / CDSE = convenience layers helping you use the index.</strong></p>
+</blockquote>
+<p>Because the underlying “libraries” differ, the STAC index cannot unify access. Providers expose different asset keys, naming conventions, and access rules, even though the metadata schema is shared.</p>
+<p>Examples include: - different asset names (B04_10m vs B04 vs COG-style filenames) - different authentication layers (public COGs vs OAuth vs API keys) - different mosaicking semantics (leastCC, mostRecent, bestPixel) - different processing levels and QA availability (L1C, L2A, SCL, cloud masks)</p>
+<p>As a result, STAC itself is not the abstraction layer — it only indexes what exists. The actual abstraction must be implemented in client libraries such as rstac, gdalcubes, CDSE’s GetImage(), or custom code.</p>
+<blockquote class="blockquote">
+<p>STAC does not enforce canonical labeling. STAC describes <em>what exists</em>, not <em>how</em> it is generated. A “uniform” STAC search yields highly non-uniform data.</p>
+</blockquote>
+</section>
+<section id="the-cascade-of-convenience-wrappers" class="level1">
+<h1>The Cascade of Convenience Wrappers</h1>
+<p>Because (in our case) the underlying EO backends differ so much, R tooling must build layered convenience wrappers on top.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 38%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Function</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Raw STAC API</td>
+<td>Pure catalogue search</td>
+<td><code>/stac/search</code></td>
+</tr>
+<tr class="even">
+<td><code>rstac</code></td>
+<td>R interface (paging, fetching)</td>
+<td><code>stac_search()</code>, <code>items_fetch()</code></td>
+</tr>
+<tr class="odd">
+<td><code>gdalcubes</code> STAC adapter</td>
+<td>Convert STAC → cube definitions</td>
+<td><code>stac_image_collection()</code></td>
+</tr>
+<tr class="even">
+<td>CDSE R package</td>
+<td>Provider-specific abstraction</td>
+<td>OAuth, JS scripts, ESA mosaics</td>
+</tr>
+<tr class="odd">
+<td>Rsagacmd / SAGA</td>
+<td>GIS-level processing wrappers</td>
+<td><code>saga$ta_morphometry$…</code></td>
+</tr>
+<tr class="even">
+<td>Your workflow</td>
+<td>Actual geospatial analysis</td>
+<td>indices → mosaics → ML</td>
+</tr>
+</tbody>
+</table>
+<p>Each layer abstracts away complexity—but also <strong>introduces provider lock-in</strong>.</p>
+<p>This is why:</p>
 <ul>
-<li>CDSE uses <code>assets$B04_10m$href</code> and requires OAuth tokens.</li>
-<li>AWS EarthSearch uses COGs under <code>sentinel-s2-l2a-cogs</code>, with different property keys.</li>
-<li>SentinelHub implements a STAC layer but requires preprocessing scripts and authentication.</li>
-<li>Element84 uses separate asset naming and often different temporal coverage.</li>
+<li><code>gdalcubes</code> can use AWS COGs but not CDSE’s JS processing<br>
+</li>
+<li><code>CDSE::GetImage</code> can use ESA’s pipelines but not AWS COGs<br>
+</li>
+<li><code>terra</code> workflows do not bypass STAC; they simply use it at the lowest level—fetching raw asset URLs and handling all processing locally without any higher-level convenience abstraction.</li>
 </ul>
-<p>Therefore, <em>filtering, asset selection, and pre-processing must be provider-specific</em>. A universal STAC R script is not feasible without explicit adapters for each backend.</p>
-<hr>
+<section id="why-this-matters-for-the-sentinel-2-comparison-above" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-matters-for-the-sentinel-2-comparison-above">Why This Matters for the Sentinel-2 Comparison Above</h2>
+<p>The workflows differ not because of STAC, but because each provider and wrapper implements data access differently (assets, authentication, preprocessing, formats). STAC only standardises metadata — not how data is delivered or processed.</p>
+<p>Therefore:</p>
+<p>gdalcubes relies on consistent COG assets → works best with AWS/E84.</p>
+<p>CDSE + GetImage uses ESA’s server-side logic → different behaviour.</p>
+<p>terra manual uses STAC only for URLs → everything else is local.</p>
+<blockquote class="blockquote">
+<p>STAC is unified. The provider and wrapper logic is not — that’s why the workflows diverge.</p>
+</blockquote>
 </section>
-<section id="when-to-choose-which-method" class="level2">
-<h2 class="anchored" data-anchor-id="when-to-choose-which-method">When to choose which method?</h2>
-<section id="choose-gdalcubes-if" class="level3">
-<h3 class="anchored" data-anchor-id="choose-gdalcubes-if">Choose <strong>gdalcubes</strong> if:</h3>
+</section>
+<section id="choosing-the-right-abstraction" class="level1">
+<h1>Choosing the Right Abstraction</h1>
+<p>Again: There is no “best” method—only one that fits the <strong>balance between control, cognitive load, and performance</strong>.</p>
+<section id="use-gdalcubes-when" class="level3">
+<h3 class="anchored" data-anchor-id="use-gdalcubes-when">Use <strong>gdalcubes</strong> when:</h3>
 <ul>
-<li>you need long time series (multi-year)</li>
-<li>uniform grid and monthly/weekly aggregates are acceptable</li>
-<li>you want high performance and vectorised EO analysis</li>
-<li>memory constraints matter</li>
+<li>long time series dominate</li>
+<li>uniform grids are acceptable</li>
+<li>performance is critical</li>
 </ul>
 </section>
-<section id="choose-cdse-getimage-if" class="level3">
-<h3 class="anchored" data-anchor-id="choose-cdse-getimage-if">Choose <strong>CDSE + GetImage</strong> if:</h3>
+<section id="use-cdse-when" class="level3">
+<h3 class="anchored" data-anchor-id="use-cdse-when">Use <strong>CDSE</strong> when:</h3>
 <ul>
-<li>you need <em>near-original</em> resolution</li>
-<li>you want server-side processing (NDVI, EVI, SAVI, RawBands)</li>
-<li>local disk usage should stay minimal</li>
-<li>you want ESA’s operational QA bands</li>
+<li>per‑date fidelity matters</li>
+<li>cloud masking and indices should run server‑side</li>
 </ul>
 </section>
-<section id="choose-terraraster-if" class="level3">
-<h3 class="anchored" data-anchor-id="choose-terraraster-if">Choose <strong>terra/raster</strong> if:</h3>
+<section id="use-pure-terra-when" class="level3">
+<h3 class="anchored" data-anchor-id="use-pure-terra-when">Use <strong>pure terra</strong> when:</h3>
 <ul>
-<li>you need absolute control over masking, resampling, compositing</li>
-<li>you are demonstrating methods in a didactic setting</li>
-<li>transparency and reproducibility matter more than speed</li>
+<li>you need exact methodological transparency</li>
+<li>teaching or QA requires inspecting every step</li>
 </ul>
-<hr>
 </section>
-</section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>The three workflows are complementary. They represent the fundamental trade-off space in satellite data processing:</p>
+<section id="use-generic-gis-wrappers-like-rsagacmd-qgisprocess-rgrass7-when" class="level3">
+<h3 class="anchored" data-anchor-id="use-generic-gis-wrappers-like-rsagacmd-qgisprocess-rgrass7-when">Use generic GIS wrappers like <code>Rsagacmd</code>, <code>qgisprocess</code>, <code>rgrass7</code> when:</h3>
 <ul>
-<li><strong>gdalcubes = performance + cube abstraction</strong></li>
-<li><strong>CDSE = fidelity + server-side processing</strong></li>
-<li><strong>manual terra = transparency + full control</strong></li>
+<li>you need high-quality terrain or hydrological derivatives<br>
+</li>
+<li>you want to reuse the mature, specialised logic of full GIS suites (SAGA, GRASS, QGIS)<br>
+</li>
+<li>you prefer not to re-implement complex algorithms (TPI, TWI, morphometry, flow models. etc.) in pure R<br>
+</li>
+<li>you need stable, well-tested operators with decades of domain optimisation behind them</li>
+<li>you rely on <code>link2GI</code> to detect, configure, and initialise GIS backends so R can call them transparently</li>
 </ul>
-<p>In practice, all three are useful depending on whether the objective is: (a) efficient multiyear analysis, (b) exact reproduction of ESA-processed scenes, or (c) methodological inspection of each step.</p>
-<p>```</p>
+</section>
+</section>
+<section id="core-insight" class="level1">
+<h1>Core Insight</h1>
+<p>All shown approaches perform the <em>same science</em>. They differ only in how much infrastructure they ask the user to handle. The real decision is therefore not “<strong>Which algorithm</strong>?” but <strong>how much low‑level responsibility you want to carry</strong>:</p>
+<ul>
+<li>Abstraction reduces boilerplate and shields you from shifting provider APIs.<br>
+</li>
+<li>Manual control increases transparency but also raises maintenance load, update overhead, and error-susceptibility.<br>
+</li>
+<li>Proper convenience wrappers minimise this burden by stabilising interfaces and absorbing backend changes.</li>
+</ul>
+<p>Choosing a workflow is never merely technical. It is a negotiation between the level of methodological precision, analytical depth, and scientific rigor you aim for — your “<strong>scientific ambition</strong>” — and the “<strong>cognitive cost of plumbing</strong>”.</p>
 
 
 </section>

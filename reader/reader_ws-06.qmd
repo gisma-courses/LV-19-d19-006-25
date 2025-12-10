@@ -1,10 +1,11 @@
 ---
-title:  Comparison of Sentinel-2 Processing Approaches
+title:  Abstraction Layers in Modern Geospatial Workflows
+subtitle: A choice can be a burden
 author: Chris Reudenbach
 
 date: '2025-12-04'
 bibliography: references.bib
-subtitle: 'A choice can be a burden'
+
 title-block-banner: "../images/gw-sp.png"
 title-block-banner-color: "white"
 format:
@@ -18,136 +19,181 @@ editor:
     wrap: sentence
 ---
 
-## Overview
 
-This page compares three fundamentally different workflows for obtaining and processing Sentinel-2 time series for mesoscale forest applications (Burgwald AOI, 2018–2022). The goal is to show where each method excels, where the limits are, and why there is no single “best” approach.
+# Introduction
 
-The three approaches:
+Modern geospatial workflows increasingly differ not in *scientific method* but in the **amount of operational complexity they hide**. Whether processing Sentinel‑2 imagery or computing terrain derivatives, the core algorithms have not changed. What has changed is how much low‑level infrastructure (downloading, tiling, reprojection, cloud masking, indexing, mosaicking, temporary file management) is exposed to the user.
 
-1. **gdalcubes** — high-performance spatiotemporal cube abstraction  
-2. **CDSE + GetImage** — server-side processing via Copernicus Data Space Ecosystem  
-3. **Manual terra/raster workflow** — full local control, no abstraction
+This text explains why **convenience layers** such as `gdalcubes`, CDSE’s `GetImage()`, or `Rsagacmd` play a structural role in contemporary geospatial analysis. We compare these abstractions to “pure” R workflows using `terra`, and illustrate the practical impact using two domains:
 
-A key point: **STAC endpoints are not unified**.  
-Different providers (AWS EarthSearch, CDSE, SentinelHub, Element84) use compatible STAC schemas but *different URL structures, asset names, and filtering logic*. A cross-provider “generic STAC script” is therefore not feasible without provider-specific adapters.
+* **Sentinel‑2 processing** (time series, indices, mosaics)
+* **SAGA terrain derivatives** (slope, curvature, TPI)
 
----
+The goal is not to prefer one system over another, but to clarify **what each layer hides, why that matters, and what the trade‑offs are**.
 
-## Conceptual Summary
 
-### A) gdalcubes
-`gdalcubes` provides fast, memory-safe spatiotemporal mosaicking and resampling on-the-fly. It converts a list of STAC items into a 4D cube (x, y, t, band) and applies functions lazily during execution. Performance is excellent and most operations (aggregation, masking, indices) scale linearly with threads.
 
-**Trade-off:**  
-Cube creation always implies *aggregation* (dt = monthly, weekly, or a custom interval) and *resampling* to a uniform grid. The result is efficient but no longer identical to original Sentinel-2 granules.
+# The Role of Convenience Layers
 
-### B) CDSE + GetImage (server-side JS scripts)
-CDSE executes Javascript processing scripts (NDVI, RawBands, kNDVI, SAVI, EVI…) directly on ESA servers. The user receives minimally-preprocessed imagery at original 10–20 m resolution. Cloud masking, index computation, or mosaicking happen before download.
+A convenience layer is a thin abstraction that removes repetitive, non‑scientific tasks. Instead of changing algorithms, it removes the plumbing around them.
 
-**Trade-off:**  
-High flexibility and high fidelity but always dependent on the availability and correctness of server-side scripts and OAuth token authentication. Performance drops for long time series (each request is a full server job).
+Examples of what convenience layers eliminate:
 
-### C) Manual terra/raster workflow
-The manual approach reads each asset (B02, B03, B04, B08, B11, etc.) as a local GeoTIFF and computes indices by hand. It offers complete control over cloud masking, compositing logic, smoothing, and QA.
+* discovering and filtering STAC assets
+* reconstructing tile mosaics and footprints
+* handling CRS negotiations
+* creating temporary VRTs and memory‑safe processing chains
+* assembling multi‑band stacks
+* passing parameters to command‑line tools
 
-**Trade-off:**  
-Highest transparency, highest reproducibility, but slowest. Large multi-year AOIs lead to long runtimes and high disk load.
+This is why workflows with abstraction tend to be extremely short (5–15 lines), while **the same scientific operation in pure R often requires 200–400 lines** of bookkeeping.
 
----
+Convenience layers do *not* alter the scientific logic. They simply prevent infrastructure from overwhelming analysis.
 
-## Comparison Matrix (1 = poor, 3 = good)
 
-```{r}
-knitr::kable(
-  data.frame(
-    Criterion = c(
-      "Performance (multi-year AOI)",
-      "Fidelity to original scenes",
-      "Transparency of processing steps",
-      "Control over low-level details",
-      "Simplicity of code",
-      "Didactic value",
-      "Time-series / cube analytics",
-      "One-off high-quality scenes"
-    ),
-    gdalcubes = c(3,2,2,2,3,1.5,3,2),
-    CDSE_GetImage = c(2,3,2.5,2.5,2,2.5,2,3),
-    terra_manual = c(1,3,3,3,1,3,1.5,2.5)
-  ),
-  caption = "Comparison of Sentinel-2 processing pipelines (1=poor, 3=good)."
-)
+
+# Sentinel‑2: Three Processing Paradigms
+
+Sentinel‑2 can be processed efficiently in three conceptually distinct ways. The scientific goal—building valid reflectance‑based predictors—remains identical; the difference lies in **where the work is performed**.
+
+## Comparative Overview (with Performance–Fidelity–Transparency Ratings)
+
+| Method | Summary | **Pros** ✅ | **Cons** ❌ | Perf. | Fid. | Transp. |
+|------|----------------|----------------|-------------|-----|-----|-----|
+| **gdalcubes** | Builds a 4D cube (x–y–t–band) and performs lazy mosaicking, reprojection, and temporal aggregation. Excellent for long time series; less suitable for per-date, high-fidelity scenes. |•  Extremely fast for multi-year time series<br>• Clean temporal reducers<br>• Memory-safe, minimal code<br>• Automatic mosaics/resampling |•  Enforces uniform grid<br>• Loses granule-level detail<br>• Limited cloud-mask control | ⭐⭐⭐ | ⭐⭐ | ⭐⭐ |
+| **CDSE + GetImage** | Executes JS processing scripts on ESA servers (cloud masks, bands, indices). Returns near-native mosaics with ESA QA. Great for high-quality scenes; slower for long time series. |•  Near-native 10–20 m resolution<br>• Authentic ESA processing chain<br>• Low disk footprint<br>• High-quality server mosaics |•  OAuth required<br>• Slow for long periods<br>• Provider-specific STAC assets<br>• JS scripts must be maintained | ⭐⭐ | ⭐⭐⭐ | ⭐⭐ |
+| **Pure terra workflow** | Fully manual local workflow: downloading assets, mosaicking, masking, computing indices. Maximum scientific control; highest code volume; slowest runtime. |•  Full scientific control<br>• Transparent and inspectable<br>• Didactically excellent<br>• Reproducible at every detail |•  Heavy code volume<br>• Fragile to provider changes<br>• Slow for multi-year AOIs<br>• High maintenance load | ⭐ | ⭐⭐⭐ | ⭐⭐⭐ |
+
+Across the three approaches there is an implicit Pareto balance:
+
+- **gdalcubes** sits near the *performance* corner: very fast and scalable, but with less per-scene fidelity and less step-by-step transparency.
+- **CDSE + GetImage** occupies the *fidelity* corner: close to native Sentinel-2 scenes and ESA’s own processing, but slower and backend-dependent.
+- **pure terra** is closest to the *transparency* corner: every operation is explicit and inspectable, but at the cost of runtime and maintenance effort.
+
+None of them dominates the others across all three axes.  
+Each method is optimal only **conditional on what you prioritise** (speed, scene fidelity, or methodological transparency).
+
+# Applying the Same Logic: The SAGA Example
+
+What happens with Sentinel‑2 also did happen with terrain analysis. Computing slope, curvature, TPI, or HAND (Height Above Nearest Drainage) purely in R means you must do everything yourself: fetch DEM tiles, harmonise EPSG codes, mosaic them, crop them, build masks, run low-level operators, and debug all intermediate steps. Almost none of these tasks are geomorphological—they are **administrative overhead**.
+
+`Rsagacmd` eliminates this by wrapping SAGA algorithms in R:
+
+```r
+saga$ta_morphometry$slope_aspect_curvature(...)
 ```
 
----
+The science is identical; the workflow is not. The convenience layer abstracts *every* non‑scientific step.
 
-## Interpretation
+This parallel to Sentinel‑2 shows: convenience layers are not shortcuts—they allow researchers to work at the conceptual level rather than the infrastructural one.
 
-* **Best for time series:**
-  `gdalcubes` (performance, cube logic, parallel execution).
-  Suited for large-area monitoring, phenology, anomaly detection, and aggregated indicators.
 
-* **Best for high-fidelity scenes and indices:**
-  **CDSE + GetImage**.
-  Uses ESA’s own processing chain, preserves ~native resolution, and provides server-processed cloud masks and indices.
 
-* **Best for teaching, transparency, and supervision of every step:**
-  **Manual terra/raster**.
-  Ideal for methodological demonstrations, QA, and thesis contexts where exact control matters more than performance.
+# Why We Return to STAC Here
 
----
+All three workflows discussed on this page—**gdalcubes**, **CDSE GetImage**, and **manual terra workflows**—begin with the same fundamental step:  
+**discover Sentinel-2 scenes for the Burgwald AOI**.
 
-## Why STAC cannot be unified
+At first glance this should be straightforward, because all modern EO backends expose Sentinel-2 through **STAC endpoints**.  
+However, the workflows diverge sharply in behaviour, reproducibility and data structures.  Although STAC defines a common schema, it functions much like a library card catalogue: it tells you what exists, but not how the underlying items are stored, formatted, accessed, or processed.
+STAC standardises the metadata, not the data structures, access mechanisms, or processing behaviour of different providers.
 
-Even though STAC is a common standard, **each provider exposes different API patterns**:
+> **STAC = the card index.  
+> Providers = different libraries.  
+> rstac / gdalcubes / CDSE = convenience layers helping you use the index.**
 
-* CDSE uses `assets$B04_10m$href` and requires OAuth tokens.
-* AWS EarthSearch uses COGs under `sentinel-s2-l2a-cogs`, with different property keys.
-* SentinelHub implements a STAC layer but requires preprocessing scripts and authentication.
-* Element84 uses separate asset naming and often different temporal coverage.
+Because the underlying “libraries” differ, the STAC index cannot unify access.
+Providers expose different asset keys, naming conventions, and access rules, even though the metadata schema is shared.
 
-Therefore, *filtering, asset selection, and pre-processing must be provider-specific*.
-A universal STAC R script is not feasible without explicit adapters for each backend.
+Examples include:
+- different asset names (B04_10m vs B04 vs COG-style filenames)
+- different authentication layers (public COGs vs OAuth vs API keys)
+- different mosaicking semantics (leastCC, mostRecent, bestPixel)
+- different processing levels and QA availability (L1C, L2A, SCL, cloud masks)
 
----
+As a result, STAC itself is not the abstraction layer — it only indexes what exists. The actual abstraction must be implemented in client libraries such as rstac, gdalcubes, CDSE’s GetImage(), or custom code. 
 
-## When to choose which method?
+> STAC does not enforce canonical labeling.
+> STAC describes *what exists*, not *how* it is generated.
+> A “uniform” STAC search yields highly non-uniform data.
 
-### Choose **gdalcubes** if:
+# The Cascade of Convenience Wrappers
 
-* you need long time series (multi-year)
-* uniform grid and monthly/weekly aggregates are acceptable
-* you want high performance and vectorised EO analysis
-* memory constraints matter
+Because (in our case) the underlying EO backends differ so much, R tooling must build layered convenience wrappers on top.
 
-### Choose **CDSE + GetImage** if:
+| Layer | Function | Examples |
+|------|----------|----------|
+| Raw STAC API | Pure catalogue search | `/stac/search` |
+| `rstac` | R interface (paging, fetching) | `stac_search()`, `items_fetch()` |
+| `gdalcubes` STAC adapter | Convert STAC → cube definitions | `stac_image_collection()` |
+| CDSE R package | Provider-specific abstraction | OAuth, JS scripts, ESA mosaics |
+| Rsagacmd / SAGA | GIS-level processing wrappers | `saga$ta_morphometry$…` |
+| Your workflow | Actual geospatial analysis | indices → mosaics → ML |
 
-* you need *near-original* resolution
-* you want server-side processing (NDVI, EVI, SAVI, RawBands)
-* local disk usage should stay minimal
-* you want ESA’s operational QA bands
+Each layer abstracts away complexity—but also **introduces provider lock-in**.
 
-### Choose **terra/raster** if:
+This is why:
 
-* you need absolute control over masking, resampling, compositing
-* you are demonstrating methods in a didactic setting
-* transparency and reproducibility matter more than speed
+- `gdalcubes` can use AWS COGs but not CDSE’s JS processing  
+- `CDSE::GetImage` can use ESA’s pipelines but not AWS COGs  
+- `terra` workflows do not bypass STAC; they simply use it at the lowest level—fetching raw asset URLs and handling all processing locally without any higher-level convenience abstraction. 
 
----
+## Why This Matters for the Sentinel-2 Comparison Above
 
-## Conclusion
+The workflows differ not because of STAC, but because each provider and wrapper implements data access differently (assets, authentication, preprocessing, formats).
+STAC only standardises metadata — not how data is delivered or processed.
 
-The three workflows are complementary.
-They represent the fundamental trade-off space in satellite data processing:
+Therefore:
 
-* **gdalcubes = performance + cube abstraction**
-* **CDSE = fidelity + server-side processing**
-* **manual terra = transparency + full control**
+gdalcubes relies on consistent COG assets → works best with AWS/E84.
 
-In practice, all three are useful depending on whether the objective is:
-(a) efficient multiyear analysis,
-(b) exact reproduction of ESA-processed scenes, or
-(c) methodological inspection of each step.
+CDSE + GetImage uses ESA’s server-side logic → different behaviour.
 
-```
+terra manual uses STAC only for URLs → everything else is local.
 
+> STAC is unified. The provider and wrapper logic is not — that’s why the workflows diverge.
+
+
+
+
+# Choosing the Right Abstraction
+
+Again: There is no “best” method—only one that fits the **balance between control, cognitive load, and performance**.
+
+### Use **gdalcubes** when:
+
+* long time series dominate
+* uniform grids are acceptable
+* performance is critical
+
+### Use **CDSE** when:
+
+* per‑date fidelity matters
+* cloud masking and indices should run server‑side
+
+### Use **pure terra** when:
+
+* you need exact methodological transparency
+* teaching or QA requires inspecting every step
+
+### Use generic GIS wrappers like `Rsagacmd`, `qgisprocess`, `rgrass7` when:
+
+- you need high-quality terrain or hydrological derivatives  
+- you want to reuse the mature, specialised logic of full GIS suites (SAGA, GRASS, QGIS)  
+- you prefer not to re-implement complex algorithms (TPI, TWI, morphometry, flow models. etc.) in pure R  
+- you need stable, well-tested operators with decades of domain optimisation behind them
+- you rely on `link2GI` to detect, configure, and initialise GIS backends so R can call them transparently  
+
+
+# Core Insight
+
+All shown approaches perform the *same science*. They differ only in how much infrastructure they ask the user to handle. The real decision is therefore not "**Which algorithm**?" but **how much low‑level responsibility you want to carry**:
+
+* Abstraction reduces boilerplate and shields you from shifting provider APIs.  
+* Manual control increases transparency but also raises maintenance load, update overhead, and error-susceptibility.  
+* Proper convenience wrappers minimise this burden by stabilising interfaces and absorbing backend changes.  
+
+
+Choosing a workflow is never merely technical.
+It is a negotiation between the level of methodological precision, analytical depth, and scientific rigor you aim for — your "**scientific ambition**" — and the "**cognitive cost of plumbing**".
 

@@ -481,13 +481,13 @@
   {
     "objectID": "reader/reader_ws-06.html",
     "href": "reader/reader_ws-06.html",
-    "title": "Comparison of Sentinel-2 Processing Approaches",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
     "section": "",
-    "text": "This page compares three fundamentally different workflows for obtaining and processing Sentinel-2 time series for mesoscale forest applications (Burgwald AOI, 2018–2022). The goal is to show where each method excels, where the limits are, and why there is no single “best” approach.\nThe three approaches:\n\ngdalcubes — high-performance spatiotemporal cube abstraction\n\nCDSE + GetImage — server-side processing via Copernicus Data Space Ecosystem\n\nManual terra/raster workflow — full local control, no abstraction\n\nA key point: STAC endpoints are not unified.\nDifferent providers (AWS EarthSearch, CDSE, SentinelHub, Element84) use compatible STAC schemas but different URL structures, asset names, and filtering logic. A cross-provider “generic STAC script” is therefore not feasible without provider-specific adapters.",
+    "text": "Modern geospatial workflows increasingly differ not in scientific method but in the amount of operational complexity they hide. Whether processing Sentinel‑2 imagery or computing terrain derivatives, the core algorithms have not changed. What has changed is how much low‑level infrastructure (downloading, tiling, reprojection, cloud masking, indexing, mosaicking, temporary file management) is exposed to the user.\nThis text explains why convenience layers such as gdalcubes, CDSE’s GetImage(), or Rsagacmd play a structural role in contemporary geospatial analysis. We compare these abstractions to “pure” R workflows using terra, and illustrate the practical impact using two domains:\n\nSentinel‑2 processing (time series, indices, mosaics)\nSAGA terrain derivatives (slope, curvature, TPI)\n\nThe goal is not to prefer one system over another, but to clarify what each layer hides, why that matters, and what the trade‑offs are.",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Comparison of Sentinel-2 Processing Approaches"
+      "Abstraction Layers in Modern Geospatial Workflows"
     ]
   },
   {
@@ -1356,6 +1356,138 @@
       "FAQ",
       "Lectures",
       "Remote Sensing - Sentinel 2"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-06.html#gdalcubes-abstraction-of-space-and-time",
+    "href": "reader/reader_ws-06.html#gdalcubes-abstraction-of-space-and-time",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "gdalcubes — abstraction of space and time",
+    "text": "gdalcubes — abstraction of space and time\ngdalcubes constructs a 4D cube (x, y, t, band) from STAC assets. It executes all operations lazily: reprojection, mosaicking, and temporal aggregation are performed only when needed.\nAdvantages:\n\nextremely fast for multi‑year time series\nclean temporal logic (weekly, monthly reducers)\nmemory‑safe\nminimal code\n\nCosts:\n\nimposes a uniform grid and temporal spacing\nloses per‑granule particularities\n\nThis is acceptable for phenology, disturbance detection, anomaly analysis—but not if you need per‑date near‑native fidelity.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Abstraction Layers in Modern Geospatial Workflows"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-06.html#cdse-getimage-abstraction-of-serverside-processing",
+    "href": "reader/reader_ws-06.html#cdse-getimage-abstraction-of-serverside-processing",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "CDSE + GetImage — abstraction of server‑side processing",
+    "text": "CDSE + GetImage — abstraction of server‑side processing\nCDSE runs Javascript index scripts (NDVI, kNDVI, SAVI, EVI, RawBands) on ESA’s servers. You receive mosaics already cloud‑masked, corrected, and composited.\nAdvantages:\n\npreserves ~native (10–20 m) resolution\nauthentic ESA processing chain\nminimal local disk load\n\nCosts:\n\nOAuth tokens required\nslow for long time series (one server job per date)\nSTAC structure differs from AWS/Google\n\nIdeal when you need: one-off pristine scenes, server QA, or high spatial fidelity.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Abstraction Layers in Modern Geospatial Workflows"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-06.html#pure-terra-workflow-maximal-transparency",
+    "href": "reader/reader_ws-06.html#pure-terra-workflow-maximal-transparency",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "Pure terra workflow — maximal transparency",
+    "text": "Pure terra workflow — maximal transparency\nHere, everything is explicit: downloading assets, assembling tiles, masking clouds, computing indices, building stacks.\nAdvantages:\n\nfull scientific control\nexcellent for didactic demonstration\nreproducible at every level\n\nCosts:\n\nheavy code volume\nfragile (provider URL changes break scripts)\nslow for multi‑year AOIs\n\nThis is not inferior—just more expensive in cognitive and operational terms.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Abstraction Layers in Modern Geospatial Workflows"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-06.html#why-stac-appears-here-at-all",
+    "href": "reader/reader_ws-06.html#why-stac-appears-here-at-all",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "4. Why STAC Appears Here at All",
+    "text": "4. Why STAC Appears Here at All\nAll three workflows discussed on this page—gdalcubes, CDSE GetImage, and manual terra workflows—begin with the same fundamental step:\ndiscover Sentinel-2 scenes for the Burgwald AOI.\nAt first glance this should be straightforward, because all modern EO backends expose Sentinel-2 through STAC endpoints.\nHowever, the workflows diverge sharply in behaviour, reproducibility and data structures. The reason is that STAC is only a metadata index. STAC does not unify access, processing, authentication, or data layout.\nTo understand why the three workflows differ so strongly, we must briefly clarify what STAC actually is—and what it is not.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Abstraction Layers in Modern Geospatial Workflows"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-06.html#applying-this-concept-to-stac",
+    "href": "reader/reader_ws-06.html#applying-this-concept-to-stac",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "Applying this Concept to STAC",
+    "text": "Applying this Concept to STAC\nAlthough STAC defines a common schema, it functions much like a library card catalogue: it tells you what exists, but not how the underlying items are stored, formatted, accessed, or processed. STAC standardises the metadata, not the data structures, access mechanisms, or processing behaviour of different providers.\n\nSTAC = the card index.\nProviders = different libraries.\nrstac / gdalcubes / CDSE = convenience layers helping you use the index.\n\nBecause the underlying “libraries” differ, the STAC index cannot unify access. Providers expose different asset keys, naming conventions, and access rules, even though the metadata schema is shared.\nExamples include: - different asset names (B04_10m vs B04 vs COG-style filenames) - different authentication layers (public COGs vs OAuth vs API keys) - different mosaicking semantics (leastCC, mostRecent, bestPixel) - different processing levels and QA availability (L1C, L2A, SCL, cloud masks)\nAs a result, STAC itself is not the abstraction layer — it only indexes what exists. The actual abstraction must be implemented in client libraries such as rstac, gdalcubes, CDSE’s GetImage(), or custom code.\n\nSTAC does not enforce canonical labeling. STAC describes what exists, not how it is generated. A “uniform” STAC search yields highly non-uniform data.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Abstraction Layers in Modern Geospatial Workflows"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-06.html#the-cascade-of-convenience-wrappers",
+    "href": "reader/reader_ws-06.html#the-cascade-of-convenience-wrappers",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "The Cascade of Convenience Wrappers",
+    "text": "The Cascade of Convenience Wrappers\nBecause (in our case) the underlying EO backends differ so much, R tooling must build layered convenience wrappers on top.\n\n\n\n\n\n\n\n\nLayer\nFunction\nExamples\n\n\n\n\nRaw STAC API\nPure catalogue search\n/stac/search\n\n\nrstac\nR interface (paging, fetching)\nstac_search(), items_fetch()\n\n\ngdalcubes STAC adapter\nConvert STAC → cube definitions\nstac_image_collection()\n\n\nCDSE R package\nProvider-specific abstraction\nOAuth, JS scripts, ESA mosaics\n\n\nRsagacmd / SAGA\nGIS-level processing wrappers\nsaga$ta_morphometry$…\n\n\nYour workflow\nActual geospatial analysis\nindices → mosaics → ML\n\n\n\nEach layer abstracts away complexity—but also introduces provider lock-in.\nThis is why:\n\ngdalcubes can use AWS COGs but not CDSE’s JS processing\n\nCDSE::GetImage can use ESA’s pipelines but not AWS COGs\n\nterra workflows do not bypass STAC; they simply use it at the lowest level—fetching raw asset URLs and handling all processing locally without any higher-level convenience abstraction.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Abstraction Layers in Modern Geospatial Workflows"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-06.html#why-this-matters-for-the-sentinel-2-comparison-above",
+    "href": "reader/reader_ws-06.html#why-this-matters-for-the-sentinel-2-comparison-above",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "Why This Matters for the Sentinel-2 Comparison Above",
+    "text": "Why This Matters for the Sentinel-2 Comparison Above\nThe workflows differ not because of STAC, but because each provider and wrapper implements data access differently (assets, authentication, preprocessing, formats). STAC only standardises metadata — not how data is delivered or processed.\nTherefore:\ngdalcubes relies on consistent COG assets → works best with AWS/E84.\nCDSE + GetImage uses ESA’s server-side logic → different behaviour.\nterra manual uses STAC only for URLs → everything else is local.\n\nSTAC is unified. The provider and wrapper logic is not — that’s why the workflows diverge.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Abstraction Layers in Modern Geospatial Workflows"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-06.html#why-we-return-to-stac-here",
+    "href": "reader/reader_ws-06.html#why-we-return-to-stac-here",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "Why We Return to STAC Here",
+    "text": "Why We Return to STAC Here\nAll three workflows discussed on this page—gdalcubes, CDSE GetImage, and manual terra workflows—begin with the same fundamental step:\ndiscover Sentinel-2 scenes for the Burgwald AOI.\nAt first glance this should be straightforward, because all modern EO backends expose Sentinel-2 through STAC endpoints.\nHowever, the workflows diverge sharply in behaviour, reproducibility and data structures. Although STAC defines a common schema, it functions much like a library card catalogue: it tells you what exists, but not how the underlying items are stored, formatted, accessed, or processed. STAC standardises the metadata, not the data structures, access mechanisms, or processing behaviour of different providers.\n\nSTAC = the card index.\nProviders = different libraries.\nrstac / gdalcubes / CDSE = convenience layers helping you use the index.\n\nBecause the underlying “libraries” differ, the STAC index cannot unify access. Providers expose different asset keys, naming conventions, and access rules, even though the metadata schema is shared.\nExamples include: - different asset names (B04_10m vs B04 vs COG-style filenames) - different authentication layers (public COGs vs OAuth vs API keys) - different mosaicking semantics (leastCC, mostRecent, bestPixel) - different processing levels and QA availability (L1C, L2A, SCL, cloud masks)\nAs a result, STAC itself is not the abstraction layer — it only indexes what exists. The actual abstraction must be implemented in client libraries such as rstac, gdalcubes, CDSE’s GetImage(), or custom code.\n\nSTAC does not enforce canonical labeling. STAC describes what exists, not how it is generated. A “uniform” STAC search yields highly non-uniform data.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Abstraction Layers in Modern Geospatial Workflows"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-06.html#procon-matrix-of-sentinel-2-processing-approaches",
+    "href": "reader/reader_ws-06.html#procon-matrix-of-sentinel-2-processing-approaches",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "Pro/Con Matrix of Sentinel-2 Processing Approaches",
+    "text": "Pro/Con Matrix of Sentinel-2 Processing Approaches\n\n\n\nMethod\nPro\nCon\n\n\n\n\ngdalcubes\n✓ Extremely fast for multi-year time series\n\n\n\n\n✓ Clean temporal reducers (weekly, monthly)\n✓ Memory-safe, minimal code\n✓ Automatic mosaicking & resampling | ✗ Forces uniform grid & timestep\n✗ Loses per-granule radiometric detail\n✗ Limited control over cloud logic\n✗ Not ideal for native single-date fidelity | | CDSE + GetImage | ✓ Near-native 10–20 m resolution\n✓ ESA server-side cloud masking & indices\n✓ Very low local disk footprint\n✓ High-quality mosaics via ESA logic | ✗ Requires OAuth\n✗ Slow for long spans (one server job per date)\n✗ Provider-specific STAC asset layout\n✗ JS scripts must be maintained | | Pure terra workflow | ✓ Full scientific control\n✓ Transparent at every step\n✓ Excellent for teaching and QA\n✓ Reproducible independent of provider logic | ✗ Large code volume (200–400 lines)\n✗ Fragile when provider URLs/assets change\n✗ Slowest for multi-year AOIs\n✗ High cognitive & maintenance load |",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Abstraction Layers in Modern Geospatial Workflows"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-06.html#comparative-overview-of-the-three-sentinel-2-paradigms",
+    "href": "reader/reader_ws-06.html#comparative-overview-of-the-three-sentinel-2-paradigms",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "Comparative Overview of the Three Sentinel-2 Paradigms",
+    "text": "Comparative Overview of the Three Sentinel-2 Paradigms\n\n\n\n\n\n\n\n\n\nMethod\nSummary\nPros\nCons\n\n\n\n\ngdalcubes\nBuilds a 4D cube (x–y–t–band) from STAC assets and executes mosaicking, reprojection, and temporal aggregation lazily. Ideal for long time series on a uniform grid; loses per-granule detail but is very strong for phenology, disturbance and anomaly analysis.\n✅ Extremely fast for multi-year time series✅ Clean temporal reducers (weekly, monthly, custom)✅ Memory-safe, minimal code✅ Automatic mosaics and resampling\n❌ Enforces uniform grid and timestep❌ Loses native granule-level detail❌ Limited control over cloud logic❌ Less suited for per-date, near-native fidelity\n\n\nCDSE + GetImage\nRuns JavaScript index scripts (RawBands, NDVI variants, cloud masks) on ESA servers and returns near-native 10–20 m mosaics. Preserves ESA’s processing chain and reduces local storage; best for high-quality single dates or short time windows.\n✅ Near-native spatial resolution✅ ESA QA and cloud masking✅ Low local storage footprint✅ High-quality server mosaics\n❌ Requires OAuth authentication❌ Slow for long time series (one job per date)❌ Provider-specific STAC structure and assets❌ JS processing scripts must be maintained\n\n\nPure terra workflow\nEnd-to-end manual control: retrieving assets, assembling granules, masking clouds, computing indices, and building stacks in R. Scientifically most transparent and excellent for teaching/QA, but code-heavy, fragile to provider changes, and slow for large AOIs.\n✅ Full scientific control✅ Transparent and inspectable at every step✅ Excellent for didactic use✅ Highly reproducible\n❌ Large code volume❌ Sensitive to provider URL/asset changes❌ Slow for multi-year AOIs❌ High cognitive and maintenance load",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Abstraction Layers in Modern Geospatial Workflows"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-06.html#comparative-overview-with-performancefidelitytransparency-ratings",
+    "href": "reader/reader_ws-06.html#comparative-overview-with-performancefidelitytransparency-ratings",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "Comparative Overview (with Performance–Fidelity–Transparency Ratings)",
+    "text": "Comparative Overview (with Performance–Fidelity–Transparency Ratings)\n\n\n\n\n\n\n\n\n\n\n\n\nMethod\nSummary\nPros ✅\nCons ❌\nPerf.\nFid.\nTransp.\n\n\n\n\ngdalcubes\nBuilds a 4D cube (x–y–t–band) and performs lazy mosaicking, reprojection, and temporal aggregation. Excellent for long time series; less suitable for per-date, high-fidelity scenes.\n• Extremely fast for multi-year time series• Clean temporal reducers• Memory-safe, minimal code• Automatic mosaics/resampling\n• Enforces uniform grid• Loses granule-level detail• Limited cloud-mask control\n⭐⭐⭐\n⭐⭐\n⭐⭐\n\n\nCDSE + GetImage\nExecutes JS processing scripts on ESA servers (cloud masks, bands, indices). Returns near-native mosaics with ESA QA. Great for high-quality scenes; slower for long time series.\n• Near-native 10–20 m resolution• Authentic ESA processing chain• Low disk footprint• High-quality server mosaics\n• OAuth required• Slow for long periods• Provider-specific STAC assets• JS scripts must be maintained\n⭐⭐\n⭐⭐⭐\n⭐⭐\n\n\nPure terra workflow\nFully manual local workflow: downloading assets, mosaicking, masking, computing indices. Maximum scientific control; highest code volume; slowest runtime.\n• Full scientific control• Transparent and inspectable• Didactically excellent• Reproducible at every detail\n• Heavy code volume• Fragile to provider changes• Slow for multi-year AOIs• High maintenance load\n⭐\n⭐⭐⭐\n⭐⭐⭐\n\n\n\nAcross the three approaches there is an implicit Pareto balance:\n\ngdalcubes sits near the performance corner: very fast and scalable, but with less per-scene fidelity and less step-by-step transparency.\nCDSE + GetImage occupies the fidelity corner: close to native Sentinel-2 scenes and ESA’s own processing, but slower and backend-dependent.\npure terra is closest to the transparency corner: every operation is explicit and inspectable, but at the cost of runtime and maintenance effort.\n\nNone of them dominates the others across all three axes.\nEach method is optimal only conditional on what you prioritise (speed, scene fidelity, or methodological transparency).",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Abstraction Layers in Modern Geospatial Workflows"
     ]
   }
 ]
