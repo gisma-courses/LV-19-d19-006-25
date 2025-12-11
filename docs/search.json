@@ -479,6 +479,54 @@
     "text": "Scientific Process – Overview\n\n\n\nFoundations / Backgroundtheory, domain context\n\n\nResearch Questionprecise, testable, scoped\n\n\nState of the Art (Literature)knowns, gaps, hypotheses\n\n\nNecessary Methods & Workflowdata, preprocessing, validation, metrics\n\n\nAdvanced Methodsmodels, tuning, ablations\n\n\nApplied Solution Pathimplementation & assumptions\n\n\nResultsfindings, uncertainty, limitations\n\n\nLoopback → Evaluation & Improvementerror analysis, robustness checks, iteration"
   },
   {
+    "objectID": "reader/reader_ws-08.html",
+    "href": "reader/reader_ws-08.html",
+    "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
+    "section": "",
+    "text": "Designing an optimal precipitation-monitoring network is not a simple geostatistical optimisation task. It requires understanding:\n\nhow landscape structure affects rainfall organisation,\nhow information gain varies across space,\nhow hydrological response depends on spatial rainfall patterns.\n\nThis document implements Layer 1 of a modern three-layer network-design framework:\n\nPhysiographic stratification (structural representativeness)\nInformation-gain optimisation (analytical efficiency)\nHydrological coupling (functional adequacy)\n\nHere we implement Layer 1: an objective stratification of the Burgwald landscape using information-theoretic metrics and pattern-based texture signatures.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "IT-Based Landscape Stratification for Rain-Gauge Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-08.html#physiographic-stratification",
+    "href": "reader/reader_ws-08.html#physiographic-stratification",
+    "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
+    "section": "2.1 Physiographic stratification",
+    "text": "2.1 Physiographic stratification\nGoal: ensure that rainfall stations represent the dominant structural units of the landscape. Landscape units differ in:\n\nland-cover composition\nforest–openland transitions\npatch fragmentation and clumpiness\ncanopy interception potential\nmicro-topographic exposure\n\nWe capture these differences using information-theoretic metrics:\n\nEntropy H(x)\n\nmeasures thematic diversity of land cover\nlow → homogeneous (e.g. closed forest)\nhigh → heterogeneous, mixed, patchy\n\nRelative mutual information U\n\nmeasures configurational order (clumpiness)\nlow → fragmented patterns\nhigh → ordered, aggregated patterns\n\n\nEach 2×2 km grid cell gets a structural fingerprint in (H, U)-space, and clustering these fingerprints yields objective structural strata.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "IT-Based Landscape Stratification for Rain-Gauge Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-08.html#information-gain-optimisation",
+    "href": "reader/reader_ws-08.html#information-gain-optimisation",
+    "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
+    "section": "2.2 Information-gain optimisation",
+    "text": "2.2 Information-gain optimisation\nOnce strata exist, statistical optimisation (e.g. kriging variance, radar–gauge mismatch, representativeness error) should be applied within and across strata, not across the whole catchment at once. This avoids bias towards “statistically convenient” open areas and keeps the optimisation linked to process-relevant structural units.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "IT-Based Landscape Stratification for Rain-Gauge Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-08.html#hydrological-coupling",
+    "href": "reader/reader_ws-08.html#hydrological-coupling",
+    "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
+    "section": "2.3 Hydrological coupling",
+    "text": "2.3 Hydrological coupling\nFinally, a network must improve the prediction of:\n\nstreamflow peaks (P–Q coherence)\nstorage changes\nwater-balance residuals\n\nEven a statistically optimal station is useless if it does not represent rainfall regimes controlling the hydrograph. This QMD prepares the structural layer required for such coupling.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "IT-Based Landscape Stratification for Rain-Gauge Network Design"
+    ]
+  },
+  {
     "objectID": "reader/reader_ws-06.html",
     "href": "reader/reader_ws-06.html",
     "title": "Abstraction Layers in Modern Geospatial Workflows",
@@ -491,87 +539,39 @@
     ]
   },
   {
-    "objectID": "reader/reader_ws-06.html#overview",
-    "href": "reader/reader_ws-06.html#overview",
-    "title": "Comparison of Sentinel-2 Processing Approaches",
-    "section": "",
-    "text": "This page compares three fundamentally different workflows for obtaining and processing Sentinel-2 time series for mesoscale forest applications (Burgwald AOI, 2018–2022). The goal is to show where each method excels, where the limits are, and why there is no single “best” approach.\nThe three approaches:\n\ngdalcubes — high-performance spatiotemporal cube abstraction\n\nCDSE + GetImage — server-side processing via Copernicus Data Space Ecosystem\n\nManual terra/raster workflow — full local control, no abstraction\n\nA key point: STAC endpoints are not unified.\nDifferent providers (AWS EarthSearch, CDSE, SentinelHub, Element84) use compatible STAC schemas but different URL structures, asset names, and filtering logic. A cross-provider “generic STAC script” is therefore not feasible without provider-specific adapters.",
+    "objectID": "reader/reader_ws-06.html#comparative-overview-with-performancefidelitytransparency-ratings",
+    "href": "reader/reader_ws-06.html#comparative-overview-with-performancefidelitytransparency-ratings",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "Comparative Overview (with Performance–Fidelity–Transparency Ratings)",
+    "text": "Comparative Overview (with Performance–Fidelity–Transparency Ratings)\n\n\n\n\n\n\n\n\n\n\n\n\nMethod\nSummary\nPros ✅\nCons ❌\nPerf.\nFid.\nTransp.\n\n\n\n\ngdalcubes\nBuilds a 4D cube (x–y–t–band) and performs lazy mosaicking, reprojection, and temporal aggregation. Excellent for long time series; less suitable for per-date, high-fidelity scenes.\n• Extremely fast for multi-year time series• Clean temporal reducers• Memory-safe, minimal code• Automatic mosaics/resampling\n• Enforces uniform grid• Loses granule-level detail• Limited cloud-mask control\n⭐⭐⭐\n⭐⭐\n⭐⭐\n\n\nCDSE + GetImage\nExecutes JS processing scripts on ESA servers (cloud masks, bands, indices). Returns near-native mosaics with ESA QA. Great for high-quality scenes; slower for long time series.\n• Near-native 10–20 m resolution• Authentic ESA processing chain• Low disk footprint• High-quality server mosaics\n• OAuth required• Slow for long periods• Provider-specific STAC assets• JS scripts must be maintained\n⭐⭐\n⭐⭐⭐\n⭐⭐\n\n\nPure terra workflow\nFully manual local workflow: downloading assets, mosaicking, masking, computing indices. Maximum scientific control; highest code volume; slowest runtime.\n• Full scientific control• Transparent and inspectable• Didactically excellent• Reproducible at every detail\n• Heavy code volume• Fragile to provider changes• Slow for multi-year AOIs• High maintenance load\n⭐\n⭐⭐⭐\n⭐⭐⭐\n\n\n\nAcross the three approaches there is an implicit Pareto balance:\n\ngdalcubes sits near the performance corner: very fast and scalable, but with less per-scene fidelity and less step-by-step transparency.\nCDSE + GetImage occupies the fidelity corner: close to native Sentinel-2 scenes and ESA’s own processing, but slower and backend-dependent.\npure terra is closest to the transparency corner: every operation is explicit and inspectable, but at the cost of runtime and maintenance effort.\n\nNone of them dominates the others across all three axes.\nEach method is optimal only conditional on what you prioritise (speed, scene fidelity, or methodological transparency).\n\nApplying the Same Logic: The SAGA Example\nWhat happens with Sentinel‑2 also did happen with terrain analysis. Computing slope, curvature, TPI, or HAND (Height Above Nearest Drainage) purely in R means you must do everything yourself: fetch DEM tiles, harmonise EPSG codes, mosaic them, crop them, build masks, run low-level operators, and debug all intermediate steps. Almost none of these tasks are geomorphological—they are administrative overhead.\nRsagacmd eliminates this by wrapping SAGA algorithms in R:\nsaga$ta_morphometry$slope_aspect_curvature(...)\nThe science is identical; the workflow is not. The convenience layer abstracts every non‑scientific step.\nThis parallel to Sentinel‑2 shows: convenience layers are not shortcuts—they allow researchers to work at the conceptual level rather than the infrastructural one.",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Comparison of Sentinel-2 Processing Approaches"
+      "Abstraction Layers in Modern Geospatial Workflows"
     ]
   },
   {
-    "objectID": "reader/reader_ws-06.html#conceptual-summary",
-    "href": "reader/reader_ws-06.html#conceptual-summary",
-    "title": "Comparison of Sentinel-2 Processing Approaches",
-    "section": "Conceptual Summary",
-    "text": "Conceptual Summary\n\nA) gdalcubes\ngdalcubes provides fast, memory-safe spatiotemporal mosaicking and resampling on-the-fly. It converts a list of STAC items into a 4D cube (x, y, t, band) and applies functions lazily during execution. Performance is excellent and most operations (aggregation, masking, indices) scale linearly with threads.\nTrade-off:\nCube creation always implies aggregation (dt = monthly, weekly, or a custom interval) and resampling to a uniform grid. The result is efficient but no longer identical to original Sentinel-2 granules.\n\n\nB) CDSE + GetImage (server-side JS scripts)\nCDSE executes Javascript processing scripts (NDVI, RawBands, kNDVI, SAVI, EVI…) directly on ESA servers. The user receives minimally-preprocessed imagery at original 10–20 m resolution. Cloud masking, index computation, or mosaicking happen before download.\nTrade-off:\nHigh flexibility and high fidelity but always dependent on the availability and correctness of server-side scripts and OAuth token authentication. Performance drops for long time series (each request is a full server job).\n\n\nC) Manual terra/raster workflow\nThe manual approach reads each asset (B02, B03, B04, B08, B11, etc.) as a local GeoTIFF and computes indices by hand. It offers complete control over cloud masking, compositing logic, smoothing, and QA.\nTrade-off:\nHighest transparency, highest reproducibility, but slowest. Large multi-year AOIs lead to long runtimes and high disk load.",
+    "objectID": "reader/reader_ws-06.html#why-we-return-to-stac-here",
+    "href": "reader/reader_ws-06.html#why-we-return-to-stac-here",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "Why We Return to STAC Here",
+    "text": "Why We Return to STAC Here\nAll three workflows discussed on this page—gdalcubes, CDSE GetImage, and manual terra workflows—begin with the same fundamental step:\ndiscover Sentinel-2 scenes for the Burgwald AOI.\nAt first glance this should be straightforward, because all modern EO backends expose Sentinel-2 through STAC endpoints.\nHowever, the workflows diverge sharply in behaviour, reproducibility and data structures. Although STAC defines a common schema, it functions much like a library card catalogue: it tells you what exists, but not how the underlying items are stored, formatted, accessed, or processed. STAC standardises the metadata, not the data structures, access mechanisms, or processing behaviour of different providers.\n\nSTAC = the card index.\nProviders = different libraries.\nrstac / gdalcubes / CDSE = convenience layers helping you use the index.\n\nBecause the underlying “libraries” differ, the STAC index cannot unify access. Providers expose different asset keys, naming conventions, and access rules, even though the metadata schema is shared.\nExamples include:\n\ndifferent asset names (B04_10m vs B04 vs COG-style filenames)\ndifferent authentication layers (public COGs vs OAuth vs API keys)\ndifferent mosaicking semantics (leastCC, mostRecent, bestPixel)\ndifferent processing levels and QA availability (L1C, L2A, SCL, cloud masks)\n\nAs a result, STAC itself is not the abstraction layer — it only indexes what exists. The actual abstraction must be implemented in client libraries such as rstac, gdalcubes, CDSE’s GetImage(), or custom code.\n\nSTAC does not enforce canonical labeling. STAC describes what exists, not how it is generated. A “uniform” STAC search yields highly non-uniform data.",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Comparison of Sentinel-2 Processing Approaches"
+      "Abstraction Layers in Modern Geospatial Workflows"
     ]
   },
   {
-    "objectID": "reader/reader_ws-06.html#comparison-matrix-1-poor-3-good",
-    "href": "reader/reader_ws-06.html#comparison-matrix-1-poor-3-good",
-    "title": "Comparison of Sentinel-2 Processing Approaches",
-    "section": "Comparison Matrix (1 = poor, 3 = good)",
-    "text": "Comparison Matrix (1 = poor, 3 = good)\n\nknitr::kable(\n  data.frame(\n    Criterion = c(\n      \"Performance (multi-year AOI)\",\n      \"Fidelity to original scenes\",\n      \"Transparency of processing steps\",\n      \"Control over low-level details\",\n      \"Simplicity of code\",\n      \"Didactic value\",\n      \"Time-series / cube analytics\",\n      \"One-off high-quality scenes\"\n    ),\n    gdalcubes = c(3,2,2,2,3,1.5,3,2),\n    CDSE_GetImage = c(2,3,2.5,2.5,2,2.5,2,3),\n    terra_manual = c(1,3,3,3,1,3,1.5,2.5)\n  ),\n  caption = \"Comparison of Sentinel-2 processing pipelines (1=poor, 3=good).\"\n)\n\n\nComparison of Sentinel-2 processing pipelines (1=poor, 3=good).\n\n\n\n\n\n\n\n\nCriterion\ngdalcubes\nCDSE_GetImage\nterra_manual\n\n\n\n\nPerformance (multi-year AOI)\n3.0\n2.0\n1.0\n\n\nFidelity to original scenes\n2.0\n3.0\n3.0\n\n\nTransparency of processing steps\n2.0\n2.5\n3.0\n\n\nControl over low-level details\n2.0\n2.5\n3.0\n\n\nSimplicity of code\n3.0\n2.0\n1.0\n\n\nDidactic value\n1.5\n2.5\n3.0\n\n\nTime-series / cube analytics\n3.0\n2.0\n1.5\n\n\nOne-off high-quality scenes\n2.0\n3.0\n2.5",
+    "objectID": "reader/reader_ws-06.html#the-cascade-of-convenience-wrappers",
+    "href": "reader/reader_ws-06.html#the-cascade-of-convenience-wrappers",
+    "title": "Abstraction Layers in Modern Geospatial Workflows",
+    "section": "The Cascade of Convenience Wrappers",
+    "text": "The Cascade of Convenience Wrappers\nBecause (in our case) the underlying EO backends differ so much, R tooling must build layered convenience wrappers on top.\n\n\n\n\n\n\n\n\nLayer\nFunction\nExamples\n\n\n\n\nRaw STAC API\nPure catalogue search\n/stac/search\n\n\nrstac\nR interface (paging, fetching)\nstac_search(), items_fetch()\n\n\ngdalcubes STAC adapter\nConvert STAC → cube definitions\nstac_image_collection()\n\n\nCDSE R package\nProvider-specific abstraction\nOAuth, JS scripts, ESA mosaics\n\n\nYour workflow\nActual geospatial analysis\ne.g. indices → mosaics → ML\n\n\n\nEach layer abstracts away complexity—but also introduces provider lock-in.\nThis is why:\n\ngdalcubes can use AWS COGs but not CDSE’s JS processing\n\nCDSE::GetImage can use ESA’s pipelines but not AWS COGs\n\nterra workflows do not bypass STAC; they simply use it at the lowest level—fetching raw asset URLs and handling all processing locally without any higher-level convenience abstraction.\n\n\nSTAC is unified. The provider and wrapper logic is not — that’s why the workflows diverge.",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Comparison of Sentinel-2 Processing Approaches"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#interpretation",
-    "href": "reader/reader_ws-06.html#interpretation",
-    "title": "Comparison of Sentinel-2 Processing Approaches",
-    "section": "Interpretation",
-    "text": "Interpretation\n\nBest for time series: gdalcubes (performance, cube logic, parallel execution). Suited for large-area monitoring, phenology, anomaly detection, and aggregated indicators.\nBest for high-fidelity scenes and indices: CDSE + GetImage. Uses ESA’s own processing chain, preserves ~native resolution, and provides server-processed cloud masks and indices.\nBest for teaching, transparency, and supervision of every step: Manual terra/raster. Ideal for methodological demonstrations, QA, and thesis contexts where exact control matters more than performance.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Comparison of Sentinel-2 Processing Approaches"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#why-stac-cannot-be-unified",
-    "href": "reader/reader_ws-06.html#why-stac-cannot-be-unified",
-    "title": "Comparison of Sentinel-2 Processing Approaches",
-    "section": "Why STAC cannot be unified",
-    "text": "Why STAC cannot be unified\nEven though STAC is a common standard, each provider exposes different API patterns:\n\nCDSE uses assets$B04_10m$href and requires OAuth tokens.\nAWS EarthSearch uses COGs under sentinel-s2-l2a-cogs, with different property keys.\nSentinelHub implements a STAC layer but requires preprocessing scripts and authentication.\nElement84 uses separate asset naming and often different temporal coverage.\n\nTherefore, filtering, asset selection, and pre-processing must be provider-specific. A universal STAC R script is not feasible without explicit adapters for each backend.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Comparison of Sentinel-2 Processing Approaches"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#when-to-choose-which-method",
-    "href": "reader/reader_ws-06.html#when-to-choose-which-method",
-    "title": "Comparison of Sentinel-2 Processing Approaches",
-    "section": "When to choose which method?",
-    "text": "When to choose which method?\n\nChoose gdalcubes if:\n\nyou need long time series (multi-year)\nuniform grid and monthly/weekly aggregates are acceptable\nyou want high performance and vectorised EO analysis\nmemory constraints matter\n\n\n\nChoose CDSE + GetImage if:\n\nyou need near-original resolution\nyou want server-side processing (NDVI, EVI, SAVI, RawBands)\nlocal disk usage should stay minimal\nyou want ESA’s operational QA bands\n\n\n\nChoose terra/raster if:\n\nyou need absolute control over masking, resampling, compositing\nyou are demonstrating methods in a didactic setting\ntransparency and reproducibility matter more than speed",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Comparison of Sentinel-2 Processing Approaches"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#conclusion",
-    "href": "reader/reader_ws-06.html#conclusion",
-    "title": "Comparison of Sentinel-2 Processing Approaches",
-    "section": "Conclusion",
-    "text": "Conclusion\nThe three workflows are complementary. They represent the fundamental trade-off space in satellite data processing:\n\ngdalcubes = performance + cube abstraction\nCDSE = fidelity + server-side processing\nmanual terra = transparency + full control\n\nIn practice, all three are useful depending on whether the objective is: (a) efficient multiyear analysis, (b) exact reproduction of ESA-processed scenes, or (c) methodological inspection of each step.\n```",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Comparison of Sentinel-2 Processing Approaches"
+      "Abstraction Layers in Modern Geospatial Workflows"
     ]
   },
   {
@@ -749,11 +749,11 @@
     ]
   },
   {
-    "objectID": "reader/reader_ws-05.html#ndvi",
-    "href": "reader/reader_ws-05.html#ndvi",
+    "objectID": "reader/reader_ws-05.html#combining-spectral-structural-and-classification-features",
+    "href": "reader/reader_ws-05.html#combining-spectral-structural-and-classification-features",
     "title": "Remote Sensing - Sentinel 2",
-    "section": "NDVI",
-    "text": "NDVI\nNormalized Difference Vegetation Index (NDVI)\nhttps://www.indexdatabase.de/db/i-single.php?id=58\nMeasures chlorophyll absorption in red vs. near-infrared reflectance. A fundamental indicator of greenness, photosynthetic activity, and canopy density. NDVI is the most widely used vegetation index, but also frequently misinterpreted or over-generalised (Huang u. a. 2020).",
+    "section": "Combining Spectral, Structural, and Classification Features",
+    "text": "Combining Spectral, Structural, and Classification Features\nIn practice, many workflows combine three types of information:\n\nSpectral indices (NDVI, MSAVI2, MSI, SAVI, EVI, kNDVI),\nStructural or textural descriptors, and\nClassification models (unsupervised and supervised).\n\nHowever, this is a design choice, not a universal requirement. Brute-force experiments and feature-selection studies show that classification performance depends strongly on the correlation structure and composition of the predictor set rather than on simply “using everything” (Lu und Weng 2007; Mehmood u. a. 2022). Highly collinear indices can dilute model signal, and some feature types become redundant once others are included.\nA common strategy is therefore to derive structural or textural descriptors not on every individual band, but on a reduced spectral subspace, for example on the first principal component of an energy-rich band stack (e.g. red–NIR–SWIR). This preserves most spatial structure while limiting dimensionality and redundancy. In many Random Forest applications, the most important splits still come from raw spectral bands or a few key indices, with texture contributing mainly in cases where spatial pattern (patchiness, edge density, canopy roughness) matters more than pure reflectance (Belgiu und Drăguţ 2016; Datta u. a. 2022). For RGB-only data, by contrast, spatial/structural features and RGB-based indices often carry a larger fraction of the discriminative information.\nEqually important is that model training and feature selection are spatially explicit. Spatial autocorrelation and clustered sampling can cause over-optimistic accuracies and misleading variable importance. Target-oriented spatial cross-validation and forward feature selection, as implemented for example in the CAST framework, explicitly account for prediction geometry and help to remove predictors that only exploit spatial structure instead of genuine environmental relationships (Meyer u. a. 2018, 2019, 2024; Meyer und Pebesma 2021, 2022). In other words, the “best” combination of spectral, structural and ancillary predictors is task- and data-specific and must be derived under an appropriate spatial validation scheme.\nAdditionally, long-term studies increasingly rely on cloud-native geospatial techniques, such as STAC catalogues, COGs, and distributed computing via gdalcubes (Appel und Pebesma 2019), rstac (Brazil Data Cube Team 2021), or openeo (Lahn 2024). These approaches are essential when analyses scale to hundreds of scenes or multiple years.",
     "crumbs": [
       "FAQ",
       "Lectures",
@@ -761,11 +761,11 @@
     ]
   },
   {
-    "objectID": "reader/reader_ws-05.html#msavi2",
-    "href": "reader/reader_ws-05.html#msavi2",
+    "objectID": "reader/reader_ws-05.html#validation",
+    "href": "reader/reader_ws-05.html#validation",
     "title": "Remote Sensing - Sentinel 2",
-    "section": "MSAVI2",
-    "text": "MSAVI2\nModified Soil Adjusted Vegetation Index (MSAVI2)\nhttps://www.indexdatabase.de/db/i-single.php?id=44\nReduces soil-brightness influence in sparse or partially damaged canopies. Useful in drought-affected stands and early dieback, especially where soil background is exposed.",
+    "section": "Assessing Classification Quality",
+    "text": "Assessing Classification Quality\nSupervised classification requires validation, usually by splitting data into training and test subsets or by using independent reference data. Performance metrics include:\n\nSensitivity (true positive rate for clearcuts),\nSpecificity (true negative rate for non-clearcuts),\nPredictive values, adjusting for actual class frequencies, and\nGlobal measures such as overall accuracy and Cohen’s kappa.\n\nEven high accuracy may mask structural misclassification in subtle transitions, such as thinning canopies or partially damaged stands.\nContinuous spectral indices such as kNDVI — derived using the gdalcubes framework — help diagnose such errors by revealing sub-pixel gradients that discrete classes cannot capture.\nAdvanced time-series methods like BFAST (Verbesselt, Zeileis, und Herold 2012; Wu u. a. 2020) breakpoints in vegetation dynamics, including timing and magnitude of structural change. BFAST is particularly valuable in drought–forest interactions and post-disturbance recovery monitoring.",
     "crumbs": [
       "FAQ",
       "Lectures",
@@ -773,11 +773,11 @@
     ]
   },
   {
-    "objectID": "reader/reader_ws-05.html#msi",
-    "href": "reader/reader_ws-05.html#msi",
+    "objectID": "reader/reader_ws-05.html#training-data",
+    "href": "reader/reader_ws-05.html#training-data",
     "title": "Remote Sensing - Sentinel 2",
-    "section": "MSI",
-    "text": "MSI\nMoisture Stress Index (MSI)\nhttps://www.indexdatabase.de/db/i-single.php?id=48\nDerived from SWIR/NIR ratio. Sensitive to water loss and canopy desiccation — often an early-warning indicator before visual decline or NDVI reductions.",
+    "section": "Digitising Training Data",
+    "text": "Digitising Training Data\nTraining data must represent all land-cover types to be classified. Digitisation can be done interactively in R (for example with mapedit) or externally in QGIS:\nhttps://docs.qgis.org/3.34/en/docs/training_manual/create_vector_data/create_new_vector.html#basic-ty-digitizing-polygons\nAfter digitisation, raster values for all predictors (bands, indices, structural descriptors) are extracted for each polygon and used to train the classifier.\nBest practices include:\n\nEnsuring balanced class representation,\nAvoiding polygons that span multiple land-cover types, and\nUsing high-resolution aerial imagery to refine training locations.",
     "crumbs": [
       "FAQ",
       "Lectures",
@@ -785,11 +785,11 @@
     ]
   },
   {
-    "objectID": "reader/reader_ws-05.html#savi",
-    "href": "reader/reader_ws-05.html#savi",
+    "objectID": "reader/reader_ws-05.html#references-reading",
+    "href": "reader/reader_ws-05.html#references-reading",
     "title": "Remote Sensing - Sentinel 2",
-    "section": "SAVI",
-    "text": "SAVI\nSoil Adjusted Vegetation Index (SAVI)\nhttps://www.indexdatabase.de/db/i-single.php?id=87\nExplicitly accounts for soil reflectance in mixed pixels. Highly effective in clearcuts, forest edges, young regrowth, and partially disturbed sites.",
+    "section": "Further Reading",
+    "text": "Further Reading\n\nTechnical tutorials & blogs\nThese resources are practical, implementation-focused guides. They are useful to understand concrete R workflows, but they do not replace primary literature or your own methodological reasoning.\n\nGoldstein, S. (2019). Classifying satellite imagery in R. Urban Spatial Blog. https://urbanspatial.github.io/classifying_satellite_imagery_in_R/ (Goldstein 2019)\nHijmans, R. J. (2023). Supervised classification. rspatial.org. https://rspatial.org/raster/rs/5-supclassification.html (Hijmans 2023)\nLizarazo, I. (2021). A tutorial on pixel-based land cover classification using random forests in R. RPubs. https://rpubs.com/ials2un/rf_landcover (Lizarazo 2021)\nGonçalves, J. (2018). Advanced techniques with raster data: Supervised classification. R-exercises. https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/ (Gonçalves 2018)\nStefan, V. (2020). Satellite image classification in R. https://valentinitnelav.github.io/satellite-image-classification-r/ (Stefan 2020)\n\n\n\n\n\n\n\nTippAbout blog posts and tutorials…\n\n\n\nUse tutorials and blog posts as practical support only. They are extremely helpful for code and workflow patterns, but they cannot replace independent thinking, methodological scrutiny, or engagement with peer-reviewed research.",
     "crumbs": [
       "FAQ",
       "Lectures",
@@ -797,11 +797,11 @@
     ]
   },
   {
-    "objectID": "reader/reader_ws-05.html#evi",
-    "href": "reader/reader_ws-05.html#evi",
+    "objectID": "reader/reader_ws-05.html#final",
+    "href": "reader/reader_ws-05.html#final",
     "title": "Remote Sensing - Sentinel 2",
-    "section": "EVI",
-    "text": "EVI\nEnhanced Vegetation Index (EVI)\nhttps://www.indexdatabase.de/db/i-single.php?id=16\nReduces atmospheric scattering effects and mitigates NDVI saturation in dense canopies. Particularly important in dense conifer forests and for monitoring spruce dieback with Sentinel-2 (Bannari u. a. 1995; Xue und Su 2017).\nThese indices serve as continuous measures of canopy condition, moisture content, and structural state. When combined with classification, they provide the physical basis required to interpret spatial-temporal change patterns.",
+    "section": "Final Remarks",
+    "text": "Final Remarks\nThis tutorial integrates both conventional and cloud-based processing paradigms. Traditional workflows download individual Sentinel scenes and process them locally. Cloud-native methods use STAC catalogues, COGs, and distributed computation (for example gdalcubes, rstac, openeo) to build scalable workflows for long time series and large spatial extents.\nFor cloud-native methods see:\n\nhttps://gdalcubes.github.io/source/tutorials/\nhttps://openeo.org/\nhttps://open-eo.github.io/openeo-r-client/\n\nBoth paradigms remain relevant. Local processing supports transparency, teaching, and technical fundamentals. Cloud-native processing is essential for scaling to continental or multi-year analyses.",
     "crumbs": [
       "FAQ",
       "Lectures",
@@ -809,39 +809,51 @@
     ]
   },
   {
-    "objectID": "reader/reader_ws-05.html#maximum-likelihood-classification-mlc",
-    "href": "reader/reader_ws-05.html#maximum-likelihood-classification-mlc",
-    "title": "Remote Sensing - Sentinel 2",
-    "section": "Maximum Likelihood Classification (MLC)",
-    "text": "Maximum Likelihood Classification (MLC)\nMLC assumes that each class follows a multivariate normal distribution in spectral (or feature) space. It computes the probability that a pixel belongs to each class and assigns it to the most likely one. Performance is strongly influenced by the covariance structure of the classes and by how well the training data represent within-class variability (Hogland, Billor, und Anderson 2013).\n\nMLC performs well when spectral differences between classes (for example, forest vs. clearcut) are large and the Gaussian assumption is approximately valid.",
+    "objectID": "reader/reader_ws-07.html",
+    "href": "reader/reader_ws-07.html",
+    "title": "Understanding spatial patterns",
+    "section": "",
+    "text": "The workshop slides are at https://jakubnowosad.com/eon2025/.",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Remote Sensing - Sentinel 2"
+      "Understanding spatial patterns"
     ]
   },
   {
-    "objectID": "reader/reader_ws-05.html#random-forest-classification-rf",
-    "href": "reader/reader_ws-05.html#random-forest-classification-rf",
-    "title": "Remote Sensing - Sentinel 2",
-    "section": "Random Forest Classification (RF)",
-    "text": "Random Forest Classification (RF)\nRandom Forest builds an ensemble of decision trees, each learning different feature partitions. A pixel is classified via majority vote across all trees.\n\nRF excels in complex, heterogeneous landscapes because it handles:\n\nNonlinear relationships,\nHigh-dimensional predictors (bands plus indices plus structural/textural descriptors),\nCorrelated variables, and\nSpectral noise and outliers.\n\nRandom Forest is now considered a baseline method in environmental machine learning, alongside Gradient Boosting and Support Vector Machines, particularly for land-cover mapping and change detection (Belgiu und Drăguţ 2016; Mehmood u. a. 2022).",
+    "objectID": "reader/reader_ws-07.html#slides",
+    "href": "reader/reader_ws-07.html#slides",
+    "title": "Understanding spatial patterns",
+    "section": "",
+    "text": "The workshop slides are at https://jakubnowosad.com/eon2025/.",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Remote Sensing - Sentinel 2"
+      "Understanding spatial patterns"
     ]
   },
   {
-    "objectID": "reader/reader_ws-05.html#technical-tutorials-blogs",
-    "href": "reader/reader_ws-05.html#technical-tutorials-blogs",
-    "title": "Remote Sensing - Sentinel 2",
-    "section": "Technical tutorials & blogs",
-    "text": "Technical tutorials & blogs\nThese resources are practical, implementation-focused guides. They are useful to understand concrete R workflows, but they do not replace primary literature or your own methodological reasoning.\n\nGoldstein, S. (2019). Classifying satellite imagery in R. Urban Spatial Blog. https://urbanspatial.github.io/classifying_satellite_imagery_in_R/ (Goldstein 2019)\nHijmans, R. J. (2023). Supervised classification. rspatial.org. https://rspatial.org/raster/rs/5-supclassification.html (Hijmans 2023)\nLizarazo, I. (2021). A tutorial on pixel-based land cover classification using random forests in R. RPubs. https://rpubs.com/ials2un/rf_landcover (Lizarazo 2021)\nGonçalves, J. (2018). Advanced techniques with raster data: Supervised classification. R-exercises. https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/ (Gonçalves 2018)\nStefan, V. (2020). Satellite image classification in R. https://valentinitnelav.github.io/satellite-image-classification-r/ (Stefan 2020)\n\n\n\n\n\n\n\nTippAbout blog posts and tutorials…\n\n\n\nUse tutorials and blog posts as practical support only. They are extremely helpful for code and workflow patterns, but they cannot replace independent thinking, methodological scrutiny, or engagement with peer-reviewed research.",
+    "objectID": "reader/reader_ws-07.html#prerequisites",
+    "href": "reader/reader_ws-07.html#prerequisites",
+    "title": "Understanding spatial patterns",
+    "section": "Prerequisites",
+    "text": "Prerequisites\nParticipants are expected to have a working recent version of R and RStudio installed, along with several R packages listed below.\n\nR: https://cloud.r-project.org/\nRStudio: https://posit.co/download/rstudio-desktop/#download\n\ninstall.packages(\"remotes\")\npkg_list = c(\"terra\", \"sf\", \"landscapemetrics\", \"motif\", \"tidyr\", \"dplyr\")\nremotes::install_cran(pkg_list)",
     "crumbs": [
       "FAQ",
       "Lectures",
-      "Remote Sensing - Sentinel 2"
+      "Understanding spatial patterns"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-07.html#exercises",
+    "href": "reader/reader_ws-07.html#exercises",
+    "title": "Understanding spatial patterns",
+    "section": "Exercises",
+    "text": "Exercises\nThe slides are accompanied by practical exercises. The best way to get them is to download the exercises repository as a ZIP file from https://github.com/Nowosad/eon2025-exercises/archive/refs/heads/main.zip and unpack it on your computer. Then, you can open the .Rproj file and start working on the exercises in RStudio.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "Understanding spatial patterns"
     ]
   },
   {
@@ -1296,198 +1308,6 @@
       "FAQ",
       "Worksheets",
       "4 – Execute the Burgwald Data Pipeline"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-05.html#combining-spectral-structural-and-classification-features",
-    "href": "reader/reader_ws-05.html#combining-spectral-structural-and-classification-features",
-    "title": "Remote Sensing - Sentinel 2",
-    "section": "Combining Spectral, Structural, and Classification Features",
-    "text": "Combining Spectral, Structural, and Classification Features\nIn practice, many workflows combine three types of information:\n\nSpectral indices (NDVI, MSAVI2, MSI, SAVI, EVI, kNDVI),\nStructural or textural descriptors, and\nClassification models (unsupervised and supervised).\n\nHowever, this is a design choice, not a universal requirement. Brute-force experiments and feature-selection studies show that classification performance depends strongly on the correlation structure and composition of the predictor set rather than on simply “using everything” (Lu und Weng 2007; Mehmood u. a. 2022). Highly collinear indices can dilute model signal, and some feature types become redundant once others are included.\nA common strategy is therefore to derive structural or textural descriptors not on every individual band, but on a reduced spectral subspace, for example on the first principal component of an energy-rich band stack (e.g. red–NIR–SWIR). This preserves most spatial structure while limiting dimensionality and redundancy. In many Random Forest applications, the most important splits still come from raw spectral bands or a few key indices, with texture contributing mainly in cases where spatial pattern (patchiness, edge density, canopy roughness) matters more than pure reflectance (Belgiu und Drăguţ 2016; Datta u. a. 2022). For RGB-only data, by contrast, spatial/structural features and RGB-based indices often carry a larger fraction of the discriminative information.\nEqually important is that model training and feature selection are spatially explicit. Spatial autocorrelation and clustered sampling can cause over-optimistic accuracies and misleading variable importance. Target-oriented spatial cross-validation and forward feature selection, as implemented for example in the CAST framework, explicitly account for prediction geometry and help to remove predictors that only exploit spatial structure instead of genuine environmental relationships (Meyer u. a. 2018, 2019, 2024; Meyer und Pebesma 2021, 2022). In other words, the “best” combination of spectral, structural and ancillary predictors is task- and data-specific and must be derived under an appropriate spatial validation scheme.\nAdditionally, long-term studies increasingly rely on cloud-native geospatial techniques, such as STAC catalogues, COGs, and distributed computing via gdalcubes (Appel und Pebesma 2019), rstac (Brazil Data Cube Team 2021), or openeo (Lahn 2024). These approaches are essential when analyses scale to hundreds of scenes or multiple years.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Remote Sensing - Sentinel 2"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-05.html#validation",
-    "href": "reader/reader_ws-05.html#validation",
-    "title": "Remote Sensing - Sentinel 2",
-    "section": "Assessing Classification Quality",
-    "text": "Assessing Classification Quality\nSupervised classification requires validation, usually by splitting data into training and test subsets or by using independent reference data. Performance metrics include:\n\nSensitivity (true positive rate for clearcuts),\nSpecificity (true negative rate for non-clearcuts),\nPredictive values, adjusting for actual class frequencies, and\nGlobal measures such as overall accuracy and Cohen’s kappa.\n\nEven high accuracy may mask structural misclassification in subtle transitions, such as thinning canopies or partially damaged stands.\nContinuous spectral indices such as kNDVI — derived using the gdalcubes framework — help diagnose such errors by revealing sub-pixel gradients that discrete classes cannot capture.\nAdvanced time-series methods like BFAST (Verbesselt, Zeileis, und Herold 2012; Wu u. a. 2020) breakpoints in vegetation dynamics, including timing and magnitude of structural change. BFAST is particularly valuable in drought–forest interactions and post-disturbance recovery monitoring.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Remote Sensing - Sentinel 2"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-05.html#training-data",
-    "href": "reader/reader_ws-05.html#training-data",
-    "title": "Remote Sensing - Sentinel 2",
-    "section": "Digitising Training Data",
-    "text": "Digitising Training Data\nTraining data must represent all land-cover types to be classified. Digitisation can be done interactively in R (for example with mapedit) or externally in QGIS:\nhttps://docs.qgis.org/3.34/en/docs/training_manual/create_vector_data/create_new_vector.html#basic-ty-digitizing-polygons\nAfter digitisation, raster values for all predictors (bands, indices, structural descriptors) are extracted for each polygon and used to train the classifier.\nBest practices include:\n\nEnsuring balanced class representation,\nAvoiding polygons that span multiple land-cover types, and\nUsing high-resolution aerial imagery to refine training locations.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Remote Sensing - Sentinel 2"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-05.html#references-reading",
-    "href": "reader/reader_ws-05.html#references-reading",
-    "title": "Remote Sensing - Sentinel 2",
-    "section": "Further Reading",
-    "text": "Further Reading\n\nTechnical tutorials & blogs\nThese resources are practical, implementation-focused guides. They are useful to understand concrete R workflows, but they do not replace primary literature or your own methodological reasoning.\n\nGoldstein, S. (2019). Classifying satellite imagery in R. Urban Spatial Blog. https://urbanspatial.github.io/classifying_satellite_imagery_in_R/ (Goldstein 2019)\nHijmans, R. J. (2023). Supervised classification. rspatial.org. https://rspatial.org/raster/rs/5-supclassification.html (Hijmans 2023)\nLizarazo, I. (2021). A tutorial on pixel-based land cover classification using random forests in R. RPubs. https://rpubs.com/ials2un/rf_landcover (Lizarazo 2021)\nGonçalves, J. (2018). Advanced techniques with raster data: Supervised classification. R-exercises. https://www.r-exercises.com/2018/03/07/advanced-techniques-with-raster-data-part-2-supervised-classification/ (Gonçalves 2018)\nStefan, V. (2020). Satellite image classification in R. https://valentinitnelav.github.io/satellite-image-classification-r/ (Stefan 2020)\n\n\n\n\n\n\n\nTippAbout blog posts and tutorials…\n\n\n\nUse tutorials and blog posts as practical support only. They are extremely helpful for code and workflow patterns, but they cannot replace independent thinking, methodological scrutiny, or engagement with peer-reviewed research.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Remote Sensing - Sentinel 2"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-05.html#final",
-    "href": "reader/reader_ws-05.html#final",
-    "title": "Remote Sensing - Sentinel 2",
-    "section": "Final Remarks",
-    "text": "Final Remarks\nThis tutorial integrates both conventional and cloud-based processing paradigms. Traditional workflows download individual Sentinel scenes and process them locally. Cloud-native methods use STAC catalogues, COGs, and distributed computation (for example gdalcubes, rstac, openeo) to build scalable workflows for long time series and large spatial extents.\nFor cloud-native methods see:\n\nhttps://gdalcubes.github.io/source/tutorials/\nhttps://openeo.org/\nhttps://open-eo.github.io/openeo-r-client/\n\nBoth paradigms remain relevant. Local processing supports transparency, teaching, and technical fundamentals. Cloud-native processing is essential for scaling to continental or multi-year analyses.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Remote Sensing - Sentinel 2"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#gdalcubes-abstraction-of-space-and-time",
-    "href": "reader/reader_ws-06.html#gdalcubes-abstraction-of-space-and-time",
-    "title": "Abstraction Layers in Modern Geospatial Workflows",
-    "section": "gdalcubes — abstraction of space and time",
-    "text": "gdalcubes — abstraction of space and time\ngdalcubes constructs a 4D cube (x, y, t, band) from STAC assets. It executes all operations lazily: reprojection, mosaicking, and temporal aggregation are performed only when needed.\nAdvantages:\n\nextremely fast for multi‑year time series\nclean temporal logic (weekly, monthly reducers)\nmemory‑safe\nminimal code\n\nCosts:\n\nimposes a uniform grid and temporal spacing\nloses per‑granule particularities\n\nThis is acceptable for phenology, disturbance detection, anomaly analysis—but not if you need per‑date near‑native fidelity.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Abstraction Layers in Modern Geospatial Workflows"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#cdse-getimage-abstraction-of-serverside-processing",
-    "href": "reader/reader_ws-06.html#cdse-getimage-abstraction-of-serverside-processing",
-    "title": "Abstraction Layers in Modern Geospatial Workflows",
-    "section": "CDSE + GetImage — abstraction of server‑side processing",
-    "text": "CDSE + GetImage — abstraction of server‑side processing\nCDSE runs Javascript index scripts (NDVI, kNDVI, SAVI, EVI, RawBands) on ESA’s servers. You receive mosaics already cloud‑masked, corrected, and composited.\nAdvantages:\n\npreserves ~native (10–20 m) resolution\nauthentic ESA processing chain\nminimal local disk load\n\nCosts:\n\nOAuth tokens required\nslow for long time series (one server job per date)\nSTAC structure differs from AWS/Google\n\nIdeal when you need: one-off pristine scenes, server QA, or high spatial fidelity.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Abstraction Layers in Modern Geospatial Workflows"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#pure-terra-workflow-maximal-transparency",
-    "href": "reader/reader_ws-06.html#pure-terra-workflow-maximal-transparency",
-    "title": "Abstraction Layers in Modern Geospatial Workflows",
-    "section": "Pure terra workflow — maximal transparency",
-    "text": "Pure terra workflow — maximal transparency\nHere, everything is explicit: downloading assets, assembling tiles, masking clouds, computing indices, building stacks.\nAdvantages:\n\nfull scientific control\nexcellent for didactic demonstration\nreproducible at every level\n\nCosts:\n\nheavy code volume\nfragile (provider URL changes break scripts)\nslow for multi‑year AOIs\n\nThis is not inferior—just more expensive in cognitive and operational terms.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Abstraction Layers in Modern Geospatial Workflows"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#why-stac-appears-here-at-all",
-    "href": "reader/reader_ws-06.html#why-stac-appears-here-at-all",
-    "title": "Abstraction Layers in Modern Geospatial Workflows",
-    "section": "4. Why STAC Appears Here at All",
-    "text": "4. Why STAC Appears Here at All\nAll three workflows discussed on this page—gdalcubes, CDSE GetImage, and manual terra workflows—begin with the same fundamental step:\ndiscover Sentinel-2 scenes for the Burgwald AOI.\nAt first glance this should be straightforward, because all modern EO backends expose Sentinel-2 through STAC endpoints.\nHowever, the workflows diverge sharply in behaviour, reproducibility and data structures. The reason is that STAC is only a metadata index. STAC does not unify access, processing, authentication, or data layout.\nTo understand why the three workflows differ so strongly, we must briefly clarify what STAC actually is—and what it is not.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Abstraction Layers in Modern Geospatial Workflows"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#applying-this-concept-to-stac",
-    "href": "reader/reader_ws-06.html#applying-this-concept-to-stac",
-    "title": "Abstraction Layers in Modern Geospatial Workflows",
-    "section": "Applying this Concept to STAC",
-    "text": "Applying this Concept to STAC\nAlthough STAC defines a common schema, it functions much like a library card catalogue: it tells you what exists, but not how the underlying items are stored, formatted, accessed, or processed. STAC standardises the metadata, not the data structures, access mechanisms, or processing behaviour of different providers.\n\nSTAC = the card index.\nProviders = different libraries.\nrstac / gdalcubes / CDSE = convenience layers helping you use the index.\n\nBecause the underlying “libraries” differ, the STAC index cannot unify access. Providers expose different asset keys, naming conventions, and access rules, even though the metadata schema is shared.\nExamples include: - different asset names (B04_10m vs B04 vs COG-style filenames) - different authentication layers (public COGs vs OAuth vs API keys) - different mosaicking semantics (leastCC, mostRecent, bestPixel) - different processing levels and QA availability (L1C, L2A, SCL, cloud masks)\nAs a result, STAC itself is not the abstraction layer — it only indexes what exists. The actual abstraction must be implemented in client libraries such as rstac, gdalcubes, CDSE’s GetImage(), or custom code.\n\nSTAC does not enforce canonical labeling. STAC describes what exists, not how it is generated. A “uniform” STAC search yields highly non-uniform data.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Abstraction Layers in Modern Geospatial Workflows"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#the-cascade-of-convenience-wrappers",
-    "href": "reader/reader_ws-06.html#the-cascade-of-convenience-wrappers",
-    "title": "Abstraction Layers in Modern Geospatial Workflows",
-    "section": "The Cascade of Convenience Wrappers",
-    "text": "The Cascade of Convenience Wrappers\nBecause (in our case) the underlying EO backends differ so much, R tooling must build layered convenience wrappers on top.\n\n\n\n\n\n\n\n\nLayer\nFunction\nExamples\n\n\n\n\nRaw STAC API\nPure catalogue search\n/stac/search\n\n\nrstac\nR interface (paging, fetching)\nstac_search(), items_fetch()\n\n\ngdalcubes STAC adapter\nConvert STAC → cube definitions\nstac_image_collection()\n\n\nCDSE R package\nProvider-specific abstraction\nOAuth, JS scripts, ESA mosaics\n\n\nYour workflow\nActual geospatial analysis\ne.g. indices → mosaics → ML\n\n\n\nEach layer abstracts away complexity—but also introduces provider lock-in.\nThis is why:\n\ngdalcubes can use AWS COGs but not CDSE’s JS processing\n\nCDSE::GetImage can use ESA’s pipelines but not AWS COGs\n\nterra workflows do not bypass STAC; they simply use it at the lowest level—fetching raw asset URLs and handling all processing locally without any higher-level convenience abstraction.\n\n\nSTAC is unified. The provider and wrapper logic is not — that’s why the workflows diverge.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Abstraction Layers in Modern Geospatial Workflows"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#why-this-matters-for-the-sentinel-2-comparison-above",
-    "href": "reader/reader_ws-06.html#why-this-matters-for-the-sentinel-2-comparison-above",
-    "title": "Abstraction Layers in Modern Geospatial Workflows",
-    "section": "Why This Matters for the Sentinel-2 Comparison Above",
-    "text": "Why This Matters for the Sentinel-2 Comparison Above\nThe workflows differ not because of STAC, but because each provider and wrapper implements data access differently (assets, authentication, preprocessing, formats). STAC only standardises metadata — not how data is delivered or processed.\nTherefore:\ngdalcubes relies on consistent COG assets → works best with AWS/E84.\nCDSE + GetImage uses ESA’s server-side logic → different behaviour.\nterra manual uses STAC only for URLs → everything else is local.\n\nSTAC is unified. The provider and wrapper logic is not — that’s why the workflows diverge.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Abstraction Layers in Modern Geospatial Workflows"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#why-we-return-to-stac-here",
-    "href": "reader/reader_ws-06.html#why-we-return-to-stac-here",
-    "title": "Abstraction Layers in Modern Geospatial Workflows",
-    "section": "Why We Return to STAC Here",
-    "text": "Why We Return to STAC Here\nAll three workflows discussed on this page—gdalcubes, CDSE GetImage, and manual terra workflows—begin with the same fundamental step:\ndiscover Sentinel-2 scenes for the Burgwald AOI.\nAt first glance this should be straightforward, because all modern EO backends expose Sentinel-2 through STAC endpoints.\nHowever, the workflows diverge sharply in behaviour, reproducibility and data structures. Although STAC defines a common schema, it functions much like a library card catalogue: it tells you what exists, but not how the underlying items are stored, formatted, accessed, or processed. STAC standardises the metadata, not the data structures, access mechanisms, or processing behaviour of different providers.\n\nSTAC = the card index.\nProviders = different libraries.\nrstac / gdalcubes / CDSE = convenience layers helping you use the index.\n\nBecause the underlying “libraries” differ, the STAC index cannot unify access. Providers expose different asset keys, naming conventions, and access rules, even though the metadata schema is shared.\nExamples include:\n\ndifferent asset names (B04_10m vs B04 vs COG-style filenames)\ndifferent authentication layers (public COGs vs OAuth vs API keys)\ndifferent mosaicking semantics (leastCC, mostRecent, bestPixel)\ndifferent processing levels and QA availability (L1C, L2A, SCL, cloud masks)\n\nAs a result, STAC itself is not the abstraction layer — it only indexes what exists. The actual abstraction must be implemented in client libraries such as rstac, gdalcubes, CDSE’s GetImage(), or custom code.\n\nSTAC does not enforce canonical labeling. STAC describes what exists, not how it is generated. A “uniform” STAC search yields highly non-uniform data.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Abstraction Layers in Modern Geospatial Workflows"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#procon-matrix-of-sentinel-2-processing-approaches",
-    "href": "reader/reader_ws-06.html#procon-matrix-of-sentinel-2-processing-approaches",
-    "title": "Abstraction Layers in Modern Geospatial Workflows",
-    "section": "Pro/Con Matrix of Sentinel-2 Processing Approaches",
-    "text": "Pro/Con Matrix of Sentinel-2 Processing Approaches\n\n\n\nMethod\nPro\nCon\n\n\n\n\ngdalcubes\n✓ Extremely fast for multi-year time series\n\n\n\n\n✓ Clean temporal reducers (weekly, monthly)\n✓ Memory-safe, minimal code\n✓ Automatic mosaicking & resampling | ✗ Forces uniform grid & timestep\n✗ Loses per-granule radiometric detail\n✗ Limited control over cloud logic\n✗ Not ideal for native single-date fidelity | | CDSE + GetImage | ✓ Near-native 10–20 m resolution\n✓ ESA server-side cloud masking & indices\n✓ Very low local disk footprint\n✓ High-quality mosaics via ESA logic | ✗ Requires OAuth\n✗ Slow for long spans (one server job per date)\n✗ Provider-specific STAC asset layout\n✗ JS scripts must be maintained | | Pure terra workflow | ✓ Full scientific control\n✓ Transparent at every step\n✓ Excellent for teaching and QA\n✓ Reproducible independent of provider logic | ✗ Large code volume (200–400 lines)\n✗ Fragile when provider URLs/assets change\n✗ Slowest for multi-year AOIs\n✗ High cognitive & maintenance load |",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Abstraction Layers in Modern Geospatial Workflows"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#comparative-overview-of-the-three-sentinel-2-paradigms",
-    "href": "reader/reader_ws-06.html#comparative-overview-of-the-three-sentinel-2-paradigms",
-    "title": "Abstraction Layers in Modern Geospatial Workflows",
-    "section": "Comparative Overview of the Three Sentinel-2 Paradigms",
-    "text": "Comparative Overview of the Three Sentinel-2 Paradigms\n\n\n\n\n\n\n\n\n\nMethod\nSummary\nPros\nCons\n\n\n\n\ngdalcubes\nBuilds a 4D cube (x–y–t–band) from STAC assets and executes mosaicking, reprojection, and temporal aggregation lazily. Ideal for long time series on a uniform grid; loses per-granule detail but is very strong for phenology, disturbance and anomaly analysis.\n✅ Extremely fast for multi-year time series✅ Clean temporal reducers (weekly, monthly, custom)✅ Memory-safe, minimal code✅ Automatic mosaics and resampling\n❌ Enforces uniform grid and timestep❌ Loses native granule-level detail❌ Limited control over cloud logic❌ Less suited for per-date, near-native fidelity\n\n\nCDSE + GetImage\nRuns JavaScript index scripts (RawBands, NDVI variants, cloud masks) on ESA servers and returns near-native 10–20 m mosaics. Preserves ESA’s processing chain and reduces local storage; best for high-quality single dates or short time windows.\n✅ Near-native spatial resolution✅ ESA QA and cloud masking✅ Low local storage footprint✅ High-quality server mosaics\n❌ Requires OAuth authentication❌ Slow for long time series (one job per date)❌ Provider-specific STAC structure and assets❌ JS processing scripts must be maintained\n\n\nPure terra workflow\nEnd-to-end manual control: retrieving assets, assembling granules, masking clouds, computing indices, and building stacks in R. Scientifically most transparent and excellent for teaching/QA, but code-heavy, fragile to provider changes, and slow for large AOIs.\n✅ Full scientific control✅ Transparent and inspectable at every step✅ Excellent for didactic use✅ Highly reproducible\n❌ Large code volume❌ Sensitive to provider URL/asset changes❌ Slow for multi-year AOIs❌ High cognitive and maintenance load",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Abstraction Layers in Modern Geospatial Workflows"
-    ]
-  },
-  {
-    "objectID": "reader/reader_ws-06.html#comparative-overview-with-performancefidelitytransparency-ratings",
-    "href": "reader/reader_ws-06.html#comparative-overview-with-performancefidelitytransparency-ratings",
-    "title": "Abstraction Layers in Modern Geospatial Workflows",
-    "section": "Comparative Overview (with Performance–Fidelity–Transparency Ratings)",
-    "text": "Comparative Overview (with Performance–Fidelity–Transparency Ratings)\n\n\n\n\n\n\n\n\n\n\n\n\nMethod\nSummary\nPros ✅\nCons ❌\nPerf.\nFid.\nTransp.\n\n\n\n\ngdalcubes\nBuilds a 4D cube (x–y–t–band) and performs lazy mosaicking, reprojection, and temporal aggregation. Excellent for long time series; less suitable for per-date, high-fidelity scenes.\n• Extremely fast for multi-year time series• Clean temporal reducers• Memory-safe, minimal code• Automatic mosaics/resampling\n• Enforces uniform grid• Loses granule-level detail• Limited cloud-mask control\n⭐⭐⭐\n⭐⭐\n⭐⭐\n\n\nCDSE + GetImage\nExecutes JS processing scripts on ESA servers (cloud masks, bands, indices). Returns near-native mosaics with ESA QA. Great for high-quality scenes; slower for long time series.\n• Near-native 10–20 m resolution• Authentic ESA processing chain• Low disk footprint• High-quality server mosaics\n• OAuth required• Slow for long periods• Provider-specific STAC assets• JS scripts must be maintained\n⭐⭐\n⭐⭐⭐\n⭐⭐\n\n\nPure terra workflow\nFully manual local workflow: downloading assets, mosaicking, masking, computing indices. Maximum scientific control; highest code volume; slowest runtime.\n• Full scientific control• Transparent and inspectable• Didactically excellent• Reproducible at every detail\n• Heavy code volume• Fragile to provider changes• Slow for multi-year AOIs• High maintenance load\n⭐\n⭐⭐⭐\n⭐⭐⭐\n\n\n\nAcross the three approaches there is an implicit Pareto balance:\n\ngdalcubes sits near the performance corner: very fast and scalable, but with less per-scene fidelity and less step-by-step transparency.\nCDSE + GetImage occupies the fidelity corner: close to native Sentinel-2 scenes and ESA’s own processing, but slower and backend-dependent.\npure terra is closest to the transparency corner: every operation is explicit and inspectable, but at the cost of runtime and maintenance effort.\n\nNone of them dominates the others across all three axes.\nEach method is optimal only conditional on what you prioritise (speed, scene fidelity, or methodological transparency).\n\nApplying the Same Logic: The SAGA Example\nWhat happens with Sentinel‑2 also did happen with terrain analysis. Computing slope, curvature, TPI, or HAND (Height Above Nearest Drainage) purely in R means you must do everything yourself: fetch DEM tiles, harmonise EPSG codes, mosaic them, crop them, build masks, run low-level operators, and debug all intermediate steps. Almost none of these tasks are geomorphological—they are administrative overhead.\nRsagacmd eliminates this by wrapping SAGA algorithms in R:\nsaga$ta_morphometry$slope_aspect_curvature(...)\nThe science is identical; the workflow is not. The convenience layer abstracts every non‑scientific step.\nThis parallel to Sentinel‑2 shows: convenience layers are not shortcuts—they allow researchers to work at the conceptual level rather than the infrastructural one.",
-    "crumbs": [
-      "FAQ",
-      "Lectures",
-      "Abstraction Layers in Modern Geospatial Workflows"
     ]
   }
 ]

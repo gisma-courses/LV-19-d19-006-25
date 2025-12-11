@@ -70,6 +70,8 @@ website:
           #- reader/cd-1.qmd
           - reader/reader_ws-05.qmd
           - reader/reader_ws-06.qmd
+          - reader/reader_ws-07.qmd
+          - reader/reader_ws-08.qmd
           # - href: reader/cd-1.qmd
           #   text: Spatial data classification
           # - href: reader/mc_2025_0.qmd
