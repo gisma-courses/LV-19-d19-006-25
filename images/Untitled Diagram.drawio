@@ -4,6 +4,27 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="mESigMN6MauJIgFy8G41-82" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="290" width="320" x="230" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="mESigMN6MauJIgFy8G41-82" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F3FF;strokeColor=#2B6CB0;strokeWidth=2;container=0;" value="" vertex="1">
+          <mxGeometry height="290" width="320" as="geometry" />
+        </mxCell>
+        <mxCell id="11" parent="mESigMN6MauJIgFy8G41-82" style="whiteSpace=wrap;html=1;fontStyle=1;" value="1 Structural landscape stratification&#xa;Where is the landscape structurally different?" vertex="1">
+          <mxGeometry height="50" width="280" x="20" y="15" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="mESigMN6MauJIgFy8G41-82" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2B6CB0;fontSize=11;" value="Tile based analysis&#xa;(2×2 km grid)" vertex="1">
+          <mxGeometry height="40" width="240" x="40" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="13" parent="mESigMN6MauJIgFy8G41-82" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2B6CB0;fontSize=11;" value="Structural metrics&#xa;entropy, diversity, cover" vertex="1">
+          <mxGeometry height="40" width="240" x="40" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="14" parent="mESigMN6MauJIgFy8G41-82" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2B6CB0;fontSize=11;" value="Tile clustering&#xa;Typical landscape tiles" vertex="1">
+          <mxGeometry height="40" width="240" x="40" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="15" parent="mESigMN6MauJIgFy8G41-82" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2B6CB0;fontSize=11;strokeWidth=3;" value="Representative tiles&#xa;(non-redundant test domains)" vertex="1">
+          <mxGeometry height="40" width="240" x="40" y="230" as="geometry" />
+        </mxCell>
         <mxCell id="mESigMN6MauJIgFy8G41-70" connectable="0" parent="1" style="group" value="" vertex="1">
           <mxGeometry height="310" width="460" x="160" y="800" as="geometry" />
         </mxCell>
@@ -71,10 +92,7 @@
           <mxGeometry height="40" width="240" x="40" y="230" as="geometry" />
         </mxCell>
         <mxCell id="2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0050ef;strokeColor=#001DBC;fontSize=12;fontColor=#ffffff;opacity=70;" value="Input data&#xa;DEM, Land cover, Forest fraction, CHM (optional)" vertex="1">
-          <mxGeometry height="60" width="260" x="70" y="30" as="geometry" />
-        </mxCell>
-        <mxCell id="10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F3FF;strokeColor=#2B6CB0;strokeWidth=2;container=0;" value="" vertex="1">
-          <mxGeometry height="290" width="320" x="40" y="120" as="geometry" />
+          <mxGeometry height="60" width="260" x="260" y="10" as="geometry" />
         </mxCell>
         <mxCell id="50" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#6B46C1;strokeWidth=2;" value="" vertex="1">
           <mxGeometry height="280" width="360" x="210" y="1150" as="geometry" />
@@ -100,23 +118,8 @@
         <mxCell id="64" edge="1" parent="1" source="47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=3;" target="51">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="11" parent="1" style="whiteSpace=wrap;html=1;fontStyle=1;" value="1 Structural landscape stratification&#xa;Where is the landscape structurally different?" vertex="1">
-          <mxGeometry height="50" width="280" x="60" y="135" as="geometry" />
-        </mxCell>
-        <mxCell id="12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2B6CB0;fontSize=11;" value="Tile based analysis&#xa;(2×2 km grid)" vertex="1">
-          <mxGeometry height="40" width="240" x="80" y="200" as="geometry" />
-        </mxCell>
-        <mxCell id="13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2B6CB0;fontSize=11;" value="Structural metrics&#xa;entropy, diversity, cover" vertex="1">
-          <mxGeometry height="40" width="240" x="80" y="250" as="geometry" />
-        </mxCell>
-        <mxCell id="14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2B6CB0;fontSize=11;" value="Tile clustering&#xa;Typical landscape tiles" vertex="1">
-          <mxGeometry height="40" width="240" x="80" y="300" as="geometry" />
-        </mxCell>
         <mxCell id="mESigMN6MauJIgFy8G41-75" edge="1" parent="1" source="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeWidth=3;" target="21">
           <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2B6CB0;fontSize=11;strokeWidth=3;" value="Representative tiles&#xa;(non-redundant test domains)" vertex="1">
-          <mxGeometry height="40" width="240" x="80" y="350" as="geometry" />
         </mxCell>
         <mxCell id="mESigMN6MauJIgFy8G41-79" edge="1" parent="1" source="34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeWidth=3;" target="41">
           <mxGeometry relative="1" as="geometry">
