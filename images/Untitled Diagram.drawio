@@ -1,11 +1,11 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.7">
   <diagram name="Page-1" id="C_qJEJ-H_p9d8kiWJM0f">
-    <mxGraphModel dx="2026" dy="2331" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1668" dy="1920" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="mESigMN6MauJIgFy8G41-70" connectable="0" parent="1" style="group" value="" vertex="1">
-          <mxGeometry height="310" width="460" x="140" y="800" as="geometry" />
+          <mxGeometry height="310" width="460" x="160" y="800" as="geometry" />
         </mxCell>
         <mxCell id="40" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF2F2;strokeColor=#C53030;strokeWidth=2;container=0;" value="" vertex="1">
           <mxGeometry height="310" width="460" as="geometry" />
@@ -28,11 +28,11 @@
         <mxCell id="46" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#C53030;fontSize=11;" value="Windwardness&#xa;(annotation only)" vertex="1">
           <mxGeometry height="40" width="180" x="240" y="200" as="geometry" />
         </mxCell>
-        <mxCell id="47" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#C53030;fontSize=11;" value="Cluster into process strata&#xa;cold air, orographic, forest–atmosphere" vertex="1">
+        <mxCell id="47" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#C53030;fontSize=11;strokeWidth=3;" value="Cluster into process strata&#xa;cold air, orographic, forest–atmosphere" vertex="1">
           <mxGeometry height="40" width="260" x="100" y="250" as="geometry" />
         </mxCell>
         <mxCell id="mESigMN6MauJIgFy8G41-68" connectable="0" parent="1" style="group" value="" vertex="1">
-          <mxGeometry height="270" width="320" x="450" y="480" as="geometry" />
+          <mxGeometry height="270" width="320" x="410" y="480" as="geometry" />
         </mxCell>
         <mxCell id="30" parent="mESigMN6MauJIgFy8G41-68" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFAF0;strokeColor=#B7791F;strokeWidth=2;container=0;" value="" vertex="1">
           <mxGeometry height="270" width="320" as="geometry" />
@@ -46,7 +46,7 @@
         <mxCell id="33" parent="mESigMN6MauJIgFy8G41-68" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#B7791F;fontSize=11;" value="Wall-to-wall segmentation&#xa;full Burgwald" vertex="1">
           <mxGeometry height="40" width="240" x="40" y="140" as="geometry" />
         </mxCell>
-        <mxCell id="34" parent="mESigMN6MauJIgFy8G41-68" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#B7791F;fontSize=11;" value="Continuous segmentation map&#xa;spatial analysis units" vertex="1">
+        <mxCell id="34" parent="mESigMN6MauJIgFy8G41-68" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#B7791F;fontSize=11;strokeWidth=3;" value="Continuous segmentation map&#xa;spatial analysis units" vertex="1">
           <mxGeometry height="40" width="240" x="40" y="190" as="geometry" />
         </mxCell>
         <mxCell id="mESigMN6MauJIgFy8G41-67" connectable="0" parent="1" style="group" value="" vertex="1">
@@ -67,7 +67,7 @@
         <mxCell id="24" parent="mESigMN6MauJIgFy8G41-67" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2F855A;fontSize=11;" value="Candidate segmentations&#xa;(multiple scales)" vertex="1">
           <mxGeometry height="40" width="240" x="40" y="180" as="geometry" />
         </mxCell>
-        <mxCell id="25" parent="mESigMN6MauJIgFy8G41-67" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2F855A;fontSize=11;" value="Scale evaluation&#xa;coherence, stability, interpretability" vertex="1">
+        <mxCell id="25" parent="mESigMN6MauJIgFy8G41-67" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2F855A;fontSize=11;strokeWidth=3;" value="Scale evaluation&#xa;coherence, stability, interpretability" vertex="1">
           <mxGeometry height="40" width="240" x="40" y="230" as="geometry" />
         </mxCell>
         <mxCell id="2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0050ef;strokeColor=#001DBC;fontSize=12;fontColor=#ffffff;opacity=70;" value="Input data&#xa;DEM, Land cover, Forest fraction, CHM (optional)" vertex="1">
@@ -77,7 +77,7 @@
           <mxGeometry height="290" width="320" x="40" y="120" as="geometry" />
         </mxCell>
         <mxCell id="50" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#6B46C1;strokeWidth=2;" value="" vertex="1">
-          <mxGeometry height="280" width="360" x="190" y="1150" as="geometry" />
+          <mxGeometry height="280" width="360" x="210" y="1150" as="geometry" />
         </mxCell>
         <mxCell id="51" parent="50" style="whiteSpace=wrap;html=1;fontStyle=1;" value="4 Network optimization and hydrology&#xa;Where does a gauge add information?" vertex="1">
           <mxGeometry height="50" width="320" x="20" y="15" as="geometry" />
@@ -91,33 +91,13 @@
         <mxCell id="54" parent="50" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6B46C1;fontSize=11;" value="Redundancy reduction" vertex="1">
           <mxGeometry height="40" width="240" x="60" y="180" as="geometry" />
         </mxCell>
-        <mxCell id="55" parent="50" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6B46C1;fontSize=11;" value="Final rainfall-gauge network" vertex="1">
+        <mxCell id="55" parent="50" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6B46C1;fontSize=11;strokeWidth=3;" value="Final rainfall-gauge network" vertex="1">
           <mxGeometry height="40" width="240" x="60" y="230" as="geometry" />
         </mxCell>
-        <mxCell id="60" edge="1" parent="1" source="2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;" target="11">
+        <mxCell id="60" edge="1" parent="1" source="2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=3;" target="11">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="61" edge="1" parent="1" source="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;" target="21">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="62" edge="1" parent="1" source="25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;" target="31">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="400" y="710" />
-              <mxPoint x="400" y="440" />
-              <mxPoint x="610" y="440" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="63" edge="1" parent="1" source="34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;" target="41">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="610" y="770" />
-              <mxPoint x="370" y="770" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="64" edge="1" parent="1" source="47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;" target="51">
+        <mxCell id="64" edge="1" parent="1" source="47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=3;" target="51">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="11" parent="1" style="whiteSpace=wrap;html=1;fontStyle=1;" value="1 Structural landscape stratification&#xa;Where is the landscape structurally different?" vertex="1">
@@ -132,8 +112,28 @@
         <mxCell id="14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2B6CB0;fontSize=11;" value="Tile clustering&#xa;Typical landscape tiles" vertex="1">
           <mxGeometry height="40" width="240" x="80" y="300" as="geometry" />
         </mxCell>
-        <mxCell id="15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2B6CB0;fontSize=11;" value="Representative tiles&#xa;(non-redundant test domains)" vertex="1">
+        <mxCell id="mESigMN6MauJIgFy8G41-75" edge="1" parent="1" source="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeWidth=3;" target="21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2B6CB0;fontSize=11;strokeWidth=3;" value="Representative tiles&#xa;(non-redundant test domains)" vertex="1">
           <mxGeometry height="40" width="240" x="80" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="mESigMN6MauJIgFy8G41-79" edge="1" parent="1" source="34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeWidth=3;" target="41">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="570" y="780" />
+              <mxPoint x="390" y="780" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mESigMN6MauJIgFy8G41-80" edge="1" parent="1" source="25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=3;" target="31">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="390" y="710" />
+              <mxPoint x="390" y="450" />
+              <mxPoint x="570" y="450" />
+            </Array>
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
