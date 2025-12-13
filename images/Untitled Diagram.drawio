@@ -91,8 +91,8 @@
         <mxCell id="25" parent="mESigMN6MauJIgFy8G41-67" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2F855A;fontSize=11;strokeWidth=3;" value="Scale evaluation&#xa;coherence, stability, interpretability" vertex="1">
           <mxGeometry height="40" width="240" x="40" y="230" as="geometry" />
         </mxCell>
-        <mxCell id="2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0050ef;strokeColor=#001DBC;fontSize=12;fontColor=#ffffff;opacity=70;" value="Input data&#xa;DEM, Land cover, Forest fraction, CHM (optional)" vertex="1">
-          <mxGeometry height="60" width="260" x="260" y="10" as="geometry" />
+        <mxCell id="2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0050ef;strokeColor=#001DBC;fontSize=12;fontColor=#ffffff;opacity=70;" value="&lt;font style=&quot;font-size: 14px; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Input data&lt;br&gt;DEM, Sentinel-Classification/Land cover, Forest fraction, CHM (optional)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="340" x="220" y="10" as="geometry" />
         </mxCell>
         <mxCell id="50" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#6B46C1;strokeWidth=2;" value="" vertex="1">
           <mxGeometry height="280" width="360" x="210" y="1150" as="geometry" />
