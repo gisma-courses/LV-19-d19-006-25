@@ -90,7 +90,7 @@ The workflow was reordered to ensure that spatial structure and process assumpti
   - data and resource plan,
   - initial literature justification.
 
-::: {.callout-tip title="📋  **Outcome**" appearance="minimal"}
+::: {.callout-tip title="🧩 Key idea" appearance="minimal"}
 Defines _**what should be built**_ and _**why**_.
 All following modules answer _**how**_.
 :::
@@ -111,7 +111,7 @@ All following modules answer _**how**_.
   - Sentinel-2 → structural layers (canopy/open), not full RS modelling
 
 
-::: {.callout-tip title="📋 Key idea" appearance="minimal"}
+::: {.callout-tip title="🧩 Key idea" appearance="minimal"}
 
 Data selection is not purely technical.  
 It is **biased by process assumptions** and directly constrains the interpretation of the project results.
@@ -136,7 +136,7 @@ It is **biased by process assumptions** and directly constrains the interpretati
 - Functional land-cover simplification (forest/open, canopy density)
 
 
-::: {.callout-tip title="📋 Key idea" appearance="minimal"}
+::: {.callout-tip title="🧩 Key idea" appearance="minimal"}
 
 This step reframes preprocessing as **process modelling at the first order**.  
 Consequently, all **scale decisions** made here become part of the scientific argument and must be revisited explicitly.
@@ -155,7 +155,7 @@ Consequently, all **scale decisions** made here become part of the scientific ar
 - Aspect × wind → Luv/Lee annotation
 
   
-::: {.callout-tip title="📋 Key idea" appearance="minimal"}
+::: {.callout-tip title="🧩 Key idea" appearance="minimal"}
 
 This module introduces key **conceptual constraints**.  
 Variables such as *Luv/Lee* are treated as **annotation layers**, not as clustering variables.  
@@ -180,7 +180,7 @@ They support **interpretation and diagnostics across segments**, but do not defi
   - process plausibility.
 
 
-::: {.callout-tip title="📋 Key idea" appearance="minimal"}
+::: {.callout-tip title="🧩 Key idea" appearance="minimal"}
 
 This module marks a **shift in emphasis**.  
 Rather than pursuing exhaustive cluster-validity optimisation (e.g. silhouette scores), the focus is placed on **interpretability**, **stability**, and **process plausibility**.  
@@ -235,7 +235,7 @@ not as a blueprint to be reproduced.
 - Recognition that technical completeness does **not** imply scientific adequacy.
 - Acceptance that refinement often means **removing** methods, not adding more.
 
-::: {.callout-tip title="📋 Key idea" appearance="minimal"}
+::: {.callout-tip title="🧩 Key idea" appearance="minimal"}
 
 
 A scientifically grounded, internally consistent project design that:
@@ -290,7 +290,7 @@ Its role is not optimisation, but **testing**:
 Maps are treated as **analytical artefacts**, not presentation products:
 they are used to identify structural consistency, mismatches, and process-related patterns.
 
-::: {.callout-tip title="📋 Key idea" appearance="minimal"}
+::: {.callout-tip title="🧩 Key idea" appearance="minimal"}
 
 Interpolation functions as a **stress test**.
 The question is not whether an interpolated field looks smooth or accurate, but whether **the chosen spatial structuring helps explain where and why interpolation fails**.
