@@ -2,6 +2,7 @@
 title: 6 – Applying the Spatial Structuring Pipeline
 Subtitle: Defining Valid Design Units Before Any Optimisation
 author: "Chris Reudenbach"
+date: '2025-12-13'
 title-block-banner: "../images/gw-sp.png"
 title-block-banner-color: "white"
 format:

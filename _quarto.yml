@@ -1,6 +1,7 @@
 project:
   type: website
   output-dir: docs/
+
   resources:
     - images/**
   render:
@@ -9,6 +10,8 @@ project:
 resource-path:
   - images
   - .
+
+
 
 website:
   title: "Advanced GIS & RS"
@@ -123,4 +126,4 @@ format:
     include-after-body:
       - includes/_footer-year.html
 
-lang: de
+lang: en

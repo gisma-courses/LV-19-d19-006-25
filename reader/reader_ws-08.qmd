@@ -1,6 +1,9 @@
 ---
 title: "IT-Based Landscape Stratification for Rain-Gauge Network Design"
 author: "Chris Reudenbach"
+date: '2025-12-10'
+title-block-banner: "../images/gw-sp.png"
+title-block-banner-color: "white"
 format:
   html:
     toc: true

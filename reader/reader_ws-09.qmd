@@ -2,12 +2,12 @@
 title: From Spatial Structure to Hydrological Network Design
 subtitle: A Segmentation-Based Framework for Rainfall Station Placement
 author: Chris Reudenbach
-
-date: '2025-12-04'
-bibliography: references.bib
+date: '2025-12-12'
 
 title-block-banner: "../images/gw-sp.png"
 title-block-banner-color: "white"
+
+bibliography: references.bib
 format:
   html:
     toc: true
@@ -27,7 +27,8 @@ Many existing approaches optimise station locations directly within predefined s
 
 The workflow adopted here explicitly separates **structural heterogeneity**, **segmentation-based scale discovery**, **physiographic process stratification**, and **hydrological optimisation** (Figure 1). This staged reduction of spatial complexity ensures that scale decisions remain explicit and that optimisation operates on process-relevant spatial units rather than raw spatial partitions.
 
-![Fig. 1: Design framework for the Burgwald rainfall gauge network](../images/Diagram.drawio.svg)  
+
+![Fig. 1: Design framework for the Burgwald rainfall gauge network](../images/workflow.drawio.png)  
 ---
 
 ## Catchment-based versus segment-based design

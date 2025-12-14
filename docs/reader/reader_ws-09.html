@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.8.26">
@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Chris Reudenbach">
+<meta name="dcterms.date" content="2025-12-12">
 
 <title>From Spatial Structure to Hydrological Network Design – Advanced GIS &amp; RS</title>
 <style>
@@ -75,17 +76,17 @@ div.csl-indent {
     "s"
   ],
   "language": {
-    "search-no-results-text": "Keine Treffer",
-    "search-matching-documents-text": "Treffer",
-    "search-copy-link-title": "Link in die Suche kopieren",
-    "search-hide-matches-text": "Zusätzliche Treffer verbergen",
-    "search-more-match-text": "weitere Treffer in diesem Dokument",
-    "search-more-matches-text": "weitere Treffer in diesem Dokument",
-    "search-clear-button-title": "Zurücksetzen",
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
     "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Abbrechen",
-    "search-submit-button-title": "Abschicken",
-    "search-label": "Suchen"
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <style>
@@ -111,9 +112,11 @@ background-size: cover;
 <link rel="stylesheet" href="../css/styles.css">
 <meta property="og:title" content="From Spatial Structure to Hydrological Network Design – Advanced GIS &amp; RS">
 <meta property="og:description" content="A Segmentation-Based Framework for Rainfall Station Placement">
-<meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/images/Diagram.drawio.svg">
+<meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/images/workflow.drawio.png">
 <meta property="og:site_name" content="Advanced GIS &amp; RS">
 <meta property="og:image:alt" content="Fig. 1: Design framework for the Burgwald rainfall gauge network">
+<meta property="og:image:height" content="1433">
+<meta property="og:image:width" content="762">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -127,8 +130,8 @@ background-size: cover;
     <span class="navbar-title">Advanced GIS &amp; RS</span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Suchen"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navigation umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -153,10 +156,10 @@ background-size: cover;
     </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
           <h1 class="quarto-secondary-nav-title">From Spatial Structure to Hydrological Network Design</h1>
         </a>     
     </div>
@@ -175,16 +178,16 @@ background-size: cover;
   <div class="quarto-title-meta">
 
       <div>
-      <div class="quarto-title-meta-heading">Autor:in</div>
+      <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
                <p>Chris Reudenbach </p>
             </div>
     </div>
       
       <div>
-      <div class="quarto-title-meta-heading">Veröffentlichungsdatum</div>
+      <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">4. Dezember 2025</p>
+        <p class="date">December 12, 2025</p>
       </div>
     </div>
     
@@ -201,7 +204,7 @@ background-size: cover;
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Basics</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Abschnitt umschalten">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -243,7 +246,7 @@ background-size: cover;
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Lectures</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Abschnitt umschalten">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -309,7 +312,7 @@ background-size: cover;
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">Worksheets</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Abschnitt umschalten">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -371,11 +374,11 @@ background-size: cover;
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Auf dieser Seite</h2>
+    <h2 id="toc-title">On this page</h2>
    
   <ul>
   <li><a href="#conceptual-background-and-problem-framing" id="toc-conceptual-background-and-problem-framing" class="nav-link active" data-scroll-target="#conceptual-background-and-problem-framing">Conceptual background and problem framing</a></li>
-  <li><a href="#fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network" id="toc-fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network" class="nav-link" data-scroll-target="#fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network"><img src="../images/Diagram.drawio.svg" class="img-fluid" alt="Fig. 1: Design framework for the Burgwald rainfall gauge network"></a></li>
+  <li><a href="#fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network" id="toc-fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network" class="nav-link" data-scroll-target="#fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network"><img src="../images/workflow.drawio.png" class="img-fluid" alt="Fig. 1: Design framework for the Burgwald rainfall gauge network"></a></li>
   <li><a href="#catchment-based-versus-segment-based-design" id="toc-catchment-based-versus-segment-based-design" class="nav-link" data-scroll-target="#catchment-based-versus-segment-based-design">Catchment-based versus segment-based design</a>
   <ul class="collapse">
   <li><a href="#catchment-based-design" id="toc-catchment-based-design" class="nav-link" data-scroll-target="#catchment-based-design">Catchment-based design</a></li>
@@ -392,7 +395,7 @@ background-size: cover;
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
-<div class="quarto-alternate-formats"><h2>Andere Formate</h2><ul><li><a href="reader_ws-09.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="reader_ws-09.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -404,22 +407,22 @@ background-size: cover;
 <section id="conceptual-background-and-problem-framing" class="level2">
 <h2 class="anchored" data-anchor-id="conceptual-background-and-problem-framing">Conceptual background and problem framing</h2>
 <p>The design of rainfall and hydrometric monitoring networks is fundamentally a <strong>spatial design problem</strong>. Landscapes are heterogeneous, monitoring resources are limited, and the target variables of interest—precipitation, runoff, and discharge—are governed by interacting processes operating across multiple spatial scales. Consequently, station placement cannot be reduced to uniform coverage or local optimisation, but must instead maximise <strong>information gain with respect to hydrological response</strong>.</p>
-<p>Many existing approaches optimise station locations directly within predefined spatial units such as grids or catchments <span class="citation" data-cites="Mishra2009 Alfonso2010 Samuel2013">(<a href="#ref-Mishra2009" role="doc-biblioref">Mishra und Coulibaly 2009</a>; <a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>; <a href="#ref-Samuel2013" role="doc-biblioref">Samuel 2013</a>)</span>. While these approaches are hydrologically intuitive, they embed <strong>implicit assumptions about spatial scale and internal homogeneity</strong>, which are rarely satisfied in real landscapes <span class="citation" data-cites="Wagener2007">(<a href="#ref-Wagener2007" role="doc-biblioref">Wagener 2007</a>)</span>.</p>
+<p>Many existing approaches optimise station locations directly within predefined spatial units such as grids or catchments <span class="citation" data-cites="Mishra2009 Alfonso2010 Samuel2013">(<a href="#ref-Mishra2009" role="doc-biblioref">Mishra and Coulibaly 2009</a>; <a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>; <a href="#ref-Samuel2013" role="doc-biblioref">Samuel 2013</a>)</span>. While these approaches are hydrologically intuitive, they embed <strong>implicit assumptions about spatial scale and internal homogeneity</strong>, which are rarely satisfied in real landscapes <span class="citation" data-cites="Wagener2007">(<a href="#ref-Wagener2007" role="doc-biblioref">Wagener 2007</a>)</span>.</p>
 <p>The workflow adopted here explicitly separates <strong>structural heterogeneity</strong>, <strong>segmentation-based scale discovery</strong>, <strong>physiographic process stratification</strong>, and <strong>hydrological optimisation</strong> (Figure 1). This staged reduction of spatial complexity ensures that scale decisions remain explicit and that optimisation operates on process-relevant spatial units rather than raw spatial partitions.</p>
 </section>
 <section id="fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network" class="level2">
-<h2 class="anchored" data-anchor-id="fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network"><img src="../images/Diagram.drawio.svg" class="img-fluid" alt="Fig. 1: Design framework for the Burgwald rainfall gauge network"></h2>
+<h2 class="anchored" data-anchor-id="fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network"><img src="../images/workflow.drawio.png" class="img-fluid" alt="Fig. 1: Design framework for the Burgwald rainfall gauge network"></h2>
 </section>
 <section id="catchment-based-versus-segment-based-design" class="level2">
 <h2 class="anchored" data-anchor-id="catchment-based-versus-segment-based-design">Catchment-based versus segment-based design</h2>
 <section id="catchment-based-design" class="level3">
 <h3 class="anchored" data-anchor-id="catchment-based-design">Catchment-based design</h3>
-<p>Catchments are the natural spatial units of hydrology. They encode drainage connectivity, flow accumulation, and mass balance, and therefore form the backbone of many network design approaches <span class="citation" data-cites="Mishra2009 Alfonso2010">(<a href="#ref-Mishra2009" role="doc-biblioref">Mishra und Coulibaly 2009</a>; <a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>)</span>. Optimisation within catchments provides a direct link between rainfall measurements and discharge observations at outlets.</p>
+<p>Catchments are the natural spatial units of hydrology. They encode drainage connectivity, flow accumulation, and mass balance, and therefore form the backbone of many network design approaches <span class="citation" data-cites="Mishra2009 Alfonso2010">(<a href="#ref-Mishra2009" role="doc-biblioref">Mishra and Coulibaly 2009</a>; <a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>)</span>. Optimisation within catchments provides a direct link between rainfall measurements and discharge observations at outlets.</p>
 <p>However, catchment-based designs implicitly assume that catchments are internally homogeneous. Empirical and comparative hydrology studies demonstrate that even small catchments often exhibit multiple dominant runoff-generation mechanisms <span class="citation" data-cites="Wagener2007 Sawicz2011">(<a href="#ref-Wagener2007" role="doc-biblioref">Wagener 2007</a>; <a href="#ref-Sawicz2011" role="doc-biblioref">Sawicz 2011</a>)</span>. As a result, station placement optimised at the catchment level may be hydrologically relevant at the outlet but <strong>spatially blind</strong> to internal process variability.</p>
 </section>
 <section id="segment-based-design" class="level3">
 <h3 class="anchored" data-anchor-id="segment-based-design">Segment-based design</h3>
-<p>Segment-based approaches derive <strong>data-driven spatial units</strong> through adaptive segmentation or regionalisation. These units aim to be internally homogeneous and externally distinct with respect to selected variables. In remote sensing and spatial analysis, segmentation has long been treated as a <strong>scale-space problem</strong> rather than a classification task <span class="citation" data-cites="Blaschke2010 Dragut2014">(<a href="#ref-Blaschke2010" role="doc-biblioref">Blaschke 2010</a>; <a href="#ref-Dragut2014" role="doc-biblioref">Drăguţ, Tiede, und Levick 2014</a>)</span>.</p>
+<p>Segment-based approaches derive <strong>data-driven spatial units</strong> through adaptive segmentation or regionalisation. These units aim to be internally homogeneous and externally distinct with respect to selected variables. In remote sensing and spatial analysis, segmentation has long been treated as a <strong>scale-space problem</strong> rather than a classification task <span class="citation" data-cites="Blaschke2010 Dragut2014">(<a href="#ref-Blaschke2010" role="doc-biblioref">Blaschke 2010</a>; <a href="#ref-Dragut2014" role="doc-biblioref">Drăguţ, Tiede, and Levick 2014</a>)</span>.</p>
 <p>Recent work on adaptive regionalisation and supercells shows that such units can be robust and reproducible when segmentation quality is evaluated quantitatively <span class="citation" data-cites="Nowosad2022">(<a href="#ref-Nowosad2022" role="doc-biblioref">Nowosad 2022</a>)</span>. Segment-based designs allow explicit control over spatial scale and can represent similar process settings across different catchments.</p>
 <p>At the same time, segments do not encode hydrological connectivity and therefore cannot replace catchments as aggregation units. Used in isolation, segment-based designs risk ignoring flow paths and drainage hierarchy.</p>
 </section>
@@ -433,7 +436,7 @@ background-size: cover;
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
 <section id="structural-landscape-stratification" class="level3">
 <h3 class="anchored" data-anchor-id="structural-landscape-stratification">Structural landscape stratification</h3>
-<p>The study area is partitioned into coarse, fixed spatial tiles. For each tile, structural landscape descriptors are derived from categorical land-cover data, including diversity and entropy-based measures <span class="citation" data-cites="Turner1989 McGarigal2012">(<a href="#ref-Turner1989" role="doc-biblioref">Turner 1989</a>; <a href="#ref-McGarigal2012" role="doc-biblioref">McGarigal, Cushman, und Ene 2012</a>)</span>. These descriptors characterise landscape structure independently of physical processes.</p>
+<p>The study area is partitioned into coarse, fixed spatial tiles. For each tile, structural landscape descriptors are derived from categorical land-cover data, including diversity and entropy-based measures <span class="citation" data-cites="Turner1989 McGarigal2012">(<a href="#ref-Turner1989" role="doc-biblioref">Turner 1989</a>; <a href="#ref-McGarigal2012" role="doc-biblioref">McGarigal, Cushman, and Ene 2012</a>)</span>. These descriptors characterise landscape structure independently of physical processes.</p>
 <p>Tiles are clustered into <strong>structural strata</strong>, reducing spatial redundancy prior to segmentation and optimisation.</p>
 </section>
 <section id="representative-test-tiles" class="level3">
@@ -442,7 +445,7 @@ background-size: cover;
 </section>
 <section id="adaptive-segmentation-and-scale-discovery" class="level3">
 <h3 class="anchored" data-anchor-id="adaptive-segmentation-and-scale-discovery">Adaptive segmentation and scale discovery</h3>
-<p>Adaptive segmentation methods (e.g.&nbsp;mean-shift or supercell-based approaches) are applied to the test tiles across a range of parameter settings. Segmentation quality is evaluated using quantitative criteria such as segment size distributions, intra-segment homogeneity, inter-segment contrast, and stability under parameter perturbation <span class="citation" data-cites="Clinton2010 Chen2018">(<a href="#ref-Clinton2010" role="doc-biblioref">Clinton u.&nbsp;a. 2010</a>; <a href="#ref-Chen2018" role="doc-biblioref">Chen 2018</a>)</span>.</p>
+<p>Adaptive segmentation methods (e.g.&nbsp;mean-shift or supercell-based approaches) are applied to the test tiles across a range of parameter settings. Segmentation quality is evaluated using quantitative criteria such as segment size distributions, intra-segment homogeneity, inter-segment contrast, and stability under parameter perturbation <span class="citation" data-cites="Clinton2010 Chen2018">(<a href="#ref-Clinton2010" role="doc-biblioref">Clinton et al. 2010</a>; <a href="#ref-Chen2018" role="doc-biblioref">Chen 2018</a>)</span>.</p>
 <p>Rather than selecting a single optimal scale, segmentation configurations are evaluated in terms of <strong>Pareto-optimal trade-offs</strong>.</p>
 </section>
 <section id="segmentation-transfer-and-physiographic-strata" class="level3">
@@ -465,49 +468,49 @@ background-size: cover;
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-Alfonso2010" class="csl-entry" role="listitem">
-Alfonso, L. et al. 2010. <span>„Information theory applied to the design of hydrometric networks“</span>. <em>Water Resources Research</em> 46.
+Alfonso, L. et al. 2010. <span>“Information Theory Applied to the Design of Hydrometric Networks.”</span> <em>Water Resources Research</em> 46.
 </div>
 <div id="ref-Blaschke2010" class="csl-entry" role="listitem">
-Blaschke, T. 2010. <span>„Object-based image analysis for remote sensing“</span>. <em>ISPRS Journal of Photogrammetry and Remote Sensing</em> 65: 2–16.
+Blaschke, T. 2010. <span>“Object-Based Image Analysis for Remote Sensing.”</span> <em>ISPRS Journal of Photogrammetry and Remote Sensing</em> 65: 2–16.
 </div>
 <div id="ref-Chen2018" class="csl-entry" role="listitem">
-Chen, G. et al. 2018. <span>„Segmentation evaluation for high-resolution remote sensing images“</span>. <em>Photogrammetric Engineering &amp; Remote Sensing</em> 84: 735–46.
+Chen, G. et al. 2018. <span>“Segmentation Evaluation for High-Resolution Remote Sensing Images.”</span> <em>Photogrammetric Engineering &amp; Remote Sensing</em> 84: 735–46.
 </div>
 <div id="ref-Clinton2010" class="csl-entry" role="listitem">
-Clinton, Nicholas, Andrew Holt, James Scarborough, Li Yan, und Peng Gong. 2010. <span>„Accuracy assessment measures for object-based image segmentation goodness“</span>. <em>Photogrammetric Engineering &amp; Remote Sensing</em> 76 (3): 289–99. <a href="https://doi.org/10.14358/PERS.76.3.289">https://doi.org/10.14358/PERS.76.3.289</a>.
+Clinton, Nicholas, Andrew Holt, James Scarborough, Li Yan, and Peng Gong. 2010. <span>“Accuracy Assessment Measures for Object-Based Image Segmentation Goodness.”</span> <em>Photogrammetric Engineering &amp; Remote Sensing</em> 76 (3): 289–99. <a href="https://doi.org/10.14358/PERS.76.3.289">https://doi.org/10.14358/PERS.76.3.289</a>.
 </div>
 <div id="ref-Dragut2014" class="csl-entry" role="listitem">
-Drăguţ, L., D. Tiede, und S. R. Levick. 2014. <span>„Automated parameterisation for multi-scale image segmentation“</span>. <em>ISPRS Journal of Photogrammetry and Remote Sensing</em> 88: 119–27.
+Drăguţ, L., D. Tiede, and S. R. Levick. 2014. <span>“Automated Parameterisation for Multi-Scale Image Segmentation.”</span> <em>ISPRS Journal of Photogrammetry and Remote Sensing</em> 88: 119–27.
 </div>
 <div id="ref-Keum2017" class="csl-entry" role="listitem">
-Keum, J. et al. 2017. <span>„Entropy applications to water monitoring network design“</span>. <em>Entropy</em> 19: 613.
+Keum, J. et al. 2017. <span>“Entropy Applications to Water Monitoring Network Design.”</span> <em>Entropy</em> 19: 613.
 </div>
 <div id="ref-McGarigal2012" class="csl-entry" role="listitem">
-McGarigal, K., S. Cushman, und E. Ene. 2012. <em>FRAGSTATS v4: Spatial Pattern Analysis Program</em>. University of Massachusetts.
+McGarigal, K., S. Cushman, and E. Ene. 2012. <em>FRAGSTATS V4: Spatial Pattern Analysis Program</em>. University of Massachusetts.
 </div>
 <div id="ref-Mishra2009" class="csl-entry" role="listitem">
-Mishra, Ashok K., und Paulin Coulibaly. 2009. <span>„Developments in hydrometric network design: A review“</span>. <em>Reviews of Geophysics</em> 47 (RG2001). <a href="https://doi.org/10.1029/2007RG000243">https://doi.org/10.1029/2007RG000243</a>.
+Mishra, Ashok K., and Paulin Coulibaly. 2009. <span>“Developments in Hydrometric Network Design: A Review.”</span> <em>Reviews of Geophysics</em> 47 (RG2001). <a href="https://doi.org/10.1029/2007RG000243">https://doi.org/10.1029/2007RG000243</a>.
 </div>
 <div id="ref-Nowosad2022" class="csl-entry" role="listitem">
-Nowosad, J. 2022. <span>„Supercells: Adaptive regionalization of spatial data“</span>. <em>ISPRS Annals</em> V-4-2022: 159–66.
+Nowosad, J. 2022. <span>“Supercells: Adaptive Regionalization of Spatial Data.”</span> <em>ISPRS Annals</em> V-4-2022: 159–66.
 </div>
 <div id="ref-Samuel2013" class="csl-entry" role="listitem">
-Samuel, J. et al. 2013. <span>„CRDEMO: Entropy-based hydrometric network design“</span>. <em>Water Resources Research</em> 49: 8070–89.
+Samuel, J. et al. 2013. <span>“CRDEMO: Entropy-Based Hydrometric Network Design.”</span> <em>Water Resources Research</em> 49: 8070–89.
 </div>
 <div id="ref-Sawicz2011" class="csl-entry" role="listitem">
-Sawicz, K. et al. 2011. <span>„A classification of catchments based on runoff generation“</span>. <em>Hydrology and Earth System Sciences</em> 15: 313–30.
+Sawicz, K. et al. 2011. <span>“A Classification of Catchments Based on Runoff Generation.”</span> <em>Hydrology and Earth System Sciences</em> 15: 313–30.
 </div>
 <div id="ref-Strahler1957" class="csl-entry" role="listitem">
-Strahler, A. N. 1957. <span>„Quantitative analysis of watershed geomorphology“</span>. <em>Transactions of the American Geophysical Union</em> 38: 913–20.
+Strahler, A. N. 1957. <span>“Quantitative Analysis of Watershed Geomorphology.”</span> <em>Transactions of the American Geophysical Union</em> 38: 913–20.
 </div>
 <div id="ref-Turner1989" class="csl-entry" role="listitem">
-Turner, M. G. 1989. <span>„Landscape ecology: The effect of pattern on process“</span>. <em>Annual Review of Ecology and Systematics</em> 20: 171–97.
+Turner, M. G. 1989. <span>“Landscape Ecology: The Effect of Pattern on Process.”</span> <em>Annual Review of Ecology and Systematics</em> 20: 171–97.
 </div>
 <div id="ref-Wagener2007" class="csl-entry" role="listitem">
-Wagener, T. et al. 2007. <span>„Understanding hydrologic variability at the catchment scale“</span>. <em>Hydrology and Earth System Sciences</em> 11: 337–50.
+Wagener, T. et al. 2007. <span>“Understanding Hydrologic Variability at the Catchment Scale.”</span> <em>Hydrology and Earth System Sciences</em> 11: 337–50.
 </div>
 <div id="ref-Winter2001" class="csl-entry" role="listitem">
-Winter, T. C. 2001. <span>„The concept of hydrologic landscapes“</span>. <em>Journal of the American Water Resources Association</em> 37: 335–49.
+Winter, T. C. 2001. <span>“The Concept of Hydrologic Landscapes.”</span> <em>Journal of the American Water Resources Association</em> 37: 335–49.
 </div>
 </div></section></div></main> <!-- /main -->
 <script>
@@ -549,12 +552,12 @@ document.addEventListener('DOMContentLoaded', function () {
       // flash "checked"
       button.classList.add('code-copy-button-checked');
       var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Kopiert");
+      button.setAttribute("title", "Copied!");
       let tooltip;
       if (window.bootstrap) {
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Kopiert");
+        button.setAttribute("data-bs-title", "Copied!");
         tooltip = new bootstrap.Tooltip(button, 
           { trigger: "manual", 
             customClass: "code-copy-button-tooltip",
