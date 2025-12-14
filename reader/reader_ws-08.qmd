@@ -37,7 +37,7 @@ clc_file <- file.path(aoi_root, "clc", "clc5_2018_burgwald.tif")
 aoi_file <- here::here("data", "processed", "aoi_burgwald.gpkg")
 ```
 
-# 1. Introduction
+## Introduction
 
 Designing an optimal precipitation-monitoring network is not a simple geostatistical optimisation task.
 It requires understanding:
@@ -54,9 +54,9 @@ This document implements **Layer 1** of a modern three-layer network-design fram
 
 Here we implement **Layer 1**: an objective stratification of the Burgwald landscape using **information-theoretic metrics** and **pattern-based texture signatures**.
 
-# 2. Conceptual background
+## Conceptual background
 
-## 2.1 Physiographic stratification
+### Physiographic stratification
 
 Goal: ensure that rainfall stations represent the dominant structural units of the landscape.
 Landscape units differ in:
@@ -83,12 +83,12 @@ We capture these differences using information-theoretic metrics:
 
 Each 2×2 km grid cell gets a structural fingerprint in **(H, U)-space**, and clustering these fingerprints yields **objective structural strata**.
 
-## 2.2 Information-gain optimisation
+### Information-gain optimisation
 
 Once strata exist, statistical optimisation (e.g. kriging variance, radar–gauge mismatch, representativeness error) should be applied **within and across strata**, not across the whole catchment at once.
 This avoids bias towards “statistically convenient” open areas and keeps the optimisation linked to process-relevant structural units.
 
-## 2.3 Hydrological coupling
+### Hydrological coupling
 
 Finally, a network must improve the prediction of:
 
@@ -99,7 +99,7 @@ Finally, a network must improve the prediction of:
 Even a statistically optimal station is useless if it does not represent rainfall regimes controlling the hydrograph.
 This QMD prepares the structural layer required for such coupling.
 
-# 3. Load AOI and land cover
+## Load AOI and land cover
 
 ```{r}
 #| eval: false
@@ -121,7 +121,7 @@ lc_burgwald <- lc_burgwald |>
 terra::values(lc_burgwald) <- round(terra::values(lc_burgwald))
 ```
 
-# 4. Compute IT metrics on a 2×2 km structural grid
+## Compute IT metrics on a 2×2 km structural grid
 
 Concept:
 
@@ -167,7 +167,7 @@ grid_it_sf <- grid |>
   dplyr::left_join(lsm_grid_it_wide, by = "grid_id")
 ```
 
-# 5. Cluster cells into IT-based strata
+## Cluster cells into IT-based strata
 
 Concept:
 
@@ -210,7 +210,7 @@ grid_it_strata_sf <- grid_it_sf |>
   )
 ```
 
-# 6. Select multiple representative cells per stratum
+## Select multiple representative cells per stratum
 
 We now choose several “typical” cells per stratum (here: 4 each → 20 candidates total):
 
@@ -261,7 +261,7 @@ rep_cells_sf <- grid_it_strata_sf |>
   )
 ```
 
-# 7. Compute station-candidate centroids
+## Compute station-candidate centroids
 
 ```{r}
 #| eval: false
@@ -282,7 +282,7 @@ station_candidates_sf <- rep_cells_sf |>
   )
 ```
 
-# 8. Pattern-based signatures (motif COVE)
+## Pattern-based signatures (motif COVE)
 
 Concept:
 
@@ -320,7 +320,7 @@ lsp_pattern_sf_plot <- lsp_pattern_sf[, c("pattern_cluster", geom_col)]
 lsp_pattern_sf_plot$pattern_cluster <- as.factor(lsp_pattern_sf_plot$pattern_cluster)
 ```
 
-# 9. Attach pattern types to station candidates
+## Attach pattern types to station candidates
 
 ```{r}
 #| eval: false
@@ -332,7 +332,7 @@ station_with_pattern_sf <- sf::st_join(
 )
 ```
 
-# 10. Visualisation (optional)
+## Visualisation (optional)
 
 ```{r}
 #| eval: false
@@ -342,7 +342,7 @@ mapview(station_with_pattern_sf, zcol = "stratum_id", cex = 4)
 mapview(lsp_pattern_sf_plot, zcol = "pattern_cluster")
 ```
 
-# 11. Outlook: combining IT-strata with classical physiographic stratification
+## Outlook: combining IT-strata with classical physiographic stratification
 
 The IT-based stratification identifies **landscape structural regimes**, but it should be combined with more traditional physiographic factors.
 
@@ -372,4 +372,4 @@ The final Burgwald network should merge:
 3. **Information-gain optimisation** – cost-efficient densification
 4. **Hydrological validation** – functional adequacy
 
-Together, these layers define a scientifically defensible, resource-efficient, and hydrologically meaningful precipitation-monitoring network for the Burgwald.
+Together, these layers define a (assumingly) scientifically defensible, resource-efficient, and hydrologically meaningful precipitation-monitoring network for the Burgwald.

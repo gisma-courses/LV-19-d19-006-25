@@ -374,23 +374,21 @@ background-size: cover;
     <h2 id="toc-title">Auf dieser Seite</h2>
    
   <ul>
-  <li><a href="#conceptual-background-and-problem-framing" id="toc-conceptual-background-and-problem-framing" class="nav-link active" data-scroll-target="#conceptual-background-and-problem-framing">1. Conceptual background and problem framing</a>
-  <ul class="collapse">
+  <li><a href="#conceptual-background-and-problem-framing" id="toc-conceptual-background-and-problem-framing" class="nav-link active" data-scroll-target="#conceptual-background-and-problem-framing">Conceptual background and problem framing</a></li>
   <li><a href="#fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network" id="toc-fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network" class="nav-link" data-scroll-target="#fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network"><img src="../images/Diagram.drawio.svg" class="img-fluid" alt="Fig. 1: Design framework for the Burgwald rainfall gauge network"></a></li>
-  </ul></li>
-  <li><a href="#catchment-based-versus-segment-based-design" id="toc-catchment-based-versus-segment-based-design" class="nav-link" data-scroll-target="#catchment-based-versus-segment-based-design">2. Catchment-based versus segment-based design</a>
+  <li><a href="#catchment-based-versus-segment-based-design" id="toc-catchment-based-versus-segment-based-design" class="nav-link" data-scroll-target="#catchment-based-versus-segment-based-design">Catchment-based versus segment-based design</a>
   <ul class="collapse">
-  <li><a href="#catchment-based-design" id="toc-catchment-based-design" class="nav-link" data-scroll-target="#catchment-based-design">2.1 Catchment-based design</a></li>
-  <li><a href="#segment-based-design" id="toc-segment-based-design" class="nav-link" data-scroll-target="#segment-based-design">2.2 Segment-based design</a></li>
-  <li><a href="#hybrid-rationale" id="toc-hybrid-rationale" class="nav-link" data-scroll-target="#hybrid-rationale">2.3 Hybrid rationale</a></li>
+  <li><a href="#catchment-based-design" id="toc-catchment-based-design" class="nav-link" data-scroll-target="#catchment-based-design">Catchment-based design</a></li>
+  <li><a href="#segment-based-design" id="toc-segment-based-design" class="nav-link" data-scroll-target="#segment-based-design">Segment-based design</a></li>
+  <li><a href="#hybrid-rationale" id="toc-hybrid-rationale" class="nav-link" data-scroll-target="#hybrid-rationale">Hybrid rationale</a></li>
   </ul></li>
-  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">3. Methods</a>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
-  <li><a href="#structural-landscape-stratification" id="toc-structural-landscape-stratification" class="nav-link" data-scroll-target="#structural-landscape-stratification">3.1 Structural landscape stratification</a></li>
-  <li><a href="#representative-test-tiles" id="toc-representative-test-tiles" class="nav-link" data-scroll-target="#representative-test-tiles">3.2 Representative test tiles</a></li>
-  <li><a href="#adaptive-segmentation-and-scale-discovery" id="toc-adaptive-segmentation-and-scale-discovery" class="nav-link" data-scroll-target="#adaptive-segmentation-and-scale-discovery">3.3 Adaptive segmentation and scale discovery</a></li>
-  <li><a href="#segmentation-transfer-and-physiographic-strata" id="toc-segmentation-transfer-and-physiographic-strata" class="nav-link" data-scroll-target="#segmentation-transfer-and-physiographic-strata">3.4 Segmentation transfer and physiographic strata</a></li>
-  <li><a href="#hydrological-context-and-network-optimisation" id="toc-hydrological-context-and-network-optimisation" class="nav-link" data-scroll-target="#hydrological-context-and-network-optimisation">3.5 Hydrological context and network optimisation</a></li>
+  <li><a href="#structural-landscape-stratification" id="toc-structural-landscape-stratification" class="nav-link" data-scroll-target="#structural-landscape-stratification">Structural landscape stratification</a></li>
+  <li><a href="#representative-test-tiles" id="toc-representative-test-tiles" class="nav-link" data-scroll-target="#representative-test-tiles">Representative test tiles</a></li>
+  <li><a href="#adaptive-segmentation-and-scale-discovery" id="toc-adaptive-segmentation-and-scale-discovery" class="nav-link" data-scroll-target="#adaptive-segmentation-and-scale-discovery">Adaptive segmentation and scale discovery</a></li>
+  <li><a href="#segmentation-transfer-and-physiographic-strata" id="toc-segmentation-transfer-and-physiographic-strata" class="nav-link" data-scroll-target="#segmentation-transfer-and-physiographic-strata">Segmentation transfer and physiographic strata</a></li>
+  <li><a href="#hydrological-context-and-network-optimisation" id="toc-hydrological-context-and-network-optimisation" class="nav-link" data-scroll-target="#hydrological-context-and-network-optimisation">Hydrological context and network optimisation</a></li>
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
@@ -403,62 +401,62 @@ background-size: cover;
 
 
 
-<section id="conceptual-background-and-problem-framing" class="level1">
-<h1>1. Conceptual background and problem framing</h1>
+<section id="conceptual-background-and-problem-framing" class="level2">
+<h2 class="anchored" data-anchor-id="conceptual-background-and-problem-framing">Conceptual background and problem framing</h2>
 <p>The design of rainfall and hydrometric monitoring networks is fundamentally a <strong>spatial design problem</strong>. Landscapes are heterogeneous, monitoring resources are limited, and the target variables of interest—precipitation, runoff, and discharge—are governed by interacting processes operating across multiple spatial scales. Consequently, station placement cannot be reduced to uniform coverage or local optimisation, but must instead maximise <strong>information gain with respect to hydrological response</strong>.</p>
 <p>Many existing approaches optimise station locations directly within predefined spatial units such as grids or catchments <span class="citation" data-cites="Mishra2009 Alfonso2010 Samuel2013">(<a href="#ref-Mishra2009" role="doc-biblioref">Mishra und Coulibaly 2009</a>; <a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>; <a href="#ref-Samuel2013" role="doc-biblioref">Samuel 2013</a>)</span>. While these approaches are hydrologically intuitive, they embed <strong>implicit assumptions about spatial scale and internal homogeneity</strong>, which are rarely satisfied in real landscapes <span class="citation" data-cites="Wagener2007">(<a href="#ref-Wagener2007" role="doc-biblioref">Wagener 2007</a>)</span>.</p>
 <p>The workflow adopted here explicitly separates <strong>structural heterogeneity</strong>, <strong>segmentation-based scale discovery</strong>, <strong>physiographic process stratification</strong>, and <strong>hydrological optimisation</strong> (Figure 1). This staged reduction of spatial complexity ensures that scale decisions remain explicit and that optimisation operates on process-relevant spatial units rather than raw spatial partitions.</p>
+</section>
 <section id="fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network" class="level2">
 <h2 class="anchored" data-anchor-id="fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network"><img src="../images/Diagram.drawio.svg" class="img-fluid" alt="Fig. 1: Design framework for the Burgwald rainfall gauge network"></h2>
 </section>
-</section>
-<section id="catchment-based-versus-segment-based-design" class="level1">
-<h1>2. Catchment-based versus segment-based design</h1>
-<section id="catchment-based-design" class="level2">
-<h2 class="anchored" data-anchor-id="catchment-based-design">2.1 Catchment-based design</h2>
+<section id="catchment-based-versus-segment-based-design" class="level2">
+<h2 class="anchored" data-anchor-id="catchment-based-versus-segment-based-design">Catchment-based versus segment-based design</h2>
+<section id="catchment-based-design" class="level3">
+<h3 class="anchored" data-anchor-id="catchment-based-design">Catchment-based design</h3>
 <p>Catchments are the natural spatial units of hydrology. They encode drainage connectivity, flow accumulation, and mass balance, and therefore form the backbone of many network design approaches <span class="citation" data-cites="Mishra2009 Alfonso2010">(<a href="#ref-Mishra2009" role="doc-biblioref">Mishra und Coulibaly 2009</a>; <a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>)</span>. Optimisation within catchments provides a direct link between rainfall measurements and discharge observations at outlets.</p>
 <p>However, catchment-based designs implicitly assume that catchments are internally homogeneous. Empirical and comparative hydrology studies demonstrate that even small catchments often exhibit multiple dominant runoff-generation mechanisms <span class="citation" data-cites="Wagener2007 Sawicz2011">(<a href="#ref-Wagener2007" role="doc-biblioref">Wagener 2007</a>; <a href="#ref-Sawicz2011" role="doc-biblioref">Sawicz 2011</a>)</span>. As a result, station placement optimised at the catchment level may be hydrologically relevant at the outlet but <strong>spatially blind</strong> to internal process variability.</p>
 </section>
-<section id="segment-based-design" class="level2">
-<h2 class="anchored" data-anchor-id="segment-based-design">2.2 Segment-based design</h2>
+<section id="segment-based-design" class="level3">
+<h3 class="anchored" data-anchor-id="segment-based-design">Segment-based design</h3>
 <p>Segment-based approaches derive <strong>data-driven spatial units</strong> through adaptive segmentation or regionalisation. These units aim to be internally homogeneous and externally distinct with respect to selected variables. In remote sensing and spatial analysis, segmentation has long been treated as a <strong>scale-space problem</strong> rather than a classification task <span class="citation" data-cites="Blaschke2010 Dragut2014">(<a href="#ref-Blaschke2010" role="doc-biblioref">Blaschke 2010</a>; <a href="#ref-Dragut2014" role="doc-biblioref">Drăguţ, Tiede, und Levick 2014</a>)</span>.</p>
 <p>Recent work on adaptive regionalisation and supercells shows that such units can be robust and reproducible when segmentation quality is evaluated quantitatively <span class="citation" data-cites="Nowosad2022">(<a href="#ref-Nowosad2022" role="doc-biblioref">Nowosad 2022</a>)</span>. Segment-based designs allow explicit control over spatial scale and can represent similar process settings across different catchments.</p>
 <p>At the same time, segments do not encode hydrological connectivity and therefore cannot replace catchments as aggregation units. Used in isolation, segment-based designs risk ignoring flow paths and drainage hierarchy.</p>
 </section>
-<section id="hybrid-rationale" class="level2">
-<h2 class="anchored" data-anchor-id="hybrid-rationale">2.3 Hybrid rationale</h2>
+<section id="hybrid-rationale" class="level3">
+<h3 class="anchored" data-anchor-id="hybrid-rationale">Hybrid rationale</h3>
 <p>This thesis adopts a <strong>hybrid position</strong>: segments are used to represent spatial heterogeneity and discover meaningful scales, while catchments and stream networks are used for hydrological aggregation and evaluation. This sequencing follows calls in hydrology to decouple spatial representation from hydrological response analysis <span class="citation" data-cites="Winter2001 Wagener2007">(<a href="#ref-Winter2001" role="doc-biblioref">Winter 2001</a>; <a href="#ref-Wagener2007" role="doc-biblioref">Wagener 2007</a>)</span>.</p>
 <hr>
 </section>
 </section>
-<section id="methods" class="level1">
-<h1>3. Methods</h1>
-<section id="structural-landscape-stratification" class="level2">
-<h2 class="anchored" data-anchor-id="structural-landscape-stratification">3.1 Structural landscape stratification</h2>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<section id="structural-landscape-stratification" class="level3">
+<h3 class="anchored" data-anchor-id="structural-landscape-stratification">Structural landscape stratification</h3>
 <p>The study area is partitioned into coarse, fixed spatial tiles. For each tile, structural landscape descriptors are derived from categorical land-cover data, including diversity and entropy-based measures <span class="citation" data-cites="Turner1989 McGarigal2012">(<a href="#ref-Turner1989" role="doc-biblioref">Turner 1989</a>; <a href="#ref-McGarigal2012" role="doc-biblioref">McGarigal, Cushman, und Ene 2012</a>)</span>. These descriptors characterise landscape structure independently of physical processes.</p>
 <p>Tiles are clustered into <strong>structural strata</strong>, reducing spatial redundancy prior to segmentation and optimisation.</p>
 </section>
-<section id="representative-test-tiles" class="level2">
-<h2 class="anchored" data-anchor-id="representative-test-tiles">3.2 Representative test tiles</h2>
+<section id="representative-test-tiles" class="level3">
+<h3 class="anchored" data-anchor-id="representative-test-tiles">Representative test tiles</h3>
 <p>From each structural stratum, representative test tiles are selected based on distance-to-centroid criteria. Restricting segmentation experiments to these tiles improves computational efficiency and reproducibility while maintaining structural representativeness.</p>
 </section>
-<section id="adaptive-segmentation-and-scale-discovery" class="level2">
-<h2 class="anchored" data-anchor-id="adaptive-segmentation-and-scale-discovery">3.3 Adaptive segmentation and scale discovery</h2>
+<section id="adaptive-segmentation-and-scale-discovery" class="level3">
+<h3 class="anchored" data-anchor-id="adaptive-segmentation-and-scale-discovery">Adaptive segmentation and scale discovery</h3>
 <p>Adaptive segmentation methods (e.g.&nbsp;mean-shift or supercell-based approaches) are applied to the test tiles across a range of parameter settings. Segmentation quality is evaluated using quantitative criteria such as segment size distributions, intra-segment homogeneity, inter-segment contrast, and stability under parameter perturbation <span class="citation" data-cites="Clinton2010 Chen2018">(<a href="#ref-Clinton2010" role="doc-biblioref">Clinton u.&nbsp;a. 2010</a>; <a href="#ref-Chen2018" role="doc-biblioref">Chen 2018</a>)</span>.</p>
 <p>Rather than selecting a single optimal scale, segmentation configurations are evaluated in terms of <strong>Pareto-optimal trade-offs</strong>.</p>
 </section>
-<section id="segmentation-transfer-and-physiographic-strata" class="level2">
-<h2 class="anchored" data-anchor-id="segmentation-transfer-and-physiographic-strata">3.4 Segmentation transfer and physiographic strata</h2>
+<section id="segmentation-transfer-and-physiographic-strata" class="level3">
+<h3 class="anchored" data-anchor-id="segmentation-transfer-and-physiographic-strata">Segmentation transfer and physiographic strata</h3>
 <p>A selected segmentation configuration is transferred wall-to-wall to the full study area. Physiographic attributes such as elevation, terrain position, and vegetation fraction are aggregated per segment and used to derive <strong>physiographic process strata</strong> <span class="citation" data-cites="Winter2001 Sawicz2011">(<a href="#ref-Winter2001" role="doc-biblioref">Winter 2001</a>; <a href="#ref-Sawicz2011" role="doc-biblioref">Sawicz 2011</a>)</span>.</p>
 </section>
-<section id="hydrological-context-and-network-optimisation" class="level2">
-<h2 class="anchored" data-anchor-id="hydrological-context-and-network-optimisation">3.5 Hydrological context and network optimisation</h2>
+<section id="hydrological-context-and-network-optimisation" class="level3">
+<h3 class="anchored" data-anchor-id="hydrological-context-and-network-optimisation">Hydrological context and network optimisation</h3>
 <p>Physiographic strata are overlaid with watershed boundaries and stream networks characterised by Strahler order <span class="citation" data-cites="Strahler1957">(<a href="#ref-Strahler1957" role="doc-biblioref">Strahler 1957</a>)</span>. Catchments serve as aggregation units to evaluate how different strata contribute to runoff at selected outlets.</p>
 <p>Station placement is then optimised using information-theoretic criteria to maximise information gain and minimise redundancy <span class="citation" data-cites="Alfonso2010 Samuel2013 Keum2017">(<a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>; <a href="#ref-Samuel2013" role="doc-biblioref">Samuel 2013</a>; <a href="#ref-Keum2017" role="doc-biblioref">Keum 2017</a>)</span>.</p>
 <hr>
 </section>
 </section>
-<section id="references" class="level1">
+<section id="references" class="level2">
 
 
 

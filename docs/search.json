@@ -908,11 +908,11 @@
     ]
   },
   {
-    "objectID": "reader/reader_ws-08.html#physiographic-stratification",
-    "href": "reader/reader_ws-08.html#physiographic-stratification",
+    "objectID": "reader/reader_ws-08.html#introduction",
+    "href": "reader/reader_ws-08.html#introduction",
     "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
-    "section": "2.1 Physiographic stratification",
-    "text": "2.1 Physiographic stratification\nGoal: ensure that rainfall stations represent the dominant structural units of the landscape. Landscape units differ in:\n\nland-cover composition\nforest–openland transitions\npatch fragmentation and clumpiness\ncanopy interception potential\nmicro-topographic exposure\n\nWe capture these differences using information-theoretic metrics:\n\nEntropy H(x)\n\nmeasures thematic diversity of land cover\nlow → homogeneous (e.g. closed forest)\nhigh → heterogeneous, mixed, patchy\n\nRelative mutual information U\n\nmeasures configurational order (clumpiness)\nlow → fragmented patterns\nhigh → ordered, aggregated patterns\n\n\nEach 2×2 km grid cell gets a structural fingerprint in (H, U)-space, and clustering these fingerprints yields objective structural strata.",
+    "section": "",
+    "text": "Designing an optimal precipitation-monitoring network is not a simple geostatistical optimisation task. It requires understanding:\n\nhow landscape structure affects rainfall organisation,\nhow information gain varies across space,\nhow hydrological response depends on spatial rainfall patterns.\n\nThis document implements Layer 1 of a modern three-layer network-design framework:\n\nPhysiographic stratification (structural representativeness)\nInformation-gain optimisation (analytical efficiency)\nHydrological coupling (functional adequacy)\n\nHere we implement Layer 1: an objective stratification of the Burgwald landscape using information-theoretic metrics and pattern-based texture signatures.",
     "crumbs": [
       "FAQ",
       "Lectures",
@@ -920,11 +920,11 @@
     ]
   },
   {
-    "objectID": "reader/reader_ws-08.html#information-gain-optimisation",
-    "href": "reader/reader_ws-08.html#information-gain-optimisation",
+    "objectID": "reader/reader_ws-08.html#conceptual-background",
+    "href": "reader/reader_ws-08.html#conceptual-background",
     "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
-    "section": "2.2 Information-gain optimisation",
-    "text": "2.2 Information-gain optimisation\nOnce strata exist, statistical optimisation (e.g. kriging variance, radar–gauge mismatch, representativeness error) should be applied within and across strata, not across the whole catchment at once. This avoids bias towards “statistically convenient” open areas and keeps the optimisation linked to process-relevant structural units.",
+    "section": "Conceptual background",
+    "text": "Conceptual background\n\nPhysiographic stratification\nGoal: ensure that rainfall stations represent the dominant structural units of the landscape. Landscape units differ in:\n\nland-cover composition\nforest–openland transitions\npatch fragmentation and clumpiness\ncanopy interception potential\nmicro-topographic exposure\n\nWe capture these differences using information-theoretic metrics:\n\nEntropy H(x)\n\nmeasures thematic diversity of land cover\nlow → homogeneous (e.g. closed forest)\nhigh → heterogeneous, mixed, patchy\n\nRelative mutual information U\n\nmeasures configurational order (clumpiness)\nlow → fragmented patterns\nhigh → ordered, aggregated patterns\n\n\nEach 2×2 km grid cell gets a structural fingerprint in (H, U)-space, and clustering these fingerprints yields objective structural strata.\n\n\nInformation-gain optimisation\nOnce strata exist, statistical optimisation (e.g. kriging variance, radar–gauge mismatch, representativeness error) should be applied within and across strata, not across the whole catchment at once. This avoids bias towards “statistically convenient” open areas and keeps the optimisation linked to process-relevant structural units.\n\n\nHydrological coupling\nFinally, a network must improve the prediction of:\n\nstreamflow peaks (P–Q coherence)\nstorage changes\nwater-balance residuals\n\nEven a statistically optimal station is useless if it does not represent rainfall regimes controlling the hydrograph. This QMD prepares the structural layer required for such coupling.",
     "crumbs": [
       "FAQ",
       "Lectures",
@@ -932,11 +932,107 @@
     ]
   },
   {
-    "objectID": "reader/reader_ws-08.html#hydrological-coupling",
-    "href": "reader/reader_ws-08.html#hydrological-coupling",
+    "objectID": "reader/reader_ws-08.html#load-aoi-and-land-cover",
+    "href": "reader/reader_ws-08.html#load-aoi-and-land-cover",
     "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
-    "section": "2.3 Hydrological coupling",
-    "text": "2.3 Hydrological coupling\nFinally, a network must improve the prediction of:\n\nstreamflow peaks (P–Q coherence)\nstorage changes\nwater-balance residuals\n\nEven a statistically optimal station is useless if it does not represent rainfall regimes controlling the hydrograph. This QMD prepares the structural layer required for such coupling.",
+    "section": "Load AOI and land cover",
+    "text": "Load AOI and land cover\n\n# Load AOI and land cover\nlc_burgwald  &lt;- terra::rast(clc_file)\naoi_burgwald &lt;- sf::read_sf(aoi_file)\n\n# Harmonise CRS\nif (!sf::st_crs(aoi_burgwald) == sf::st_crs(lc_burgwald)) {\n  aoi_burgwald &lt;- sf::st_transform(aoi_burgwald, sf::st_crs(lc_burgwald))\n}\n\n# Clip raster strictly to AOI\nlc_burgwald &lt;- lc_burgwald |&gt;\n  terra::crop(terra::vect(aoi_burgwald)) |&gt;\n  terra::mask(terra::vect(aoi_burgwald))\n\n# Ensure integer categories for landscapemetrics\nterra::values(lc_burgwald) &lt;- round(terra::values(lc_burgwald))",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "IT-Based Landscape Stratification for Rain-Gauge Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-08.html#compute-it-metrics-on-a-22-km-structural-grid",
+    "href": "reader/reader_ws-08.html#compute-it-metrics-on-a-22-km-structural-grid",
+    "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
+    "section": "Compute IT metrics on a 2×2 km structural grid",
+    "text": "Compute IT metrics on a 2×2 km structural grid\nConcept:\n\nCreate a regular 2×2 km grid over the Burgwald.\nTreat each grid cell as a small “landscape”.\nCompute entropy H(x) and relative mutual information U for each grid cell.\nEach cell becomes a point in (H, U)-space.\n\n\n# Transform AOI to metric CRS so that cellsize is in metres\naoi_utm &lt;- sf::st_transform(aoi_burgwald, 25832)  # ETRS89 / UTM 32N\n\n# Grid resolution (metres)\ngrid_cellsize &lt;- 2000  # 2 km × 2 km\n\n# Build grid in UTM space\ngrid_utm &lt;- sf::st_make_grid(\n  aoi_utm,\n  cellsize = grid_cellsize,\n  what     = \"polygons\"\n) |&gt;\n  sf::st_as_sf() |&gt;\n  dplyr::mutate(grid_id = dplyr::row_number())\n\n# Back-transform grid to raster CRS\ngrid &lt;- sf::st_transform(grid_utm, sf::st_crs(lc_burgwald))\n\n# Compute entropy and relative mutual information per grid cell\nlsm_grid_it &lt;- sample_lsm(\n  landscape = lc_burgwald,\n  y         = grid,\n  what      = c(\"lsm_l_ent\", \"lsm_l_relmutinf\"),\n  level     = \"landscape\"\n)\n\n# Wide format: grid_id | ent | relmutinf\nlsm_grid_it_wide &lt;- lsm_grid_it |&gt;\n  dplyr::select(grid_id = plot_id, metric, value) |&gt;\n  tidyr::pivot_wider(names_from = metric, values_from = value)\n\ngrid_it_sf &lt;- grid |&gt;\n  dplyr::left_join(lsm_grid_it_wide, by = \"grid_id\")",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "IT-Based Landscape Stratification for Rain-Gauge Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-08.html#cluster-cells-into-it-based-strata",
+    "href": "reader/reader_ws-08.html#cluster-cells-into-it-based-strata",
+    "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
+    "section": "Cluster cells into IT-based strata",
+    "text": "Cluster cells into IT-based strata\nConcept:\n\nUse (H, U) to cluster grid cells into k structural strata.\nEach stratum is a region with similar composition and configuration.\nWe will later select representative cells per stratum as station candidates.\n\n\n# Extract numeric metrics\nit_clust_df &lt;- grid_it_sf |&gt;\n  sf::st_drop_geometry() |&gt;\n  dplyr::select(grid_id, ent, relmutinf) |&gt;\n  dplyr::filter(!is.na(ent), !is.na(relmutinf))\n\n# Standardise to z-scores\nit_clust_scaled &lt;- it_clust_df |&gt;\n  dplyr::mutate(\n    ent_z       = as.numeric(scale(ent)),\n    relmutinf_z = as.numeric(scale(relmutinf))\n  )\n\n# Number of strata\nk_strata &lt;- 5\n\nset.seed(123)\nkm_it &lt;- stats::kmeans(\n  it_clust_scaled[, c(\"ent_z\", \"relmutinf_z\")],\n  centers = k_strata,\n  nstart  = 50\n)\n\nit_clust_scaled$stratum_id &lt;- km_it$cluster\n\n# Attach strata to grid sf\ngrid_it_strata_sf &lt;- grid_it_sf |&gt;\n  dplyr::left_join(\n    it_clust_scaled |&gt; dplyr::select(grid_id, stratum_id),\n    by = \"grid_id\"\n  )",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "IT-Based Landscape Stratification for Rain-Gauge Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-08.html#select-multiple-representative-cells-per-stratum",
+    "href": "reader/reader_ws-08.html#select-multiple-representative-cells-per-stratum",
+    "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
+    "section": "Select multiple representative cells per stratum",
+    "text": "Select multiple representative cells per stratum\nWe now choose several “typical” cells per stratum (here: 4 each → 20 candidates total):\n\nn_per_stratum &lt;- 4\n\n# Stratum centroids in z-space\nstrata_centroids &lt;- it_clust_scaled |&gt;\n  dplyr::group_by(stratum_id) |&gt;\n  dplyr::summarise(\n    ent_z_mean       = mean(ent_z, na.rm = TRUE),\n    relmutinf_z_mean = mean(relmutinf_z, na.rm = TRUE),\n    .groups = \"drop\"\n  )\n\n# Distance to stratum centroid\nit_clust_scaled &lt;- it_clust_scaled |&gt;\n  dplyr::left_join(strata_centroids, by = \"stratum_id\") |&gt;\n  dplyr::mutate(\n    dist_to_center = sqrt(\n      (ent_z       - ent_z_mean)^2 +\n      (relmutinf_z - relmutinf_z_mean)^2\n    )\n  )\n\n# n nearest cells per stratum\nrep_cells &lt;- it_clust_scaled |&gt;\n  dplyr::group_by(stratum_id) |&gt;\n  dplyr::slice_min(order_by = dist_to_center,\n                   n = n_per_stratum,\n                   with_ties = FALSE) |&gt;\n  dplyr::ungroup()\n\n# Attach geometries\nrep_cells_sf &lt;- grid_it_strata_sf |&gt;\n  dplyr::inner_join(\n    rep_cells |&gt;\n      dplyr::select(\n        grid_id,\n        stratum_id,\n        ent,\n        relmutinf,\n        ent_z,\n        relmutinf_z\n      ),\n    by = c(\"grid_id\", \"stratum_id\")\n  )",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "IT-Based Landscape Stratification for Rain-Gauge Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-08.html#compute-station-candidate-centroids",
+    "href": "reader/reader_ws-08.html#compute-station-candidate-centroids",
+    "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
+    "section": "Compute station-candidate centroids",
+    "text": "Compute station-candidate centroids\n\nstation_candidates_sf &lt;- rep_cells_sf |&gt;\n  sf::st_centroid() |&gt;\n  dplyr::mutate(\n    station_id = dplyr::row_number()\n  ) |&gt;\n  dplyr::select(\n    station_id,\n    stratum_id,\n    grid_id,\n    ent,\n    relmutinf,\n    ent_z,\n    relmutinf_z\n    # geometry is kept implicitly by sf\n  )",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "IT-Based Landscape Stratification for Rain-Gauge Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-08.html#pattern-based-signatures-motif-cove",
+    "href": "reader/reader_ws-08.html#pattern-based-signatures-motif-cove",
+    "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
+    "section": "Pattern-based signatures (motif COVE)",
+    "text": "Pattern-based signatures (motif COVE)\nConcept:\n\nmotif calculates co-occurrence signatures on moving windows.\nHere: window size 25×25 cells (~2.5 km at 100 m resolution).\nEach window yields a probability distribution of adjacency patterns.\nDistances between signatures (e.g. Jensen–Shannon) define pattern types.\n\n\nlsp_cove_burgwald &lt;- lsp_signature(\n  x             = lc_burgwald,\n  type          = \"cove\",\n  window        = 25,\n  normalization = \"pdf\"\n)\n\ndist_mat &lt;- lsp_to_dist(\n  x        = lsp_cove_burgwald,\n  dist_fun = \"jensen-shannon\"\n)\n\nk_pattern &lt;- 6\nset.seed(123)\nhc &lt;- hclust(dist_mat, method = \"ward.D2\")\npattern_ids &lt;- cutree(hc, k = k_pattern)\n\nlsp_cove_burgwald$pattern_cluster &lt;- pattern_ids\n\nlsp_pattern_sf &lt;- lsp_add_sf(lsp_cove_burgwald)\n\n# Reduce list-columns for plotting / joins\ngeom_col &lt;- attr(lsp_pattern_sf, \"sf_column\")\nlsp_pattern_sf_plot &lt;- lsp_pattern_sf[, c(\"pattern_cluster\", geom_col)]\nlsp_pattern_sf_plot$pattern_cluster &lt;- as.factor(lsp_pattern_sf_plot$pattern_cluster)",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "IT-Based Landscape Stratification for Rain-Gauge Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-08.html#attach-pattern-types-to-station-candidates",
+    "href": "reader/reader_ws-08.html#attach-pattern-types-to-station-candidates",
+    "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
+    "section": "Attach pattern types to station candidates",
+    "text": "Attach pattern types to station candidates\n\nstation_with_pattern_sf &lt;- sf::st_join(\n  station_candidates_sf,\n  lsp_pattern_sf_plot,\n  join = sf::st_intersects,\n  left = TRUE\n)",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "IT-Based Landscape Stratification for Rain-Gauge Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-08.html#visualisation-optional",
+    "href": "reader/reader_ws-08.html#visualisation-optional",
+    "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
+    "section": "Visualisation (optional)",
+    "text": "Visualisation (optional)\n\nmapview(grid_it_strata_sf, zcol = \"stratum_id\")\nmapview(station_with_pattern_sf, zcol = \"stratum_id\", cex = 4)\nmapview(lsp_pattern_sf_plot, zcol = \"pattern_cluster\")",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "IT-Based Landscape Stratification for Rain-Gauge Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-08.html#outlook-combining-it-strata-with-classical-physiographic-stratification",
+    "href": "reader/reader_ws-08.html#outlook-combining-it-strata-with-classical-physiographic-stratification",
+    "title": "IT-Based Landscape Stratification for Rain-Gauge Network Design",
+    "section": "Outlook: combining IT-strata with classical physiographic stratification",
+    "text": "Outlook: combining IT-strata with classical physiographic stratification\nThe IT-based stratification identifies landscape structural regimes, but it should be combined with more traditional physiographic factors.\nFuture integration should combine IT strata with:\n\nElevation bands → capture orographic rainfall gradients\nSlope and aspect classes → control exposure, interception, wind undercatch\nGeological units / parent material → influence stormflow generation processes\nHydrotopes / representative hillslopes → link rainfall structure to runoff response\nForest structural types (deciduous, coniferous, mixed, stand age) → modify canopy storage and interception patterns\nCold-air drainage pathways → relevant for radiation fog and winter precipitation phase transitions\nConvective storm tracks / radar climatology → areas repeatedly hit by convective cells\nAccessibility and operational constraints → maintenance, vandalism, telemetry, power supply\n\nThe final Burgwald network should merge:\n\nIT strata – structural representativeness\nPhysiographic strata – process-based representativeness\nInformation-gain optimisation – cost-efficient densification\nHydrological validation – functional adequacy\n\nTogether, these layers define a (assumingly) scientifically defensible, resource-efficient, and hydrologically meaningful precipitation-monitoring network for the Burgwald.",
     "crumbs": [
       "FAQ",
       "Lectures",
@@ -1291,6 +1387,42 @@
       "FAQ",
       "Worksheets",
       "6 – Applying the Spatial Structuring Pipeline"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-09.html#conceptual-background-and-problem-framing",
+    "href": "reader/reader_ws-09.html#conceptual-background-and-problem-framing",
+    "title": "From Spatial Structure to Hydrological Network Design",
+    "section": "",
+    "text": "The design of rainfall and hydrometric monitoring networks is fundamentally a spatial design problem. Landscapes are heterogeneous, monitoring resources are limited, and the target variables of interest—precipitation, runoff, and discharge—are governed by interacting processes operating across multiple spatial scales. Consequently, station placement cannot be reduced to uniform coverage or local optimisation, but must instead maximise information gain with respect to hydrological response.\nMany existing approaches optimise station locations directly within predefined spatial units such as grids or catchments (Mishra und Coulibaly 2009; Alfonso 2010; Samuel 2013). While these approaches are hydrologically intuitive, they embed implicit assumptions about spatial scale and internal homogeneity, which are rarely satisfied in real landscapes (Wagener 2007).\nThe workflow adopted here explicitly separates structural heterogeneity, segmentation-based scale discovery, physiographic process stratification, and hydrological optimisation (Figure 1). This staged reduction of spatial complexity ensures that scale decisions remain explicit and that optimisation operates on process-relevant spatial units rather than raw spatial partitions.",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "From Spatial Structure to Hydrological Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-09.html#catchment-based-versus-segment-based-design",
+    "href": "reader/reader_ws-09.html#catchment-based-versus-segment-based-design",
+    "title": "From Spatial Structure to Hydrological Network Design",
+    "section": "Catchment-based versus segment-based design",
+    "text": "Catchment-based versus segment-based design\n\nCatchment-based design\nCatchments are the natural spatial units of hydrology. They encode drainage connectivity, flow accumulation, and mass balance, and therefore form the backbone of many network design approaches (Mishra und Coulibaly 2009; Alfonso 2010). Optimisation within catchments provides a direct link between rainfall measurements and discharge observations at outlets.\nHowever, catchment-based designs implicitly assume that catchments are internally homogeneous. Empirical and comparative hydrology studies demonstrate that even small catchments often exhibit multiple dominant runoff-generation mechanisms (Wagener 2007; Sawicz 2011). As a result, station placement optimised at the catchment level may be hydrologically relevant at the outlet but spatially blind to internal process variability.\n\n\nSegment-based design\nSegment-based approaches derive data-driven spatial units through adaptive segmentation or regionalisation. These units aim to be internally homogeneous and externally distinct with respect to selected variables. In remote sensing and spatial analysis, segmentation has long been treated as a scale-space problem rather than a classification task (Blaschke 2010; Drăguţ, Tiede, und Levick 2014).\nRecent work on adaptive regionalisation and supercells shows that such units can be robust and reproducible when segmentation quality is evaluated quantitatively (Nowosad 2022). Segment-based designs allow explicit control over spatial scale and can represent similar process settings across different catchments.\nAt the same time, segments do not encode hydrological connectivity and therefore cannot replace catchments as aggregation units. Used in isolation, segment-based designs risk ignoring flow paths and drainage hierarchy.\n\n\nHybrid rationale\nThis thesis adopts a hybrid position: segments are used to represent spatial heterogeneity and discover meaningful scales, while catchments and stream networks are used for hydrological aggregation and evaluation. This sequencing follows calls in hydrology to decouple spatial representation from hydrological response analysis (Winter 2001; Wagener 2007).",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "From Spatial Structure to Hydrological Network Design"
+    ]
+  },
+  {
+    "objectID": "reader/reader_ws-09.html#methods",
+    "href": "reader/reader_ws-09.html#methods",
+    "title": "From Spatial Structure to Hydrological Network Design",
+    "section": "Methods",
+    "text": "Methods\n\nStructural landscape stratification\nThe study area is partitioned into coarse, fixed spatial tiles. For each tile, structural landscape descriptors are derived from categorical land-cover data, including diversity and entropy-based measures (Turner 1989; McGarigal, Cushman, und Ene 2012). These descriptors characterise landscape structure independently of physical processes.\nTiles are clustered into structural strata, reducing spatial redundancy prior to segmentation and optimisation.\n\n\nRepresentative test tiles\nFrom each structural stratum, representative test tiles are selected based on distance-to-centroid criteria. Restricting segmentation experiments to these tiles improves computational efficiency and reproducibility while maintaining structural representativeness.\n\n\nAdaptive segmentation and scale discovery\nAdaptive segmentation methods (e.g. mean-shift or supercell-based approaches) are applied to the test tiles across a range of parameter settings. Segmentation quality is evaluated using quantitative criteria such as segment size distributions, intra-segment homogeneity, inter-segment contrast, and stability under parameter perturbation (Clinton u. a. 2010; Chen 2018).\nRather than selecting a single optimal scale, segmentation configurations are evaluated in terms of Pareto-optimal trade-offs.\n\n\nSegmentation transfer and physiographic strata\nA selected segmentation configuration is transferred wall-to-wall to the full study area. Physiographic attributes such as elevation, terrain position, and vegetation fraction are aggregated per segment and used to derive physiographic process strata (Winter 2001; Sawicz 2011).\n\n\nHydrological context and network optimisation\nPhysiographic strata are overlaid with watershed boundaries and stream networks characterised by Strahler order (Strahler 1957). Catchments serve as aggregation units to evaluate how different strata contribute to runoff at selected outlets.\nStation placement is then optimised using information-theoretic criteria to maximise information gain and minimise redundancy (Alfonso 2010; Samuel 2013; Keum 2017).",
+    "crumbs": [
+      "FAQ",
+      "Lectures",
+      "From Spatial Structure to Hydrological Network Design"
     ]
   }
 ]
