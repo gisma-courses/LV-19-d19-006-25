@@ -214,7 +214,7 @@ What has often *not* happened sufficiently is the **recursive alignment** betwee
 
 This module therefore enforces that alignment **retroactively and explicitly**.
 
-::: {.callout-note title="🔁 Scientific Recursion" appearance="minimal"}
+::: {.callout-warning  title="🔁 Scientific Recursion" appearance="minimal"}
 
 Each group must now refine its project by:
 
