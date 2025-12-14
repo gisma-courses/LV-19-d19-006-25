@@ -1,0 +1,139 @@
+---
+title: "7 - Project - Scientific Recursion"
+subtitle: "Back to the Future"
+author: "Chris Reudenbach"
+title-block-banner: "../images/gw-sp.png"
+title-block-banner-color: "white"
+format:
+  html:
+    toc: true
+    theme: flatly
+  pdf:
+    toc: true
+    toc-depth: 2
+execute:
+  cache: false
+---
+
+## Purpose
+
+This memo enforces the **scientific recursion** of your project.
+
+At this stage, technical exploration and template workflows are no longer sufficient.  
+You are required to **re-enter the scientific literature** and use it actively to **justify, refine, or revise** your project design. Course examples — including the instructor’s project logic — must be treated as **contextual references**, not as directions to follow.  They may inform your reasoning, but they must **not constrain or replace your own argumentation**.
+
+Your task is to **continue and sharpen your existing project exposé**:
+- align methods with your conceptual intent,
+- justify design decisions with literature and reasoning,
+- and explicitly state where your approach converges with or diverges from established designs.
+
+The memo may exceed up to 3 pages if required for a coherent argument. In addition, include a short **appendix** that documents:
+- remaining technical gaps,
+- unresolved conceptual questions,
+- and -most important- **constraints** that currently limit your design.
+
+These gaps are **not a deficit**. Making them explicit is part of scientific control over the project.
+
+
+## Format & Scope
+
+- **Length:** up to ≈ 2000 words.  
+  (*only* if argumentatively necessary no listings and placeholders...).
+- **Style:** scientific, technical, precise, and argumentative — no **narrative padding**.
+- **Figures:** optional, only if they support an argument.
+- **References:** **mandatory**  
+  (inline citations + reference list).
+
+
+::: {.callout-tip title="Scientific intent" appearance="minimal"}
+Again: This is the point where **argument replaces execution**.
+:::
+
+
+## Required Structure
+
+### 1. Original Design Intent (≈ 1 paragraph)
+
+State clearly:
+
+- the **conceptual objective** of your rainfall network design,
+- the **dominant design logic**  
+  (physiographic, information-gain, hydrological),
+- the **key assumptions** that initially guided your project.
+
+Focus strictly on **intent and rationale**, not on methods or tools.
+
+---
+
+### 2. What Changed During the Workflow (≈ 2–3 paragraphs)
+
+Document **decisions**, not impressions:
+
+- which workflow components were **adapted, simplified, or removed**,
+- which assumptions were **confirmed, revised, or abandoned**,
+- where the course workflow or examples influenced your thinking —  
+  and where you deliberately **departed** from them.
+
+::: {.callout-tip appearance="minimal"}
+Use the following question as a **reflection frame**, not as a reset instruction:
+
+If you had to justify your current design **from scratch**,  
+which decisions would you now argue differently — and **why**?
+:::
+
+---
+
+### 3. Scientific Justification (≈ 2-5 paragraphs)
+
+This is the **core section**. You are required to **re-enter the literature seriously** and use it to **argue** your design.
+
+- Introduce **new or re-read sources** that became relevant *because of* your results.
+- Explain how specific references:
+  - support your current design,
+  - contradict earlier assumptions,
+  - or point to alternative, equally valid approaches.
+
+You must explicitly link **papers to decisions**, e.g.:
+
+- choice of stratification logic,
+- use (or non-use) of landforms or catchments,
+- rejection of optimisation strategies,
+- prioritisation of certain processes over others.
+
+---
+
+### 4. Scope, Limits, and Open Questions (≈ 2-3 paragraphs)
+
+State plainly:
+
+- which processes your design captures **robustly**,
+- which are represented **only indirectly**,
+- which remain **unresolved or unaddressed**.
+
+Lack of clarity here indicates missing literature or weak reasoning.  
+Clarity about limits indicates **scientific control**.
+
+---
+
+## Appendix 
+
+Add a short appendix, listing:
+
+- remaining **technical gaps**,
+- unresolved **conceptual questions**,
+- constraints (data, scale, feasibility) that currently limit your design.
+
+Do **not** hide these gaps in the main text.  
+Making them explicit is part of the task.
+
+---
+
+## Submission
+
+- **File name:** `NAME_Module5_ScientificRecursion.pdf`
+- **Upload:** ILIAS folder `project_revisited`.
+
+::: {.callout-warning title="Note:"}
+This memo marks the point where your project stops being a pure technical exercise  
+and becomes a **scientifically argued design**.
+:::

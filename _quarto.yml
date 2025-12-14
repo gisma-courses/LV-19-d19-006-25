@@ -72,6 +72,7 @@ website:
           - reader/reader_ws-06.qmd
           - reader/reader_ws-07.qmd
           - reader/reader_ws-08.qmd
+          - reader/reader_ws-09.qmd
           # - href: reader/cd-1.qmd
           #   text: Spatial data classification
           # - href: reader/mc_2025_0.qmd
@@ -102,6 +103,8 @@ website:
           - worksheets/ws-03.qmd
           - worksheets/ws-04.qmd
           - worksheets/ws-05.qmd
+          - worksheets/ws-06.qmd
+          - worksheets/ws-07.qmd
           - worksheets/comingsoon.qmd
 
 

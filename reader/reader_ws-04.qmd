@@ -1,5 +1,6 @@
 ---
-title: "GIS & Remote Sensing Training Plan for Rainfall Network Design"
+title: "GIS & Remote Sensing Workflow for Rainfall Network Design"
+subtitle: "Adaptive Spatial Structuring, Diagnostics, and Scientific Recursion"
 author: "Chris Reudenbach"
 comments: false
 title-block-banner: "../images/gw-sp.png"
@@ -12,94 +13,332 @@ format:
     toc: true
 ---
 
-
 ## Goal
-This modular training program is designed for a seminar on physiographically-stratified rainfall networks in low mountain regions (e.g., Burgwald, Germany). It uses the R-spatial ecosystem and provides a mix of core and elective modules tailored to group projects. Each session is 3 hours long, with a maximum of 1 hour of instructor-led input.
 
-## Structure
-- **Total sessions:** roughly 10 × 3h
-- **Core modules (required):** 6 modules, spread over sessions 1–6
-- **Advanced (toolkit) modules:** Optional, to support specific project needs, scheduled flexibly across sessions 7–10
+This seminar develops a **scientifically grounded workflow** for designing
+physiographically stratified rainfall networks in low mountain regions
+(e.g. the Burgwald, Germany).
+
+Rather than optimising station locations directly, the course emphasises:
+
+- spatial structure before optimisation,
+- explicit separation of structure, process, and context,
+- reproducible spatial analysis,
+- and validation through **diagnostic reasoning**, not model perfection.
+
+The workflow combines **literature-driven design**, **GIS-based spatial structuring**,
+and **selective quantitative diagnostics**.
 
 ---
 
-## Core Modules (for all groups)
+## Course Structure
 
-### Module 1: Project Organization & FAIR Data Retrieval
-- R project setup: `renv`, `here`, `targets`
+- **Total sessions:** ~10 × 3 h  
+- **Core workflow modules:** Sessions 1–6  
+- **Advanced / toolkit modules:** Sessions 7–10 (project-specific)
+
+Each session contains:
+- ≤ 1 h instructor input,
+- guided implementation,
+- structured discussion and reflexion.
+
+---
+
+## Introduction: From Conceptual Design to Calculation
+
+Rainfall network design is not a purely technical optimisation problem.
+It is a **scientific design task** that links:
+
+- landscape structure,
+- physical processes,
+- and measurement constraints.
+
+In the first phase of the course (Tasks *First Design* and *Resources & Pitch*), the following were developed:
+
+- conceptual network layouts,
+- deployment rationales (physiographic, information-gain, hydrological),
+- resource plans and feasibility assessments,
+- an initial literature base using **benchmark observatories**.
+
+The technical modules that follow **do not invent completely new questions**. They **operationalise, adapt and test** these design ideas using spatial data and reproducible workflows.
+
+::: {.callout-warning title="🔁 Adaptive redesign" appearance="minimal"}
+
+In response to the evolving projects, the module plan was **adapted rather than replaced**.  
+The workflow was reordered to ensure that spatial structure and process assumptions are made explicit *prior to* interpolation or optimisation.
+
+:::
+
+
+
+## Module 0 – Concept & Evidence Scan
+
+**Status:** completed in Tasks *First Design* and *Resources & Pitch*
+
+**Goal:** Establish a **literature-anchored design rationale** before technical work.
+
+### Core elements
+
+- Review of benchmark rain-gauge networks and observatories.
+- Classification by dominant rationale:
+  - physiographic stratification,
+  - information-gain optimisation,
+  - hydrological coupling.
+- Conceptual Burgwald network:
+  - ≤ 20 stations,
+  - explicit station roles (Backbone, Infill, P–Q, Open–Wood, Event-Scout),
+  - data and resource plan,
+  - initial literature justification.
+
+::: {.callout-tip title="📋  **Outcome**" appearance="minimal"}
+Defines _**what should be built**_ and _**why**_.
+All following modules answer _**how**_.
+:::
+
+
+## Module 1 – Project Organisation & FAIR Data Retrieval
+
+**Goal:** Build a reproducible project skeleton consistent with Module 0.
+
+##### Technical scope
+
+- R project setup (`renv`, `here`, `targets`)
 - FAIR principles (Findable, Accessible, Interoperable, Reusable)
-- Open datasets: DGM (elevation), CORINE/ATKIS (land use), RADOLAN, Sentinel-2, stream gauge data
+- Targeted datasets:
+  - DEM / DGM → terrain, landforms, drainage
+  - CORINE / ATKIS → structural & physiographic context
+  - RADOLAN, DWD gauges → precipitation fields and point data
+  - Sentinel-2 → structural layers (canopy/open), not full RS modelling
 
-### Module 2: Geodata Preprocessing
-- Raster and vector import, reprojection, masking (`terra`, `sf`, `stars`)
-- Deriving morphometric indices: slope, aspect, convexity, TWI
-- Simplifying land cover classes for analysis
 
-### Module 3: Interpolation Techniques
-- Deterministic: IDW, Spline, trend surfaces
-- Geostatistical: Ordinary/Universal Kriging, CoKriging (elevation as covariate)
-- Parametric: Regression models based on physiographic predictors (PRISM-style)
+::: {.callout-tip title="📋 Key idea" appearance="minimal"}
 
-### Module 4: Wind Fields & Luv-Lee Classification
-- Wind data (DWD stations, ERA5/COSMO reanalysis)
-- Deriving dominant wind directions (seasonal, annual)
-- Linking wind data with aspect for Luv/Lee mapping
+Data selection is not purely technical.  
+It is **biased by process assumptions** and directly constrains the interpretation of the project results.
 
-### Module 5: Spatial Structuring & Stratification
-- **Goal:** Segment study area into physiographically consistent zones
-- Clustering: `kmeans`, `raster.kmeans`
-- Nowosad-style landscape pattern analysis:
-  - `supercells`: superpixel-based segmentation
-  - `motif`: landscape pattern frequency analysis
-  - `spQuery`: neighborhood similarity queries
-  - `patternogram`: spatial pattern comparison
-- Sampling representative locations (`spatSample`, `sf::st_sample()`)
+:::
 
-### Module 6: Visualization & Mapping
-- Mapping with `tmap`, `mapview`, `ggplot2`
-- Composite visual layers: terrain + stations + uncertainty + structure
 
----
 
-## Advanced Toolkit Modules (optional per group/project)
+## Module 2 – Geodata Preprocessing as Process Modelling
 
-### For Module 1 (Project organization):
-- Metadata management with YAML, `EML`
-- Project transparency with GitHub workflows
+**Goal:** Derive **process-relevant base variables**, not just cleaned inputs.
 
-### For Module 2 (Preprocessing):
-- Landform classification (ridge/valley/slope)
-- Watershed and flow direction (`terra`, `whitebox`, `RSAGA`)
+#### Technical scope
 
-### For Module 3 (Interpolation):
-- Radar-gauge bias correction (mean field bias, rolling bias)
-- Time series smoothing, rolling event detection (`zoo`, `hydroGOF`)
+- Raster/vector handling (`terra`, `sf`, `stars`)
+- Morphometry:
+  - slope, aspect, curvature / convexity
+  - landform classification (ridge / slope / valley)
+- Hydrological pre-structuring:
+  - flow direction, flow accumulation
+  - watershed and sub-catchment delineation
+- Functional land-cover simplification (forest/open, canopy density)
 
-### For Module 4 (Wind):
-- Automated Luv/Lee classification per aspect and wind dominance
-- Wind-exposure stratification zones
 
-### For Module 5 (Structuring):
-- Cluster validation (silhouette score, within-cluster variance)
-- Comparison: PRISM/ASOADeK-type models vs. unsupervised clustering
+::: {.callout-tip title="📋 Key idea" appearance="minimal"}
 
-### For Module 6 (Visualization):
-- Optional: interactive dashboards with `shiny`, `leaflet`
+This step reframes preprocessing as **process modelling at the first order**.  
+Consequently, all **scale decisions** made here become part of the scientific argument and must be revisited explicitly.
 
----
+:::
 
-## Suggested Timeline (Flexible)
 
-| Session | Theme                         | Module(s)        | Format                     |
-|---------|-------------------------------|------------------|----------------------------|
-| 1       | Project & Data Infrastructure | Module 1         | Plenary + group setup      |
-| 2       | Data Preprocessing            | Module 2         | Guided workflow + maps     |
-| 3       | Structuring & Patterns          | Module 3         |Core + Nowosad extensions          |
-| 4       | Wind Fields & Luv/Lee         | Module 4         | Analysis + map output      |
-| 5       |   Interpolation Basics      | Module 5         | Demo + application  |
-| 6       | Visualization                 | Module 6         | Output & comparison        |
-| 7–10    | Workshops                     | Advanced modules  | Project-specific tutorials |
+## Module 3 – Wind Fields & Luv–Lee Annotation
 
----
+**Goal:** Provide atmospheric **context**, not full atmospheric modelling.
 
-This structure ensures every group acquires key spatial methods while allowing targeted deep-dives into advanced techniques, including the use of cutting-edge spatial pattern tools from the Nowosad ecosystem.
+#### Technical scope
+
+- Wind data (DWD stations, ERA5 / COSMO)
+- Dominant wind directions (seasonal / aggregated)
+- Aspect × wind → Luv/Lee annotation
+
+  
+::: {.callout-tip title="📋 Key idea" appearance="minimal"}
+
+This module introduces key **conceptual constraints**.  
+Variables such as *Luv/Lee* are treated as **annotation layers**, not as clustering variables.  
+They support **interpretation and diagnostics across segments**, but do not define the spatial segmentation itself.
+
+:::
+
+
+## Module 4 – Spatial Structuring & Stratification (Core Module)
+
+**Goal:** Reduce spatial complexity **before** interpolation or optimisation.
+
+#### Technical scope
+
+- Tile-based structural pre-analysis
+- Adaptive spatial units:
+  - `supercells` (Nowosad ecosystem)
+  - optional simple clustering (e.g. `kmeans`)
+- Focus on:
+  - spatial coherence,
+  - reproducibility,
+  - process plausibility.
+
+
+::: {.callout-tip title="📋 Key idea" appearance="minimal"}
+
+This module marks a **shift in emphasis**.  
+Rather than pursuing exhaustive cluster-validity optimisation (e.g. silhouette scores), the focus is placed on **interpretability**, **stability**, and **process plausibility**.  
+As a consequence, the workflow requires a **renewed and more critical engagement with the literature** to reassess methodological assumptions and design choices.
+
+:::
+
+
+## Module 5 – Scientific Recursion (Re-Entry Loop)
+
+**Goal:** Enforce an explicit **scientific recursion**:  
+projects must now be **re-aligned, refined, and justified** based on accumulated insights.
+
+This module introduces a deliberate **loop in the workflow**.  
+Instead of progressing forward, all groups are required to **re-enter their own project logic**.
+
+The intention is to make explicit what ideally should have happened iteratively from the start:
+the continuous adaptation of methods to concepts, not the other way around.
+
+#### Scientific Recursion
+
+Over the past weeks, students have:
+- implemented substantial technical workflows,
+- explored multiple methodological templates,
+- generated concrete spatial structures, strata, and candidate designs.
+
+What has often *not* happened sufficiently is the **recursive alignment** between:
+- conceptual intent,
+- methodological choices,
+- and scientific justification.
+
+This module therefore enforces that alignment **retroactively and explicitly**.
+
+::: {.callout-note title="🔁 Scientific Recursion" appearance="minimal"}
+
+Each group must now refine its project by:
+
+- revisiting the original concept and design intent,
+- adapting the workflow where necessary (simplification, re-weighting, omission),
+- justifying these adaptations with **literature and own argumentation**,
+- explaining why the resulting workflow is *appropriate for their specific project*.
+
+The provided workflow and examples are to be treated as **exemplary scaffolding**,  
+not as a blueprint to be reproduced.
+
+:::
+
+#### What this module demands
+
+- A clear statement of **what was changed** and **why**.
+- Explicit references that support or contradict earlier assumptions.
+- Recognition that technical completeness does **not** imply scientific adequacy.
+- Acceptance that refinement often means **removing** methods, not adding more.
+
+::: {.callout-tip title="📋 Key idea" appearance="minimal"}
+
+
+A scientifically grounded, internally consistent project design that:
+- reflects informed methodological choices,
+- acknowledges limitations and alternatives,
+- and demonstrates ownership over the workflow.
+
+This recursion marks the transition from **method execution** to **scientific authorship**.
+:::
+
+
+
+## Module 6 – Interpolation, Mapping & Diagnostic Validation
+
+**Goal:** Use interpolation and mapping as **diagnostic tools** to evaluate spatial structuring and process assumptions — not to construct a “true” precipitation field.
+
+#### Conceptual framing
+
+Interpolation is deliberately positioned **after** spatial structuring and stratification.
+Its role is not optimisation, but **testing**:
+
+* Do the chosen spatial units and strata explain systematic deviations?
+* Where do interpolated fields perform consistently well or poorly — and why?
+
+#### Technical scope
+
+**Interpolation inputs**
+
+* RADOLAN precipitation products, *or*
+* simple gauge-based approaches (IDW, basic Kriging).
+
+**Evaluation strategy**
+
+* Extract precipitation time series at:
+  * existing gauges,
+  * planned or hypothetical station locations.
+* Analyse residuals and differences by:
+  * spatial strata and segments,
+  * landforms (ridge / slope / valley),
+  * annotation layers (e.g. Luv/Lee),
+  * catchments and sub-catchments.
+
+#### Mapping & visual diagnostics
+
+* Cartographic tools: `tmap`, `ggplot2`, `mapview`
+* Core overlays:
+  * segmentation and physiographic strata,
+  * landforms and drainage networks,
+  * interpolated precipitation fields,
+  * spatial residual patterns.
+
+Maps are treated as **analytical artefacts**, not presentation products:
+they are used to identify structural consistency, mismatches, and process-related patterns.
+
+::: {.callout-tip title="📋 Key idea" appearance="minimal"}
+
+Interpolation functions as a **stress test**.
+The question is not whether an interpolated field looks smooth or accurate, but whether **the chosen spatial structuring helps explain where and why interpolation fails**.
+
+:::
+
+
+
+
+
+
+## Suggested Timeline 
+
+| Session | Theme                               | Module(s)                  | Format                          |
+|--------:|-------------------------------------|----------------------------|---------------------------------|
+| 1       | Concept & Evidence                  | Module 0                   | Discussion + design review      |
+| 2       | Project & Data Infrastructure       | Module 1                   | Setup + guided workflow         |
+| 3       | Preprocessing & Landforms           | Module 2                   | Analysis + maps                 |
+| 4       | Spatial Structuring                 | Module 4                   | Segmentation workshop           |
+| 5       | Wind Context & Interpretation       | Module 3                   | Annotation + discussion         |
+| 6       | Scientific Recursion                | Module 5                   | Literature-based redesign       |
+| 7       | Diagnostic Validation               | Module 6                   | Interpolation + residuals       |
+| 8–10    | Workshops & Refinement              | Advanced modules           | Project-specific deep dives     |
+
+
+
+::: {.callout-warning title="Original Schedule vs. Adaptive Workflow" collapse="true"}
+
+## Summary Table
+
+
+| Original Module | Original Focus                         | Adaptive Role Now                                   | Status |
+|-----------------|----------------------------------------|-----------------------------------------------------|--------|
+| Module 0        | Implicit literature review             | Explicit concept & evidence scan                    | Central |
+| Module 1        | Project setup & data                   | FAIR, reproducible implementation base              | Active |
+| Module 2        | Preprocessing                          | First-order process modelling                       | Active |
+| Module 3        | Wind fields                            | Contextual annotation (Luv/Lee etc.)                | Active |
+| Module 4        | Structuring & clustering               | Core spatial backbone (segmentation & strata)       | Active |
+| Cross-cutting | Iterative scientific reflection | Explicit Scientific Recursion (Module 5) | Central |
+| Interpolation   | Field generation                       | Diagnostic / validation instrument (Module 6)       | Limited |
+| Visualization   | Mapping                                | Analytical diagnostics, not presentation             | Integrated |
+
+:::
+
+## Key Take-Home Messages
+
+- **Structure precedes interpolation.**
+- **Interpolation serves validation, not truth.**
+- **Spatial decisions imply scale decisions.**
+- **Adaptive workflows require renewed literature engagement.**
+- **Scientific recursion is part of the method, not an afterthought.**
