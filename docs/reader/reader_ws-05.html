@@ -410,7 +410,6 @@ background-size: cover;
 <li>Applying classification and temporal analysis methods to quantify and interpret changes.</li>
 </ol>
 <p>The following sections outline the conceptual foundations of image-based change detection and demonstrate how classification, spectral indices and Sentinel-2 data together reveal spatial-temporal patterns. The Burgwald serve as examples of vegetation change between 2018 and 2023. For a broader conceptual framework of GIScience and remote sensing as components of system-based spatial information science, see <span class="citation" data-cites="tolpekin2012">Tolpekin and Stein (<a href="#ref-tolpekin2012" role="doc-biblioref">2012</a>)</span>.</p>
-<hr>
 </section>
 <section id="change-overview" class="level1">
 <h1>Change Detection and Spatial–Temporal Analysis</h1>
@@ -428,7 +427,6 @@ background-size: cover;
 <section id="classification-logic" class="level3">
 <h3 class="anchored" data-anchor-id="classification-logic">Classification logic: MLC, k-means, Random Forest</h3>
 <p>From a methodological perspective, three families of classifiers illustrate the logic from classical statistics through unsupervised clustering to modern ensemble learning: Maximum Likelihood Classification (MLC), k-means clustering, and Random Forest (RF). Together, these three methods illustrate the progression from distribution-based decision rules (MLC), via geometry-based partitioning (k-means), to data-driven ensemble learning (RF) that is now standard in remote-sensing workflows and frequently used as a benchmark in comparative studies <span class="citation" data-cites="lu2007 hogland2013 paradis2022 belgiu2016">(<a href="#ref-lu2007" role="doc-biblioref">Lu and Weng 2007</a>; <a href="#ref-hogland2013" role="doc-biblioref">Hogland, Billor, and Anderson 2013</a>; <a href="#ref-paradis2022" role="doc-biblioref">Paradis et al. 2022</a>; <a href="#ref-belgiu2016" role="doc-biblioref">Belgiu and Drăguţ 2016</a>)</span>.</p>
-<hr>
 <section id="kmeans" class="level4">
 <h4 class="anchored" data-anchor-id="kmeans">1. K-means (Unsupervised Clustering)</h4>
 <p>K-means is an unsupervised clustering algorithm that partitions pixels into k clusters by iteratively minimising within-cluster variance. It is simple, fast and requires no labelled training data, but has no notion of semantic classes, is sensitive to initialisation and scale, and ignores spatial context. In land-cover workflows, it is therefore mainly used for exploratory grouping or as a pre-step before manual labelling rather than as a final map <span class="citation" data-cites="paradis2022">(<a href="#ref-paradis2022" role="doc-biblioref">Paradis et al. 2022</a>)</span>.</p>
@@ -436,7 +434,6 @@ background-size: cover;
 <p><img src="../images/K-means_convergence.png" class="img-fluid" data-fig-cap="K-means convergence (animated, HTML only)"></p>
 <p><em>Convergence of k-means clustering from an unfavourable starting position (two initial cluster centres are fairly close).</em></p>
 <p>In vegetation-change studies, k-means is used to check whether classes like forest, dead wood, and clearcuts are spectrally distinct — an essential requirement for stable supervised classification.</p>
-<hr>
 </section>
 <section id="mlc" class="level4">
 <h4 class="anchored" data-anchor-id="mlc">2. Maximum Likelihood Classification (MLC)</h4>
@@ -445,7 +442,6 @@ background-size: cover;
 <p>MLC performs well when spectral differences between classes (for example, forest vs.&nbsp;clearcut) are large and the Gaussian assumption is approximately valid.</p>
 <p><img src="images/max.png" class="img-fluid"></p>
 <p>Classifiers such as MLC use training data to determine descriptive models representing statistical signatures. Within the limits of the quality and representativeness of the training data, such models can be applied to all pixels for which the predictor variables are available <span class="citation" data-cites="lu2007 belgiu2016">(<a href="#ref-lu2007" role="doc-biblioref">Lu and Weng 2007</a>; <a href="#ref-belgiu2016" role="doc-biblioref">Belgiu and Drăguţ 2016</a>)</span>.</p>
-<hr>
 </section>
 <section id="rf" class="level4">
 <h4 class="anchored" data-anchor-id="rf">3. Random Forest Classification (RF)</h4>
@@ -481,7 +477,6 @@ background-size: cover;
 <p>Even high accuracy may mask structural misclassification in subtle transitions, such as thinning canopies or partially damaged stands.</p>
 <p>Continuous spectral indices such as kNDVI — derived using the gdalcubes framework — help diagnose such errors by revealing sub-pixel gradients that discrete classes cannot capture.</p>
 <p>Advanced time-series methods like BFAST <span class="citation" data-cites="bfast bfast_rs2020">(<a href="#ref-bfast" role="doc-biblioref">Verbesselt, Zeileis, and Herold 2012</a>; <a href="#ref-bfast_rs2020" role="doc-biblioref">Wu et al. 2020</a>)</span> breakpoints in vegetation dynamics, including timing and magnitude of structural change. BFAST is particularly valuable in drought–forest interactions and post-disturbance recovery monitoring.</p>
-<hr>
 </section>
 <section id="training-data" class="level2">
 <h2 class="anchored" data-anchor-id="training-data">Digitising Training Data</h2>
@@ -494,7 +489,6 @@ background-size: cover;
 <li>Avoiding polygons that span multiple land-cover types, and</li>
 <li>Using high-resolution aerial imagery to refine training locations.</li>
 </ul>
-<hr>
 </section>
 <section id="references-reading" class="level2">
 <h2 class="anchored" data-anchor-id="references-reading">Further Reading</h2>
@@ -521,7 +515,6 @@ background-size: cover;
 <p>Use tutorials and blog posts as practical support only. They are extremely helpful for code and workflow patterns, but they cannot replace independent thinking, methodological scrutiny, or engagement with peer-reviewed research.</p>
 </div>
 </div>
-<hr>
 </section>
 </section>
 <section id="final" class="level2">

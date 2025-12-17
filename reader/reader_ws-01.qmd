@@ -18,7 +18,7 @@ It is a **multi-criteria design challenge** that requires combining spatial reas
 
 Before learning the analytical tools (e.g., Kriging, radar integration, hydrological modelling), you first need to understand **what makes such a network “good” or “bad”** — and why there is no single correct solution.
 
----
+
 
 ## Your task for this worksheet
 
@@ -39,7 +39,7 @@ Before learning the analytical tools (e.g., Kriging, radar integration, hydrolog
 
 You will later revisit these reflections when developing your final **Network Design Proposal**, where you will apply the methods learned throughout the course.
 
----
+
 
 ## Learning outcome of this phase
 
@@ -48,7 +48,7 @@ By completing this introductory reflection, you should:
 - Identify your current methodological baseline.  
 - Establish a **research orientation** for the semester: what tools, data, and reasoning you will need to reach a defensible design.
 
----
+
 
 
 ## Background and problem definition

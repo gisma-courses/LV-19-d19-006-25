@@ -40,7 +40,7 @@ The following sections outline the conceptual foundations of image-based change 
 The Burgwald serve as examples of vegetation change between 2018 and 2023.
 For a broader conceptual framework of GIScience and remote sensing as components of system-based spatial information science, see @tolpekin2012.
 
----
+
 
 # Change Detection and Spatial–Temporal Analysis {#change-overview}
 
@@ -69,7 +69,7 @@ Modern classification workflows therefore often combine spectral indices with st
 
 From a methodological perspective, three families of classifiers illustrate the logic from classical statistics through unsupervised clustering to modern ensemble learning: Maximum Likelihood Classification (MLC), k-means clustering, and Random Forest (RF). Together, these three methods illustrate the progression from distribution-based decision rules (MLC), via geometry-based partitioning (k-means), to data-driven ensemble learning (RF) that is now standard in remote-sensing workflows and frequently used as a benchmark in comparative studies [@lu2007; @hogland2013; @paradis2022; @belgiu2016].
 
----
+
 
 #### 1. K-means (Unsupervised Clustering) {#kmeans}
 
@@ -83,7 +83,7 @@ K-means is often considered the most accessible unsupervised classification algo
 
 In vegetation-change studies, k-means is used to check whether classes like forest, dead wood, and clearcuts are spectrally distinct — an essential requirement for stable supervised classification.
 
----
+
 
 #### 2. Maximum Likelihood Classification (MLC) {#mlc}
 
@@ -97,7 +97,7 @@ MLC performs well when spectral differences between classes (for example, forest
 
 Classifiers such as MLC use training data to determine descriptive models representing statistical signatures. Within the limits of the quality and representativeness of the training data, such models can be applied to all pixels for which the predictor variables are available [@lu2007; @belgiu2016].
 
----
+
 
 #### 3. Random Forest Classification (RF) {#rf}
 
@@ -149,7 +149,7 @@ Continuous spectral indices such as kNDVI — derived using the gdalcubes framew
 Advanced time-series methods like BFAST [@bfast; @bfast_rs2020] breakpoints in vegetation dynamics, including timing and magnitude of structural change.
 BFAST is particularly valuable in drought–forest interactions and post-disturbance recovery monitoring.
 
----
+
 
 ## Digitising Training Data {#training-data}
 
@@ -166,7 +166,7 @@ Best practices include:
 - Avoiding polygons that span multiple land-cover types, and
 - Using high-resolution aerial imagery to refine training locations.
 
----
+
 
 ## Further Reading {#references-reading}
 
@@ -192,7 +192,7 @@ They are extremely helpful for code and workflow patterns, but they cannot repla
 :::
 
 
----
+
 
 ## Final Remarks {#final}
 

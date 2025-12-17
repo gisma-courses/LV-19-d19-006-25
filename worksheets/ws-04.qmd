@@ -51,7 +51,7 @@ Clone this repository locally and open the `.Rproj`:
 
 [https://github.com/gisma/LV-19-d19-006-25-R.git](https://github.com/gisma/LV-19-d19-006-25-R.git)
 
----
+
 
 
 
@@ -75,7 +75,7 @@ Minimal check (optional in console):
 fs::dir_ls("data", recurse = TRUE)
 ```
 
----
+
 
 # Task 2 – Run generic data retrieval
 
@@ -96,7 +96,7 @@ Suggested quick check:
 fs::dir_ls("data", recurse = TRUE)
 ```
 
----
+
 
 # Task 3 – Test external API (SAGA)
 
@@ -107,7 +107,7 @@ fs::dir_ls("data", recurse = TRUE)
 * At least **one new terrain raster** (e.g. slope, aspect) has to be created.
 * Note the file name and location.
 
----
+
 
 # Task 4 – Sentinel-2 via CDSE
 
@@ -123,7 +123,7 @@ data/raw/s2/
 
 * Count/list how many items were downloaded or referenced.
 
----
+
 
 # Task 5 – Sentinel-2 via gdalcubes
 
@@ -143,7 +143,7 @@ data/predictor/
 stars::read_stars("data/predictor/<your-file>.nc")
 ```
 
----
+
 
 # Task 6 – Pipeline check
 
@@ -163,7 +163,7 @@ Verify that all three stages exist on your system:
 
 If any stage is missing, re-run the corresponding script or document the error.
 
----
+
 
 # Task 8 – Short reproducibility log
 
@@ -176,7 +176,7 @@ Write **one short paragraph** (max. 5–6 sentences) for your own log:
 
 You will use this later to compare reproducibility between systems.
 
----
+
 
 # Expected final structure
 

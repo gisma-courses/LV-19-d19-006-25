@@ -456,7 +456,6 @@ Please follow this workflow:</p>
 <h1>Repository</h1>
 <p>Clone this repository locally and open the <code>.Rproj</code>:</p>
 <p><a href="https://github.com/gisma/LV-19-d19-006-25-R.git">https://github.com/gisma/LV-19-d19-006-25-R.git</a></p>
-<hr>
 </section>
 <section id="task-1-run-the-setup" class="level1">
 <h1>Task 1 – Run the setup</h1>
@@ -471,7 +470,6 @@ data/processed/aoi_burgwald.gpkg
 src/01-fun-data-retrieval.R  (loaded without error)</code></pre>
 <p>Minimal check (optional in console):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">dir_ls</span>(<span class="st">"data"</span>, <span class="at">recurse =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
 </section>
 <section id="task-2-run-generic-data-retrieval" class="level1">
 <h1>Task 2 – Run generic data retrieval</h1>
@@ -489,7 +487,6 @@ src/01-fun-data-retrieval.R  (loaded without error)</code></pre>
 </ul>
 <p>Suggested quick check:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">dir_ls</span>(<span class="st">"data"</span>, <span class="at">recurse =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
 </section>
 <section id="task-3-test-external-api-saga" class="level1">
 <h1>Task 3 – Test external API (SAGA)</h1>
@@ -500,7 +497,6 @@ src/01-fun-data-retrieval.R  (loaded without error)</code></pre>
 <li>At least <strong>one new terrain raster</strong> (e.g.&nbsp;slope, aspect) has to be created.</li>
 <li>Note the file name and location.</li>
 </ul>
-<hr>
 </section>
 <section id="task-4-sentinel-2-via-cdse" class="level1">
 <h1>Task 4 – Sentinel-2 via CDSE</h1>
@@ -514,7 +510,6 @@ src/01-fun-data-retrieval.R  (loaded without error)</code></pre>
 <ul>
 <li>Count/list how many items were downloaded or referenced.</li>
 </ul>
-<hr>
 </section>
 <section id="task-5-sentinel-2-via-gdalcubes" class="level1">
 <h1>Task 5 – Sentinel-2 via gdalcubes</h1>
@@ -529,7 +524,6 @@ src/01-fun-data-retrieval.R  (loaded without error)</code></pre>
 <li>Confirm that the NetCDF file exists and can be opened, e.g.:</li>
 </ul>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>stars<span class="sc">::</span><span class="fu">read_stars</span>(<span class="st">"data/predictor/&lt;your-file&gt;.nc"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
 </section>
 <section id="task-6-pipeline-check" class="level1">
 <h1>Task 6 – Pipeline check</h1>
@@ -544,7 +538,6 @@ src/01-fun-data-retrieval.R  (loaded without error)</code></pre>
 <li>PREDICTOR STACK(S)</li>
 </ul>
 <p>If any stage is missing, re-run the corresponding script or document the error.</p>
-<hr>
 </section>
 <section id="task-8-short-reproducibility-log" class="level1">
 <h1>Task 8 – Short reproducibility log</h1>
@@ -556,7 +549,6 @@ src/01-fun-data-retrieval.R  (loaded without error)</code></pre>
 <li>Which errors (if any) stopped the pipeline?</li>
 </ul>
 <p>You will use this later to compare reproducibility between systems.</p>
-<hr>
 </section>
 <section id="expected-final-structure" class="level1">
 <h1>Expected final structure</h1>

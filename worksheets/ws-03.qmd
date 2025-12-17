@@ -64,7 +64,6 @@ radolan_path <- here::here("data", "raw", "radolan_rw_20250101.tif")
 
 Using this pattern ensures that **all groups** can clone a GitHub repo, run the scripts, and obtain the same results without manual path tweaking.
 
----
 
 
 
@@ -173,9 +172,9 @@ Each group must:
 
 The next session (Module 2) will assume that **all groups can load at least their DGM file and one specific other data set from `data/raw`** using `here::here()`.
 
----
 
----
+
+
 
 
 ### Module 2: Geodata Preprocessing

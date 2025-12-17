@@ -114,7 +114,6 @@ background-size: cover;
 <meta property="og:description" content="A Segmentation-Based Framework for Rainfall Station Placement">
 <meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/images/workflow.drawio.svg">
 <meta property="og:site_name" content="Advanced GIS &amp; RS">
-<meta property="og:image:alt" content="Fig. 1: Design framework for the Burgwald rainfall gauge network">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -376,7 +375,6 @@ background-size: cover;
    
   <ul>
   <li><a href="#conceptual-background-and-problem-framing" id="toc-conceptual-background-and-problem-framing" class="nav-link active" data-scroll-target="#conceptual-background-and-problem-framing">Conceptual background and problem framing</a></li>
-  <li><a href="#fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network" id="toc-fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network" class="nav-link" data-scroll-target="#fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network"><img src="../images/workflow.drawio.svg" class="img-fluid" alt="Fig. 1: Design framework for the Burgwald rainfall gauge network"></a></li>
   <li><a href="#catchment-based-versus-segment-based-design" id="toc-catchment-based-versus-segment-based-design" class="nav-link" data-scroll-target="#catchment-based-versus-segment-based-design">Catchment-based versus segment-based design</a>
   <ul class="collapse">
   <li><a href="#catchment-based-design" id="toc-catchment-based-design" class="nav-link" data-scroll-target="#catchment-based-design">Catchment-based design</a></li>
@@ -407,9 +405,12 @@ background-size: cover;
 <p>The design of rainfall and hydrometric monitoring networks is fundamentally a <strong>spatial design problem</strong>. Landscapes are heterogeneous, monitoring resources are limited, and the target variables of interest—precipitation, runoff, and discharge—are governed by interacting processes operating across multiple spatial scales. Consequently, station placement cannot be reduced to uniform coverage or local optimisation, but must instead maximise <strong>information gain with respect to hydrological response</strong>.</p>
 <p>Many existing approaches optimise station locations directly within predefined spatial units such as grids or catchments <span class="citation" data-cites="Mishra2009 Alfonso2010 Samuel2013">(<a href="#ref-Mishra2009" role="doc-biblioref">Mishra and Coulibaly 2009</a>; <a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>; <a href="#ref-Samuel2013" role="doc-biblioref">Samuel 2013</a>)</span>. While these approaches are hydrologically intuitive, they embed <strong>implicit assumptions about spatial scale and internal homogeneity</strong>, which are rarely satisfied in real landscapes <span class="citation" data-cites="Wagener2007">(<a href="#ref-Wagener2007" role="doc-biblioref">Wagener 2007</a>)</span>.</p>
 <p>The workflow adopted here explicitly separates <strong>structural heterogeneity</strong>, <strong>segmentation-based scale discovery</strong>, <strong>physiographic process stratification</strong>, and <strong>hydrological optimisation</strong> (Figure 1). This staged reduction of spatial complexity ensures that scale decisions remain explicit and that optimisation operates on process-relevant spatial units rather than raw spatial partitions.</p>
-</section>
-<section id="fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network" class="level2">
-<h2 class="anchored" data-anchor-id="fig.-1-design-framework-for-the-burgwald-rainfall-gauge-network"><img src="../images/workflow.drawio.svg" class="img-fluid" alt="Fig. 1: Design framework for the Burgwald rainfall gauge network"></h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../images/workflow.drawio.svg" class="img-fluid figure-img"></p>
+<figcaption>Fig. 1: Design framework for the Burgwald rainfall gauge network</figcaption>
+</figure>
+</div>
 </section>
 <section id="catchment-based-versus-segment-based-design" class="level2">
 <h2 class="anchored" data-anchor-id="catchment-based-versus-segment-based-design">Catchment-based versus segment-based design</h2>
@@ -427,7 +428,6 @@ background-size: cover;
 <section id="hybrid-rationale" class="level3">
 <h3 class="anchored" data-anchor-id="hybrid-rationale">Hybrid rationale</h3>
 <p>This thesis adopts a <strong>hybrid position</strong>: segments are used to represent spatial heterogeneity and discover meaningful scales, while catchments and stream networks are used for hydrological aggregation and evaluation. This sequencing follows calls in hydrology to decouple spatial representation from hydrological response analysis <span class="citation" data-cites="Winter2001 Wagener2007">(<a href="#ref-Winter2001" role="doc-biblioref">Winter 2001</a>; <a href="#ref-Wagener2007" role="doc-biblioref">Wagener 2007</a>)</span>.</p>
-<hr>
 </section>
 </section>
 <section id="methods" class="level2">
@@ -454,7 +454,6 @@ background-size: cover;
 <h3 class="anchored" data-anchor-id="hydrological-context-and-network-optimisation">Hydrological context and network optimisation</h3>
 <p>Physiographic strata are overlaid with watershed boundaries and stream networks characterised by Strahler order <span class="citation" data-cites="Strahler1957">(<a href="#ref-Strahler1957" role="doc-biblioref">Strahler 1957</a>)</span>. Catchments serve as aggregation units to evaluate how different strata contribute to runoff at selected outlets.</p>
 <p>Station placement is then optimised using information-theoretic criteria to maximise information gain and minimise redundancy <span class="citation" data-cites="Alfonso2010 Samuel2013 Keum2017">(<a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>; <a href="#ref-Samuel2013" role="doc-biblioref">Samuel 2013</a>; <a href="#ref-Keum2017" role="doc-biblioref">Keum 2017</a>)</span>.</p>
-<hr>
 </section>
 </section>
 <section id="references" class="level2">

@@ -25,11 +25,10 @@ The design of rainfall and hydrometric monitoring networks is fundamentally a **
 
 Many existing approaches optimise station locations directly within predefined spatial units such as grids or catchments [@Mishra2009; @Alfonso2010; @Samuel2013]. While these approaches are hydrologically intuitive, they embed **implicit assumptions about spatial scale and internal homogeneity**, which are rarely satisfied in real landscapes [@Wagener2007].
 
-The workflow adopted here explicitly separates **structural heterogeneity**, **segmentation-based scale discovery**, **physiographic process stratification**, and **hydrological optimisation** (Figure 1). This staged reduction of spatial complexity ensures that scale decisions remain explicit and that optimisation operates on process-relevant spatial units rather than raw spatial partitions.
-
+The workflow adopted here explicitly separates **structural heterogeneity**, **segmentation-based scale discovery**, **physiographic process stratification**, and **hydrological optimisation** (Figure 1). This staged reduction of spatial complexity ensures that scale decisions remain explicit and that optimisation operates on process-relevant spatial units rather than raw spatial partitions. 
 
 ![Fig. 1: Design framework for the Burgwald rainfall gauge network](../images/workflow.drawio.svg)  
----
+
 
 ## Catchment-based versus segment-based design
 
@@ -51,7 +50,7 @@ At the same time, segments do not encode hydrological connectivity and therefore
 
 This thesis adopts a **hybrid position**: segments are used to represent spatial heterogeneity and discover meaningful scales, while catchments and stream networks are used for hydrological aggregation and evaluation. This sequencing follows calls in hydrology to decouple spatial representation from hydrological response analysis [@Winter2001; @Wagener2007].
 
----
+
 
 ## Methods
 
@@ -81,6 +80,6 @@ Physiographic strata are overlaid with watershed boundaries and stream networks 
 
 Station placement is then optimised using information-theoretic criteria to maximise information gain and minimise redundancy [@Alfonso2010; @Samuel2013; @Keum2017].
 
----
+
 
 ## References

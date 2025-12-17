@@ -29,7 +29,7 @@ Rather than optimising station locations directly, the course emphasises:
 The workflow combines **literature-driven design**, **GIS-based spatial structuring**,
 and **selective quantitative diagnostics**.
 
----
+
 
 ## Course Structure
 
@@ -42,7 +42,7 @@ Each session contains:
 - guided implementation,
 - structured discussion and reflexion.
 
----
+
 
 ## Introduction: From Conceptual Design to Calculation
 
