@@ -8,7 +8,7 @@ format:
     toc: true
     theme: flatly
   pdf:
-    toc: true
+    toc: false
 ---
 
 

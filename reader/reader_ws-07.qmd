@@ -11,7 +11,7 @@ format:
     toc: true
     theme: flatly
   pdf:
-    toc: true
+    toc: false
 editor: 
   markdown: 
     wrap: sentence
