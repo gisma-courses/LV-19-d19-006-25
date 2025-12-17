@@ -282,7 +282,7 @@ Write one short paragraph (max. 6–7 sentences) that positions this workflow::
     -   or hydrological validation (Step 4).
 
 
-![Design framework for the Burgwald rainfall gauge network](../images/Diagram.drawio.svg)  
+![Design framework for the Burgwald rainfall gauge network](../images/workflow.drawio.svg)  
 
 
 ::: {.callout-tip title="Final note" appearance="minimal"}
