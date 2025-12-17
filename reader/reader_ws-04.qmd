@@ -170,7 +170,7 @@ They support **interpretation and diagnostics across segments**, but do not defi
 
 #### Technical scope
 
-- Tile-based structural pre-analysis
+ - Tile-based structural pre-analysis
 - Adaptive spatial units:
   - `supercells` (Nowosad ecosystem)
   - optional simple clustering (e.g. `kmeans`)
