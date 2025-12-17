@@ -28,7 +28,7 @@ Many existing approaches optimise station locations directly within predefined s
 The workflow adopted here explicitly separates **structural heterogeneity**, **segmentation-based scale discovery**, **physiographic process stratification**, and **hydrological optimisation** (Figure 1). This staged reduction of spatial complexity ensures that scale decisions remain explicit and that optimisation operates on process-relevant spatial units rather than raw spatial partitions.
 
 
-![Fig. 1: Design framework for the Burgwald rainfall gauge network](../images/workflow.drawio.png)  
+![Fig. 1: Design framework for the Burgwald rainfall gauge network](../images/workflow.drawio.svg)  
 ---
 
 ## Catchment-based versus segment-based design
