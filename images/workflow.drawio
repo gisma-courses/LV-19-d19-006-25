@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.7">
   <diagram name="Page-1" id="C_qJEJ-H_p9d8kiWJM0f">
-    <mxGraphModel dx="1418" dy="1632" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="light-dark(#FFFFFF,#FFFFFF)" math="1" shadow="0">
+    <mxGraphModel dx="810" dy="933" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="light-dark(#FFFFFF,#FFFFFF)" math="1" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -16,10 +16,10 @@
         <mxCell id="40" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;strokeWidth=2;container=0;fontColor=light-dark(#000000,#000000);" value="" vertex="1">
           <mxGeometry height="320" width="460" as="geometry" />
         </mxCell>
-        <mxCell id="IzBITlkS-URz4ScaLrYP-68" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);" target="44">
+        <mxCell id="IzBITlkS-URz4ScaLrYP-68" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);strokeWidth=2;" target="44">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="IzBITlkS-URz4ScaLrYP-70" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);" target="43">
+        <mxCell id="IzBITlkS-URz4ScaLrYP-70" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);strokeWidth=2;" target="43">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="42" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Aggregate physiographic variables per segment" vertex="1">
@@ -28,13 +28,13 @@
         <mxCell id="43" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Topography&#xa;elevation, slope, aspect" vertex="1">
           <mxGeometry height="40" width="180" x="40" y="150" as="geometry" />
         </mxCell>
-        <mxCell id="IzBITlkS-URz4ScaLrYP-71" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);" target="46">
+        <mxCell id="IzBITlkS-URz4ScaLrYP-71" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);strokeWidth=2;" target="46">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="44" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Valley–slope–ridge position" vertex="1">
           <mxGeometry height="40" width="180" x="240" y="150" as="geometry" />
         </mxCell>
-        <mxCell id="IzBITlkS-URz4ScaLrYP-74" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);" target="47">
+        <mxCell id="IzBITlkS-URz4ScaLrYP-74" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);strokeWidth=2;" target="47">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="46" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Windwardness&#xa;(annotation only)" vertex="1">
@@ -43,13 +43,13 @@
         <mxCell id="FcrEOxOfpnKt4RclhEI3-68" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;fontColor=light-dark(#000000,#000000);strokeWidth=3;" value="&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;3 Physiographic process stratification&lt;/span&gt;&lt;br style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;Which processes dominate where?&lt;/span&gt;" vertex="1">
           <mxGeometry height="40" width="260" x="98" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="IzBITlkS-URz4ScaLrYP-67" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.509;entryY=0.946;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=light-dark(#000000,#000000);endArrow=none;endFill=0;startArrow=classic;startFill=1;" target="FcrEOxOfpnKt4RclhEI3-68">
+        <mxCell id="IzBITlkS-URz4ScaLrYP-67" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.509;entryY=0.946;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=light-dark(#000000,#000000);endArrow=none;endFill=0;startArrow=classic;startFill=1;strokeWidth=2;" target="FcrEOxOfpnKt4RclhEI3-68">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="IzBITlkS-URz4ScaLrYP-72" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);" target="45">
+        <mxCell id="IzBITlkS-URz4ScaLrYP-72" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);strokeWidth=2;" target="45">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="IzBITlkS-URz4ScaLrYP-73" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.261;entryY=0.006;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=light-dark(#000000,#000000);" target="47">
+        <mxCell id="IzBITlkS-URz4ScaLrYP-73" edge="1" parent="mESigMN6MauJIgFy8G41-70" source="45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.261;entryY=0.006;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=light-dark(#000000,#000000);strokeWidth=2;" target="47">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="45" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Forest fraction" vertex="1">
