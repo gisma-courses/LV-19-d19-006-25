@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.7">
   <diagram name="Page-1" id="C_qJEJ-H_p9d8kiWJM0f">
-    <mxGraphModel dx="810" dy="933" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="light-dark(#FFFFFF,#FFFFFF)" math="1" shadow="0">
+    <mxGraphModel dx="1418" dy="1632" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="light-dark(#FFFFFF,#FFFFFF)" math="1" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -97,9 +97,6 @@
         </mxCell>
         <mxCell id="FcrEOxOfpnKt4RclhEI3-64" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B7791F;fillOpacity=10;strokeColor=#B7791F;fontSize=11;fontColor=light-dark(#000000,#000000);strokeWidth=3;" value="&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;2b Segmentation transfer&lt;/span&gt;&lt;br style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;From tiles to full domain&lt;/span&gt;" vertex="1">
           <mxGeometry height="40" width="240" x="450" y="501" as="geometry" />
-        </mxCell>
-        <mxCell id="FcrEOxOfpnKt4RclhEI3-65" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Text" vertex="1">
-          <mxGeometry height="30" width="60" x="730" y="610" as="geometry" />
         </mxCell>
         <mxCell id="32" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B7791F;fillOpacity=10;strokeColor=#B7791F;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Fix segmentation configuration&#xa;(method, scale, features)" vertex="1">
           <mxGeometry height="40" width="240" x="450" y="561" as="geometry" />
