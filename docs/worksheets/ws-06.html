@@ -365,7 +365,7 @@ background-size: cover;
   <li><a href="#task-7-contextual-annotation-for-later-decision-making-link-to-step-4" id="toc-task-7-contextual-annotation-for-later-decision-making-link-to-step-4" class="nav-link" data-scroll-target="#task-7-contextual-annotation-for-later-decision-making-link-to-step-4">Task 7 – Contextual annotation for later decision making (link to Step 4)</a></li>
   <li><a href="#take-home-from-structure-to-robust-design-steps-14" id="toc-take-home-from-structure-to-robust-design-steps-14" class="nav-link" data-scroll-target="#take-home-from-structure-to-robust-design-steps-14">Take-home – From structure to robust design (Steps 1–4)</a></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ws-06.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -374,11 +374,31 @@ background-size: cover;
 
 
 
-<p>The workflow used in this worksheet emerges from a simple constraint: spatial systems such as the Burgwald are too complex, and too heterogeneous in scale, to be optimised directly for gauge placement or model validation. If structural variability, segmentation scale, and process signals are mixed into a single step, the result is usually unstable, hard to interpret, and difficult to reproduce. The framework therefore separates four stages: first, structural stratification on coarse tiles using information-theoretic and compositional metrics; second, adaptive segmentation on representative test tiles to discover meaningful spatial scales; third, transfer of the chosen segmentation configuration to the full domain and aggregation into physiographic process strata; and only then, fourth, the use of these strata as a basis for network optimisation and hydrological reasoning. Structural, physiographic, and contextual information are treated as different “layers of evidence” rather than one big predictor stack. This staged reduction of spatial complexity is designed to keep scale decisions explicit, to link segments back to physical processes, and to provide a transparent foundation for later decisions such as station placement or sampling design.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled" title="Instructor note - conceptual framing">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Instructor note - conceptual framing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The workflow presented in this worksheet is a <strong>fully functional reference implementation</strong> developed by the instructor.<br>
+It reflects <strong>one coherent set of conceptual decisions</strong> about scale separation, segmentation, and process attribution that have proven robust for the Burgwald case.</p>
+<p>Students may <strong>use, adapt, simplify, or partially reject</strong> this workflow.<br>
+It is <strong>not expected</strong> to fit all individual research questions, mental models, or optimisation goals.</p>
+<p>The purpose of this worksheet is therefore <strong>not replication</strong>, but <strong>critical reconstruction</strong>:<br>
+understanding <em>why</em> the workflow is structured this way, <em>where alternatives exist</em>, and <em>which assumptions are embedded</em>.</p>
+</div>
+</div>
+<p>The workflow used in this worksheet emerges from a simple constraint: spatial systems such as the Burgwald are too complex, and too heterogeneous in scale, to be optimised directly for gauge placement or model validation. If structural variability, segmentation scale, and process signals are mixed into a single step, the result is usually unstable, hard to interpret, and difficult to reproduce. One <strong>possible</strong> framework therefore separates four stages: first, structural stratification on coarse tiles using information-theoretic and compositional metrics; second, adaptive segmentation on representative test tiles to discover meaningful spatial scales; third, transfer of the chosen segmentation configuration to the full domain and aggregation into physiographic process strata; and only then, fourth, the use of these strata as a basis for network optimisation and hydrological reasoning. Structural, physiographic, and contextual information are treated as different “layers of evidence” rather than one big predictor stack. This staged reduction of spatial complexity is designed to keep scale decisions explicit, to link segments back to physical processes, and to provide a transparent foundation for later decisions such as station placement or sampling design.</p>
 <section id="goals" class="level2">
 <h2 class="anchored" data-anchor-id="goals">Goals</h2>
 <ul>
-<li>Use the existing spatial data pipeline as a <strong>fixed technical base</strong>.</li>
+<li>Explicitly reflect on <strong>where this workflow constrains thinking</strong>,<br>
+and where alternative structuring choices might be equally valid or preferable.</li>
+<li>Use the existing spatial data pipeline as a <strong>conceptual technical base</strong>.</li>
 <li>Understand the difference between <strong>structural</strong>, <strong>physiographic</strong>, and <strong>process-oriented</strong> stratification.</li>
 <li>Develop a <strong>multi-stage workflow</strong> that:
 <ul>
@@ -400,10 +420,10 @@ background-size: cover;
 <li>or model evaluation.</li>
 </ul></li>
 </ul>
-<div class="callout callout-style-simple callout-tip callout-titled" title="Written output">
+<div class="callout callout-style-simple callout-tip no-icon callout-titled" title="Written output">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Tip</span>Written output
@@ -454,7 +474,20 @@ background-size: cover;
 </ul></li>
 <li>Required R packages are installed and load without errors.</li>
 </ul>
-<hr>
+<div class="callout callout-style-default callout-note callout-titled" title="Instructor note">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Instructor note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The specific choices shown in the next tasks reflect the <strong>instructor’s implementation</strong>.</p>
+<p>Other choices are desireable if they are <strong>conceptually consistent and well argued</strong> especially within the individual project approach.</p>
+</div>
+</div>
 </section>
 <section id="task-1-base-data-and-spatial-units-step-0-in-the-diagram" class="level2">
 <h2 class="anchored" data-anchor-id="task-1-base-data-and-spatial-units-step-0-in-the-diagram">Task 1 – Base data and spatial units (Step 0 in the diagram)</h2>
@@ -480,10 +513,23 @@ background-size: cover;
 <li>Which processes are <strong>not</strong> well represented by fixed grid cells (e.g.&nbsp;cold-air drainage, flow paths)?</li>
 <li>Why might <strong>adaptive units</strong> be preferable for later process-oriented analysis?</li>
 </ul>
-<hr>
 </section>
 <section id="task-2-structural-pre-stratification-on-tiles-step-1-structural-strata" class="level2">
 <h2 class="anchored" data-anchor-id="task-2-structural-pre-stratification-on-tiles-step-1-structural-strata">Task 2 – Structural pre-stratification on tiles (Step 1: structural strata)</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled" title="Instructor note">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Instructor note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The distinction between “structural” and “process-related” variables follows a <strong>didactic separation</strong>,<br>
+not a claim that structure is physically irrelevant.</p>
+</div>
+</div>
 <p>Reduce spatial complexity on the level of <strong>coarse tiles</strong> (structural, not yet process-based).</p>
 <ul>
 <li>For each coarse tile, compute <strong>structural descriptors</strong>, e.g.:
@@ -499,7 +545,6 @@ background-size: cover;
 <li>What does tile clustering achieve at this stage (in terms of complexity reduction)?</li>
 <li>Why is this <strong>not yet</strong> a physiographic or process-based stratification?</li>
 </ul>
-<hr>
 </section>
 <section id="task-3-selection-of-representative-test-tiles-end-of-step-1" class="level2">
 <h2 class="anchored" data-anchor-id="task-3-selection-of-representative-test-tiles-end-of-step-1">Task 3 – Selection of representative test tiles (end of Step 1)</h2>
@@ -518,10 +563,23 @@ background-size: cover;
 <li>What are the risks if segmentation is tuned on the <strong>full AOI</strong> without this step?</li>
 <li>How does this step improve <strong>reproducibility and efficiency</strong> of later segmentation tuning?</li>
 </ul>
-<hr>
 </section>
 <section id="task-4-adaptive-segmentation-on-test-tiles-step-2a-segmentation-as-scale-discovery" class="level2">
 <h2 class="anchored" data-anchor-id="task-4-adaptive-segmentation-on-test-tiles-step-2a-segmentation-as-scale-discovery">Task 4 – Adaptive segmentation on test tiles (Step 2a: segmentation as scale discovery)</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled" title="Instructor note">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Instructor note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Segmentation is treated here as a <strong>tool for scale discovery</strong>, not as a universally required step.<br>
+If your conceptual model does not rely on spatially adaptive units, justify why.</p>
+</div>
+</div>
 <p>Now explore how the landscape <strong>self-organises into segments</strong> on the representative tiles.</p>
 <ul>
 <li>Choose one <strong>segmentation approach</strong>:
@@ -545,7 +603,6 @@ background-size: cover;
 <li>Why should strongly derived variables (e.g.&nbsp;complex indices, stability classes) be avoided at this stage?</li>
 <li>What does <strong>“over-segmentation”</strong> vs.&nbsp;<strong>“under-segmentation”</strong> mean in this context?</li>
 </ul>
-<hr>
 </section>
 <section id="task-5-objective-evaluation-of-segmentation-quality-step-2a-choose-scales" class="level2">
 <h2 class="anchored" data-anchor-id="task-5-objective-evaluation-of-segmentation-quality-step-2a-choose-scales">Task 5 – Objective evaluation of segmentation quality (Step 2a: choose scales)</h2>
@@ -564,11 +621,11 @@ background-size: cover;
 <li>Why is there <strong>no single “optimal”</strong> segmentation parameter set?</li>
 <li>What does a <strong>Pareto-optimal solution</strong> mean here (trade-offs between criteria)?</li>
 </ul>
-<hr>
 </section>
 <section id="task-6-segmentation-transfer-and-physiographic-strata-steps-2b-and-3" class="level2">
 <h2 class="anchored" data-anchor-id="task-6-segmentation-transfer-and-physiographic-strata-steps-2b-and-3">Task 6 – Segmentation transfer and physiographic strata (Steps 2b and 3)</h2>
-<p>Move from test-tile experiments to <strong>wall-to-wall segments</strong> and then to <strong>physiographic strata</strong>.</p>
+<p>Move from test-tile experiments to <strong>wall-to-wall segments</strong> and then to <strong>physiographic strata</strong>. This step formalises <strong>one interpretation</strong> of how segments relate to dominant processes;<br>
+other process groupings are possible and may be more appropriate for different research questions.</p>
 <ol type="1">
 <li><p><strong>Segmentation transfer (Step 2b)</strong></p>
 <ul>
@@ -596,10 +653,24 @@ For each segment in the full AOI, attach <strong>process-relevant attributes</st
 <li>Why should <strong>collinear or strongly derived</strong> variables be excluded from clustering?</li>
 <li>How do these <strong>physiographic strata</strong> differ from the initial <strong>structural tile clusters</strong>?</li>
 </ul>
-<hr>
 </section>
 <section id="task-7-contextual-annotation-for-later-decision-making-link-to-step-4" class="level2">
 <h2 class="anchored" data-anchor-id="task-7-contextual-annotation-for-later-decision-making-link-to-step-4">Task 7 – Contextual annotation for later decision making (link to Step 4)</h2>
+<div class="callout callout-style-simple callout-note no-icon callout-titled" title="Instructor note">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Instructor note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The separation between clustering variables and contextual annotations is a <strong>design choice</strong>,<br>
+not a universal rule.<br>
+Its purpose here is analytical transparency, not methodological purity.</p>
+</div>
+</div>
 <p>Prepare for later <strong>network optimisation / hydrological design</strong> without mixing decision criteria into the clustering space.</p>
 <ul>
 <li>Attach <strong>contextual descriptors</strong> to each segment or stratum, e.g.:
@@ -616,11 +687,10 @@ For each segment in the full AOI, attach <strong>process-relevant attributes</st
 <li>How can they still influence <strong>final site selection</strong> (e.g.&nbsp;station placement)?</li>
 <li>What problems arise if such contextual variables are <strong>included directly in clustering</strong>?</li>
 </ul>
-<hr>
 </section>
 <section id="take-home-from-structure-to-robust-design-steps-14" class="level1">
 <h1>Take-home – From structure to robust design (Steps 1–4)</h1>
-<p>Write one short paragraph (max. 6–7 sentences) that explains:</p>
+<p>Write one short paragraph (max. 6–7 sentences) that positions this workflow::</p>
 <ul>
 <li>why spatial complexity in the Burgwald must be reduced in <strong>stages</strong>:
 <ul>
@@ -642,6 +712,22 @@ For each segment in the full AOI, attach <strong>process-relevant attributes</st
 <p><img src="../images/Diagram.drawio.svg" class="img-fluid figure-img"></p>
 <figcaption>Design framework for the Burgwald rainfall gauge network</figcaption>
 </figure>
+</div>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled" title="Final note">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Final note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This worksheet documents a <strong>working, internally consistent spatial reasoning pipeline</strong>.<br>
+Its value lies in making assumptions explicit, not in claiming general optimality.</p>
+<p>A good solution may therefore look <em>different</em> from this reference —<br>
+but it must be <strong>equally explicit about scale, process assumptions, and decision logic</strong>.</p>
+</div>
 </div>
 
 

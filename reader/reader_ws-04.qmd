@@ -301,7 +301,6 @@ The question is not whether an interpolated field looks smooth or accurate, but 
 
 
 
-
 ## Suggested Timeline 
 
 | Session | Theme                               | Module(s)                  | Format                          |

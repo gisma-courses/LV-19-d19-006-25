@@ -9,18 +9,36 @@ format:
   html:
     toc: true
     theme: flatly
-  # pdf:
-  #   toc: true
-  #   toc-depth: 2
+  pdf:
+    toc: true
+    toc-depth: 2
 execute:
   cache: false
 ---
 
-The workflow used in this worksheet emerges from a simple constraint: spatial systems such as the Burgwald are too complex, and too heterogeneous in scale, to be optimised directly for gauge placement or model validation. If structural variability, segmentation scale, and process signals are mixed into a single step, the result is usually unstable, hard to interpret, and difficult to reproduce. The framework therefore separates four stages: first, structural stratification on coarse tiles using information-theoretic and compositional metrics; second, adaptive segmentation on representative test tiles to discover meaningful spatial scales; third, transfer of the chosen segmentation configuration to the full domain and aggregation into physiographic process strata; and only then, fourth, the use of these strata as a basis for network optimisation and hydrological reasoning. Structural, physiographic, and contextual information are treated as different “layers of evidence” rather than one big predictor stack. This staged reduction of spatial complexity is designed to keep scale decisions explicit, to link segments back to physical processes, and to provide a transparent foundation for later decisions such as station placement or sampling design.
+
+::: {.callout-note title="Instructor note - conceptual framing" appearance="minimal"}
+
+
+ The workflow presented in this worksheet is a **fully functional reference implementation** developed by the instructor.  
+ It reflects **one coherent set of conceptual decisions** about scale separation, segmentation, and process attribution that have proven robust for the Burgwald case.  
+  
+ Students may **use, adapt, simplify, or partially reject** this workflow.  
+ It is **not expected** to fit all individual research questions, mental models, or optimisation goals.  
+  
+ The purpose of this worksheet is therefore **not replication**, but **critical reconstruction**:  
+ understanding *why* the workflow is structured this way, *where alternatives exist*, and *which assumptions are embedded*.
+
+:::
+
+
+The workflow used in this worksheet emerges from a simple constraint: spatial systems such as the Burgwald are too complex, and too heterogeneous in scale, to be optimised directly for gauge placement or model validation. If structural variability, segmentation scale, and process signals are mixed into a single step, the result is usually unstable, hard to interpret, and difficult to reproduce. One **possible** framework therefore separates four stages: first, structural stratification on coarse tiles using information-theoretic and compositional metrics; second, adaptive segmentation on representative test tiles to discover meaningful spatial scales; third, transfer of the chosen segmentation configuration to the full domain and aggregation into physiographic process strata; and only then, fourth, the use of these strata as a basis for network optimisation and hydrological reasoning. Structural, physiographic, and contextual information are treated as different “layers of evidence” rather than one big predictor stack. This staged reduction of spatial complexity is designed to keep scale decisions explicit, to link segments back to physical processes, and to provide a transparent foundation for later decisions such as station placement or sampling design.
 
 ## Goals
 
--   Use the existing spatial data pipeline as a **fixed technical base**.
+-   Explicitly reflect on **where this workflow constrains thinking**,  
+    and where alternative structuring choices might be equally valid or preferable.
+-   Use the existing spatial data pipeline as a **conceptual technical base**.
 -   Understand the difference between **structural**, **physiographic**, and **process-oriented** stratification.
 -   Develop a **multi-stage workflow** that:
     -   first reduces spatial complexity structurally,
@@ -36,7 +54,7 @@ The workflow used in this worksheet emerges from a simple constraint: spatial sy
     -   sampling design,
     -   or model evaluation.
 
-::: {.callout-tip title="Written output" appearance="simple"}
+::: {.callout-tip title="Written output" appearance="minimal"}
 Please export all written answers as a PDF and save it in the project directory `docs/` using the filename convention  
 `<Name1_NameN>_ws-XX.pdf`.
 
@@ -67,7 +85,14 @@ Before starting, make sure that:
     -   a polygon **AOI** defining the study region.
 -   Required R packages are installed and load without errors.
 
----
+
+
+::: {.callout-note title="Instructor note"}
+
+The specific choices shown  in the next tasks reflect the **instructor’s implementation**.  
+
+Other choices are desireable if they are **conceptually consistent and well argued** especially within the individual project approach.
+:::
 
 ## Task 1 – Base data and spatial units (Step 0 in the diagram)
 
@@ -81,15 +106,22 @@ Clarify which spatial units all later steps will build on.
 -   Define **one adaptive unit candidate** for Steps 2a/2b:
     -   e.g. image **segments**, **supercells**, or similar.
 
+
+
 Short written output:
 
 -   Which spatial unit is used **first**, and why is it suitable as a structural base?
 -   Which processes are **not** well represented by fixed grid cells (e.g. cold-air drainage, flow paths)?
 -   Why might **adaptive units** be preferable for later process-oriented analysis?
 
----
+
 
 ## Task 2 – Structural pre-stratification on tiles (Step 1: structural strata)
+
+::: {.callout-note title="Instructor note" appearance="minimal"}
+The distinction between “structural” and “process-related” variables follows a **didactic separation**,  
+not a claim that structure is physically irrelevant.
+:::
 
 Reduce spatial complexity on the level of **coarse tiles** (structural, not yet process-based).
 
@@ -98,13 +130,16 @@ Reduce spatial complexity on the level of **coarse tiles** (structural, not yet 
     -   simple **configurational / composition** metrics (e.g. forest fraction, entropy).
 -   Cluster the tiles based on these structural descriptors into **structural tile clusters**.
 
+
+
+
 Short written output:
 
 -   Which variables are used, and why are they considered **structural** (not process variables)?
 -   What does tile clustering achieve at this stage (in terms of complexity reduction)?
 -   Why is this **not yet** a physiographic or process-based stratification?
 
----
+
 
 ## Task 3 – Selection of representative test tiles (end of Step 1)
 
@@ -121,9 +156,15 @@ Short written output:
 -   What are the risks if segmentation is tuned on the **full AOI** without this step?
 -   How does this step improve **reproducibility and efficiency** of later segmentation tuning?
 
----
+
 
 ## Task 4 – Adaptive segmentation on test tiles (Step 2a: segmentation as scale discovery)
+
+::: {.callout-note title="Instructor note" appearance="minimal"}
+Segmentation is treated here as a **tool for scale discovery**, not as a universally required step.  
+If your conceptual model does not rely on spatially adaptive units, justify why.
+:::
+
 
 Now explore how the landscape **self-organises into segments** on the representative tiles.
 
@@ -144,7 +185,7 @@ Short written output:
 -   Why should strongly derived variables (e.g. complex indices, stability classes) be avoided at this stage?
 -   What does **“over-segmentation”** vs. **“under-segmentation”** mean in this context?
 
----
+
 
 ## Task 5 – Objective evaluation of segmentation quality (Step 2a: choose scales)
 
@@ -165,11 +206,15 @@ Short written output:
 -   Why is there **no single “optimal”** segmentation parameter set?
 -   What does a **Pareto-optimal solution** mean here (trade-offs between criteria)?
 
----
+
 
 ## Task 6 – Segmentation transfer and physiographic strata (Steps 2b and 3)
 
-Move from test-tile experiments to **wall-to-wall segments** and then to **physiographic strata**.
+
+
+Move from test-tile experiments to **wall-to-wall segments** and then to **physiographic strata**. This step formalises **one interpretation** of how segments relate to dominant processes;  
+other process groupings are possible and may be more appropriate for different research questions.
+
 
 1. **Segmentation transfer (Step 2b)**  
    -   Fix one or a small set of **segmentation configurations** (method, scale, features) based on Task 5.
@@ -195,9 +240,15 @@ Short written output:
 -   Why should **collinear or strongly derived** variables be excluded from clustering?
 -   How do these **physiographic strata** differ from the initial **structural tile clusters**?
 
----
+
 
 ## Task 7 – Contextual annotation for later decision making (link to Step 4)
+
+::: {.callout-note title="Instructor note" appearance="minimal"}
+The separation between clustering variables and contextual annotations is a **design choice**,  
+not a universal rule.  
+Its purpose here is analytical transparency, not methodological purity.
+:::
 
 Prepare for later **network optimisation / hydrological design** without mixing decision criteria into the clustering space.
 
@@ -213,11 +264,11 @@ Short written output:
 -   How can they still influence **final site selection** (e.g. station placement)?
 -   What problems arise if such contextual variables are **included directly in clustering**?
 
----
+
 
 # Take-home – From structure to robust design (Steps 1–4)
 
-Write one short paragraph (max. 6–7 sentences) that explains:
+Write one short paragraph (max. 6–7 sentences) that positions this workflow::
 
 -   why spatial complexity in the Burgwald must be reduced in **stages**:
     -   from **structural tiles** (Step 1),
@@ -232,3 +283,14 @@ Write one short paragraph (max. 6–7 sentences) that explains:
 
 
 ![Design framework for the Burgwald rainfall gauge network](../images/Diagram.drawio.svg)  
+
+
+::: {.callout-tip title="Final note" appearance="minimal"}
+
+This worksheet documents a **working, internally consistent spatial reasoning pipeline**.  
+Its value lies in making assumptions explicit, not in claiming general optimality.  
+  
+A good solution may therefore look *different* from this reference —  
+but it must be **equally explicit about scale, process assumptions, and decision logic**.
+
+:::

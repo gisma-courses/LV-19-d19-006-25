@@ -46,7 +46,7 @@ These gaps are **not a deficit**. Making them explicit is part of scientific con
   (inline citations + reference list).
 
 
-::: {.callout-tip title="Scientific intent" appearance="minimal"}
+::: {.callout-note title="Instructor note" appearance="minimal"}
 Again: This is the point where **argument replaces execution**.
 :::
 
@@ -64,7 +64,7 @@ State clearly:
 
 Focus strictly on **intent and rationale**, not on methods or tools.
 
----
+
 
 ### 2. What Changed During the Workflow (≈ 2–3 paragraphs)
 
@@ -75,14 +75,14 @@ Document **decisions**, not impressions:
 - where the course workflow or examples influenced your thinking —  
   and where you deliberately **departed** from them.
 
-::: {.callout-tip appearance="minimal"}
+::: {.callout-note title="Instructor note" appearance="minimal"}
 Use the following question as a **reflection frame**, not as a reset instruction:
 
 If you had to justify your current design **from scratch**,  
 which decisions would you now argue differently — and **why**?
 :::
 
----
+
 
 ### 3. Scientific Justification (≈ 2-5 paragraphs)
 
@@ -101,7 +101,7 @@ You must explicitly link **papers to decisions**, e.g.:
 - rejection of optimisation strategies,
 - prioritisation of certain processes over others.
 
----
+
 
 ### 4. Scope, Limits, and Open Questions (≈ 2-3 paragraphs)
 
@@ -114,7 +114,7 @@ State plainly:
 Lack of clarity here indicates missing literature or weak reasoning.  
 Clarity about limits indicates **scientific control**.
 
----
+
 
 ## Appendix 
 
@@ -127,14 +127,14 @@ Add a short appendix, listing:
 Do **not** hide these gaps in the main text.  
 Making them explicit is part of the task.
 
----
+
 
 ## Submission
 
 - **File name:** `NAME_Module5_ScientificRecursion.pdf`
 - **Upload:** ILIAS folder `project_revisited`.
 
-::: {.callout-warning title="Note:"}
+::: {.callout-tip title="Note" appearance="minimal"}
 This memo marks the point where your project stops being a pure technical exercise  
 and becomes a **scientifically argued design**.
 :::
