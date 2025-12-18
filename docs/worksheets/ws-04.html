@@ -552,6 +552,234 @@ src/01-fun-data-retrieval.R  (loaded without error)</code></pre>
 </section>
 <section id="expected-final-structure" class="level1">
 <h1>Expected final structure</h1>
+<svg xmlns="http://www.w3.org/2000/svg" style="cursor:pointer;max-width:100%;max-height:927px;" xlink="http://www.w3.org/1999/xlink" version="1.1" width="1957px" viewbox="-0.5 -0.5 1957 927" content="<mxfile host=&quot;app.diagrams.net&quot; agent=&quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36&quot; version=&quot;29.2.7&quot;>
+  <diagram name=&quot;Page-1&quot; id=&quot;DGbU-9msn52gsMR4BYVo&quot;>
+    <mxGraphModel dx=&quot;3338&quot; dy=&quot;2699&quot; grid=&quot;1&quot; gridSize=&quot;10&quot; guides=&quot;1&quot; tooltips=&quot;1&quot; connect=&quot;1&quot; arrows=&quot;1&quot; fold=&quot;1&quot; page=&quot;1&quot; pageScale=&quot;1&quot; pageWidth=&quot;1169&quot; pageHeight=&quot;827&quot; math=&quot;0&quot; shadow=&quot;0&quot;>
+      <root>
+        <mxCell id=&quot;0&quot; />
+        <mxCell id=&quot;1&quot; parent=&quot;0&quot; />
+        <mxCell id=&quot;n_setup&quot; parent=&quot;1&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#e8f0fe;strokeColor=#3c78d8;strokeWidth=2;fontSize=12;&quot; value=&quot;00-setup-burgwald.R&amp;#xa;• pacman::p_load() (zentral)&amp;#xa;• Projektstruktur / Pfade / AOI&amp;#xa;• Tempdirs (R/GDAL/terra)&amp;#xa;• source(&amp;quot;src/01-fun-data-retrieval.R&amp;quot;)&quot; vertex=&quot;1&quot;>
+          <mxGeometry height=&quot;145&quot; width=&quot;520&quot; x=&quot;65&quot; y=&quot;-105&quot; as=&quot;geometry&quot; />
+        </mxCell>
+        <mxCell id=&quot;n_helpers&quot; parent=&quot;1&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eef2f7;strokeColor=#5f6368;strokeWidth=2;fontSize=12;&quot; value=&quot;src/01-fun-data-retrieval.R (Helper)&amp;#xa;• aoi_with_buffer()&amp;#xa;• get_osm_burgwald_by_key()&amp;#xa;• run_if_missing(), download_if_missing(), write_nc_if_missing()&amp;#xa;• burgwald_get_hourly_dwd(), burgwald_get_subhourly_precip(), burgwald_get_radolan_rw_recent()&amp;#xa;• mapview_clc()&quot; vertex=&quot;1&quot;>
+          <mxGeometry height=&quot;190&quot; width=&quot;520&quot; x=&quot;1500&quot; y=&quot;240&quot; as=&quot;geometry&quot; />
+        </mxCell>
+        <mxCell id=&quot;n_base&quot; parent=&quot;1&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#e6f4ea;strokeColor=#34a853;strokeWidth=2;fontSize=12;&quot; value=&quot;01-1_get_base-geodata.R&amp;#xa;Base Geodata&amp;#xa;• DGM1 mosaic+clip&amp;#xa;• CLC5 clip&amp;#xa;• OSM by key&amp;#xa;Output: data/raw/AOI_Burgwald/{dem,clc,osm_by_key}/…&quot; vertex=&quot;1&quot;>
+          <mxGeometry height=&quot;160&quot; width=&quot;520&quot; x=&quot;460&quot; y=&quot;440&quot; as=&quot;geometry&quot; />
+        </mxCell>
+        <mxCell id=&quot;n_s2_year&quot; parent=&quot;1&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#fde7e9;strokeColor=#ea4335;strokeWidth=2;fontSize=12;&quot; value=&quot;02-2_processing_s2-predictor-stacks-summer.R&amp;#xa;Sentinel-2 Jahresstacks (CDSE)&amp;#xa;• STAC search + daily cloud stats&amp;#xa;• Best summer day je Jahr&amp;#xa;• RawBands + kNDVI/SAVI/EVI via CDSE::GetImage&amp;#xa;Output: data/pred_stack_&amp;lt;year&amp;gt;.tif&quot; vertex=&quot;1&quot;>
+          <mxGeometry height=&quot;175&quot; width=&quot;520&quot; x=&quot;750&quot; y=&quot;210&quot; as=&quot;geometry&quot; />
+        </mxCell>
+        <mxCell id=&quot;n_s2_cube&quot; parent=&quot;1&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#fff4e5;strokeColor=#fbbc04;strokeWidth=2;fontSize=12;&quot; value=&quot;01-3_get-gdalcubes-sentinel-data.R&amp;#xa;Sentinel-2 Datacube (STAC → gdalcubes)&amp;#xa;• Monatsmedian 2018-06…2022-09&amp;#xa;• Wolkenmaskierung via SCL&amp;#xa;Output: data/burgwald_2018_2022_all.nc&quot; vertex=&quot;1&quot;>
+          <mxGeometry height=&quot;160&quot; width=&quot;520&quot; x=&quot;770&quot; y=&quot;660&quot; as=&quot;geometry&quot; />
+        </mxCell>
+        <mxCell id=&quot;n_dwd&quot; parent=&quot;1&quot; style=&quot;rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#f3e8fd;strokeColor=#a142f4;strokeWidth=2;fontSize=12;&quot; value=&quot;01-4-get_DWD-data.R&amp;#xa;DWD Forcing (Orchestrator)&amp;#xa;• Zeitraum setzen&amp;#xa;• Calls: burgwald_get_hourly_dwd() + burgwald_get_subhourly_precip()&amp;#xa;Output: data/raw/dwd-stations/ + data/processed/dwd-stations/&quot; vertex=&quot;1&quot;>
+          <mxGeometry height=&quot;165&quot; width=&quot;520&quot; x=&quot;770&quot; y=&quot;20&quot; as=&quot;geometry&quot; />
+        </mxCell>
+        <mxCell id=&quot;e_setup_helpers&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;n_setup&quot; style=&quot;endArrow=block;html=1;strokeWidth=2;strokeColor=#5f6368;dashed=1;&quot; target=&quot;n_helpers&quot; value=&quot;source()&quot;>
+          <mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot;>
+            <Array as=&quot;points&quot;>
+              <mxPoint x=&quot;1470&quot; y=&quot;-30&quot; />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id=&quot;e_setup_base&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;n_setup&quot; style=&quot;endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;&quot; target=&quot;n_base&quot; value=&quot;&quot;>
+          <mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot;>
+            <Array as=&quot;points&quot;>
+              <mxPoint x=&quot;330&quot; y=&quot;520&quot; />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id=&quot;e_setup_s2year&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;n_setup&quot; style=&quot;endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;&quot; target=&quot;n_s2_year&quot; value=&quot;&quot;>
+          <mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot;>
+            <Array as=&quot;points&quot;>
+              <mxPoint x=&quot;325&quot; y=&quot;310&quot; />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id=&quot;e_setup_s2cube&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;n_setup&quot; style=&quot;endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;&quot; target=&quot;n_s2_cube&quot; value=&quot;&quot;>
+          <mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot;>
+            <Array as=&quot;points&quot;>
+              <mxPoint x=&quot;330&quot; y=&quot;730&quot; />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id=&quot;e_setup_dwd&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;n_setup&quot; style=&quot;endArrow=block;html=1;strokeWidth=2;strokeColor=#666666;exitX=0.5;exitY=1;exitDx=0;exitDy=0;&quot; target=&quot;n_dwd&quot; value=&quot;&quot;>
+          <mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot;>
+            <Array as=&quot;points&quot;>
+              <mxPoint x=&quot;320&quot; y=&quot;110&quot; />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id=&quot;e_helpers_base&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;n_helpers&quot; style=&quot;dashed=1;endArrow=block;html=1;strokeWidth=2;strokeColor=#999999;&quot; target=&quot;n_base&quot; value=&quot;uses helpers&quot;>
+          <mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot; />
+        </mxCell>
+        <mxCell id=&quot;e_helpers_dwd&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;n_helpers&quot; style=&quot;dashed=1;endArrow=block;html=1;strokeWidth=2;strokeColor=#999999;&quot; target=&quot;n_dwd&quot; value=&quot;uses helpers&quot;>
+          <mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot; />
+        </mxCell>
+        <mxCell id=&quot;e_helpers_s2cube&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;n_helpers&quot; style=&quot;dashed=1;endArrow=block;html=1;strokeWidth=2;strokeColor=#999999;&quot; target=&quot;n_s2_cube&quot; value=&quot;uses write_nc_if_missing()&quot;>
+          <mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot; />
+        </mxCell>
+        <mxCell id=&quot;e_base_s2cube&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;n_base&quot; style=&quot;dashed=1;endArrow=block;html=1;strokeWidth=2;strokeColor=#bbbbbb;&quot; target=&quot;n_s2_cube&quot; value=&quot;optional context (AOI/CLC)&quot;>
+          <mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot; />
+        </mxCell>
+        <mxCell id=&quot;e_base_s2year&quot; edge=&quot;1&quot; parent=&quot;1&quot; source=&quot;n_base&quot; style=&quot;dashed=1;endArrow=block;html=1;strokeWidth=2;strokeColor=#bbbbbb;&quot; target=&quot;n_s2_year&quot; value=&quot;optional context (AOI/CLC)&quot;>
+          <mxGeometry relative=&quot;1&quot; as=&quot;geometry&quot; />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+" onclick="(function(svg){var src=window.event.target||window.event.srcElement;while (src!=null&amp;&amp;src.nodeName.toLowerCase()!='a'){src=src.parentNode;}if(src==null){if(svg.wnd!=null&amp;&amp;!svg.wnd.closed){svg.wnd.focus();}else{var r=function(evt){if(evt.data=='ready'&amp;&amp;evt.source==svg.wnd){svg.wnd.postMessage(decodeURIComponent(svg.getAttribute('content')),'*');window.removeEventListener('message',r);}};window.addEventListener('message',r);svg.wnd=window.open('https://viewer.diagrams.net/?client=1&amp;page=0&amp;edit=_blank');}}})(this);">
+<defs></defs><g><g data-cell-id="0"><g data-cell-id="1"><g data-cell-id="n_setup"><g><rect x="1" y="1" width="520" height="145" rx="21.75" ry="21.75" fill="#e8f0fe" stroke="#3c78d8" stroke-width="2" pointer-events="all" style="fill: light-dark(rgb(232, 240, 254), rgb(25, 32, 44)); stroke: light-dark(rgb(60, 120, 216), rgb(92, 144, 227));"></rect></g><g><g>
+<switch>
+<foreignobject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+<div data-xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe flex-start; width: 502px; height: 1px; padding-top: 16px; margin-left: 11px;">
+<div style="box-sizing: border-box; font-size: 0; text-align: left; color: #000000; ">
+<div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+00-setup-burgwald.R<br>• pacman::p_load() (zentral)<br>• Projektstruktur / Pfade / AOI<br>• Tempdirs (R/GDAL/terra)<br>• source(“src/01-fun-data-retrieval.R”)
+</div>
+</div>
+</div>
+</foreignobject><text x="11" y="28" fill="light-dark(#000000, #ffffff)" font-family="Helvetica" font-size="12px">00-setup-burgwald.R…</text>
+</switch>
+</g></g></g><g data-cell-id="n_helpers"><g><rect x="1436" y="346" width="520" height="190" rx="28.5" ry="28.5" fill="#eef2f7" stroke="#5f6368" stroke-width="2" pointer-events="all" style="fill: light-dark(rgb(238, 242, 247), rgb(27, 30, 34)); stroke: light-dark(rgb(95, 99, 104), rgb(150, 153, 157));"></rect></g><g><g>
+<switch>
+<foreignobject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+<div data-xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe flex-start; width: 502px; height: 1px; padding-top: 361px; margin-left: 1446px;">
+<div style="box-sizing: border-box; font-size: 0; text-align: left; color: #000000; ">
+<div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+src/01-fun-data-retrieval.R (Helper)<br>• aoi_with_buffer()<br>• get_osm_burgwald_by_key()<br>• run_if_missing(), download_if_missing(), write_nc_if_missing()<br>• burgwald_get_hourly_dwd(), burgwald_get_subhourly_precip(), burgwald_get_radolan_rw_recent()<br>• mapview_clc()
+</div>
+</div>
+</div>
+</foreignobject><text x="1446" y="373" fill="light-dark(#000000, #ffffff)" font-family="Helvetica" font-size="12px">src/01-fun-data-retrieval.R (Helper)…</text>
+</switch>
+</g></g></g><g data-cell-id="n_base"><g><rect x="396" y="546" width="520" height="160" rx="24" ry="24" fill="#e6f4ea" stroke="#34a853" stroke-width="2" pointer-events="all" style="fill: light-dark(rgb(230, 244, 234), rgb(21, 33, 24)); stroke: light-dark(rgb(52, 168, 83), rgb(47, 146, 73));"></rect></g><g><g>
+<switch>
+<foreignobject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+<div data-xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe flex-start; width: 502px; height: 1px; padding-top: 561px; margin-left: 406px;">
+<div style="box-sizing: border-box; font-size: 0; text-align: left; color: #000000; ">
+<div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+01-1_get_base-geodata.R<br>Base Geodata<br>• DGM1 mosaic+clip<br>• CLC5 clip<br>• OSM by key<br>Output: data/raw/AOI_Burgwald/{dem,clc,osm_by_key}/…
+</div>
+</div>
+</div>
+</foreignobject><text x="406" y="573" fill="light-dark(#000000, #ffffff)" font-family="Helvetica" font-size="12px">01-1_get_base-geodata.R…</text>
+</switch>
+</g></g></g><g data-cell-id="n_s2_year"><g><rect x="686" y="316" width="520" height="175" rx="26.25" ry="26.25" fill="#fde7e9" stroke="#ea4335" stroke-width="2" pointer-events="all" style="fill: light-dark(rgb(253, 231, 233), rgb(48, 30, 31)); stroke: light-dark(rgb(234, 67, 53), rgb(255, 121, 109));"></rect></g><g><g>
+<switch>
+<foreignobject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+<div data-xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe flex-start; width: 502px; height: 1px; padding-top: 331px; margin-left: 696px;">
+<div style="box-sizing: border-box; font-size: 0; text-align: left; color: #000000; ">
+<div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+02-2_processing_s2-predictor-stacks-summer.R<br>Sentinel-2 Jahresstacks (CDSE)<br>• STAC search + daily cloud stats<br>• Best summer day je Jahr<br>• RawBands + kNDVI/SAVI/EVI via CDSE::GetImage<br>Output: data/pred_stack_.tif
+</div>
+</div>
+</div>
+</foreignobject><text x="696" y="343" fill="light-dark(#000000, #ffffff)" font-family="Helvetica" font-size="12px">02-2_processing_s2-predictor-stacks-summer.R…</text>
+</switch>
+</g></g></g><g data-cell-id="n_s2_cube"><g><rect x="706" y="766" width="520" height="160" rx="24" ry="24" fill="#fff4e5" stroke="#fbbc04" stroke-width="2" pointer-events="all" style="fill: light-dark(rgb(255, 244, 229), rgb(34, 25, 12)); stroke: light-dark(rgb(251, 188, 4), rgb(129, 75, 0));"></rect></g><g><g>
+<switch>
+<foreignobject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+<div data-xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe flex-start; width: 502px; height: 1px; padding-top: 781px; margin-left: 716px;">
+<div style="box-sizing: border-box; font-size: 0; text-align: left; color: #000000; ">
+<div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+01-3_get-gdalcubes-sentinel-data.R<br>Sentinel-2 Datacube (STAC → gdalcubes)<br>• Monatsmedian 2018-06…2022-09<br>• Wolkenmaskierung via SCL<br>Output: data/burgwald_2018_2022_all.nc
+</div>
+</div>
+</div>
+</foreignobject><text x="716" y="793" fill="light-dark(#000000, #ffffff)" font-family="Helvetica" font-size="12px">01-3_get-gdalcubes-sentinel-data.R…</text>
+</switch>
+</g></g></g><g data-cell-id="n_dwd"><g><rect x="706" y="126" width="520" height="165" rx="24.75" ry="24.75" fill="#f3e8fd" stroke="#a142f4" stroke-width="2" pointer-events="all" style="fill: light-dark(rgb(243, 232, 253), rgb(41, 31, 49)); stroke: light-dark(rgb(161, 66, 244), rgb(204, 123, 255));"></rect></g><g><g>
+<switch>
+<foreignobject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+<div data-xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe flex-start; width: 502px; height: 1px; padding-top: 141px; margin-left: 716px;">
+<div style="box-sizing: border-box; font-size: 0; text-align: left; color: #000000; ">
+<div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+01-4-get_DWD-data.R<br>DWD Forcing (Orchestrator)<br>• Zeitraum setzen<br>• Calls: burgwald_get_hourly_dwd() + burgwald_get_subhourly_precip()<br>Output: data/raw/dwd-stations/ + data/processed/dwd-stations/
+</div>
+</div>
+</div>
+</foreignobject><text x="716" y="153" fill="light-dark(#000000, #ffffff)" font-family="Helvetica" font-size="12px">01-4-get_DWD-data.R…</text>
+</switch>
+</g></g></g><g data-cell-id="e_setup_helpers"><g><path d="M 521 74.07 L 1396 75.98 Q 1406 76 1412.22 83.83 L 1614.15 337.99" fill="none" stroke="#5f6368" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke" style="stroke: light-dark(rgb(95, 99, 104), rgb(150, 153, 157));"></path><path d="M 1619.13 344.25 L 1611.02 340.47 L 1617.28 335.5 Z" fill="#5f6368" stroke="#5f6368" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: light-dark(rgb(95, 99, 104), rgb(150, 153, 157)); stroke: light-dark(rgb(95, 99, 104), rgb(150, 153, 157));"></path></g><g><g>
+<switch>
+<foreignobject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+<div data-xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 75px; margin-left: 1136px;">
+<div style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
+<div style="display: inline-block; font-size: 11px; font-family: Helvetica; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
+source()
+</div>
+</div>
+</div>
+</foreignobject><text x="1136" y="79" fill="light-dark(#000000, #ffffff)" font-family="Helvetica" font-size="11px" text-anchor="middle">source()</text>
+</switch>
+</g></g></g><g data-cell-id="e_setup_base"><g><path d="M 261.66 146 L 265.91 616 Q 266 626 276 626 L 385.76 626" fill="none" stroke="#666666" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke" style="stroke: light-dark(rgb(102, 102, 102), rgb(149, 149, 149));"></path><path d="M 393.76 626 L 385.76 630 L 385.76 622 Z" fill="#666666" stroke="#666666" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: light-dark(rgb(102, 102, 102), rgb(149, 149, 149)); stroke: light-dark(rgb(102, 102, 102), rgb(149, 149, 149));"></path></g></g><g data-cell-id="e_setup_s2year"><g><path d="M 261 146 L 261 406 Q 261 416 271 415.82 L 675.77 408.43" fill="none" stroke="#666666" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke" style="stroke: light-dark(rgb(102, 102, 102), rgb(149, 149, 149));"></path><path d="M 683.76 408.29 L 675.84 412.43 L 675.69 404.43 Z" fill="#666666" stroke="#666666" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: light-dark(rgb(102, 102, 102), rgb(149, 149, 149)); stroke: light-dark(rgb(102, 102, 102), rgb(149, 149, 149));"></path></g></g><g data-cell-id="e_setup_s2cube"><g><path d="M 261.48 146 L 265.93 826 Q 266 836 276 836.14 L 695.77 842.14" fill="none" stroke="#666666" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke" style="stroke: light-dark(rgb(102, 102, 102), rgb(149, 149, 149));"></path><path d="M 703.76 842.25 L 695.71 846.14 L 695.82 838.14 Z" fill="#666666" stroke="#666666" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: light-dark(rgb(102, 102, 102), rgb(149, 149, 149)); stroke: light-dark(rgb(102, 102, 102), rgb(149, 149, 149));"></path></g></g><g data-cell-id="e_setup_dwd"><g><path d="M 261 146 L 256.71 206.03 Q 256 216 266 215.89 L 695.76 211.35" fill="none" stroke="#666666" stroke-width="2" stroke-miterlimit="10" pointer-events="stroke" style="stroke: light-dark(rgb(102, 102, 102), rgb(149, 149, 149));"></path><path d="M 703.76 211.27 L 695.81 215.35 L 695.72 207.35 Z" fill="#666666" stroke="#666666" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: light-dark(rgb(102, 102, 102), rgb(149, 149, 149)); stroke: light-dark(rgb(102, 102, 102), rgb(149, 149, 149));"></path></g></g><g data-cell-id="e_helpers_base"><g><path d="M 1436 487.25 L 926.08 577.96" fill="none" stroke="#999999" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke" style="stroke: light-dark(rgb(153, 153, 153), rgb(106, 106, 106));"></path><path d="M 918.2 579.36 L 925.38 574.02 L 926.78 581.9 Z" fill="#999999" stroke="#999999" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: light-dark(rgb(153, 153, 153), rgb(106, 106, 106)); stroke: light-dark(rgb(153, 153, 153), rgb(106, 106, 106));"></path></g><g><g>
+<switch>
+<foreignobject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+<div data-xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 533px; margin-left: 1176px;">
+<div style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
+<div style="display: inline-block; font-size: 11px; font-family: Helvetica; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
+uses helpers
+</div>
+</div>
+</div>
+</foreignobject><text x="1176" y="537" fill="light-dark(#000000, #ffffff)" font-family="Helvetica" font-size="11px" text-anchor="middle">uses helpers</text>
+</switch>
+</g></g></g><g data-cell-id="e_helpers_dwd"><g><path d="M 1436 358.19 L 1234.79 294.11" fill="none" stroke="#999999" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke" style="stroke: light-dark(rgb(153, 153, 153), rgb(106, 106, 106));"></path><path d="M 1227.16 291.68 L 1236 290.29 L 1233.57 297.92 Z" fill="#999999" stroke="#999999" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: light-dark(rgb(153, 153, 153), rgb(106, 106, 106)); stroke: light-dark(rgb(153, 153, 153), rgb(106, 106, 106));"></path></g><g><g>
+<switch>
+<foreignobject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+<div data-xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 325px; margin-left: 1330px;">
+<div style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
+<div style="display: inline-block; font-size: 11px; font-family: Helvetica; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
+uses helpers
+</div>
+</div>
+</div>
+</foreignobject><text x="1330" y="328" fill="light-dark(#000000, #ffffff)" font-family="Helvetica" font-size="11px" text-anchor="middle">uses helpers</text>
+</switch>
+</g></g></g><g data-cell-id="e_helpers_s2cube"><g><path d="M 1524.77 536 L 1119.15 761.03" fill="none" stroke="#999999" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke" style="stroke: light-dark(rgb(153, 153, 153), rgb(106, 106, 106));"></path><path d="M 1112.15 764.92 L 1117.21 757.54 L 1121.09 764.53 Z" fill="#999999" stroke="#999999" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: light-dark(rgb(153, 153, 153), rgb(106, 106, 106)); stroke: light-dark(rgb(153, 153, 153), rgb(106, 106, 106));"></path></g><g><g>
+<switch>
+<foreignobject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+<div data-xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 651px; margin-left: 1318px;">
+<div style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
+<div style="display: inline-block; font-size: 11px; font-family: Helvetica; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
+uses write_nc_if_missing()
+</div>
+</div>
+</div>
+</foreignobject><text x="1318" y="654" fill="light-dark(#000000, #ffffff)" font-family="Helvetica" font-size="11px" text-anchor="middle">uses write_nc_if_missing()</text>
+</switch>
+</g></g></g><g data-cell-id="e_base_s2cube"><g><path d="M 768.73 706 L 844.93 760.08" fill="none" stroke="#bbbbbb" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke" style="stroke: light-dark(rgb(187, 187, 187), rgb(76, 76, 76));"></path><path d="M 851.45 764.71 L 842.61 763.34 L 847.24 756.81 Z" fill="#bbbbbb" stroke="#bbbbbb" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: light-dark(rgb(187, 187, 187), rgb(76, 76, 76)); stroke: light-dark(rgb(187, 187, 187), rgb(76, 76, 76));"></path></g><g><g>
+<switch>
+<foreignobject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+<div data-xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 736px; margin-left: 811px;">
+<div style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
+<div style="display: inline-block; font-size: 11px; font-family: Helvetica; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
+optional context (AOI/CLC)
+</div>
+</div>
+</div>
+</foreignobject><text x="811" y="739" fill="light-dark(#000000, #ffffff)" font-family="Helvetica" font-size="11px" text-anchor="middle">optional context (AOI/CLC)</text>
+</switch>
+</g></g></g><g data-cell-id="e_base_s2year"><g><path d="M 760.27 546 L 823.83 497.23" fill="none" stroke="#bbbbbb" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="6 6" pointer-events="stroke" style="stroke: light-dark(rgb(187, 187, 187), rgb(76, 76, 76));"></path><path d="M 830.18 492.36 L 826.27 500.4 L 821.4 494.06 Z" fill="#bbbbbb" stroke="#bbbbbb" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: light-dark(rgb(187, 187, 187), rgb(76, 76, 76)); stroke: light-dark(rgb(187, 187, 187), rgb(76, 76, 76));"></path></g><g><g>
+<switch>
+<foreignobject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+<div data-xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 519px; margin-left: 796px;">
+<div style="box-sizing: border-box; font-size: 0; text-align: center; color: #000000; background-color: #ffffff; ">
+<div style="display: inline-block; font-size: 11px; font-family: Helvetica; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); white-space: nowrap; ">
+optional context (AOI/CLC)
+</div>
+</div>
+</div>
+</foreignobject><text x="796" y="522" fill="light-dark(#000000, #ffffff)" font-family="Helvetica" font-size="11px" text-anchor="middle">optional context (AOI/CLC)</text>
+</switch>
+</g></g></g></g></g></g>
+<switch>
+<g requiredfeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"></g><a transform="translate(0,-5)" href="https://www.drawio.com/doc/faq/svg-export-text-problems" target="_blank"><text text-anchor="middle" font-size="10px" x="50%" y="100%">Text is not SVG - cannot display</text></a>
+</switch>
+</svg>
 <p>The expected directory tree at the end of this worksheet should be more or less like this:</p>
 <pre class="text"><code>data/
 ├── processed
