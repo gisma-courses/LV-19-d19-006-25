@@ -1,144 +1,59 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.7">
-  <diagram name="Page-1" id="C_qJEJ-H_p9d8kiWJM0f">
-    <mxGraphModel dx="1418" dy="1632" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="light-dark(#FFFFFF,#FFFFFF)" math="1" shadow="0">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.3.1">
+  <diagram name="Page-1" id="DqC-k16ebgd2F329TbQv">
+    <mxGraphModel dx="1320" dy="2091" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="mESigMN6MauJIgFy8G41-70" connectable="0" parent="1" style="group;fontColor=light-dark(#000000,#000000);" value="" vertex="1">
-          <mxGeometry height="310" width="460" x="160" y="800" as="geometry" />
+        <mxCell id="t1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=18;" value="Spatial Research Pipeline — Didactic Core Model" vertex="1">
+          <mxGeometry height="50" width="1040" x="60" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="40" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;strokeWidth=2;container=0;fontColor=light-dark(#000000,#000000);" value="" vertex="1">
-          <mxGeometry height="310" width="460" as="geometry" />
+        <mxCell id="t2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontSize=12;" value="Goal: conceptual modelling and epistemic reasoning (not programming). Every step transforms reality and introduces assumptions." vertex="1">
+          <mxGeometry height="40" width="1040" x="60" y="90" as="geometry" />
         </mxCell>
-        <mxCell id="42" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Aggregate physiographic variables per segment" vertex="1">
-          <mxGeometry height="40" width="260" x="100" y="90" as="geometry" />
+        <mxCell id="s0" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;fillColor=#f3e8ff;strokeColor=#7c3aed;fontColor=#5b21b6;strokeWidth=2;" value="S0 — Problem Space&#xa;Question • scale • decision targets" vertex="1">
+          <mxGeometry height="80" width="300" x="60" y="170" as="geometry" />
         </mxCell>
-        <mxCell id="43" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Topography&#xa;elevation, slope, aspect" vertex="1">
-          <mxGeometry height="40" width="180" x="40" y="150" as="geometry" />
+        <mxCell id="s1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontColor=#075985;strokeWidth=2;" value="S1 — Observation Space&#xa;Data sources • AOI • uncertainty enters" vertex="1">
+          <mxGeometry height="80" width="300" x="410" y="170" as="geometry" />
         </mxCell>
-        <mxCell id="44" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Valley–slope–ridge position" vertex="1">
-          <mxGeometry height="40" width="180" x="240" y="150" as="geometry" />
+        <mxCell id="s2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;fillColor=#dcfce7;strokeColor=#16a34a;fontColor=#14532d;strokeWidth=2;" value="S2 — Feature Space&#xa;Process proxies • indicators • scale/aggregation" vertex="1">
+          <mxGeometry height="80" width="340" x="760" y="170" as="geometry" />
         </mxCell>
-        <mxCell id="45" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Forest fraction" vertex="1">
-          <mxGeometry height="40" width="180" x="40" y="200" as="geometry" />
+        <mxCell id="s3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;fillColor=#ffedd5;strokeColor=#f97316;fontColor=#7c2d12;strokeWidth=2;" value="S3 — Structural Space&#xa;Segmentation • strata • spatial units" vertex="1">
+          <mxGeometry height="80" width="340" x="760" y="310" as="geometry" />
         </mxCell>
-        <mxCell id="46" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Windwardness&#xa;(annotation only)" vertex="1">
-          <mxGeometry height="40" width="180" x="240" y="200" as="geometry" />
+        <mxCell id="s4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;fillColor=#ffe4e6;strokeColor=#e11d48;fontColor=#881337;strokeWidth=2;" value="S4 — Decision Space&#xa;Objectives • trade-offs • selection/optimisation" vertex="1">
+          <mxGeometry height="80" width="340" x="760" y="460" as="geometry" />
         </mxCell>
-        <mxCell id="47" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;strokeWidth=3;fontColor=light-dark(#000000,#000000);" value="Cluster into process strata&#xa;cold air, orographic, forest–atmosphere" vertex="1">
-          <mxGeometry height="40" width="260" x="100" y="250" as="geometry" />
+        <mxCell id="s5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;fillColor=#e2e8f0;strokeColor=#334155;fontColor=#0f172a;strokeWidth=2;" value="S5 — Validation Space&#xa;Stability • sensitivity • robustness/transfer" vertex="1">
+          <mxGeometry height="80" width="340" x="760" y="590" as="geometry" />
         </mxCell>
-        <mxCell id="FcrEOxOfpnKt4RclhEI3-68" parent="mESigMN6MauJIgFy8G41-70" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C53030;fillOpacity=10;strokeColor=#C53030;fontSize=11;fontColor=light-dark(#000000,#000000);" value="&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;3 Physiographic process stratification&lt;/span&gt;&lt;br style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;Which processes dominate where?&lt;/span&gt;" vertex="1">
-          <mxGeometry height="40" width="260" x="98" y="30" as="geometry" />
+        <mxCell id="e01" edge="1" parent="1" source="s0" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#64748b;" target="s1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#001DBC;fillOpacity=10;strokeColor=#001DBC;fontSize=12;fontColor=light-dark(#000000,#000000);" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Input data&lt;br&gt;DEM, Sentinel-Classification/Land cover, Forest fraction, CHM (optional)&lt;/font&gt;" vertex="1">
-          <mxGeometry height="60" width="340" x="220" y="10" as="geometry" />
+        <mxCell id="e12" edge="1" parent="1" source="s1" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#64748b;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="50" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6B46C1;fillOpacity=10;strokeColor=#6B46C1;strokeWidth=2;fontColor=light-dark(#000000,#000000);movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;container=0;" value="" vertex="1">
-          <mxGeometry height="280" width="360" x="210" y="1150" as="geometry" />
+        <mxCell id="e2s3" edge="1" parent="1" source="s2" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#64748b;" target="s3">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="60" edge="1" parent="1" source="2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=3;fontColor=light-dark(#000000,#000000);strokeColor=light-dark(#000000,#333333);">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="390" y="115" as="targetPoint" />
-          </mxGeometry>
+        <mxCell id="e34" edge="1" parent="1" source="s3" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#64748b;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="64" edge="1" parent="1" source="47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=3;fontColor=light-dark(#000000,#000000);strokeColor=light-dark(#000000,#333333);">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="390" y="1165" as="targetPoint" />
-          </mxGeometry>
+        <mxCell id="e45" edge="1" parent="1" source="s4" style="endArrow=block;html=1;rounded=0;strokeWidth=2;strokeColor=#64748b;" target="s5">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="mESigMN6MauJIgFy8G41-75" edge="1" parent="1" source="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeWidth=3;fontColor=light-dark(#000000,#000000);strokeColor=light-dark(#000000,#333333);">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="200" y="475" as="targetPoint" />
-          </mxGeometry>
+        <mxCell id="note_parallel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;arcSize=10;" value="Parallel paths are intentional:&#xa;Different abstractions produce different truths.&#xa;&#xa;&lt;span style=&quot;color:#075985;font-weight:700;&quot;&gt;S1&lt;/span&gt;: different observation pipelines&#xa;&lt;span style=&quot;color:#14532d;font-weight:700;&quot;&gt;S2&lt;/span&gt;: different feature abstractions&#xa;&lt;span style=&quot;color:#7c2d12;font-weight:700;&quot;&gt;S3&lt;/span&gt;: different structure models">
+          <mxGeometry height="120" width="296" x="64" y="412" as="geometry" />
         </mxCell>
-        <mxCell id="mESigMN6MauJIgFy8G41-79" edge="1" parent="1" source="34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeWidth=3;fontColor=light-dark(#000000,#000000);strokeColor=light-dark(#000000,#333333);">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="570" y="780" />
-              <mxPoint x="390" y="780" />
-            </Array>
-            <mxPoint x="390" y="825" as="targetPoint" />
-          </mxGeometry>
+        <mxCell id="rules" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" value="Core rules&#xa;1. No step is neutral&#xa;2. Every transformation loses information&#xa;3. Multiple representations are necessary&#xa;4. &lt;span style=&quot;color:#7c2d12;font-weight:700;&quot;&gt;Structure&lt;/span&gt; is modelled, not discovered&#xa;5. &lt;span style=&quot;color:#881337;font-weight:700;&quot;&gt;Decisions&lt;/span&gt; are justified, not computed&#xa;6. Reproducibility is mandatory&#xa;7. Interpretation belongs outside the code">
+          <mxGeometry height="140" width="246" x="65" y="276" as="geometry" />
         </mxCell>
-        <mxCell id="mESigMN6MauJIgFy8G41-80" edge="1" parent="1" source="25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=3;fontColor=light-dark(#000000,#000000);strokeColor=light-dark(#000000,#333333);">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="390" y="710" />
-              <mxPoint x="390" y="450" />
-              <mxPoint x="570" y="450" />
-            </Array>
-            <mxPoint x="570" y="505" as="targetPoint" />
-          </mxGeometry>
+        <mxCell id="fail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" value="Typical failure modes&#xa;• tools ≠ models&#xa;• &lt;span style=&quot;color:#14532d;font-weight:700;&quot;&gt;features&lt;/span&gt; treated as reality&#xa;• assumptions hidden in code&#xa;• &lt;span style=&quot;color:#881337;font-weight:700;&quot;&gt;optimisation&lt;/span&gt; before understanding &lt;span style=&quot;color:#7c2d12;font-weight:700;&quot;&gt;structure&lt;/span&gt;&#xa;• overfitting spatial detail&#xa;• ignoring scale effects">
+          <mxGeometry height="140" width="306" x="64" y="536" as="geometry" />
         </mxCell>
-        <mxCell id="FcrEOxOfpnKt4RclhEI3-64" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B7791F;fillOpacity=10;strokeColor=#B7791F;fontSize=11;fontColor=light-dark(#000000,#000000);" value="&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;2b Segmentation transfer&lt;/span&gt;&lt;br style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;From tiles to full domain&lt;/span&gt;" vertex="1">
-          <mxGeometry height="40" width="240" x="450" y="510" as="geometry" />
-        </mxCell>
-        <mxCell id="FcrEOxOfpnKt4RclhEI3-65" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Text" vertex="1">
-          <mxGeometry height="30" width="60" x="730" y="610" as="geometry" />
-        </mxCell>
-        <mxCell id="30" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B7791F;fillOpacity=10;strokeColor=#B7791F;strokeWidth=2;container=0;fontColor=light-dark(#000000,#000000);" value="" vertex="1">
-          <mxGeometry height="270" width="320" x="410" y="480" as="geometry" />
-        </mxCell>
-        <mxCell id="32" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B7791F;fillOpacity=10;strokeColor=#B7791F;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Fix segmentation configuration&#xa;(method, scale, features)" vertex="1">
-          <mxGeometry height="40" width="240" x="450" y="570" as="geometry" />
-        </mxCell>
-        <mxCell id="33" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B7791F;fillOpacity=10;strokeColor=#B7791F;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Wall-to-wall segmentation&#xa;full Burgwald" vertex="1">
-          <mxGeometry height="40" width="240" x="450" y="620" as="geometry" />
-        </mxCell>
-        <mxCell id="34" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B7791F;fillOpacity=10;strokeColor=#B7791F;fontSize=11;strokeWidth=3;fontColor=light-dark(#000000,#000000);" value="Continuous segmentation map&#xa;spatial analysis units" vertex="1">
-          <mxGeometry height="40" width="240" x="450" y="670" as="geometry" />
-        </mxCell>
-        <mxCell id="20" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2F855A;fillOpacity=10;strokeColor=#2F855A;strokeWidth=2;container=0;fontColor=light-dark(#000000,#000000);" value="" vertex="1">
-          <mxGeometry height="290" width="320" x="40" y="460" as="geometry" />
-        </mxCell>
-        <mxCell id="22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2F855A;fillOpacity=10;strokeColor=#2F855A;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Multi-scale segmentation&#xa;on representative tiles" vertex="1">
-          <mxGeometry height="40" width="240" x="80" y="540" as="geometry" />
-        </mxCell>
-        <mxCell id="23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2F855A;fillOpacity=10;strokeColor=#2F855A;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Mean-shift&#xa;multiple bandwidths" vertex="1">
-          <mxGeometry height="40" width="240" x="80" y="590" as="geometry" />
-        </mxCell>
-        <mxCell id="24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2F855A;fillOpacity=10;strokeColor=#2F855A;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Candidate segmentations&#xa;(multiple scales)" vertex="1">
-          <mxGeometry height="40" width="240" x="80" y="640" as="geometry" />
-        </mxCell>
-        <mxCell id="25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2F855A;fillOpacity=10;strokeColor=#2F855A;fontSize=11;strokeWidth=3;fontColor=light-dark(#000000,#000000);" value="Scale evaluation&#xa;coherence, stability, interpretability" vertex="1">
-          <mxGeometry height="40" width="240" x="80" y="690" as="geometry" />
-        </mxCell>
-        <mxCell id="FcrEOxOfpnKt4RclhEI3-66" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2F855A;fillOpacity=10;strokeColor=#2F855A;fontSize=11;fontColor=light-dark(#000000,#000000);" value="&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;2a Segmentation as scale discovery&lt;/span&gt;&lt;br style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;Where does the landscape self-organize?&lt;/span&gt;" vertex="1">
-          <mxGeometry height="50" width="270" x="62" y="481" as="geometry" />
-        </mxCell>
-        <mxCell id="10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2B6CB0;fillOpacity=10;strokeColor=#2B6CB0;strokeWidth=2;container=0;fontColor=light-dark(#000000,#000000);" value="" vertex="1">
-          <mxGeometry height="290" width="320" x="230" y="100" as="geometry" />
-        </mxCell>
-        <mxCell id="12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2B6CB0;fillOpacity=10;strokeColor=#2B6CB0;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Tile based analysis&#xa;(2×2 km grid)" vertex="1">
-          <mxGeometry height="40" width="240" x="270" y="180" as="geometry" />
-        </mxCell>
-        <mxCell id="13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2B6CB0;fillOpacity=10;strokeColor=#2B6CB0;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Structural metrics&#xa;entropy, diversity, cover" vertex="1">
-          <mxGeometry height="40" width="240" x="270" y="230" as="geometry" />
-        </mxCell>
-        <mxCell id="14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2B6CB0;fillOpacity=10;strokeColor=#2B6CB0;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Tile clustering&#xa;Typical landscape tiles" vertex="1">
-          <mxGeometry height="40" width="240" x="270" y="280" as="geometry" />
-        </mxCell>
-        <mxCell id="15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2B6CB0;fillOpacity=10;strokeColor=#2B6CB0;fontSize=11;strokeWidth=3;fontColor=light-dark(#000000,#000000);" value="Representative tiles&#xa;(non-redundant test domains)" vertex="1">
-          <mxGeometry height="40" width="240" x="270" y="330" as="geometry" />
-        </mxCell>
-        <mxCell id="FcrEOxOfpnKt4RclhEI3-67" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2B6CB0;fillOpacity=10;strokeColor=#2B6CB0;fontSize=11;fontColor=light-dark(#000000,#000000);" value="&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;1 Structural landscape stratification&lt;/span&gt;&lt;br style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;Where is the landscape structurally different?&lt;/span&gt;" vertex="1">
-          <mxGeometry height="50" width="240" x="270" y="110" as="geometry" />
-        </mxCell>
-        <mxCell id="52" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6B46C1;fillOpacity=10;strokeColor=#6B46C1;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Process strata coverage" vertex="1">
-          <mxGeometry height="40" width="240" x="270" y="1230" as="geometry" />
-        </mxCell>
-        <mxCell id="53" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6B46C1;fillOpacity=10;strokeColor=#6B46C1;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Hydrological relevance&#xa;catchments, flow paths" vertex="1">
-          <mxGeometry height="40" width="240" x="270" y="1280" as="geometry" />
-        </mxCell>
-        <mxCell id="54" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6B46C1;fillOpacity=10;strokeColor=#6B46C1;fontSize=11;fontColor=light-dark(#000000,#000000);" value="Redundancy reduction" vertex="1">
-          <mxGeometry height="40" width="240" x="270" y="1330" as="geometry" />
-        </mxCell>
-        <mxCell id="55" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6B46C1;fillOpacity=10;strokeColor=#6B46C1;fontSize=11;strokeWidth=3;fontColor=light-dark(#000000,#000000);" value="Final rainfall-gauge network" vertex="1">
-          <mxGeometry height="40" width="240" x="270" y="1380" as="geometry" />
-        </mxCell>
-        <mxCell id="FcrEOxOfpnKt4RclhEI3-70" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6B46C1;fillOpacity=10;strokeColor=#6B46C1;fontSize=11;fontColor=light-dark(#000000,#000000);" value="&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;4 Network optimization and hydrology&lt;/span&gt;&lt;br style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;&lt;span style=&quot;font-size: 12px; font-weight: 700;&quot;&gt;Where does a gauge add information?&lt;/span&gt;" vertex="1">
-          <mxGeometry height="40" width="240" x="270" y="1170" as="geometry" />
+        <mxCell id="succ" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fontStyle=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" value="Success criterion&#xa;You can explain:&#xa;• why a result looks as it does&#xa;• which assumptions created it (S0–S4)&#xa;• how it changes under different abstractions in &lt;span style=&quot;color:#075985;font-weight:700;&quot;&gt;S1&lt;/span&gt;, &lt;span style=&quot;color:#14532d;font-weight:700;&quot;&gt;S2&lt;/span&gt;, &lt;span style=&quot;color:#7c2d12;font-weight:700;&quot;&gt;S3&lt;/span&gt;, &lt;span style=&quot;color:#881337;font-weight:700;&quot;&gt;S4&lt;/span&gt;">
+          <mxGeometry height="120" width="1040" x="64" y="697" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
