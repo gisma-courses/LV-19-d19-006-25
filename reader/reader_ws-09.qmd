@@ -20,7 +20,6 @@ editor:
     wrap: sentence
 ---
 
-
 ## Conceptual background and problem framing (S0)
 
 The design of rainfall and hydrometric monitoring networks is fundamentally a **spatial design problem**.
@@ -37,6 +36,7 @@ To keep modelling assumptions explicit, this thesis separates the modelling task
 
 This staged reduction of spatial complexity ensures that scale decisions remain explicit and that optimisation operates on process-relevant spatial units rather than raw spatial partitions.
 
+
 ### Conceptual modelling spaces (S0–S5)
 
 The workflow is structured into a sequence of modelling spaces.
@@ -51,7 +51,6 @@ Each transition is a deliberate abstraction step: it reduces complexity and incr
 
 ![Fig. 1: Didactic meta-model of the workflow as modelling spaces (S0–S5). The diagram highlights epistemic roles and abstraction steps rather than implementation details.](../images/reader9-1.png)
 
-
 Figure 1 serves as a navigation model for the remainder of this document.
 Whenever sections refer to (S1–S5), they refer to the corresponding abstraction spaces in this meta-model.
 
@@ -61,11 +60,10 @@ Whenever sections refer to (S1–S5), they refer to the corresponding abstractio
 The Burgwald workflow implements the same abstraction logic in a concrete processing chain.
 In contrast to the didactic meta-model (Figure 1), the concrete pipeline makes explicit **which datasets enter the process**, **where segmentation is explored and fixed**, **how process strata are derived**, and **where optimisation is performed**.
 
-
 ![Fig. 2: Concrete Burgwald implementation pipeline. Blocks correspond to abstraction stages in Figure 1: S1 (input data), S2→S3 (structural stratification), S3 (segmentation discovery and transfer), S3→S4 (physiographic process stratification), and S4 (network optimisation).](../images/reader9-2.png)
 
-
 In Figure 2, the numbered blocks are referenced explicitly in the Methods section to indicate where each methodological component operates in the end-to-end workflow.
+
 
 ## Catchment-based versus segment-based design (S0 → S3)
 
@@ -97,12 +95,9 @@ This thesis adopts a **hybrid position**:
 segments are used to represent spatial heterogeneity and discover meaningful scales, while catchments and stream networks are used for hydrological aggregation and evaluation.
 This sequencing follows calls in hydrology to decouple spatial representation from hydrological response analysis [@Winter2001; @Wagener2007].
 
-In modelling-space terms, segments operate in the **structural representation domain (S3)**, while catchments remain the **hydrological aggregation domain (S4/S5)*S4 — Segment-based Pattern and Process Stratification and Station Candidate Derivation
-
-The S4 module consumes the geometric base units generated in S2 (segmentation) together with environmental reference layers from S1 (DEM, land cover) and aggregated wind statistics from the Wind layer, and derives object-based predictors, strata, and station candidates. For each segment, information-theoretic landscape metrics (entropy and relative mutual information) are computed to characterize spatial pattern complexity (pattern dimension), while physiographic predictors (mean elevation, slope, southness, forest fraction) represent dominant process controls. In addition, a seasonal wind exposure indicator (windwardness for summer and winter) is derived from terrain aspect and prevailing wind direction and retained as a descriptive process attribute.
-
-Based on these predictors, two independent stratification systems are constructed: an IT-based pattern stratification and a physiography-based process stratification. For each stratum in both systems, representative segments are identified by minimizing the multivariate distance to the stratum centroid in feature space. The geometric centroids of these representative segments are exported as station candidate locations, forming a reduced but structurally and process-representative spatial candidate set. This candidate set serves as the constrained search space for subsequent optimisation and coupling steps (e.g. information gain, uncertainty reduction, hydrological or atmospheric consistency), enabling computationally tractable and physically interpretable network design.*.
+In modelling-space terms, segments operate in the **structural representation domain (S3)**, while catchments remain the **hydrological aggregation domain (S4/S5)**.
 Their coupling preserves both spatial heterogeneity and process connectivity without conflating epistemic roles.
+
 
 ## Methods
 
@@ -112,6 +107,7 @@ Their coupling preserves both spatial heterogeneity and process connectivity wit
 > Each modelling layer introduces assumptions that remain transparent and contestable.
 >
 > In the concrete Burgwald workflow (Figure 2), these abstractions are operationalised as blocks (1–4), which are referenced below.
+
 
 ### Structural landscape stratification (S2 → S3; Figure 2, Block 1)
 
@@ -123,12 +119,14 @@ Tiles are clustered into **structural strata**, reducing spatial redundancy prio
 
 This step deliberately abstracts from physical processes and treats landscape structure as a spatial descriptor, trading physical realism for stability and comparability.
 
+
 ### Representative test tiles (S3 — model reduction; Figure 2, Block 1)
 
 From each structural stratum, representative test tiles are selected based on distance-to-centroid criteria.
 Restricting segmentation experiments to these tiles improves computational efficiency and reproducibility while maintaining structural representativeness.
 
 This is a controlled reduction of the search space: representativeness is retained while computation and parameter exploration become feasible.
+
 
 ### Adaptive segmentation and scale discovery (S3; Figure 2, Block 2a)
 
@@ -139,6 +137,7 @@ Rather than selecting a single optimal scale, segmentation configurations are ev
 
 Segmentation replaces continuous spatial variability by discrete objects, reducing internal heterogeneity while introducing boundary uncertainty and scale dependency.
 
+
 ### Segmentation transfer and physiographic strata (S3 → S4; Figure 2, Blocks 2b and 3)
 
 A selected segmentation configuration is transferred wall-to-wall to the full study area (Figure 2, Block 2b).
@@ -148,6 +147,7 @@ Physiographic attributes such as elevation, terrain position, and vegetation fra
 
 This step maps structural units into process-relevant strata: it trades pixel-level detail for segment-level interpretability and process comparability.
 
+
 ### Hydrological context and network optimisation (S4; Figure 2, Block 4)
 
 Physiographic strata are overlaid with watershed boundaries and stream networks characterised by Strahler order [@Strahler1957].
@@ -155,11 +155,25 @@ Catchments serve as aggregation units to evaluate how different strata contribut
 
 Station placement is then optimised using information-theoretic criteria to maximise information gain and minimise redundancy [@Alfonso2010; @Samuel2013; @Keum2017].
 
-S4 — Segment-based Pattern and Process Stratification and Station Candidate Derivation
 
-The S4 module consumes the geometric base units generated in S2 (segmentation) together with environmental reference layers from S1 (DEM, land cover) and aggregated wind statistics from the Wind layer, and derives object-based predictors, strata, and station candidates. For each segment, information-theoretic landscape metrics (entropy and relative mutual information) are computed to characterize spatial pattern complexity (pattern dimension), while physiographic predictors (mean elevation, slope, southness, forest fraction) represent dominant process controls. In addition, a seasonal wind exposure indicator (windwardness for summer and winter) is derived from terrain aspect and prevailing wind direction and retained as a descriptive process attribute.
+### S4 — Segment-based Pattern and Process Stratification and Station Candidate Derivation
 
-Based on these predictors, two independent stratification systems are constructed: an IT-based pattern stratification and a physiography-based process stratification. For each stratum in both systems, representative segments are identified by minimizing the multivariate distance to the stratum centroid in feature space. The geometric centroids of these representative segments are exported as station candidate locations, forming a reduced but structurally and process-representative spatial candidate set. This candidate set serves as the constrained search space for subsequent optimisation and coupling steps (e.g. information gain, uncertainty reduction, hydrological or atmospheric consistency), enabling computationally tractable and physically interpretable network design.
+The S4 module consumes the geometric base units generated in **S3 (segmentation and structural representation)** together with environmental reference layers from **S1 (DEM, land cover)** and aggregated wind statistics from the Wind layer.
+Its purpose is not to redefine spatial structure, but to transform structurally defined segments into a constrained and interpretable **decision space for network design**.
+
+For each segment, information-theoretic landscape metrics (entropy and relative mutual information) are computed to characterise spatial pattern complexity (pattern dimension).
+In parallel, physiographic predictors (mean elevation, slope, southness, forest fraction) represent dominant process controls.
+A seasonal wind exposure indicator (windwardness for summer and winter) is derived from terrain aspect and prevailing wind direction and retained as a descriptive process attribute.
+
+Based on these predictors, two independent stratification systems are constructed: an IT-based pattern stratification and a physiography-based process stratification.
+These strata still belong to the structural representation domain (S3); their role is to organise segments into comparable process and pattern classes.
+
+The transition into the decision space (S4) occurs through the derivation of **station candidates**.
+Within each stratum, representative segments are identified by minimising multivariate distance to the respective feature-space centroid.
+The geometric centroids of these representative segments are exported as station candidate locations.
+This procedure reduces the full spatial complexity to a compact but structurally and process-representative candidate set, which defines the constrained search space for subsequent optimisation and coupling steps (e.g. information gain, uncertainty reduction, hydrological or atmospheric consistency).
+This separation preserves interpretability while keeping the optimisation problem computationally tractable.
+
 
 ### Stability, sensitivity, and transferability (S5)
 
@@ -171,5 +185,6 @@ Network design outcomes are evaluated for robustness against:
 * and spatial transfer across subregions.
 
 Validation targets stability of the *structural representation* and the *decision outcomes*, not the existence of a single “correct” spatial partition.
+
 
 ## References
