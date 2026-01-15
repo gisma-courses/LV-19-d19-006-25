@@ -1,9 +1,65 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.3.1">
   <diagram name="Page-1" id="DqC-k16ebgd2F329TbQv">
-    <mxGraphModel>
+    <mxGraphModel dx="1155" dy="1830" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="t1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=18;" value="Spatial Research Pipeline — Didactic Core Model" vertex="1">
+          <mxGeometry height="50" width="1040" x="60" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontSize=12;" value="Goal: conceptual modelling and epistemic reasoning (not programming). Every step transforms reality and introduces assumptions." vertex="1">
+          <mxGeometry height="40" width="1040" x="60" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="s0" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;" value="S0 — Problem Space&#xa;Question • scale • decision targets" vertex="1">
+          <mxGeometry height="80" width="300" x="60" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;" value="S1 — Observation Space&#xa;Data sources • AOI • uncertainty enters" vertex="1">
+          <mxGeometry height="80" width="300" x="410" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;" value="S2 — Feature Space&#xa;Process proxies • indicators • scale/aggregation" vertex="1">
+          <mxGeometry height="80" width="340" x="760" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;" value="S3 — Structural Space&#xa;Segmentation • strata • spatial units" vertex="1">
+          <mxGeometry height="80" width="340" x="420" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;" value="S4 — Decision Space&#xa;Objectives • trade-offs • selection/optimisation" vertex="1">
+          <mxGeometry height="80" width="340" x="420" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontStyle=1;" value="S5 — Validation Space&#xa;Stability • sensitivity • robustness/transfer" vertex="1">
+          <mxGeometry height="80" width="300" x="800" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="e01" edge="1" parent="1" source="s0" style="endArrow=block;html=1;rounded=0;" target="s1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="s1" style="endArrow=block;html=1;rounded=0;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2d" edge="1" parent="1" source="s2" style="endArrow=block;html=1;rounded=0;" target="s5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="930" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2s3" edge="1" parent="1" source="s2" style="endArrow=block;html=1;rounded=0;" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e34" edge="1" parent="1" source="s3" style="endArrow=block;html=1;rounded=0;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e45" edge="1" parent="1" source="s4" style="endArrow=block;html=1;rounded=0;" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note_parallel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontStyle=1;" value="Parallel paths are intentional:&#xa;Different abstractions produce different truths." vertex="1">
+          <mxGeometry height="70" width="480" x="64" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="rules" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" value="Core rules&#xa;1. No step is neutral&#xa;2. Every transformation loses information&#xa;3. Multiple representations are necessary&#xa;4. Structure is modelled, not discovered&#xa;5. Decisions are justified, not computed&#xa;6. Reproducibility is mandatory&#xa;7. Interpretation belongs outside the code" vertex="1">
+          <mxGeometry height="170" width="530" x="574" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="fail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" value="Typical failure modes&#xa;• tools ≠ models&#xa;• features treated as reality&#xa;• assumptions hidden in code&#xa;• optimisation before structure understanding&#xa;• overfitting spatial detail&#xa;• ignoring scale effects" vertex="1">
+          <mxGeometry height="120" width="480" x="64" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="succ" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fontStyle=1;" value="Success criterion&#xa;You can explain:&#xa;• why a result looks as it does&#xa;• which assumptions created it&#xa;• how it changes under different abstractions" vertex="1">
+          <mxGeometry height="110" width="1040" x="64" y="860" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
