@@ -97,7 +97,11 @@ This thesis adopts a **hybrid position**:
 segments are used to represent spatial heterogeneity and discover meaningful scales, while catchments and stream networks are used for hydrological aggregation and evaluation.
 This sequencing follows calls in hydrology to decouple spatial representation from hydrological response analysis [@Winter2001; @Wagener2007].
 
-In modelling-space terms, segments operate in the **structural representation domain (S3)**, while catchments remain the **hydrological aggregation domain (S4/S5)**.
+In modelling-space terms, segments operate in the **structural representation domain (S3)**, while catchments remain the **hydrological aggregation domain (S4/S5)*S4 — Segment-based Pattern and Process Stratification and Station Candidate Derivation
+
+The S4 module consumes the geometric base units generated in S2 (segmentation) together with environmental reference layers from S1 (DEM, land cover) and aggregated wind statistics from the Wind layer, and derives object-based predictors, strata, and station candidates. For each segment, information-theoretic landscape metrics (entropy and relative mutual information) are computed to characterize spatial pattern complexity (pattern dimension), while physiographic predictors (mean elevation, slope, southness, forest fraction) represent dominant process controls. In addition, a seasonal wind exposure indicator (windwardness for summer and winter) is derived from terrain aspect and prevailing wind direction and retained as a descriptive process attribute.
+
+Based on these predictors, two independent stratification systems are constructed: an IT-based pattern stratification and a physiography-based process stratification. For each stratum in both systems, representative segments are identified by minimizing the multivariate distance to the stratum centroid in feature space. The geometric centroids of these representative segments are exported as station candidate locations, forming a reduced but structurally and process-representative spatial candidate set. This candidate set serves as the constrained search space for subsequent optimisation and coupling steps (e.g. information gain, uncertainty reduction, hydrological or atmospheric consistency), enabling computationally tractable and physically interpretable network design.*.
 Their coupling preserves both spatial heterogeneity and process connectivity without conflating epistemic roles.
 
 ## Methods
@@ -150,6 +154,12 @@ Physiographic strata are overlaid with watershed boundaries and stream networks 
 Catchments serve as aggregation units to evaluate how different strata contribute to runoff at selected outlets.
 
 Station placement is then optimised using information-theoretic criteria to maximise information gain and minimise redundancy [@Alfonso2010; @Samuel2013; @Keum2017].
+
+S4 — Segment-based Pattern and Process Stratification and Station Candidate Derivation
+
+The S4 module consumes the geometric base units generated in S2 (segmentation) together with environmental reference layers from S1 (DEM, land cover) and aggregated wind statistics from the Wind layer, and derives object-based predictors, strata, and station candidates. For each segment, information-theoretic landscape metrics (entropy and relative mutual information) are computed to characterize spatial pattern complexity (pattern dimension), while physiographic predictors (mean elevation, slope, southness, forest fraction) represent dominant process controls. In addition, a seasonal wind exposure indicator (windwardness for summer and winter) is derived from terrain aspect and prevailing wind direction and retained as a descriptive process attribute.
+
+Based on these predictors, two independent stratification systems are constructed: an IT-based pattern stratification and a physiography-based process stratification. For each stratum in both systems, representative segments are identified by minimizing the multivariate distance to the stratum centroid in feature space. The geometric centroids of these representative segments are exported as station candidate locations, forming a reduced but structurally and process-representative spatial candidate set. This candidate set serves as the constrained search space for subsequent optimisation and coupling steps (e.g. information gain, uncertainty reduction, hydrological or atmospheric consistency), enabling computationally tractable and physically interpretable network design.
 
 ### Stability, sensitivity, and transferability (S5)
 
