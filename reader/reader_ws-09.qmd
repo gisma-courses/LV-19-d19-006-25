@@ -22,169 +22,162 @@ editor:
 
 ## Conceptual background and problem framing (S0)
 
-The design of rainfall and hydrometric monitoring networks is fundamentally a **spatial design problem**.
-Landscapes are heterogeneous, monitoring resources are limited, and the target variables of interest—precipitation, runoff, and discharge—are governed by interacting processes operating across multiple spatial scales.
-Consequently, station placement cannot be reduced to uniform coverage or local optimisation, but must instead maximise **information gain with respect to hydrological response**.
+The conceptualization of networks for the purpose of rainfall and hydrometric monitoring constitutes, in essence, a **spatial design problem** *of* considerable complexity.
+Landscapes are inherently heterogeneous, monitoring resources are limited, and the target variables of interest—precipitation, runoff, and discharge—are governed by interacting processes operating across multiple spatial scales.
+Therefore, station placement cannot be reduced to uniform coverage or local optimisation; rather, it must maximize information gain with respect to hydrological response.
 
-Many existing approaches optimise station locations directly within predefined spatial units such as grids or catchments [@Mishra2009; @Alfonso2010; @Samuel2013].
-While these approaches are hydrologically intuitive, they embed **implicit assumptions about spatial scale and internal homogeneity**, which are rarely satisfied in real landscapes [@Wagener2007].
+Many existing approaches optimize station locations directly within predefined spatial units, such as grids or catchments [@Mishra2009; @Alfonso2010; @Samuel2013]. While these approaches are hydrologically intuitive, they embed **implicit** assumptions about spatial scale and internal homogeneity, which are rarely satisfied in real landscapes and process patterns [@Wagener2007].
 
-To keep modelling assumptions explicit, this thesis separates the modelling task into two complementary frames:
+In order to maintain transparency regarding the assumptions underlying the model, this approach subdivides the modeling task into two complementary frames:
 
-1. a **didactic meta-model** that makes abstraction steps and epistemic roles explicit (Figure 1), and  
-2. the **concrete Burgwald implementation pipeline** that operationalises these steps in a reproducible GIS/RS workflow (Figure 2).
+1.  The first element is a **didactic meta-model** that makes abstraction steps and epistemic roles explicit ([see figure 1](#figure-1)).\
+2.  The second component is the Concrete Burgwald implementation pipeline, which utilizes these steps in a reproducible GIS/RS workflow ([see figure 2](#figure-2)).
 
-This staged reduction of spatial complexity ensures that scale decisions remain explicit and that optimisation operates on process-relevant spatial units rather than raw spatial partitions.
-
+This staged reduction of spatial complexity ensures that scale decisions remain explicit and that optimization operates on process-relevant spatial units rather than raw spatial partitions.
 
 ### Conceptual modelling spaces (S0–S5)
 
-The workflow is structured into a sequence of modelling spaces.
-Each transition is a deliberate abstraction step: it reduces complexity and increases comparability, but introduces assumptions and information loss.
+The workflow is structured into a sequence of modeling spaces.
+Each transition constitutes a deliberate abstraction step, whereby complexity is reduced and comparability is enhanced, though assumptions are introduced and information is lost.
 
-* **S0 — Problem Space:** design objectives, relevant scales, decision criteria.
-* **S1 — Observation Space:** reproducible construction of spatial observations from heterogeneous data sources.
-* **S2 — Feature Space:** derivation of abstract descriptors and process proxies.
-* **S3 — Structural Space:** segmentation and stratification into discrete spatial units.
-* **S4 — Decision Space:** optimisation and trade-off analysis for station placement.
-* **S5 — Validation Space:** stability, sensitivity, robustness and transferability analysis.
+-   S0 — Problem Space: This category encompasses design objectives, relevant scales, and decision criteria.
+-   S1 — Observation Space: The reproducible construction of spatial observations from heterogeneous data sources is paramount.
+-   S2 — Feature Space: The derivation of abstract descriptors and process proxies is a critical component of the analysis.
+-   S3 — Structural Space: Segmentation and stratification into discrete spatial units are the defining characteristics of structural space.
+-   S4 — Decision Space: This section is devoted to the optimization and trade-off analysis for station placement.
+-   S5 — Validation Space: Stability, sensitivity, robustness, and transferability analysis are critical components of this space.
 
-![Fig. 1: Didactic meta-model of the workflow as modelling spaces (S0–S5). The diagram highlights epistemic roles and abstraction steps rather than implementation details.](../images/reader9-1.png)
-
-Figure 1 serves as a navigation model for the remainder of this document.
-Whenever sections refer to (S1–S5), they refer to the corresponding abstraction spaces in this meta-model.
+![As illustrated in Figure 1, the didactic meta-model of the workflow is depicted as modeling spaces (S0–S5). The diagram emphasizes epistemic roles and abstraction steps rather than implementation details. In instances where sections refer to (S1–S5), they are referring to the corresponding abstraction spaces in this meta-model.](../images/reader9-1.png){#figure-1}
 
 
 ### Concrete implementation pipeline (Burgwald)
 
+The Concrete Implementation Pipeline (Burgwald) is a system that has been developed for the purpose of facilitating the implementation of concrete projects.
+
 The Burgwald workflow implements the same abstraction logic in a concrete processing chain.
-In contrast to the didactic meta-model (Figure 1), the concrete pipeline makes explicit **which datasets enter the process**, **where segmentation is explored and fixed**, **how process strata are derived**, and **where optimisation is performed**.
+In contrast to the didactic meta-model (Figure 1), the concrete pipeline makes explicit the following: - the datasets that enter the process - the location of segmentation exploration and fixation - the derivation of process strata - the location of optimization
 
-![Fig. 2: Concrete Burgwald implementation pipeline. Blocks correspond to abstraction stages in Figure 1: S1 (input data), S2→S3 (structural stratification), S3 (segmentation discovery and transfer), S3→S4 (physiographic process stratification), and S4 (network optimisation).](../images/reader9-2.png)
-
-In Figure 2, the numbered blocks are referenced explicitly in the Methods section to indicate where each methodological component operates in the end-to-end workflow.
+![Fig. 2: As illustrated in Figure 2, the Concrete Burgwald implementation pipeline is comprised of a series of interconnected components. As illustrated in Figure 1, the blocks are analogous to the abstraction stages enumerated below: S1 (input data), S2→S3 (structural stratification), S3 (segmentation discovery and transfer), S3→S4 (physiographic process stratification), and S4 (network optimization).](../images/reader9-2.png){#figure-2}
 
 
-## Catchment-based versus segment-based design (S0 → S3)
+## Process based  versus structural and functional design
+
+Catchment-based hydrological thinking is fundamentally **connectivity-first**: watersheds and subbasins are delineated by drainage topology and therefore encode routing, flow accumulation, and outlet mass balance by construction. This makes them the canonical aggregation units for discharge prediction and for network-design approaches that optimize performance at the outlet. The cost of that convenience is conceptual: catchments are rarely internally homogeneous in terms of runoff generation, storage–release dynamics, or dominant flow paths, even at small spatial extents [@Wagener2007; @Sawicz2011]. In practice, this internal heterogeneity is often “handled” indirectly through **catchment-specific calibration**, where parameter sets are tuned to match outlet signals despite unresolved within-catchment variability. The resulting equifinality and weak identifiability mean that calibration can compensate for structural and process-representation errors—producing acceptable outlet fits while decoupling inferred process parameters from observable landscape structure (“right answers for the wrong reasons”) [@BevenBinley1992; @Beven2006; @LiuGupta2007]. From a network-design perspective, this creates a systematic risk: designs that are optimal with respect to outlet criteria may remain **insensitive to internal process diversity** and therefore under-inform the very mechanisms that govern transferability across events, seasons, or neighbouring basins.
+
+To address internal heterogeneity, hydrology has repeatedly introduced alternative spatial units that are closer to **process organization** than to drainage topology. The classic operational form are HRUs, i.e., GIS-derived response patches constructed from combinations of terrain, soils, and land cover, intended to represent internally similar hydrological behaviour within a subbasin [@Flugel1995]. More recent conceptual developments generalize this logic toward explicitly **functional units** (EFUs) and hillslope-embedded hierarchies, where the unit concept is tied to dominant process configurations and to where/when specific mechanisms should be observable [@Zehe2014]. In parallel, hydrologic landscape classifications and regions seek reproducible typologies across larger extents by grouping landscapes according to physiographic and climatic controls that co-vary with hydrologic response [@Winter2001; @Wolock2004; @Gharari2011]. These approaches make a strong epistemic move: they treat “hydrologic space” as a set of **repeatable functional settings**, not merely as a nested drainage container. However, most of these unit systems remain either (i) only weakly connected to explicit lateral connectivity (HRUs as patches without flow topology), or (ii) connectivity-aware mainly at the level of the catchment/subbasin skeleton rather than within the internal mosaic. This is precisely why unit-based modelling has historically struggled to represent process interactions that are mediated by connected pathways (e.g., hillslope–riparian coupling, preferential source areas, or threshold connectivity), motivating newer model structures that reintroduce landscape routing concepts (e.g., landscape units in SWAT+ discussions) [@Wagner2022].
+
+In the remote-sensing and spatial-analysis domain, segmentation/regionalization adds a complementary capability: it provides **data-driven, scale-controlled** spatial units that can be made robust and reproducible when segmentation quality is assessed quantitatively [@Blaschke2010; @Dragut2014; @Nowosad2022]. Conceptually, this is very close to the HRU/functional-unit rationale—but with modern tools for scale regulation, quality control, and reproducibility. The hydrological limitation is also clear: segments, on their own, do not encode the drainage hierarchy or lateral connectivity and therefore cannot substitute catchments as routing/aggregation units. Used in isolation, they risk missing the very pathway structure that makes hydrology hydrology.
+
+**Gap.** Across these strands, the literature offers strong building blocks—topological catchments for connectivity, functional/response units for within-catchment heterogeneity, and quantitative segmentation for reproducible scale control—but it largely lacks a unified methodology that (1) derives spatial units in a **process-relevant, data-driven** manner, (2) explicitly respects **hydrological connectivity**, and (3) translates this hybrid representation into **measurement network design** targeted at specific scale–process relationships rather than only outlet performance. The missing piece is not “another unit concept”, but an operational bridge from unit derivation to **site selection** under explicit scale and process objectives.
+
+**Gain of a hybrid method.** A hybrid design can close this gap by coupling segmentation-based units (to control scale and represent repeatable functional settings across basins) with catchment/network topology (to preserve routing structure and drainage hierarchy). In such a framework, measurement locations are not chosen to “represent a catchment” in the generic sense, nor to “cover segments” blindly, but to **maximize representativeness of process settings at defined scales while remaining embedded in the connected drainage structure**. The practical payoff is twofold: (i) improved internal observability and constraint of process hypotheses (reducing equifinality by placing observations where they actually disambiguate mechanisms), and (ii) a principled pathway to transfer network logic across catchments by matching **analogous functional segments** rather than relying on outlet-level calibration alone.
+
 
 ### Catchment-based design
 
-Catchments are the natural spatial units of hydrology.
-They encode drainage connectivity, flow accumulation, and mass balance, and therefore form the backbone of many network design approaches [@Mishra2009; @Alfonso2010].
-Optimisation within catchments provides a direct link between rainfall measurements and discharge observations at outlets.
+Catchments are the generic spatial units of hydrology. These elements are critical in the encoding of drainage connectivity, flow accumulation, and mass balance, thereby establishing the foundation for numerous network design methodologies. [@Mishra2009; @Alfonso2010]. Optimization within catchments establishes a direct correlation between rainfall measurements and discharge observations at outlets.
 
-However, catchment-based designs implicitly assume that catchments are internally homogeneous.
-Empirical and comparative hydrology studies demonstrate that even small catchments often exhibit multiple dominant runoff-generation mechanisms [@Wagener2007; @Sawicz2011].
-As a result, station placement optimised at the catchment level may be hydrologically relevant at the outlet but **spatially blind** to internal process variability.
+However, catchment-based designs presuppose the internal homogeneity of catchments. Empirical and comparative hydrology studies demonstrate that even small catchments often exhibit multiple dominant runoff-generation mechanisms [@Wagener2007; @Sawicz2011]. Consequently, station placement optimized at the catchment level may be hydrologically relevant at the outlet but **spatially blind** to internal process variability. In practice, this mismatch is typically absorbed through catchment-specific model calibration: parameter sets are tuned individually to reproduce outlet discharge despite unresolved within-catchment heterogeneity. Such calibration can yield equifinal (or weakly identifiable) parameterizations that fit outlet responses while compensating for structural and process-representation errors, effectively decoupling inferred “process” parameters from observable catchment structure and internal dynamics (“right answers for the wrong reasons”)[@BevenBinley1992; @Beven2006; @LiuGupta2007; @Kelleher2017]
 
 ### Segment-based design
 
-Segment-based approaches derive **data-driven spatial units** through adaptive segmentation or regionalisation.
-These units aim to be internally homogeneous and externally distinct with respect to selected variables.
-In remote sensing and spatial analysis, segmentation has long been treated as a **scale-space problem** rather than a classification task [@Blaschke2010; @Dragut2014].
+Segment-based approaches are predicated on the derivation of data-driven spatial units through the implementation of adaptive segmentation or regionalization. The objective of these units is to be internally homogeneous and externally distinct with respect to selected variables. In the domain of remote sensing and spatial analysis, the issue of segmentation has historically been regarded as a scale-space problem rather than a classification task [@Blaschke2010; @Dragut2014].
 
-Recent work on adaptive regionalisation and supercells shows that such units can be robust and reproducible when segmentation quality is evaluated quantitatively [@Nowosad2022].
-Segment-based designs allow explicit control over spatial scale and can represent similar process settings across different catchments.
+Recent research on adaptive regionalization and supercells indicates that such units can be both robust and reproducible when segmentation quality is evaluated quantitatively [@Nowosad2022]. Segment-based designs enable precise regulation of spatial scale and facilitate the representation of analogous process settings across disparate catchments.
 
-At the same time, segments do not encode hydrological connectivity and therefore cannot replace catchments as aggregation units.
-Used in isolation, segment-based designs risk ignoring flow paths and drainage hierarchy.
+Concurrently, segments lack the capacity to encode hydrological connectivity, thereby precluding their utilization as substitutes for catchments as aggregation units. When employed in isolation, segment-based designs have the potential to overlook critical factors such as flow paths and the established drainage hierarchy.
 
-### Hybrid rationale
+### Hybrid approach
 
-This thesis adopts a **hybrid position**:
-segments are used to represent spatial heterogeneity and discover meaningful scales, while catchments and stream networks are used for hydrological aggregation and evaluation.
-This sequencing follows calls in hydrology to decouple spatial representation from hydrological response analysis [@Winter2001; @Wagener2007].
+This thesis adopts a hybrid position, utilizing segments to symbolize spatial heterogeneity and ascertain salient scales, while employing catchments and stream networks for hydrological aggregation and evaluation.
+This sequencing aligns with the calls in the field of hydrology to decouple spatial representation from hydrological response analysis [@Winter2001; @Wagener2007].
 
-In modelling-space terms, segments operate in the **structural representation domain (S3)**, while catchments remain the **hydrological aggregation domain (S4/S5)**.
+In the context of modeling space, segments function within the structural representation domain (S3), while catchments operate within the hydrological aggregation domain (S4/S5).
 Their coupling preserves both spatial heterogeneity and process connectivity without conflating epistemic roles.
 
+## The Methods
 
-## Methods
+::: {.callout-tip title="Modeling Perspective" appearance="simple"}
 
-> **Modelling perspective**
-> This workflow does not aim to compute an “optimal” solution directly from raw space.
-> It constructs a sequence of abstractions that progressively transform spatial complexity into a structured decision space.
-> Each modelling layer introduces assumptions that remain transparent and contestable.
->
-> In the concrete Burgwald workflow (Figure 2), these abstractions are operationalised as blocks (1–4), which are referenced below.
-
+The objective of this workflow is not to compute an "optimal" solution directly from raw space.
+The process under consideration constructs a sequence of abstractions that progressively transform spatial complexity into a structured decision space.
+Each modeling layer introduces assumptions that remain transparent and contestable.
+In the concrete Burgwald workflow (Figure 2), these abstractions are operationalized as blocks (1–4), which are referenced below.
+:::
 
 ### Structural landscape stratification (S2 → S3; Figure 2, Block 1)
 
-The study area is partitioned into coarse, fixed spatial tiles.
+The geographical area under consideration is divided into coarse, fixed spatial tiles.
 For each tile, structural landscape descriptors are derived from categorical land-cover data, including diversity and entropy-based measures [@Turner1989; @McGarigal2012].
-These descriptors characterise landscape structure independently of physical processes.
+These descriptors are intended to characterize landscape structure in an independent manner, that is, as they are not contingent upon physical processes.
 
-Tiles are clustered into **structural strata**, reducing spatial redundancy prior to segmentation and optimisation.
+Tiles are grouped into structural strata, which reduces spatial redundancy prior to segmentation and optimization.
 
 This step deliberately abstracts from physical processes and treats landscape structure as a spatial descriptor, trading physical realism for stability and comparability.
 
-
 ### Representative test tiles (S3 — model reduction; Figure 2, Block 1)
 
-From each structural stratum, representative test tiles are selected based on distance-to-centroid criteria.
-Restricting segmentation experiments to these tiles improves computational efficiency and reproducibility while maintaining structural representativeness.
+Representative test tiles are selected from each structural stratum based on distance-to-centroid criteria.
+Restricting segmentation experiments to these tiles has been demonstrated to enhance computational efficiency and reproducibility while preserving structural representativeness.
 
-This is a controlled reduction of the search space: representativeness is retained while computation and parameter exploration become feasible.
+This approach involves a systematic reduction of the search space, ensuring the preservation of representativeness while enabling the exploration of computation and parameters.
 
 
 ### Adaptive segmentation and scale discovery (S3; Figure 2, Block 2a)
 
-Adaptive segmentation methods (e.g. mean-shift or supercell-based approaches) are applied to the test tiles across a range of parameter settings.
-Segmentation quality is evaluated using quantitative criteria such as segment size distributions, intra-segment homogeneity, inter-segment contrast, and stability under parameter perturbation [@Clinton2010; @Chen2018].
+Adaptive segmentation methods (e.g., mean-shift or supercell-based approaches) are applied to the test tiles across a range of parameter settings.
+The quality of segmentation is evaluated using quantitative criteria, such as segment size distributions, intra-segment homogeneity, inter-segment contrast, and stability under parameter perturbation [@Clinton2010; @Chen2018].
 
-Rather than selecting a single optimal scale, segmentation configurations are evaluated in terms of **Pareto-optimal trade-offs**.
+In lieu of selecting a solitary optimal scale, the evaluation of segmentation configurations is undertaken in accordance with Pareto-optimal trade-offs.
 
-Segmentation replaces continuous spatial variability by discrete objects, reducing internal heterogeneity while introducing boundary uncertainty and scale dependency.
-
+Segmentation replaces continuous spatial variability with discrete objects, thereby reducing internal heterogeneity while introducing boundary uncertainty and scale dependency.
 
 ### Segmentation transfer and physiographic strata (S3 → S4; Figure 2, Blocks 2b and 3)
 
-A selected segmentation configuration is transferred wall-to-wall to the full study area (Figure 2, Block 2b).
-Once fixed, the segmentation becomes the spatial reference frame for subsequent aggregation and analysis.
+A selected segmentation configuration is transferred wall-to-wall to the full study area (see Figure 2, Block 2b).
+Once the segmentation has been rectified, it functions as the spatial reference frame for subsequent aggregation and analysis.
 
-Physiographic attributes such as elevation, terrain position, and vegetation fraction are aggregated per segment and used to derive **physiographic process strata** (Figure 2, Block 3) [@Winter2001; @Sawicz2011].
+Physiographic attributes such as elevation, terrain position, and vegetation fraction are aggregated per segment and used to derive physiographic process strata (Figure 2, Block 3) [@Winter2001; @Sawicz2011].
 
-This step maps structural units into process-relevant strata: it trades pixel-level detail for segment-level interpretability and process comparability.
-
+This step involves the mapping of structural units into process-relevant strata, whereby pixel-level detail is exchanged for segment-level interpretability and process comparability.
 
 ### Hydrological context and network optimisation (S4; Figure 2, Block 4)
 
-Physiographic strata are overlaid with watershed boundaries and stream networks characterised by Strahler order [@Strahler1957].
-Catchments serve as aggregation units to evaluate how different strata contribute to runoff at selected outlets.
+Physiographic strata are overlaid with watershed boundaries and stream networks characterized by Strahler order [@Strahler1957].
+Catchments function as aggregation units, thereby facilitating the evaluation of the contributions of distinct strata to runoff at designated outlets.
 
-Station placement is then optimised using information-theoretic criteria to maximise information gain and minimise redundancy [@Alfonso2010; @Samuel2013; @Keum2017].
+Station placement is subsequently optimized using information-theoretic criteria to maximize information gain and minimize redundancy [@Alfonso2010; @Samuel2013; @Keum2017].
 
+### Segment-based Pattern and Process Stratification and Station Candidate Derivation (S4)
 
-### S4 — Segment-based Pattern and Process Stratification and Station Candidate Derivation
+The S4 module consumes the geometric base units generated in S3 (segmentation and structural representation) in conjunction with environmental reference layers from S1 (DEM, land cover) and aggregated wind statistics from the Wind layer.
+Its objective is not to redefine spatial structure, but rather to transform structurally defined segments into a constrained and interpretable decision space for network design.
 
-The S4 module consumes the geometric base units generated in **S3 (segmentation and structural representation)** together with environmental reference layers from **S1 (DEM, land cover)** and aggregated wind statistics from the Wind layer.
-Its purpose is not to redefine spatial structure, but to transform structurally defined segments into a constrained and interpretable **decision space for network design**.
+For each segment, information-theoretic landscape metrics (entropy and relative mutual information) are computed to characterize spatial pattern complexity (pattern dimension).
+Concurrently, physiographic predictors (mean elevation, slope, southness, forest fraction) signify predominant process controls.
+A seasonal wind exposure indicator, or windwardness, is derived from the terrain aspect and the prevailing wind direction.
+This indicator is then retained as a descriptive process attribute.
 
-For each segment, information-theoretic landscape metrics (entropy and relative mutual information) are computed to characterise spatial pattern complexity (pattern dimension).
-In parallel, physiographic predictors (mean elevation, slope, southness, forest fraction) represent dominant process controls.
-A seasonal wind exposure indicator (windwardness for summer and winter) is derived from terrain aspect and prevailing wind direction and retained as a descriptive process attribute.
-
-Based on these predictors, two independent stratification systems are constructed: an IT-based pattern stratification and a physiography-based process stratification.
-These strata still belong to the structural representation domain (S3); their role is to organise segments into comparable process and pattern classes.
+It is evident that, in consideration of the aforementioned predictors, the development of two distinct stratification systems is warranted: one that is IT-based and another that is physiography-based.
+These strata are still considered part of the structural representation domain (S3), and their function is to organize segments into comparable process and pattern classes.
 
 The transition into the decision space (S4) occurs through the derivation of **station candidates**.
-Within each stratum, representative segments are identified by minimising multivariate distance to the respective feature-space centroid.
-The geometric centroids of these representative segments are exported as station candidate locations.
-This procedure reduces the full spatial complexity to a compact but structurally and process-representative candidate set, which defines the constrained search space for subsequent optimisation and coupling steps (e.g. information gain, uncertainty reduction, hydrological or atmospheric consistency).
-This separation preserves interpretability while keeping the optimisation problem computationally tractable.
+Within each stratum, representative segments are identified by minimizing multivariate distance to the respective feature-space centroid.
+The geometric centroids of these representative segments are exported as potential station locations.
+This procedure reduces the full spatial complexity to a compact yet structurally and process-representative candidate set.
+This candidate set defines the constrained search space for subsequent optimization and coupling steps (e.g., information gain, uncertainty reduction, hydrological or atmospheric consistency).
+This separation maintains interpretability while ensuring the optimization problem remains computationally tractable.
 
 
 ### Stability, sensitivity, and transferability (S5)
 
-Network design outcomes are evaluated for robustness against:
+Network design outcomes are evaluated for robustness against the following factors:
 
-* segmentation parameter perturbations,
-* alternative feature abstractions,
-* alternative stratification settings,
-* and spatial transfer across subregions.
+* The application of perturbations to the segmentation parameter is a subject of considerable interest.
+* The utilization of alternative feature abstractions is imperative.
+* The following alternative stratification settings are provided for consideration
+* Furthermore, spatial transfer across subregions is a salient phenomenon that merits consideration.
 
-Validation targets stability of the *structural representation* and the *decision outcomes*, not the existence of a single “correct” spatial partition.
-
+The objective of validation is to ensure the stability of the structural representation and the decision outcomes, rather than to determine the existence of a single "correct" spatial partition.
 
 ## References

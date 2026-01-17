@@ -51,6 +51,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../reader/reader_ws-08.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -111,10 +112,8 @@ background-size: cover;
 <link rel="stylesheet" href="../css/styles.css">
 <meta property="og:title" content="From Spatial Structure to Hydrological Network Design – Advanced GIS &amp; RS">
 <meta property="og:description" content="A Segmentation-Based Framework for Rainfall Station Placement">
-<meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/images/reader9-1.png">
+<meta property="og:image" content="https://gisma-courses.github.io/LV-19-d19-006-25/images/reader9-1-didactic.drawio.svg">
 <meta property="og:site_name" content="Advanced GIS &amp; RS">
-<meta property="og:image:height" content="788">
-<meta property="og:image:width" content="1046">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -242,13 +241,13 @@ background-size: cover;
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Lectures</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../slides/slide0.html" class="sidebar-item-text sidebar-link">
@@ -299,7 +298,7 @@ background-size: cover;
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reader/reader_ws-09a.html" class="sidebar-item-text sidebar-link">
+  <a href="../reader/reader_ws-09a.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">From Spatial Structure to Hydrological Network Design</span></a>
   </div>
 </li>
@@ -375,30 +374,33 @@ background-size: cover;
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#conceptual-background-and-problem-framing-s0" id="toc-conceptual-background-and-problem-framing-s0" class="nav-link active" data-scroll-target="#conceptual-background-and-problem-framing-s0">Conceptual background and problem framing (S0)</a>
+  <li><a href="#spatial-units-process-logic-and-scale-theoretical-grounding-and-epistemic-recursion" id="toc-spatial-units-process-logic-and-scale-theoretical-grounding-and-epistemic-recursion" class="nav-link active" data-scroll-target="#spatial-units-process-logic-and-scale-theoretical-grounding-and-epistemic-recursion">Spatial units, process logic, and scale: theoretical grounding and epistemic recursion</a>
+  <ul class="collapse">
+  <li><a href="#structureprocess-coupling-and-the-mediating-role-of-connectivity" id="toc-structureprocess-coupling-and-the-mediating-role-of-connectivity" class="nav-link" data-scroll-target="#structureprocess-coupling-and-the-mediating-role-of-connectivity">Structure–process coupling and the mediating role of connectivity</a></li>
+  <li><a href="#scale-as-an-explicit-design-variable" id="toc-scale-as-an-explicit-design-variable" class="nav-link" data-scroll-target="#scale-as-an-explicit-design-variable">Scale as an explicit design variable</a></li>
+  <li><a href="#epistemic-recursion-and-didactic-implication" id="toc-epistemic-recursion-and-didactic-implication" class="nav-link" data-scroll-target="#epistemic-recursion-and-didactic-implication">Epistemic recursion and didactic implication</a></li>
+  </ul></li>
+  <li><a href="#conceptual-background-and-problem-framing-s0" id="toc-conceptual-background-and-problem-framing-s0" class="nav-link" data-scroll-target="#conceptual-background-and-problem-framing-s0">Conceptual background and problem framing (S0)</a></li>
+  <li><a href="#conceptual-background-and-problem-framing-s0-1" id="toc-conceptual-background-and-problem-framing-s0-1" class="nav-link" data-scroll-target="#conceptual-background-and-problem-framing-s0-1">Conceptual background and problem framing (S0)</a>
   <ul class="collapse">
   <li><a href="#conceptual-modelling-spaces-s0s5" id="toc-conceptual-modelling-spaces-s0s5" class="nav-link" data-scroll-target="#conceptual-modelling-spaces-s0s5">Conceptual modelling spaces (S0–S5)</a></li>
   <li><a href="#concrete-implementation-pipeline-burgwald" id="toc-concrete-implementation-pipeline-burgwald" class="nav-link" data-scroll-target="#concrete-implementation-pipeline-burgwald">Concrete implementation pipeline (Burgwald)</a></li>
   </ul></li>
-  <li><a href="#process-based-versus-structural-and-functional-design" id="toc-process-based-versus-structural-and-functional-design" class="nav-link" data-scroll-target="#process-based-versus-structural-and-functional-design">Process based versus structural and functional design</a>
-  <ul class="collapse">
-  <li><a href="#catchment-based-design" id="toc-catchment-based-design" class="nav-link" data-scroll-target="#catchment-based-design">Catchment-based design</a></li>
-  <li><a href="#segment-based-design" id="toc-segment-based-design" class="nav-link" data-scroll-target="#segment-based-design">Segment-based design</a></li>
-  <li><a href="#hybrid-approach" id="toc-hybrid-approach" class="nav-link" data-scroll-target="#hybrid-approach">Hybrid approach</a></li>
-  </ul></li>
+  <li><a href="#hydrological-unit-concepts-and-their-operational-roles" id="toc-hydrological-unit-concepts-and-their-operational-roles" class="nav-link" data-scroll-target="#hydrological-unit-concepts-and-their-operational-roles">Hydrological unit concepts and their operational roles</a></li>
+  <li><a href="#processstructurescale-synthesis-design-logic" id="toc-processstructurescale-synthesis-design-logic" class="nav-link" data-scroll-target="#processstructurescale-synthesis-design-logic">Process–structure–scale synthesis (design logic)</a></li>
   <li><a href="#the-methods" id="toc-the-methods" class="nav-link" data-scroll-target="#the-methods">The Methods</a>
   <ul class="collapse">
-  <li><a href="#structural-landscape-stratification-s2-s3-figure-2-block-1" id="toc-structural-landscape-stratification-s2-s3-figure-2-block-1" class="nav-link" data-scroll-target="#structural-landscape-stratification-s2-s3-figure-2-block-1">Structural landscape stratification (S2 → S3; Figure 2, Block 1)</a></li>
-  <li><a href="#representative-test-tiles-s3-model-reduction-figure-2-block-1" id="toc-representative-test-tiles-s3-model-reduction-figure-2-block-1" class="nav-link" data-scroll-target="#representative-test-tiles-s3-model-reduction-figure-2-block-1">Representative test tiles (S3 — model reduction; Figure 2, Block 1)</a></li>
-  <li><a href="#adaptive-segmentation-and-scale-discovery-s3-figure-2-block-2a" id="toc-adaptive-segmentation-and-scale-discovery-s3-figure-2-block-2a" class="nav-link" data-scroll-target="#adaptive-segmentation-and-scale-discovery-s3-figure-2-block-2a">Adaptive segmentation and scale discovery (S3; Figure 2, Block 2a)</a></li>
-  <li><a href="#segmentation-transfer-and-physiographic-strata-s3-s4-figure-2-blocks-2b-and-3" id="toc-segmentation-transfer-and-physiographic-strata-s3-s4-figure-2-blocks-2b-and-3" class="nav-link" data-scroll-target="#segmentation-transfer-and-physiographic-strata-s3-s4-figure-2-blocks-2b-and-3">Segmentation transfer and physiographic strata (S3 → S4; Figure 2, Blocks 2b and 3)</a></li>
-  <li><a href="#hydrological-context-and-network-optimisation-s4-figure-2-block-4" id="toc-hydrological-context-and-network-optimisation-s4-figure-2-block-4" class="nav-link" data-scroll-target="#hydrological-context-and-network-optimisation-s4-figure-2-block-4">Hydrological context and network optimisation (S4; Figure 2, Block 4)</a></li>
+  <li><a href="#structural-landscape-stratification-s2-s3-block-1" id="toc-structural-landscape-stratification-s2-s3-block-1" class="nav-link" data-scroll-target="#structural-landscape-stratification-s2-s3-block-1">Structural landscape stratification (S2 → S3; Block 1)</a></li>
+  <li><a href="#representative-test-tiles-s3-model-reduction-block-1" id="toc-representative-test-tiles-s3-model-reduction-block-1" class="nav-link" data-scroll-target="#representative-test-tiles-s3-model-reduction-block-1">Representative test tiles (S3 — model reduction; Block 1)</a></li>
+  <li><a href="#adaptive-segmentation-and-scale-discovery-s3-block-2a" id="toc-adaptive-segmentation-and-scale-discovery-s3-block-2a" class="nav-link" data-scroll-target="#adaptive-segmentation-and-scale-discovery-s3-block-2a">Adaptive segmentation and scale discovery (S3; Block 2a)</a></li>
+  <li><a href="#segmentation-transfer-and-physiographic-strata-s3-s4-blocks-2b-and-3" id="toc-segmentation-transfer-and-physiographic-strata-s3-s4-blocks-2b-and-3" class="nav-link" data-scroll-target="#segmentation-transfer-and-physiographic-strata-s3-s4-blocks-2b-and-3">Segmentation transfer and physiographic strata (S3 → S4; Blocks 2b and 3)</a></li>
+  <li><a href="#hydrological-context-and-network-optimisation-s4-block-4" id="toc-hydrological-context-and-network-optimisation-s4-block-4" class="nav-link" data-scroll-target="#hydrological-context-and-network-optimisation-s4-block-4">Hydrological context and network optimisation (S4; Block 4)</a></li>
   <li><a href="#segment-based-pattern-and-process-stratification-and-station-candidate-derivation-s4" id="toc-segment-based-pattern-and-process-stratification-and-station-candidate-derivation-s4" class="nav-link" data-scroll-target="#segment-based-pattern-and-process-stratification-and-station-candidate-derivation-s4">Segment-based Pattern and Process Stratification and Station Candidate Derivation (S4)</a></li>
   <li><a href="#stability-sensitivity-and-transferability-s5" id="toc-stability-sensitivity-and-transferability-s5" class="nav-link" data-scroll-target="#stability-sensitivity-and-transferability-s5">Stability, sensitivity, and transferability (S5)</a></li>
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="reader_ws-09.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="reader_ws-09a.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -407,70 +409,145 @@ background-size: cover;
 
 
 
+<section id="spatial-units-process-logic-and-scale-theoretical-grounding-and-epistemic-recursion" class="level2">
+<h2 class="anchored" data-anchor-id="spatial-units-process-logic-and-scale-theoretical-grounding-and-epistemic-recursion">Spatial units, process logic, and scale: theoretical grounding and epistemic recursion</h2>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Why complexity explodes here (and why that is normal)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Why complexity explodes here (and why that is normal)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At this point, the reader may feel as if complexity suddenly increases rather than decreases. This is not a stylistic accident, and it is not a failure of the framework. It is the normal consequence of moving from <em>spatial representation</em> to <em>process claims</em>.</p>
+<p>Up to this point, many modelling choices can be framed as technical: segmentation quality, stability, interpretability, reproducibility. The moment HRU/EFU logic, connectivity constraints, and scale–process mappings enter the argument, the same choices become epistemic. A segment is no longer “just a unit”; it becomes a candidate for a functional claim. A proxy is no longer “just a variable”; it becomes a hypothesis about mechanism. And the catchment is no longer “just an overlay”; it becomes a constraint on what can meaningfully aggregate, propagate, and be evaluated.</p>
+<p>This shift forces an explicit <strong>recursive design logic</strong>. Later steps do not merely consume earlier outputs; they retroactively define what the earlier steps were <em>for</em>. If process strata fail to produce interpretable or transferable patterns, this is not simply an optimisation problem — it can indicate that the segmentation scale, the attribution set, or the HRU/EFU interpretation layer was conceptually mis-specified. In other words: once process logic is taken seriously, the workflow cannot remain a linear pipeline.</p>
+<p>At the same time, the response to this necessary recursion is not to increase modelling breadth indefinitely. Scientific progress typically increases complexity locally while tightening focus globally. For network design, this means that recursion must be paired with explicit targeting: which precipitation signal, at which spatial and temporal scale, for which specific process linkage, and for which decision criterion. Only under such focus can the framework use recursion to reduce ambiguity rather than amplify it.</p>
+</div>
+</div>
+<p>Any monitoring-network design implicitly commits to a spatial ontology: measurements are assumed to represent <em>something</em> — a spatial unit, a functional configuration, or a process regime. In hydrology, this commitment is often left implicit, although it fundamentally determines what kind of information a network can resolve and what remains structurally invisible <span class="citation" data-cites="Winter2001 Wagener2007">(<a href="#ref-Winter2001" role="doc-biblioref">Winter 2001</a>; <a href="#ref-Wagener2007" role="doc-biblioref">Wagener et al. 2007</a>)</span>.</p>
+<p>Three families of spatial units dominate hydrological practice and provide complementary but incomplete representations of hydrologic space.</p>
+<p><strong>Catchments and subbasins</strong> encode lateral connectivity, routing, and mass balance by construction. They therefore constitute the canonical aggregation units for discharge prediction and for network design approaches that optimize outlet performance <span class="citation" data-cites="Mishra2009 Alfonso2010 Samuel2013">(<a href="#ref-Mishra2009" role="doc-biblioref">Mishra and Coulibaly 2009</a>; <a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>; <a href="#ref-Samuel2013" role="doc-biblioref">Samuel 2013</a>)</span>. Their strength is topological consistency; their weakness is conceptual: catchments are rarely internally homogeneous with respect to runoff generation, storage dynamics, or threshold behaviour, even at small spatial extents <span class="citation" data-cites="Wagener2007 Sawicz2011">(<a href="#ref-Wagener2007" role="doc-biblioref">Wagener et al. 2007</a>; <a href="#ref-Sawicz2011" role="doc-biblioref">Sawicz et al. 2011</a>)</span>. In practice, unresolved internal heterogeneity is often absorbed through catchment-specific calibration, producing equifinality and weak identifiability, where acceptable outlet fits coexist with structurally implausible parameterizations (“right answers for the wrong reasons”) <span class="citation" data-cites="BevenBinley1992 Beven2006 LiuGupta2007 Kelleher2017">(<a href="#ref-BevenBinley1992" role="doc-biblioref">Beven and Binley 1992</a>; <a href="#ref-Beven2006" role="doc-biblioref">Beven 2006</a>; <a href="#ref-LiuGupta2007" role="doc-biblioref">Liu and Gupta 2007</a>; <a href="#ref-Kelleher2017" role="doc-biblioref">Kelleher, McGlynn, and Wagener 2017</a>)</span>.</p>
+<p><strong>Hydrologic Response Units (HRUs)</strong> were introduced to explicitly address this limitation by subdividing catchments into GIS-derived response patches based on terrain, soils, and land cover <span class="citation" data-cites="Flugel1995">(<a href="#ref-Flugel1995" role="doc-biblioref">Flügel 1995</a>)</span>. HRUs improve within-catchment differentiation and interpretability, but they remain primarily cartographic constructs: connectivity and lateral interaction are usually inherited from the surrounding subbasin structure rather than encoded in the units themselves.</p>
+<p><strong>Elementary or functional units (EFUs)</strong> generalize the HRU logic toward explicitly process-organized and often hierarchical entities. Rather than representing spatial similarity alone, EFUs are intended to correspond to functional configurations in which dominant mechanisms are expected to operate and to be observable (e.g., hillslope elements, interfaces, threshold-controlled source areas) <span class="citation" data-cites="Zehe2014">(<a href="#ref-Zehe2014" role="doc-biblioref">Zehe et al. 2014</a>)</span>. EFUs thus shift the unit concept from spatial partitioning toward mechanistic expectation and hypothesis testing.</p>
+<p>In parallel, hydrologic landscape classifications and regionalizations pursue reproducible typologies across larger extents by grouping landscapes according to physiographic and climatic controls that co-vary with hydrologic response <span class="citation" data-cites="Winter2001 Wolock2004 Gharari2011">(<a href="#ref-Winter2001" role="doc-biblioref">Winter 2001</a>; <a href="#ref-Wolock2004" role="doc-biblioref">Wolock, Winter, and McMahon 2004</a>; <a href="#ref-Gharari2011" role="doc-biblioref">Gharari et al. 2011</a>)</span>. These approaches emphasize functional similarity across space rather than local routing structure, further reinforcing the notion of hydrologic space as a set of repeatable functional settings.</p>
+<p>From the spatial-analysis perspective, adaptive segmentation and regionalization provide <strong>data-driven, scale-controlled spatial units</strong> with quantitative quality assessment and reproducibility <span class="citation" data-cites="Blaschke2010 Dragut2014 Nowosad2022">(<a href="#ref-Blaschke2010" role="doc-biblioref">Blaschke 2010</a>; <a href="#ref-Dragut2014" role="doc-biblioref">Drăguţ et al. 2014</a>; <a href="#ref-Nowosad2022" role="doc-biblioref">Nowosad and Stepinski 2022</a>)</span>. Conceptually, this is closely aligned with the HRU/EFU rationale, but without inherent hydrological semantics or connectivity constraints.</p>
+<p>None of these unit families alone is sufficient for measurement-network design aimed at resolving process–scale relationships. Catchments preserve connectivity but obscure internal heterogeneity; HRUs and EFUs represent heterogeneity and process expectations but weakly encode routing; segmentation provides reproducible scale control but lacks hydrological meaning unless explicitly coupled. A hybrid representation is therefore required in which unit concepts are combined without conflating their epistemic roles.</p>
+<section id="structureprocess-coupling-and-the-mediating-role-of-connectivity" class="level3">
+<h3 class="anchored" data-anchor-id="structureprocess-coupling-and-the-mediating-role-of-connectivity">Structure–process coupling and the mediating role of connectivity</h3>
+<p>Landscape structure constrains hydrological processes by shaping energy balance, storage capacity, flow pathways, and threshold behaviour <span class="citation" data-cites="Winter2001 Zehe2014">(<a href="#ref-Winter2001" role="doc-biblioref">Winter 2001</a>; <a href="#ref-Zehe2014" role="doc-biblioref">Zehe et al. 2014</a>)</span>. Conversely, hydrological processes reorganize effective structure through transient connectivity, preferential flow paths, and event-dependent activation of landscape elements. Purely structural discretizations capture spatial similarity but do not guarantee process relevance. Purely process-oriented units presuppose mechanistic knowledge that may not be directly observable or transferable.</p>
+<p>Connectivity mediates between these domains. Drainage topology and network position determine how local process expressions propagate and aggregate. Unit systems that ignore connectivity struggle to represent interactions such as hillslope–riparian coupling or threshold-controlled source areas, motivating recent attempts to reintroduce landscape routing concepts into unit-based models <span class="citation" data-cites="Wagner2022">(<a href="#ref-Wagner2022" role="doc-biblioref">Wagner et al. 2022</a>)</span>.</p>
+<p>In the proposed framework, segmentation provides controlled structural granularity, HRU/EFU logic provides functional interpretation, and catchment topology constrains admissible aggregation and information flow. Connectivity is therefore treated as a structural constraint on admissible unit combinations rather than as a decorative overlay.</p>
+</section>
+<section id="scale-as-an-explicit-design-variable" class="level3">
+<h3 class="anchored" data-anchor-id="scale-as-an-explicit-design-variable">Scale as an explicit design variable</h3>
+<p>Scale is not a single quantity but a family of interacting dimensions:</p>
+<ul>
+<li><strong>Measurement scale</strong> (sensor footprint and temporal integration),</li>
+<li><strong>Field scale</strong> (spatial correlation and variability of precipitation and forcing),</li>
+<li><strong>Process scale</strong> (characteristic extent of dominant mechanisms),</li>
+<li><strong>Aggregation scale</strong> (domain of evaluation and routing).</li>
+</ul>
+<p>Hydrological misinterpretation often arises when these scales are implicitly conflated <span class="citation" data-cites="Wagener2007 Sawicz2011">(<a href="#ref-Wagener2007" role="doc-biblioref">Wagener et al. 2007</a>; <a href="#ref-Sawicz2011" role="doc-biblioref">Sawicz et al. 2011</a>)</span>. Segmentation primarily controls structural and field-scale representation. HRU/EFU concepts relate these representations to hypothesized process scales. Catchments define aggregation scale and connectivity constraints.</p>
+<p>Rather than attempting to identify a single “correct” scale, the framework explicitly maps segmentation-derived structural scales onto process hypotheses and evaluates their stability and transferability.</p>
+</section>
+<section id="epistemic-recursion-and-didactic-implication" class="level3">
+<h3 class="anchored" data-anchor-id="epistemic-recursion-and-didactic-implication">Epistemic recursion and didactic implication</h3>
+<p>At this point, the workflow logic deliberately loops back onto its own conceptual foundations. The didactic meta-model and the concrete implementation pipeline initially serve as scaffolding to prevent methodological overload and to make abstraction steps explicit. However, once the operational workflow is understood, it becomes necessary to re-enter the theoretical layer: spatial units, process assumptions, and scale choices must now be critically examined and justified.</p>
+<p>For students, this recursion marks the transition from procedural execution to conceptual responsibility. Initial project designs, which may have treated segmentation, stratification, and optimisation as technical steps, must now be revisited in light of hydrological unit theory, process logic, and scale coupling. The framework therefore functions not only as a workflow template, but as an instrument for reflective model critique and redesign.</p>
+<p>This recursive coupling between theory, abstraction, and implementation is intentional and constitutes a central learning objective of the project-based format.</p>
+</section>
+</section>
 <section id="conceptual-background-and-problem-framing-s0" class="level2">
 <h2 class="anchored" data-anchor-id="conceptual-background-and-problem-framing-s0">Conceptual background and problem framing (S0)</h2>
-<p>The conceptualization of networks for the purpose of rainfall and hydrometric monitoring constitutes, in essence, a <strong>spatial design problem</strong> <em>of</em> considerable complexity. Landscapes are inherently heterogeneous, monitoring resources are limited, and the target variables of interest—precipitation, runoff, and discharge—are governed by interacting processes operating across multiple spatial scales. Therefore, station placement cannot be reduced to uniform coverage or local optimisation; rather, it must maximize information gain with respect to hydrological response.</p>
+<p>The conceptualization of networks for the purpose of rainfall and hydrometric monitoring constitutes, in essence, a <strong>spatial design problem</strong> of considerable complexity. Landscapes are heterogeneous, monitoring resources are limited, and the target variables of interest—precipitation, runoff, and discharge—are governed by interacting processes operating across multiple spatial scales. Therefore, station placement cannot be reduced to uniform coverage or local optimisation; rather, it must maximize information gain with respect to hydrological response.</p>
 <p>Many existing approaches optimize station locations directly within predefined spatial units, such as grids or catchments <span class="citation" data-cites="Mishra2009 Alfonso2010 Samuel2013">(<a href="#ref-Mishra2009" role="doc-biblioref">Mishra and Coulibaly 2009</a>; <a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>; <a href="#ref-Samuel2013" role="doc-biblioref">Samuel 2013</a>)</span>. While these approaches are hydrologically intuitive, they embed <strong>implicit</strong> assumptions about spatial scale and internal homogeneity, which are rarely satisfied in real landscapes and process patterns <span class="citation" data-cites="Wagener2007">(<a href="#ref-Wagener2007" role="doc-biblioref">Wagener et al. 2007</a>)</span>.</p>
-<p>In order to maintain transparency regarding the assumptions underlying the model, this approach subdivides the modeling task into two complementary frames:</p>
+<p>In order to maintain transparency regarding the assumptions underlying the model, this thesis separates the overall problem into two complementary frames:</p>
 <ol type="1">
-<li>The first element is a <strong>didactic meta-model</strong> that makes abstraction steps and epistemic roles explicit (<a href="#figure-1">see figure 1</a>).<br>
+<li>A <strong>didactic meta-model</strong> that makes abstraction steps and epistemic roles explicit (<a href="#figure-1">see figure 1</a>).<br>
 </li>
-<li>The second component is the Concrete Burgwald implementation pipeline, which utilizes these steps in a reproducible GIS/RS workflow (<a href="#figure-2">see figure 2</a>).</li>
+<li>A <strong>concrete implementation pipeline</strong> (Burgwald) that operationalizes these steps in a reproducible GIS/RS workflow (<a href="#figure-2">see figure 2</a>).</li>
 </ol>
 <p>This staged reduction of spatial complexity ensures that scale decisions remain explicit and that optimization operates on process-relevant spatial units rather than raw spatial partitions.</p>
+</section>
+<section id="conceptual-background-and-problem-framing-s0-1" class="level2">
+<h2 class="anchored" data-anchor-id="conceptual-background-and-problem-framing-s0-1">Conceptual background and problem framing (S0)</h2>
+<p>The conceptualization of networks for rainfall and hydrometric monitoring constitutes a <strong>spatial design problem</strong> under strong structural and epistemic constraints. Landscapes are heterogeneous, monitoring resources are limited, and the target variables — precipitation, runoff, and discharge — are governed by interacting processes operating across multiple spatial scales. Station placement therefore cannot be reduced to uniform coverage or purely local optimisation, but must maximize information with respect to identifiable hydrological mechanisms and their spatial organization.</p>
+<p>Most existing network-design approaches optimize station locations within predefined spatial units such as grids or catchments <span class="citation" data-cites="Mishra2009 Alfonso2010 Samuel2013">(<a href="#ref-Mishra2009" role="doc-biblioref">Mishra and Coulibaly 2009</a>; <a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>; <a href="#ref-Samuel2013" role="doc-biblioref">Samuel 2013</a>)</span>. While hydrologically intuitive, these approaches embed implicit assumptions about scale, homogeneity, and process aggregation that are rarely satisfied in real landscapes <span class="citation" data-cites="Wagener2007">(<a href="#ref-Wagener2007" role="doc-biblioref">Wagener et al. 2007</a>)</span>. In particular, outlet-oriented optimisation risks suppressing internal process diversity through calibration effects and equifinality <span class="citation" data-cites="BevenBinley1992 Beven2006">(<a href="#ref-BevenBinley1992" role="doc-biblioref">Beven and Binley 1992</a>; <a href="#ref-Beven2006" role="doc-biblioref">Beven 2006</a>)</span>.</p>
+<p>To avoid collapsing these assumptions into hidden technical choices, the framework explicitly separates <strong>conceptual reasoning, structural abstraction, and operational optimisation</strong>. This separation is implemented through two complementary representations:</p>
+<ol type="1">
+<li>A <strong>didactic meta-model</strong> that formalizes abstraction spaces and epistemic roles (<a href="#figure-1">Figure 1</a>).<br>
+</li>
+<li>A <strong>concrete implementation pipeline</strong> (Burgwald) that operationalizes these abstractions in a reproducible workflow (<a href="#figure-2">Figure 2</a>).</li>
+</ol>
+<p>Crucially, these representations are not linear recipes but elements of a <strong>recursive design logic</strong>: operational choices must repeatedly be confronted with their theoretical implications regarding spatial units, processes, and scale.</p>
 <section id="conceptual-modelling-spaces-s0s5" class="level3">
 <h3 class="anchored" data-anchor-id="conceptual-modelling-spaces-s0s5">Conceptual modelling spaces (S0–S5)</h3>
-<p>The workflow is structured into a sequence of modeling spaces. Each transition constitutes a deliberate abstraction step, whereby complexity is reduced and comparability is enhanced, though assumptions are introduced and information is lost.</p>
+<p>The modelling framework is structured into a sequence of abstraction spaces. Each transition reduces complexity while introducing explicit assumptions that remain open to critique and revision.</p>
 <ul>
-<li>S0 — Problem Space: This category encompasses design objectives, relevant scales, and decision criteria.</li>
-<li>S1 — Observation Space: The reproducible construction of spatial observations from heterogeneous data sources is paramount.</li>
-<li>S2 — Feature Space: The derivation of abstract descriptors and process proxies is a critical component of the analysis.</li>
-<li>S3 — Structural Space: Segmentation and stratification into discrete spatial units are the defining characteristics of structural space.</li>
-<li>S4 — Decision Space: This section is devoted to the optimization and trade-off analysis for station placement.</li>
-<li>S5 — Validation Space: Stability, sensitivity, robustness, and transferability analysis are critical components of this space.</li>
+<li><strong>S0 — Problem Space</strong>: Design objectives, target processes, relevant scales, evaluation criteria.</li>
+<li><strong>S1 — Observation Space</strong>: Reproducible construction of spatial observations from heterogeneous sources.</li>
+<li><strong>S2 — Feature Space</strong>: Derivation of abstract descriptors and process proxies.</li>
+<li><strong>S3 — Structural Space</strong>: Construction of spatial units through segmentation and stratification.</li>
+<li><strong>S4 — Decision Space</strong>: Candidate generation, constraint formulation, and optimisation.</li>
+<li><strong>S5 — Validation Space</strong>: Stability, sensitivity, robustness, and transferability analysis.</li>
 </ul>
 <div id="figure-1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<p><img src="../images/reader9-1.png" class="img-fluid figure-img"></p>
-<figcaption>As illustrated in Figure 1, the didactic meta-model of the workflow is depicted as modeling spaces (S0–S5). The diagram emphasizes epistemic roles and abstraction steps rather than implementation details. In instances where sections refer to (S1–S5), they are referring to the corresponding abstraction spaces in this meta-model.</figcaption>
+<p><img src="../images/reader9-1-didactic.drawio.svg" class="img-fluid figure-img"></p>
+<figcaption>Didactic meta-model of abstraction spaces (S0–S5) and epistemic roles.</figcaption>
 </figure>
 </div>
+<p>The purpose of this meta-model is not methodological prescription, but epistemic transparency: it exposes where assumptions enter the modelling chain and where alternative choices remain admissible.</p>
 </section>
 <section id="concrete-implementation-pipeline-burgwald" class="level3">
 <h3 class="anchored" data-anchor-id="concrete-implementation-pipeline-burgwald">Concrete implementation pipeline (Burgwald)</h3>
-<p>The Concrete Implementation Pipeline (Burgwald) is a system that has been developed for the purpose of facilitating the implementation of concrete projects.</p>
-<p>The Burgwald workflow implements the same abstraction logic in a concrete processing chain. In contrast to the didactic meta-model (Figure 1), the concrete pipeline makes explicit the following: - the datasets that enter the process - the location of segmentation exploration and fixation - the derivation of process strata - the location of optimization</p>
+<p>The Burgwald pipeline implements the same abstraction logic in a concrete processing chain. In contrast to the meta-model, it makes explicit:</p>
+<ul>
+<li>which datasets enter the workflow,</li>
+<li>where segmentation is explored and fixed,</li>
+<li>how process-relevant strata are derived,</li>
+<li>where optimisation and validation occur.</li>
+</ul>
 <div id="figure-2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<p><img src="../images/reader9-2.png" class="img-fluid figure-img"></p>
-<figcaption>Fig. 2: As illustrated in Figure 2, the Concrete Burgwald implementation pipeline is comprised of a series of interconnected components. As illustrated in Figure 1, the blocks are analogous to the abstraction stages enumerated below: S1 (input data), S2→S3 (structural stratification), S3 (segmentation discovery and transfer), S3→S4 (physiographic process stratification), and S4 (network optimization).</figcaption>
+<p><img src="../images/reader9_2.svg" class="img-fluid figure-img"></p>
+<figcaption>Concrete Burgwald implementation pipeline mapped onto abstraction spaces.</figcaption>
 </figure>
 </div>
+<p>The pipeline is intentionally modular: individual blocks can be replaced or refined without collapsing the overall epistemic structure. This modularity enables the recursive re-entry of theoretical considerations into technical design decisions.</p>
 </section>
 </section>
-<section id="process-based-versus-structural-and-functional-design" class="level2">
-<h2 class="anchored" data-anchor-id="process-based-versus-structural-and-functional-design">Process based versus structural and functional design</h2>
-<p>Catchment-based hydrological thinking is fundamentally <strong>connectivity-first</strong>: watersheds and subbasins are delineated by drainage topology and therefore encode routing, flow accumulation, and outlet mass balance by construction. This makes them the canonical aggregation units for discharge prediction and for network-design approaches that optimize performance at the outlet. The cost of that convenience is conceptual: catchments are rarely internally homogeneous in terms of runoff generation, storage–release dynamics, or dominant flow paths, even at small spatial extents <span class="citation" data-cites="Wagener2007 Sawicz2011">(<a href="#ref-Wagener2007" role="doc-biblioref">Wagener et al. 2007</a>; <a href="#ref-Sawicz2011" role="doc-biblioref">Sawicz et al. 2011</a>)</span>. In practice, this internal heterogeneity is often “handled” indirectly through <strong>catchment-specific calibration</strong>, where parameter sets are tuned to match outlet signals despite unresolved within-catchment variability. The resulting equifinality and weak identifiability mean that calibration can compensate for structural and process-representation errors—producing acceptable outlet fits while decoupling inferred process parameters from observable landscape structure (“right answers for the wrong reasons”) <span class="citation" data-cites="BevenBinley1992 Beven2006 LiuGupta2007">(<a href="#ref-BevenBinley1992" role="doc-biblioref">Beven and Binley 1992</a>; <a href="#ref-Beven2006" role="doc-biblioref">Beven 2006</a>; <a href="#ref-LiuGupta2007" role="doc-biblioref">Liu and Gupta 2007</a>)</span>. From a network-design perspective, this creates a systematic risk: designs that are optimal with respect to outlet criteria may remain <strong>insensitive to internal process diversity</strong> and therefore under-inform the very mechanisms that govern transferability across events, seasons, or neighbouring basins.</p>
-<p>To address internal heterogeneity, hydrology has repeatedly introduced alternative spatial units that are closer to <strong>process organization</strong> than to drainage topology. The classic operational form are HRUs, i.e., GIS-derived response patches constructed from combinations of terrain, soils, and land cover, intended to represent internally similar hydrological behaviour within a subbasin <span class="citation" data-cites="Flugel1995">(<a href="#ref-Flugel1995" role="doc-biblioref">Flügel 1995</a>)</span>. More recent conceptual developments generalize this logic toward explicitly <strong>functional units</strong> (EFUs) and hillslope-embedded hierarchies, where the unit concept is tied to dominant process configurations and to where/when specific mechanisms should be observable <span class="citation" data-cites="Zehe2014">(<a href="#ref-Zehe2014" role="doc-biblioref">Zehe et al. 2014</a>)</span>. In parallel, hydrologic landscape classifications and regions seek reproducible typologies across larger extents by grouping landscapes according to physiographic and climatic controls that co-vary with hydrologic response <span class="citation" data-cites="Winter2001 Wolock2004 Gharari2011">(<a href="#ref-Winter2001" role="doc-biblioref">Winter 2001</a>; <a href="#ref-Wolock2004" role="doc-biblioref">Wolock, Winter, and McMahon 2004</a>; <a href="#ref-Gharari2011" role="doc-biblioref">Gharari et al. 2011</a>)</span>. These approaches make a strong epistemic move: they treat “hydrologic space” as a set of <strong>repeatable functional settings</strong>, not merely as a nested drainage container. However, most of these unit systems remain either (i) only weakly connected to explicit lateral connectivity (HRUs as patches without flow topology), or (ii) connectivity-aware mainly at the level of the catchment/subbasin skeleton rather than within the internal mosaic. This is precisely why unit-based modelling has historically struggled to represent process interactions that are mediated by connected pathways (e.g., hillslope–riparian coupling, preferential source areas, or threshold connectivity), motivating newer model structures that reintroduce landscape routing concepts (e.g., landscape units in SWAT+ discussions) <span class="citation" data-cites="Wagner2022">(<a href="#ref-Wagner2022" role="doc-biblioref">Wagner et al. 2022</a>)</span>.</p>
-<p>In the remote-sensing and spatial-analysis domain, segmentation/regionalization adds a complementary capability: it provides <strong>data-driven, scale-controlled</strong> spatial units that can be made robust and reproducible when segmentation quality is assessed quantitatively <span class="citation" data-cites="Blaschke2010 Dragut2014 Nowosad2022">(<a href="#ref-Blaschke2010" role="doc-biblioref">Blaschke 2010</a>; <a href="#ref-Dragut2014" role="doc-biblioref">Drăguţ et al. 2014</a>; <a href="#ref-Nowosad2022" role="doc-biblioref">Nowosad and Stepinski 2022</a>)</span>. Conceptually, this is very close to the HRU/functional-unit rationale—but with modern tools for scale regulation, quality control, and reproducibility. The hydrological limitation is also clear: segments, on their own, do not encode the drainage hierarchy or lateral connectivity and therefore cannot substitute catchments as routing/aggregation units. Used in isolation, they risk missing the very pathway structure that makes hydrology hydrology.</p>
-<p><strong>Gap.</strong> Across these strands, the literature offers strong building blocks—topological catchments for connectivity, functional/response units for within-catchment heterogeneity, and quantitative segmentation for reproducible scale control—but it largely lacks a unified methodology that (1) derives spatial units in a <strong>process-relevant, data-driven</strong> manner, (2) explicitly respects <strong>hydrological connectivity</strong>, and (3) translates this hybrid representation into <strong>measurement network design</strong> targeted at specific scale–process relationships rather than only outlet performance. The missing piece is not “another unit concept”, but an operational bridge from unit derivation to <strong>site selection</strong> under explicit scale and process objectives.</p>
-<p><strong>Gain of a hybrid method.</strong> A hybrid design can close this gap by coupling segmentation-based units (to control scale and represent repeatable functional settings across basins) with catchment/network topology (to preserve routing structure and drainage hierarchy). In such a framework, measurement locations are not chosen to “represent a catchment” in the generic sense, nor to “cover segments” blindly, but to <strong>maximize representativeness of process settings at defined scales while remaining embedded in the connected drainage structure</strong>. The practical payoff is twofold: (i) improved internal observability and constraint of process hypotheses (reducing equifinality by placing observations where they actually disambiguate mechanisms), and (ii) a principled pathway to transfer network logic across catchments by matching <strong>analogous functional segments</strong> rather than relying on outlet-level calibration alone.</p>
-<section id="catchment-based-design" class="level3">
-<h3 class="anchored" data-anchor-id="catchment-based-design">Catchment-based design</h3>
-<p>Catchments are the generic spatial units of hydrology. These elements are critical in the encoding of drainage connectivity, flow accumulation, and mass balance, thereby establishing the foundation for numerous network design methodologies. <span class="citation" data-cites="Mishra2009 Alfonso2010">(<a href="#ref-Mishra2009" role="doc-biblioref">Mishra and Coulibaly 2009</a>; <a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>)</span>. Optimization within catchments establishes a direct correlation between rainfall measurements and discharge observations at outlets.</p>
-<p>However, catchment-based designs presuppose the internal homogeneity of catchments. Empirical and comparative hydrology studies demonstrate that even small catchments often exhibit multiple dominant runoff-generation mechanisms <span class="citation" data-cites="Wagener2007 Sawicz2011">(<a href="#ref-Wagener2007" role="doc-biblioref">Wagener et al. 2007</a>; <a href="#ref-Sawicz2011" role="doc-biblioref">Sawicz et al. 2011</a>)</span>. Consequently, station placement optimized at the catchment level may be hydrologically relevant at the outlet but <strong>spatially blind</strong> to internal process variability. In practice, this mismatch is typically absorbed through catchment-specific model calibration: parameter sets are tuned individually to reproduce outlet discharge despite unresolved within-catchment heterogeneity. Such calibration can yield equifinal (or weakly identifiable) parameterizations that fit outlet responses while compensating for structural and process-representation errors, effectively decoupling inferred “process” parameters from observable catchment structure and internal dynamics (“right answers for the wrong reasons”)<span class="citation" data-cites="BevenBinley1992 Beven2006 LiuGupta2007 Kelleher2017">(<a href="#ref-BevenBinley1992" role="doc-biblioref">Beven and Binley 1992</a>; <a href="#ref-Beven2006" role="doc-biblioref">Beven 2006</a>; <a href="#ref-LiuGupta2007" role="doc-biblioref">Liu and Gupta 2007</a>; <a href="#ref-Kelleher2017" role="doc-biblioref">Kelleher, McGlynn, and Wagener 2017</a>)</span></p>
+<section id="hydrological-unit-concepts-and-their-operational-roles" class="level2">
+<h2 class="anchored" data-anchor-id="hydrological-unit-concepts-and-their-operational-roles">Hydrological unit concepts and their operational roles</h2>
+<p>Spatial units serve different epistemic functions within the framework and must not be conflated.</p>
+<ul>
+<li><strong>Catchments</strong> encode connectivity and aggregation logic and therefore constrain admissible signal propagation and evaluation.</li>
+<li><strong>HRUs</strong> represent internally similar response patches within catchments <span class="citation" data-cites="Flugel1995">(<a href="#ref-Flugel1995" role="doc-biblioref">Flügel 1995</a>)</span>.</li>
+<li><strong>EFUs</strong> generalize HRUs toward explicitly process-organized functional entities <span class="citation" data-cites="Zehe2014">(<a href="#ref-Zehe2014" role="doc-biblioref">Zehe et al. 2014</a>)</span>.</li>
+<li><strong>Segments</strong> provide scale-controlled, data-driven structural units with quantitative reproducibility <span class="citation" data-cites="Blaschke2010 Dragut2014 Nowosad2022">(<a href="#ref-Blaschke2010" role="doc-biblioref">Blaschke 2010</a>; <a href="#ref-Dragut2014" role="doc-biblioref">Drăguţ et al. 2014</a>; <a href="#ref-Nowosad2022" role="doc-biblioref">Nowosad and Stepinski 2022</a>)</span>.</li>
+</ul>
+<p>Within the workflow, these unit concepts occupy distinct roles rather than competing alternatives:</p>
+<ul>
+<li>Segments provide the <strong>structural substrate</strong> in S3.</li>
+<li>HRU/EFU logic provides the <strong>functional interpretation layer</strong> that maps segments to process hypotheses in S3→S4.</li>
+<li>Catchments impose <strong>connectivity constraints and aggregation logic</strong> in S4/S5.</li>
+</ul>
+<p>This separation allows hybridization without epistemic collapse: structural regularity, functional meaning, and network topology remain explicitly distinguishable.</p>
 </section>
-<section id="segment-based-design" class="level3">
-<h3 class="anchored" data-anchor-id="segment-based-design">Segment-based design</h3>
-<p>Segment-based approaches are predicated on the derivation of data-driven spatial units through the implementation of adaptive segmentation or regionalization. The objective of these units is to be internally homogeneous and externally distinct with respect to selected variables. In the domain of remote sensing and spatial analysis, the issue of segmentation has historically been regarded as a scale-space problem rather than a classification task <span class="citation" data-cites="Blaschke2010 Dragut2014">(<a href="#ref-Blaschke2010" role="doc-biblioref">Blaschke 2010</a>; <a href="#ref-Dragut2014" role="doc-biblioref">Drăguţ et al. 2014</a>)</span>.</p>
-<p>Recent research on adaptive regionalization and supercells indicates that such units can be both robust and reproducible when segmentation quality is evaluated quantitatively <span class="citation" data-cites="Nowosad2022">(<a href="#ref-Nowosad2022" role="doc-biblioref">Nowosad and Stepinski 2022</a>)</span>. Segment-based designs enable precise regulation of spatial scale and facilitate the representation of analogous process settings across disparate catchments.</p>
-<p>Concurrently, segments lack the capacity to encode hydrological connectivity, thereby precluding their utilization as substitutes for catchments as aggregation units. When employed in isolation, segment-based designs have the potential to overlook critical factors such as flow paths and the established drainage hierarchy.</p>
-</section>
-<section id="hybrid-approach" class="level3">
-<h3 class="anchored" data-anchor-id="hybrid-approach">Hybrid approach</h3>
-<p>This thesis adopts a hybrid position, utilizing segments to symbolize spatial heterogeneity and ascertain salient scales, while employing catchments and stream networks for hydrological aggregation and evaluation. This sequencing aligns with the calls in the field of hydrology to decouple spatial representation from hydrological response analysis <span class="citation" data-cites="Winter2001 Wagener2007">(<a href="#ref-Winter2001" role="doc-biblioref">Winter 2001</a>; <a href="#ref-Wagener2007" role="doc-biblioref">Wagener et al. 2007</a>)</span>.</p>
-<p>In the context of modeling space, segments function within the structural representation domain (S3), while catchments operate within the hydrological aggregation domain (S4/S5). Their coupling preserves both spatial heterogeneity and process connectivity without conflating epistemic roles.</p>
-</section>
+<section id="processstructurescale-synthesis-design-logic" class="level2">
+<h2 class="anchored" data-anchor-id="processstructurescale-synthesis-design-logic">Process–structure–scale synthesis (design logic)</h2>
+<p>Hydrological processes are conditioned by landscape structure but cannot be reduced to it. Structural proxies (topography, vegetation, exposure, soils) constrain energy balance, storage capacity, and connectivity patterns <span class="citation" data-cites="Winter2001 Zehe2014">(<a href="#ref-Winter2001" role="doc-biblioref">Winter 2001</a>; <a href="#ref-Zehe2014" role="doc-biblioref">Zehe et al. 2014</a>)</span>. Conversely, hydrological processes reorganize effective structure through transient connectivity and threshold activation.</p>
+<p>Segmentation captures structural similarity and scale regularization but is agnostic to process meaning. HRU/EFU concepts embed mechanistic expectations but require spatial instantiation and scale control. Catchments preserve connectivity but suppress internal differentiation.</p>
+<p>The hybrid framework explicitly couples these dimensions:</p>
+<ul>
+<li><strong>Structure → Process</strong>: segments are interpreted through HRU/EFU logic using physiographic predictors and process hypotheses.</li>
+<li><strong>Process → Structure</strong>: process expectations constrain admissible segmentation scales and aggregation choices.</li>
+<li><strong>Connectivity</strong> constrains how structural–functional units can meaningfully interact and propagate signals.</li>
+</ul>
+<p>Scale is treated as an explicit design variable rather than an implicit artifact. Structural scale (segmentation), process scale (HRU/EFU interpretation), measurement scale (sensor footprint), and aggregation scale (catchments) are mapped and tested for compatibility.</p>
 </section>
 <section id="the-methods" class="level2">
 <h2 class="anchored" data-anchor-id="the-methods">The Methods</h2>
@@ -484,34 +561,36 @@ background-size: cover;
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The objective of this workflow is not to compute an “optimal” solution directly from raw space. The process under consideration constructs a sequence of abstractions that progressively transform spatial complexity into a structured decision space. Each modeling layer introduces assumptions that remain transparent and contestable. In the concrete Burgwald workflow (Figure 2), these abstractions are operationalized as blocks (1–4), which are referenced below.</p>
+<p>The workflow does not compute an “optimal” solution directly from raw space. It constructs a sequence of abstractions that progressively transform spatial complexity into a constrained decision space. Each abstraction introduces assumptions that remain explicit and contestable. Recursive revisiting of these assumptions is an intended part of the methodology.</p>
 </div>
 </div>
-<section id="structural-landscape-stratification-s2-s3-figure-2-block-1" class="level3">
-<h3 class="anchored" data-anchor-id="structural-landscape-stratification-s2-s3-figure-2-block-1">Structural landscape stratification (S2 → S3; Figure 2, Block 1)</h3>
+<section id="structural-landscape-stratification-s2-s3-block-1" class="level3">
+<h3 class="anchored" data-anchor-id="structural-landscape-stratification-s2-s3-block-1">Structural landscape stratification (S2 → S3; Block 1)</h3>
 <p>The geographical area under consideration is divided into coarse, fixed spatial tiles. For each tile, structural landscape descriptors are derived from categorical land-cover data, including diversity and entropy-based measures <span class="citation" data-cites="Turner1989 McGarigal2012">(<a href="#ref-Turner1989" role="doc-biblioref">Turner 1989</a>; <a href="#ref-McGarigal2012" role="doc-biblioref">McGarigal, Cushman, and Ene 2012</a>)</span>. These descriptors are intended to characterize landscape structure in an independent manner, that is, as they are not contingent upon physical processes.</p>
 <p>Tiles are grouped into structural strata, which reduces spatial redundancy prior to segmentation and optimization.</p>
 <p>This step deliberately abstracts from physical processes and treats landscape structure as a spatial descriptor, trading physical realism for stability and comparability.</p>
 </section>
-<section id="representative-test-tiles-s3-model-reduction-figure-2-block-1" class="level3">
-<h3 class="anchored" data-anchor-id="representative-test-tiles-s3-model-reduction-figure-2-block-1">Representative test tiles (S3 — model reduction; Figure 2, Block 1)</h3>
+<section id="representative-test-tiles-s3-model-reduction-block-1" class="level3">
+<h3 class="anchored" data-anchor-id="representative-test-tiles-s3-model-reduction-block-1">Representative test tiles (S3 — model reduction; Block 1)</h3>
 <p>Representative test tiles are selected from each structural stratum based on distance-to-centroid criteria. Restricting segmentation experiments to these tiles has been demonstrated to enhance computational efficiency and reproducibility while preserving structural representativeness.</p>
 <p>This approach involves a systematic reduction of the search space, ensuring the preservation of representativeness while enabling the exploration of computation and parameters.</p>
 </section>
-<section id="adaptive-segmentation-and-scale-discovery-s3-figure-2-block-2a" class="level3">
-<h3 class="anchored" data-anchor-id="adaptive-segmentation-and-scale-discovery-s3-figure-2-block-2a">Adaptive segmentation and scale discovery (S3; Figure 2, Block 2a)</h3>
+<section id="adaptive-segmentation-and-scale-discovery-s3-block-2a" class="level3">
+<h3 class="anchored" data-anchor-id="adaptive-segmentation-and-scale-discovery-s3-block-2a">Adaptive segmentation and scale discovery (S3; Block 2a)</h3>
 <p>Adaptive segmentation methods (e.g., mean-shift or supercell-based approaches) are applied to the test tiles across a range of parameter settings. The quality of segmentation is evaluated using quantitative criteria, such as segment size distributions, intra-segment homogeneity, inter-segment contrast, and stability under parameter perturbation <span class="citation" data-cites="Clinton2010 Chen2018">(<a href="#ref-Clinton2010" role="doc-biblioref">Clinton et al. 2010</a>; <a href="#ref-Chen2018" role="doc-biblioref">Chen 2018</a>)</span>.</p>
 <p>In lieu of selecting a solitary optimal scale, the evaluation of segmentation configurations is undertaken in accordance with Pareto-optimal trade-offs.</p>
 <p>Segmentation replaces continuous spatial variability with discrete objects, thereby reducing internal heterogeneity while introducing boundary uncertainty and scale dependency.</p>
 </section>
-<section id="segmentation-transfer-and-physiographic-strata-s3-s4-figure-2-blocks-2b-and-3" class="level3">
-<h3 class="anchored" data-anchor-id="segmentation-transfer-and-physiographic-strata-s3-s4-figure-2-blocks-2b-and-3">Segmentation transfer and physiographic strata (S3 → S4; Figure 2, Blocks 2b and 3)</h3>
+<section id="segmentation-transfer-and-physiographic-strata-s3-s4-blocks-2b-and-3" class="level3">
+<h3 class="anchored" data-anchor-id="segmentation-transfer-and-physiographic-strata-s3-s4-blocks-2b-and-3">Segmentation transfer and physiographic strata (S3 → S4; Blocks 2b and 3)</h3>
 <p>A selected segmentation configuration is transferred wall-to-wall to the full study area (see Figure 2, Block 2b). Once the segmentation has been rectified, it functions as the spatial reference frame for subsequent aggregation and analysis.</p>
 <p>Physiographic attributes such as elevation, terrain position, and vegetation fraction are aggregated per segment and used to derive physiographic process strata (Figure 2, Block 3) <span class="citation" data-cites="Winter2001 Sawicz2011">(<a href="#ref-Winter2001" role="doc-biblioref">Winter 2001</a>; <a href="#ref-Sawicz2011" role="doc-biblioref">Sawicz et al. 2011</a>)</span>.</p>
 <p>This step involves the mapping of structural units into process-relevant strata, whereby pixel-level detail is exchanged for segment-level interpretability and process comparability.</p>
+<p>This aggregation step constitutes the operational entry point for HRU/EFU-style functional interpretation: segments are no longer treated as purely geometric objects, but as candidate functional response entities whose comparability is evaluated across physiographic process proxies.</p>
 </section>
-<section id="hydrological-context-and-network-optimisation-s4-figure-2-block-4" class="level3">
-<h3 class="anchored" data-anchor-id="hydrological-context-and-network-optimisation-s4-figure-2-block-4">Hydrological context and network optimisation (S4; Figure 2, Block 4)</h3>
+<section id="hydrological-context-and-network-optimisation-s4-block-4" class="level3">
+<h3 class="anchored" data-anchor-id="hydrological-context-and-network-optimisation-s4-block-4">Hydrological context and network optimisation (S4; Block 4)</h3>
+<p>Catchment topology therefore acts as a connectivity constraint on admissible candidate combinations rather than merely as an evaluation overlay.</p>
 <p>Physiographic strata are overlaid with watershed boundaries and stream networks characterized by Strahler order <span class="citation" data-cites="Strahler1957">(<a href="#ref-Strahler1957" role="doc-biblioref">Strahler 1957</a>)</span>. Catchments function as aggregation units, thereby facilitating the evaluation of the contributions of distinct strata to runoff at designated outlets.</p>
 <p>Station placement is subsequently optimized using information-theoretic criteria to maximize information gain and minimize redundancy <span class="citation" data-cites="Alfonso2010 Samuel2013 Keum2017">(<a href="#ref-Alfonso2010" role="doc-biblioref">Alfonso 2010</a>; <a href="#ref-Samuel2013" role="doc-biblioref">Samuel 2013</a>; <a href="#ref-Keum2017" role="doc-biblioref">Keum 2017</a>)</span>.</p>
 </section>
@@ -521,6 +600,7 @@ background-size: cover;
 <p>For each segment, information-theoretic landscape metrics (entropy and relative mutual information) are computed to characterize spatial pattern complexity (pattern dimension). Concurrently, physiographic predictors (mean elevation, slope, southness, forest fraction) signify predominant process controls. A seasonal wind exposure indicator, or windwardness, is derived from the terrain aspect and the prevailing wind direction. This indicator is then retained as a descriptive process attribute.</p>
 <p>It is evident that, in consideration of the aforementioned predictors, the development of two distinct stratification systems is warranted: one that is IT-based and another that is physiography-based. These strata are still considered part of the structural representation domain (S3), and their function is to organize segments into comparable process and pattern classes.</p>
 <p>The transition into the decision space (S4) occurs through the derivation of <strong>station candidates</strong>. Within each stratum, representative segments are identified by minimizing multivariate distance to the respective feature-space centroid. The geometric centroids of these representative segments are exported as potential station locations. This procedure reduces the full spatial complexity to a compact yet structurally and process-representative candidate set. This candidate set defines the constrained search space for subsequent optimization and coupling steps (e.g., information gain, uncertainty reduction, hydrological or atmospheric consistency). This separation maintains interpretability while ensuring the optimization problem remains computationally tractable.</p>
+<p>This candidate derivation step operationalizes the hybrid unit logic: segment geometry provides structural stability, HRU/EFU-inspired predictors provide functional interpretability, and catchment topology constrains admissible spatial configurations.</p>
 </section>
 <section id="stability-sensitivity-and-transferability-s5" class="level3">
 <h3 class="anchored" data-anchor-id="stability-sensitivity-and-transferability-s5">Stability, sensitivity, and transferability (S5)</h3>
@@ -528,10 +608,13 @@ background-size: cover;
 <ul>
 <li>The application of perturbations to the segmentation parameter is a subject of considerable interest.</li>
 <li>The utilization of alternative feature abstractions is imperative.</li>
-<li>The following alternative stratification settings are provided for consideration</li>
+<li>The following alternative stratification settings are provided for consideration.</li>
 <li>Furthermore, spatial transfer across subregions is a salient phenomenon that merits consideration.</li>
 </ul>
-<p>The objective of validation is to ensure the stability of the structural representation and the decision outcomes, rather than to determine the existence of a single “correct” spatial partition.</p>
+<p>Validation explicitly targets the stability of structural–functional coupling and the robustness of scale mappings, rather than the existence of a single optimal spatial configuration. Perturbation experiments therefore serve as epistemic stress tests of the underlying unit and process assumptions.</p>
+<p>The framework intentionally closes the loop between theory, abstraction, and implementation. Initial project designs often treat segmentation, stratification, and optimisation as procedural steps. Through recursive confrontation with unit theory (HRUs, EFUs, connectivity) and scale logic, these procedural choices must be re-evaluated and, if necessary, revised.</p>
+<p>For students, this marks the transition from workflow execution to conceptual ownership. Design decisions are no longer justified by technical feasibility alone, but by their coherence with hydrological unit theory, process hypotheses, and scale consistency.</p>
+<p>The didactic meta-model thus functions both as navigational scaffold and as reflective instrument for methodological critique and redesign.</p>
 </section>
 </section>
 <section id="references" class="level2">
@@ -1036,6 +1119,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
   </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reader/reader_ws-08.html" class="pagination-link" aria-label="IT-Based Landscape Stratification for Rain-Gauge Network Design">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">IT-Based Landscape Stratification for Rain-Gauge Network Design</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">

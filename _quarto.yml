@@ -1,7 +1,8 @@
 project:
   type: website
   output-dir: docs/
-
+  preview:
+    watch-inputs: true
   resources:
     - images/**
   render:
@@ -75,7 +76,7 @@ website:
           - reader/reader_ws-06.qmd
           - reader/reader_ws-07.qmd
           - reader/reader_ws-08.qmd
-          - reader/reader_ws-09.qmd
+          - reader/reader_ws-09a.qmd
           # - href: reader/cd-1.qmd
           #   text: Spatial data classification
           # - href: reader/mc_2025_0.qmd
