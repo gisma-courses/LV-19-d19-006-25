@@ -1,50 +1,44 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.2">
   <diagram name="Page-1" id="4-lXOOk_QXh7GzYnUOXl">
-    <mxGraphModel dx="1418" dy="2532" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+    <mxGraphModel dx="1418" dy="1632" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="t1" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=20;fontStyle=1;" value="Burgwald Decision Support: Signatures (S4) → Decisions (S5) → Validation (S6)" vertex="1">
           <mxGeometry height="40" width="1200" x="40" y="20" as="geometry" />
         </mxCell>
-        <mxCell id="s4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#1A73E8;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="S4_signatures&#xa;layer0_segments_attrstack_metrics (gpkg)&#xa;&#xa;Truth source for decision support&#xa;• segment_id + geometry&#xa;• domain distances (*_dist_to_center)&#xa;• strata labels (it_stratum, physio_stratum, …)&#xa;• cov fractions (cov_forest, …)&#xa;• hydro + bio + physio attributes" vertex="1">
-          <mxGeometry height="260" width="420" x="40" y="90" as="geometry" />
+        <mxCell id="s4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#1A73E8;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;S4_signatures&lt;br&gt;&lt;/b&gt;&lt;/font&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;br&gt;&lt;br&gt;Truth source for decision support&lt;br&gt;• segment_id + geometry&lt;br&gt;• domain distances (*_dist_to_center)&lt;br&gt;• strata labels (it_stratum, physio_stratum, …)&lt;br&gt;• cov fractions (cov_forest, …)&lt;br&gt;• hydro + bio + physio attributes&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Output: layer0_segments_attrstack_metrics (gpkg)&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="260" width="420" x="20" y="360" as="geometry" />
         </mxCell>
-        <mxCell id="s5d" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F4EA;strokeColor=#188038;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="S5 domain decisions (per-domain)&#xa;&#xa;05-1 decisions_it_metrics&#xa;05-2 decisions_physio_metrics&#xa;05-3 decisions_hydro_metrics&#xa;05-4 decisions_biostructure_metrics&#xa;05-5 decisions_coverage_metrics&#xa;&#xa;Outputs per domain:&#xa;• *_strata_segments (gpkg)&#xa;• *_candidates_pts (gpkg)&#xa;• *_dist_to_center per segment" vertex="1">
+        <mxCell id="s5d" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6F4EA;strokeColor=#188038;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="&lt;font style=&quot;font-weight: bold; font-size: 18px;&quot;&gt;S5 domain decisions (per-domain)&lt;br&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;i style=&quot;&quot;&gt;05-1 decisions_it_metrics.R&lt;br&gt;05-2 decisions_physio_metrics.R&lt;br&gt;05-3 decisions_hydro_metrics.R&lt;br&gt;05-4 decisions_biostructure_metrics.R&lt;br&gt;05-5 decisions_coverage_metrics.R&lt;/i&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;Outputs per domain:&lt;/b&gt;&lt;br&gt;&lt;b&gt;• *_strata_segments (gpkg)&lt;/b&gt;&lt;br&gt;&lt;b&gt;• *_candidates_pts (gpkg)&lt;/b&gt;&lt;br&gt;&lt;b&gt;• *_dist_to_center per segment&lt;/b&gt;&lt;/font&gt;" vertex="1">
           <mxGeometry height="260" width="360" x="520" y="90" as="geometry" />
         </mxCell>
-        <mxCell id="e1" edge="1" parent="1" source="s4" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;" target="s5d">
+        <mxCell id="e1" edge="1" parent="1" source="s4" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="s5d">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="mcda" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7E0;strokeColor=#F9AB00;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="MCDA module (single source)&#xa;mcda_add_score() in metrics-fun.R&#xa;&#xa;Input: dist cols + weights + norm_scope&#xa;Output: mcda_score&#xa;&#xa;Two uses:&#xa;A) Standalone global ranking (norm_scope=global)&#xa;B) Internal ranking inside selector (norm_scope=filtered)" vertex="1">
-          <mxGeometry height="200" width="360" x="530" y="500" as="geometry" />
+        <mxCell id="mcda" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7E0;strokeColor=#F9AB00;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;S5 MCDA module (single source)&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;i&gt;mcda_add_score() in metrics-fun.R&lt;br&gt;&lt;/i&gt;&lt;br&gt;Input: dist cols + weights + norm_scope&lt;br&gt;Output: mcda_score&lt;br&gt;&lt;br&gt;Two uses:&lt;br&gt;A) Standalone global ranking (norm_scope=global)&lt;br&gt;B) Internal ranking inside selector (norm_scope=filtered)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="200" width="370" x="510" y="720" as="geometry" />
         </mxCell>
-        <mxCell id="mcdaS" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7E0;strokeColor=#F9AB00;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="MCDA standalone (baseline)&#xa;05-9_decisions_mcda_fuse_metrics.R&#xa;&#xa;Purpose: overall representativeness ranking&#xa;No constraints: no coverage guarantee, no spacing, no hard filters&#xa;&#xa;Outputs: top segments + points (gpkg)" vertex="1">
-          <mxGeometry height="200" width="320" x="1000" y="500" as="geometry" />
+        <mxCell id="mcdaS" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7E0;strokeColor=#F9AB00;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;S5 MCDA standalone (baseline)&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;i&gt;05-9_decisions_mcda_fuse_metrics.R&lt;/i&gt;&lt;br&gt;&lt;br&gt;Purpose: overall representativeness ranking&lt;br&gt;No constraints: no coverage guarantee, no spacing, no hard filters&lt;br&gt;&lt;br&gt;Outputs: top segments + points (gpkg)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="200" width="390" x="950" y="710" as="geometry" />
         </mxCell>
         <mxCell id="e2" edge="1" parent="1" source="mcda" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;" target="mcdaS">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e3" edge="1" parent="1" source="s4" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;" target="mcda">
+        <mxCell id="e3" edge="1" parent="1" source="s4" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" target="mcda">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="sel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE8E6;strokeColor=#D93025;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="Selector (constraint-based design)&#xa;05-9_decisions_selector_settings.R&#xa;&#xa;For each setting:&#xa;1) filter_expr (hard constraints)&#xa;2) target_col + n_per_target (coverage)&#xa;3) ranking:&#xa;   • rank_mode=lex (rank_cols) OR&#xa;   • rank_mode=mcda (mcda_score)&#xa;4) d_min_m (spacing via thinning)&#xa;5) point-on-surface for candidate points&#xa;&#xa;Outputs: per-setting segments + points (tmp gpkg)" vertex="1">
-          <mxGeometry height="260" width="320" x="980" y="90" as="geometry" />
+        <mxCell id="sel" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE8E6;strokeColor=#D93025;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;S5 Selector (constraint-based design)&lt;br&gt;&lt;/b&gt;&lt;/font&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;i&gt;05-9_decisions_selector_settings.R&lt;br&gt;&lt;/i&gt;&lt;br&gt;For each setting:&lt;br&gt;1) filter_expr (hard constraints)&lt;br&gt;2) target_col + n_per_target (coverage)&lt;br&gt;3) ranking:&lt;br&gt;   • rank_mode=lex (rank_cols) OR&lt;br&gt;   • rank_mode=mcda (mcda_score)&lt;br&gt;4) d_min_m (spacing via thinning)&lt;br&gt;5) point-on-surface for candidate points&lt;br&gt;&lt;br&gt;Outputs: per-setting segments + points (tmp gpkg)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="260" width="370" x="510" y="370" as="geometry" />
         </mxCell>
-        <mxCell id="e4" edge="1" parent="1" source="s4" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;" target="sel">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="550" y="390" />
-              <mxPoint x="710" y="420" />
-              <mxPoint x="880" y="380" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e5" edge="1" parent="1" source="mcda" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;dashed=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="sel" value="optional internal scoring">
+        <mxCell id="e4" edge="1" parent="1" source="s4" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;entryX=0.016;entryY=0.462;entryDx=0;entryDy=0;entryPerimeter=0;" target="sel">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="s6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDE7F6;strokeColor=#673AB7;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="S6 validation (evaluation of candidate sets)&#xa;&#xa;Check:&#xa;• coverage completeness (targets filled?)&#xa;• spatial spacing achieved?&#xa;• overlap vs MCDA baseline&#xa;• representativeness metrics per domain&#xa;• scenario comparisons" vertex="1">
-          <mxGeometry height="160" width="420" x="1380" y="240" as="geometry" />
+        <mxCell id="e5" edge="1" parent="1" source="mcda" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="sel" value="optional internal scoring">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDE7F6;strokeColor=#673AB7;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;S6 validation (evaluation of candidate sets)&lt;br&gt;&lt;/b&gt;&lt;/font&gt;&lt;br&gt;Check:&lt;br&gt;• coverage completeness (targets filled?)&lt;br&gt;• spatial spacing achieved?&lt;br&gt;• overlap vs MCDA baseline&lt;br&gt;• representativeness metrics per domain&lt;br&gt;• scenario comparisons" vertex="1">
+          <mxGeometry height="160" width="390" x="950" y="410" as="geometry" />
         </mxCell>
         <mxCell id="e6" edge="1" parent="1" source="mcdaS" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;" target="s6">
           <mxGeometry relative="1" as="geometry" />
@@ -52,17 +46,11 @@
         <mxCell id="e7" edge="1" parent="1" source="sel" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;" target="s6">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e8" edge="1" parent="1" source="s5d" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;" target="s6">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="1020" y="20" />
-              <mxPoint x="1170" />
-              <mxPoint x="1360" y="70" />
-            </Array>
-          </mxGeometry>
+        <mxCell id="e8" edge="1" parent="1" source="s5d" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#5F6368;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" target="s6">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="leg" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9AA0A6;fontSize=12;align=left;verticalAlign=top;spacing=10;" value="Legend&#xa;Blue: S4 truth source&#xa;Green: S5 per-domain decisions&#xa;Orange: MCDA scoring and baseline&#xa;Red: selector = constraints + coverage + spacing&#xa;Purple: S6 evaluation" vertex="1">
-          <mxGeometry height="160" width="280" x="1440" y="540" as="geometry" />
+        <mxCell id="leg" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9AA0A6;fontSize=15;align=left;verticalAlign=top;spacing=10;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Legend&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(51, 153, 255));&quot;&gt;&lt;font&gt;Blue: S4 truth source&lt;/font&gt;&lt;br&gt;&lt;/font&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 153, 77));&quot;&gt;Green: S5 per-domain decisions&lt;br&gt;&lt;/font&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 128, 0));&quot;&gt;Orange: MCDA scoring and baseline&lt;br&gt;&lt;/font&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 0, 0));&quot;&gt;Red: selector = constraints + coverage + spacing&lt;br&gt;&lt;/font&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(51, 0, 102));&quot;&gt;Purple: S6 evaluation&lt;/font&gt;" vertex="1">
+          <mxGeometry height="160" width="370" x="970" y="90" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
