@@ -1,9 +1,66 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.4">
   <diagram name="Page-1" id="m1OVmlGLv9qs28j8_gUd">
-    <mxGraphModel>
+    <mxGraphModel dx="3428" dy="4067" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="s1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillColor=#BFC6EE;strokeColor=#3D7ECF;fontSize=17;" value="S1&#xa;Observations&#xa;(measurements)" vertex="1">
+          <mxGeometry height="110" width="220" x="-70" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;opacity=40;fillColor=#A0C8B0;strokeColor=#288058;fontSize=17;" value="S2&#xa;Derived raster products" vertex="1">
+          <mxGeometry height="110" width="260" x="200" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;opacity=40;fillColor=#A0B8D8;strokeColor=#2868B0;fontSize=17;" value="S3&#xa;Segmentation" vertex="1">
+          <mxGeometry height="110" width="260" x="490" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;opacity=40;fillColor=#E0A0A0;strokeColor=#C03030;fontSize=17;" value="S4&#xa;Signatures" vertex="1">
+          <mxGeometry height="110" width="240" x="770" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=3;fillColor=#E6C8F0;strokeColor=#7A3FA0;fontSize=17;" value="S5&#xa;Decision and candidate selection&#xa;(normative layer)" vertex="1">
+          <mxGeometry height="150" width="360" x="1040" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="s1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#3D7ECF;fontSize=17;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="s2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#288058;fontSize=17;" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="s3" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#2868B0;fontSize=17;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="s4" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#C03030;fontSize=17;" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s5q" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#FFFFFF;strokeColor=#7A3FA0;fontSize=17;" value="S5 question&#xa;Which concrete spatial candidates should be selected from the attribute space under explicit constraints, coverage targets and trade-offs?" vertex="1">
+          <mxGeometry height="100" width="560" x="-60" y="-100" as="geometry" />
+        </mxCell>
+        <mxCell id="s5dp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;align=left;spacingLeft=10;fillColor=#FFFFFF;strokeColor=#7A3FA0;fontSize=17;" value="S5 design principles&#xa;• explicit filters, quotas, weights&#xa;• transparent scoring and ranking&#xa;• immutable geometry&#xa;• separation of productive vs exploratory outputs&#xa;• reproducible parameterisation" vertex="1">
+          <mxGeometry height="130" width="390" x="530" y="-100" as="geometry" />
+        </mxCell>
+        <mxCell id="s5ex" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;align=left;spacingLeft=11;fillColor=#FFFFFF;strokeColor=#7A3FA0;fontSize=17;" value="S5 excludes&#xa;• raster derivation (S2)&#xa;• segmentation (S3)&#xa;• signature construction (S4)&#xa;• representation learning (S4L)&#xa;• validation and benchmarking (S6)" vertex="1">
+          <mxGeometry height="130" width="420" x="980" y="-100" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_title" parent="1" style="text;html=1;fontStyle=1;fontSize=17;" value="S5 decision product families (Burgwald implementation)" vertex="1">
+          <mxGeometry height="30" width="600" x="-45" y="-140" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_domains" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillColor=#E6C8F0;strokeColor=#7A3FA0;fontSize=17;" value="Domain decision spaces&#xa;IT / Physio / Hydro / Bio / Coverage&#xa;Strata + representative candidates" vertex="1">
+          <mxGeometry height="130" width="430" x="1010" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_mcda" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillColor=#E6C8F0;strokeColor=#7A3FA0;fontSize=17;" value="MCDA fusion&#xa;Weighted fusion of per-domain distances&#xa;Global candidate ranking" vertex="1">
+          <mxGeometry height="130" width="430" x="510" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_selector" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillColor=#E6C8F0;strokeColor=#7A3FA0;fontSize=17;" value="Constraint-based selector&#xa;Filters + coverage targets + ranking + spacing&#xa;Scenario execution" vertex="1">
+          <mxGeometry height="130" width="430" x="990" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf1" edge="1" parent="1" source="pf_domains" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#7A3FA0;fontSize=17;" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf2" edge="1" parent="1" source="pf_mcda" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#7A3FA0;fontSize=17;" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf3" edge="1" parent="1" source="pf_selector" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#7A3FA0;fontSize=17;" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
