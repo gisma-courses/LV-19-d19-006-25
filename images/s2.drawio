@@ -1,0 +1,85 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.4">
+  <diagram name="Page-1" id="TIUnbjKMvUNjSM6PQYOg">
+    <mxGraphModel dx="2876" dy="3431" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="s1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;" value="S1&#xa;Observations&#xa;(measurements)" vertex="1">
+          <mxGeometry height="110" width="220" x="40" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=3;" value="S2&#xa;Derived raster and observation products&#xa;(pixel/station support preserved)" vertex="1">
+          <mxGeometry height="150" width="360" x="360" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;opacity=60;" value="S3&#xa;Segmentation / objects&#xa;(spatial units)" vertex="1">
+          <mxGeometry height="110" width="240" x="770" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;opacity=60;" value="S4&#xa;Signatures&#xa;(object descriptors)" vertex="1">
+          <mxGeometry height="110" width="220" x="1040" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;opacity=60;" value="S5&#xa;Decision logic&#xa;(ranking/selection)" vertex="1">
+          <mxGeometry height="110" width="220" x="1290" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="s1" style="endArrow=block;html=1;strokeWidth=2;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="s2" style="endArrow=block;html=1;strokeWidth=2;opacity=60;" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="s3" style="endArrow=block;html=1;strokeWidth=2;opacity=60;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="s4" style="endArrow=block;html=1;strokeWidth=2;opacity=60;" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s2q" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;" value="S2 question&#xa;What can be derived directly from measurements in space/time&#xa;before segmentation, objects, or decisions?" vertex="1">
+          <mxGeometry height="90" width="560" x="-60" y="-100" as="geometry" />
+        </mxCell>
+        <mxCell id="s2ex" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;align=left;spacingLeft=11;" value="S2 excludes&#xa;• S3 objects / segmentations&#xa;• S4 object signatures&#xa;• S4L learned representations&#xa;• S5 ranking/selection/optimisation" vertex="1">
+          <mxGeometry height="100" width="420" x="980" y="-100" as="geometry" />
+        </mxCell>
+        <mxCell id="s2dp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;align=left;spacingLeft=10;" value="S2 design principles&#xa;• registry-defined IO (no hard-coded paths)&#xa;• explicit transformations (no silent smoothing/aggregation)&#xa;• controlled spatial support (canonical 10 m grid)&#xa;• descriptive-only station summaries (no decision logic)" vertex="1">
+          <mxGeometry height="100" width="390" x="530" y="-100" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_title" parent="1" style="text;html=1;fontStyle=1;" value="S2 product families (Burgwald implementation)" vertex="1">
+          <mxGeometry height="30" width="600" x="-45" y="-140" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_dem" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;" value="Terrain / hydrological derivatives&#xa;DEM → morphometry, flow, distance, watersheds&#xa;Script: 02-1_processing_dem-derivates-saga.R" vertex="1">
+          <mxGeometry height="120" width="430" x="-60" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_dom" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;" value="Biostructural derivatives&#xa;DOM/DSM + DEM → CHM + aggregated canopy metrics&#xa;Script: 02-1_processing_dom-biostructure-derivates.R" vertex="1">
+          <mxGeometry height="120" width="430" x="400" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_cls" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;" value="Pixel-based classifications&#xa;Categorical/probability rasters (per-pixel semantics)&#xa;Script: 02-3_processing_basic-classifications_cdse.R" vertex="1">
+          <mxGeometry height="120" width="430" x="860" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_bfast" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;" value="Time-series change diagnostics&#xa;Per-pixel BFAST / disturbance indicators&#xa;Script: 02-2_processing_bfast-classification.R" vertex="1">
+          <mxGeometry height="140" width="430" x="-100" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_stack" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;" value="Canonical predictor stacks&#xa;Registered raster stacks (pixel-aligned)&#xa;+ explicit reduction rules (variance/collinearity)&#xa;Script: 02-5-processing_predictor-stacks.R" vertex="1">
+          <mxGeometry height="140" width="430" x="360" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_wind" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;" value="Descriptive climate summaries (stations)&#xa;Wind roses / frequency tables / plots&#xa;No optimisation/selection logic&#xa;Script: 02-4_analysis_burgwald-dwd-wind-rose.R" vertex="1">
+          <mxGeometry height="140" width="430" x="810" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf1" edge="1" parent="1" source="pf_dem" style="endArrow=block;html=1;strokeWidth=2;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf2" edge="1" parent="1" source="pf_dom" style="endArrow=block;html=1;strokeWidth=2;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf3" edge="1" parent="1" source="pf_cls" style="endArrow=block;html=1;strokeWidth=2;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf4" edge="1" parent="1" source="pf_bfast" style="endArrow=block;html=1;strokeWidth=2;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf5" edge="1" parent="1" source="pf_stack" style="endArrow=block;html=1;strokeWidth=2;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf6" edge="1" parent="1" source="pf_wind" style="endArrow=block;html=1;strokeWidth=2;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
