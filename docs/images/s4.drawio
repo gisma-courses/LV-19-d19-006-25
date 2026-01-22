@@ -1,0 +1,85 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.4">
+  <diagram name="Page-1" id="8NHwKR-OakWP4zGZhvSg">
+    <mxGraphModel dx="2026" dy="3431" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="s1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillColor=#BFC6EE;strokeColor=#3D7ECF;fontSize=16;" value="S1&#xa;Observations&#xa;(measurements)" vertex="1">
+          <mxGeometry height="110" width="220" x="100" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;opacity=40;fillColor=#A0C8B0;strokeColor=#288058;fontSize=16;" value="S2&#xa;Derived raster products&#xa;(predictor fields)" vertex="1">
+          <mxGeometry height="110" width="260" x="360" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;opacity=40;fillColor=#A0B8D8;strokeColor=#2868B0;fontSize=16;" value="S3&#xa;Segmentation &amp;amp; Structure&#xa;(spatial units)" vertex="1">
+          <mxGeometry height="110" width="260" x="650" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=3;fillColor=#E0A0A0;strokeColor=#C03030;fontSize=16;" value="S4&#xa;Deterministic Signatures&#xa;(segment attribute space)" vertex="1">
+          <mxGeometry height="150" width="360" x="930" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;opacity=40;fillColor=#D8D0F0;strokeColor=#6840C0;fontSize=16;" value="S5&#xa;Decision logic&#xa;(ranking/selection)" vertex="1">
+          <mxGeometry height="110" width="220" x="1360" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="s1" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#3D7ECF;fontSize=16;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="s2" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#288058;fontSize=16;" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="s3" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#2868B0;fontSize=16;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="s4" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#C03030;fontSize=16;" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s4q" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#FFFFFF;strokeColor=#C03030;fontSize=16;" value="S4 question&#xa;How can structural segments be transformed into a stable, interpretable attribute space without introducing semantics, clustering, or decision logic?" vertex="1">
+          <mxGeometry height="135" width="560" x="100" y="-115" as="geometry" />
+        </mxCell>
+        <mxCell id="s4ex" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;align=left;spacingLeft=11;fillColor=#FFFFFF;strokeColor=#C03030;fontSize=16;" value="S4 excludes&#xa;• any classification or clustering&#xa;• candidate selection or ranking&#xa;• optimisation or trade-offs&#xa;• learned representations (S4L)&#xa;• semantic interpretation" vertex="1">
+          <mxGeometry height="135" width="420" x="1170" y="-120" as="geometry" />
+        </mxCell>
+        <mxCell id="s4dp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;align=left;spacingLeft=10;fillColor=#FFFFFF;strokeColor=#C03030;fontSize=16;" value="S4 design principles&#xa;• pure zonal aggregation on stable segments&#xa;• registry-defined inputs and outputs only&#xa;• no thresholds, no heuristics unless explicit&#xa;• geometry inherited strictly from S3&#xa;• transformations must be auditable and reversible" vertex="1">
+          <mxGeometry height="140" width="390" x="690" y="-120" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_title" parent="1" style="text;html=1;fontStyle=1;fontSize=16;" value="S4 signature products (Burgwald implementation)" vertex="1">
+          <mxGeometry height="30" width="600" x="100" y="-160" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_it" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillColor=#E0A0A0;strokeColor=#C03030;fontSize=16;" value="Information-theoretic signatures&#xa;Entropy H, mutual information U per segment&#xa;Composition vs configuration&#xa;Script: 04-1_signatures_landscape-metrics.R" vertex="1">
+          <mxGeometry height="150" width="430" x="435" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_physio" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillColor=#E0A0A0;strokeColor=#C03030;fontSize=16;" value="Physiographic signatures&#xa;Elevation, slope, aspect, southness, windwardness&#xa;Pure zonal statistics&#xa;Script: 04-2_signatures_physio_metrics.R" vertex="1">
+          <mxGeometry height="150" width="430" x="895" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_hydro" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillColor=#E0A0A0;strokeColor=#C03030;fontSize=16;" value="Hydrological signatures&#xa;Watershed dominance, Strahler order, flow accumulation&#xa;Optional stream distance&#xa;Script: 04-3_signatures_hydro_metrics.R" vertex="1">
+          <mxGeometry height="150" width="430" x="1355" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_cover" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillColor=#E0A0A0;strokeColor=#C03030;fontSize=16;" value="Cover signatures&#xa;Per-class fractions, forest_fraction&#xa;No diversity metrics&#xa;Script: 04-4_signatures_cover_metrics.R" vertex="1">
+          <mxGeometry height="150" width="430" x="1355" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_bio" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillColor=#E0A0A0;strokeColor=#C03030;fontSize=16;" value="Biostructure signatures&#xa;CHM mean, p95, sd, canopy fraction&#xa;Pure zonal extraction&#xa;Script: 04-4_signatures_biostructure_metrics.R" vertex="1">
+          <mxGeometry height="150" width="430" x="435" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="pf_join" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillColor=#E0A0A0;strokeColor=#C03030;fontSize=16;" value="Attrstack assembly + transparent tokens&#xa;Join all signature layers onto segment geometry&#xa;Optional bin123 discretisation&#xa;Script: 04-9_signatures_attrstack_join_metrics.R" vertex="1">
+          <mxGeometry height="150" width="430" x="900" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf1" edge="1" parent="1" source="pf_it" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#C03030;fontSize=16;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf2" edge="1" parent="1" source="pf_physio" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#C03030;fontSize=16;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf3" edge="1" parent="1" source="pf_hydro" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#C03030;fontSize=16;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf4" edge="1" parent="1" source="pf_cover" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#C03030;fontSize=16;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf5" edge="1" parent="1" source="pf_bio" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#C03030;fontSize=16;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_pf6" edge="1" parent="1" source="pf_join" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#C03030;fontSize=16;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

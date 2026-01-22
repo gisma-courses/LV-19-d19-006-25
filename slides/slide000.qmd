@@ -17,3 +17,52 @@ spotlight:
   useAsPointer: true
   size: 5
 ---
+
+---
+title: "GUI-GIS vs. Pipeline – Erkenntnis-Constraints"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    incremental: false
+---
+
+## „Können wir das nicht auch mit GIS machen?“
+
+**Antwort:** *begrenzt – und mit systematischem Erkenntnisverlust, sobald Workflow-Eigenschaften Teil der Fragestellung werden.*
+
+**Erkenntnis-Constraints (warum das Ergebnis entwertet):**
+
+- **Nicht reproduzierbar:** manuelle Schritte sind schwer exakt zu wiederholen → Ergebnis nicht stabil rekonstruierbar.  
+  *„Avoid manual data manipulation steps“* (Sandve et al., 2013).  
+  https://pmc.ncbi.nlm.nih.gov/articles/PMC3812051/
+- **Nicht auditierbar:** Parameter/Masken/Resampling/CRS-Entscheidungen bleiben implizit → Ergebnis nicht sauber begründbar/prüfbar.  
+  (vgl. Reproducibility/Provenance-Arbeiten: Schlögl et al., 2025; Fischer et al., 2023).
+- **Fehler nicht lokalisierbar:** bei vielen manuellen Eingriffen ist Debugging methodisch nicht mehr sauber.
+- **Geodaten verschärfen das:** CRS-Wechsel, Resampling, Support-Änderungen, Masken/NoData, heterogene Quellen.
+
+**Punchline:** GUI kann Schritte ausführen – aber **trägt keine wissenschaftliche Produktionskette**, wenn Variantenräume, Stabilitätstests, Provenance und Contracts Teil des Erkenntnisziels sind.
+
+---
+
+## Konservative GUI-Äquivalenz (Burgwald-Pipeline)
+
+| Bereich | Beispiel-Inhalte | GUI-Status | konservative GUI-Ops |
+|---|---|---:|---:|
+| Projektstruktur / Registry | Ordner, Pfade, Artefakt-Contracts, Versionierung | ❌ | nicht seriös abschätzbar |
+| Sentinel-Akquise (STAC/Cloud-Selektion) | Suche, Filter, best-day, Batch | ❌ | nicht seriös abschätzbar |
+| DWD-Akquise / Join | Batch-Download, Zeitfenster, Metadaten-Join | ❌/⚠️ | 30–50 (roh, fragil) |
+| Base-Geodata | Download, unzip, mosaic, clip, mask, export | ⚠️ | 60–90 |
+| S2 Derivate | DEM/Hydro/CHM/Indizes | ✅/⚠️ | 60–120 |
+| S3 Segmentation | PCA + MeanShift | ⚠️ | 40–80 |
+| S3 Stabilität (ARI-Perturbationen) | Variantenläufe + ARI | ❌ | nicht GUI-fähig |
+| S4 Signatures | 30–60 zonal stats + joins | ⚠️ | 120–240 |
+| S5 MCDA/Szenarien/Selector | Gewichtung, constraints, spacing | ❌ | nicht GUI-fähig |
+
+**Bottom line:**
+- **Zählbarer Teil:** ~**300–600** GUI-Operationen pro Lauf (untere Grenze).  
+- **Entscheidender Teil (Erkenntnisgewinn):** ❌ *nicht sinnvoll GUI-fähig* (Variantenräume, Stabilität, MCDA, Szenarien, Registry/Provenance).
+
+**Fairer Satz:** QGIS kann Teile als Processing-Model bündeln, aber die Kette **Akquise → Varianten → Stabilität → Entscheideräume → Provenance** ist damit nicht abgedeckt.  
+https://docs.qgis.org/latest/en/docs/user_manual/processing/modeler.html
+
