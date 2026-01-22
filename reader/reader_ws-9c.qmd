@@ -1,0 +1,140 @@
+---
+title: "From Spatial Structure to Rain-Gauge Network Design"
+subtitle: "A didactic and operational workflow for process-based site selection (Burgwald)"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  echo: false
+  warning: false
+---
+
+## 1. Why rainfall network design is not a technical optimisation problem (S0)
+
+Designing a precipitation monitoring network in a complex upland landscape is not a question of geometric coverage or statistical convenience.  
+It is a scientific design problem that links spatial heterogeneity, process understanding, and observational constraints.
+
+Rainfall variability in low mountain regions emerges from interacting controls:
+orography, exposure, wind fields, vegetation structure, land–atmosphere coupling, and drainage organisation.  
+A network that ignores these controls may perform well in purely statistical metrics while remaining blind to the mechanisms that govern hydrological response and transferability.
+
+This workflow therefore treats station placement as a **multi-layer abstraction problem**, not as a single optimisation step.  
+Each modelling space reduces complexity while introducing explicit assumptions.
+
+(Reference: modelling spaces S0–S5 and epistemic framing. :contentReference[oaicite:4]{index=4})
+
+---
+
+## 2. Observation as construction, not as given data (S1)
+
+Spatial observations do not exist as neutral inputs.  
+Every dataset already encodes scale choices, sensor physics, preprocessing assumptions, and uncertainty structures.
+
+In the Burgwald pipeline, S1 deliberately combines heterogeneous observation sources:
+terrain models, land-cover products, Sentinel-2 predictors, wind statistics, and hydrological derivatives.  
+The goal is not maximal completeness but **process coverage**.
+
+This step establishes what the system can possibly learn — and what it fundamentally cannot.
+
+---
+
+## 3. From raw space to process proxies (S2)
+
+Raw spatial data are not directly meaningful for design decisions.
+They must be transformed into descriptors that approximate dominant processes.
+
+Examples:
+- Terrain derivatives approximate energy gradients, exposure, and flow potential.
+- Vegetation indices and classifications approximate canopy structure and interception potential.
+- Wind statistics approximate dominant atmospheric forcing directions.
+- Hydrological derivatives approximate connectivity and contributing area.
+
+This transformation is not neutral:  
+each variable is a hypothesis about what matters for rainfall organisation and hydrological relevance.
+
+Convenience layers (SAGA, CDSE, gdalcubes) are used deliberately to separate scientific intent from infrastructural overhead.  
+They do not simplify the science — they stabilise the workflow. :contentReference[oaicite:5]{index=5}
+
+---
+
+## 4. Why segmentation precedes optimisation (S3)
+
+Optimising directly in pixel space or catchment space embeds hidden assumptions about scale and homogeneity.
+
+Segments are introduced as intermediate spatial units:
+- internally coherent,
+- externally distinct,
+- reproducible under parameter variation.
+
+Segmentation is treated as a **scale-discovery problem**, not as classification.  
+Stability, plausibility and interpretability dominate over algorithmic optimality.
+
+This aligns segmentation with functional unit concepts in hydrology and landscape ecology, while remaining data-driven. :contentReference[oaicite:6]{index=6}
+
+Segments become the common language between physical structure and decision logic.
+
+---
+
+## 5. Signatures, tokens, and explicit abstraction (S4)
+
+Each segment is described through multiple domain signatures:
+physiography, hydrology, land cover, vegetation structure, and information-theoretic metrics.
+
+These continuous variables are intentionally discretised into quantile-based bins (1/2/3).  
+The goal is not prediction accuracy but **comparability and transparency**.
+
+Tokens encode combinations of process settings:
+they allow reasoning about coverage, redundancy, and representativeness without collapsing back into raw numerics.
+
+This step transforms spatial heterogeneity into a structured decision space.
+
+---
+
+## 6. Decision logic: representativeness before efficiency
+
+The network design follows a layered rationale:
+1. Structural representativeness (physiographic coverage),
+2. Information efficiency (redundancy reduction),
+3. Hydrological relevance (connectivity and interpretability).
+
+Multi-criteria decision analysis does not replace scientific judgement — it externalises it.
+
+Trade-offs become explicit, inspectable and debatable. :contentReference[oaicite:7]{index=7}
+
+---
+
+## 7. Scientific recursion and validation (S5)
+
+The workflow is intentionally recursive.
+Intermediate results are not treated as final truths but as hypotheses that must be confronted with:
+- sensitivity,
+- stability,
+- alternative abstractions,
+- and conceptual consistency.
+
+Refinement often means removing complexity, not adding it. :contentReference[oaicite:8]{index=8}
+
+This closes the loop between method and meaning.
+
+---
+
+## 8. From segments to concrete station candidates
+
+Only at the end are abstract segments translated into concrete site candidates.
+Field constraints, accessibility, telemetry and maintenance enter here — deliberately late, not early.
+
+The workflow ensures that practical compromises do not silently override scientific structure.
+
+---
+
+## 9. What this workflow teaches
+
+This pipeline is not primarily about software.
+It teaches:
+- how spatial abstraction shapes knowledge,
+- how scale choices constrain interpretation,
+- how reproducibility enables scientific critique,
+- and how design decisions remain accountable.
+
+The code operationalises a reasoning chain — not the other way around.

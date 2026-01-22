@@ -1,0 +1,19 @@
+---
+title: "GIS vs GIS"
+author: "Chris Reudenbach"
+format:
+  revealjs:
+    #theme: [default, ../_extensions/metropolis-theme/metropolis.scss]
+    toc: false
+    toc-depth: 2
+    chalkboard: true
+    slide-number: true
+    footer: "<gisma 2025>"
+    menu: true
+    title-slide: true
+    include-in-header: ../includes/back.html
+lightbox: true
+spotlight:
+  useAsPointer: true
+  size: 5
+---
