@@ -63,6 +63,7 @@ format:
 - **Zählbarer Teil:** ~**300–600** GUI-Operationen pro Lauf (untere Grenze).  
 - **Entscheidender Teil (Erkenntnisgewinn):** ❌ *nicht sinnvoll GUI-fähig* (Variantenräume, Stabilität, MCDA, Szenarien, Registry/Provenance).
 
+
 **Fairer Satz:** QGIS kann Teile als Processing-Model bündeln, aber die Kette **Akquise → Varianten → Stabilität → Entscheideräume → Provenance** ist damit nicht abgedeckt.  
 https://docs.qgis.org/latest/en/docs/user_manual/processing/modeler.html
 
