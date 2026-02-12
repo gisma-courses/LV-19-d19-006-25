@@ -72,11 +72,6 @@ Each submission is evaluated across **five dimensions**, 0–2 points each (max 
 
 ---
 
-### Competition element
-
-The Kellerwald Network Design Project is structured as a **friendly competition**:  
-the group achieving the highest total score becomes the *Course Design Champion*.  
-In case of a tie, the tiebreaker is **Hydrological integration**, since the final goal is a coherent rainfall–runoff framework, not aesthetic map design.
 
 ---
 
